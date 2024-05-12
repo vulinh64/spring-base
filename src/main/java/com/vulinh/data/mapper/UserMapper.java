@@ -1,16 +1,15 @@
 package com.vulinh.data.mapper;
 
+import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.entity.Users;
+import java.util.stream.Collectors;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
-
-import java.util.stream.Collectors;
 
 @Mapper(builder = @Builder(disableBuilder = true), imports = Collectors.class)
 public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
@@ -21,7 +20,6 @@ public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
   @Mapping(target = "userRoles", ignore = true)
   UserDTO toUserDTO(Users users);
 
-  @Mapping(target = "userRoles", expression = "java(users.getUserRoles().stream().map(Roles::getId).toList())")
   UserBasicDTO toBasicUserDTO(Users users);
 
   @Override

@@ -1,11 +1,10 @@
 package com.vulinh.constant;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,7 +18,20 @@ public enum UserRole {
   // The higher the value, the more "superior" a role is
   private final int superiority;
 
-  public static final Collection<String> DEFAULT_ROLE = Set.of(UserRole.USER.name());
+  private static final Set<String> ROLE_LITERAL_SET =
+      Arrays.stream(values()).map(UserRole::name).collect(Collectors.toSet());
+
+  public static Collection<UserRole> fromRawRole(Collection<String> rawRoles) {
+    return rawRoles.stream()
+        .filter(UserRole::isValidRole)
+        .map(String::toUpperCase)
+        .map(UserRole::valueOf)
+        .collect(Collectors.toSet());
+  }
+
+  public static boolean isValidRole(String role) {
+    return ROLE_LITERAL_SET.stream().anyMatch(userRole -> userRole.equalsIgnoreCase(role));
+  }
 
   public static String toHierarchyPhrase() {
     return Arrays.stream(values())

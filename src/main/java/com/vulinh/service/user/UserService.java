@@ -1,7 +1,6 @@
 package com.vulinh.service.user;
 
-import static com.vulinh.constant.UserRole.DEFAULT_ROLE;
-
+import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.user.UserBasicDTO;
@@ -18,6 +17,7 @@ import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.SpecificationBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -63,12 +63,13 @@ public class UserService implements BaseEntityService<String, Users, UserDTO, Us
             userRegistrationDTO.withPassword(
                 passwordEncoder.encode(userRegistrationDTO.password())));
 
-    var rawRoleNames = userRegistrationDTO.userRoles();
+    var rawRoleNames = UserRole.fromRawRole(userRegistrationDTO.userRoles());
 
     transientUser
         .setIsActive(true)
         .setUserRoles(
-            roleRepository.findAllById(rawRoleNames.isEmpty() ? DEFAULT_ROLE : rawRoleNames));
+            roleRepository.findAllById(
+                rawRoleNames.isEmpty() ? Set.of(UserRole.USER) : rawRoleNames));
 
     return USER_MAPPER.toDto(repository.save(transientUser));
   }
@@ -105,7 +106,7 @@ public class UserService implements BaseEntityService<String, Users, UserDTO, Us
             SpecificationBuilder.like(Users_.email, identity),
             SpecificationBuilder.like(Users_.fullName, identity));
 
-    var searchRoles = userSearchDTO.roles();
+    var searchRoles = UserRole.fromRawRole(userSearchDTO.roles());
 
     if (!searchRoles.isEmpty()) {
       var roles =

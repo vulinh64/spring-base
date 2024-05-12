@@ -11,5 +11,5 @@ public record UserBasicDTO(
     String email,
     LocalDateTime createdDate,
     LocalDateTime updatedDate,
-    Collection<String> userRoles)
+    Collection<RoleDTO> userRoles)
     implements Serializable {}

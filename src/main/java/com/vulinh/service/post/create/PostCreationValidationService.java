@@ -1,4 +1,4 @@
-package com.vulinh.service.post;
+package com.vulinh.service.post.create;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;

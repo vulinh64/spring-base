@@ -2,7 +2,7 @@ package com.vulinh.utils;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.exception.CommonException;
-import com.vulinh.service.post.PostCreationValidationService;
+import com.vulinh.service.post.create.PostCreationValidationService;
 import java.security.SecureRandom;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

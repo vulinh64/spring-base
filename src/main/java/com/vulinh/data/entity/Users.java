@@ -1,5 +1,6 @@
 package com.vulinh.data.entity;
 
+import com.vulinh.constant.UserRole;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -53,6 +54,6 @@ public class Users extends AbstractIdentifiable.StringAbstractIdentifiable {
   private Collection<Roles> userRoles;
 
   public Collection<String> toRawUserRoles() {
-    return getUserRoles().stream().map(Roles::getId).toList();
+    return getUserRoles().stream().map(Roles::getId).map(UserRole::name).toList();
   }
 }

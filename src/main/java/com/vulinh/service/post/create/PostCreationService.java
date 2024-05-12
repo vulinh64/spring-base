@@ -1,4 +1,4 @@
-package com.vulinh.service.post;
+package com.vulinh.service.post.create;
 
 import com.google.common.collect.ImmutableSet;
 import com.vulinh.constant.CommonConstant;

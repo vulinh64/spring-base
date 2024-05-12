@@ -2,6 +2,7 @@ package com.vulinh.data.dto.auth;
 
 import com.vulinh.constant.UserRole;
 import java.util.Collection;
+import java.util.Set;
 import lombok.Builder;
 import lombok.With;
 
@@ -20,6 +21,6 @@ public record UserRegistrationDTO(
     this.password = password;
     this.fullName = fullName;
     this.email = email;
-    this.userRoles = userRoles == null ? UserRole.DEFAULT_ROLE : userRoles;
+    this.userRoles = userRoles == null ? Set.of(UserRole.USER.name()) : userRoles;
   }
 }
