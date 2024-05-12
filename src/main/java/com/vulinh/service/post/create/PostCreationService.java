@@ -14,6 +14,7 @@ import com.vulinh.data.repository.TagRepository;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.CommonException;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.service.post.PostValidationService;
 import com.vulinh.utils.PostUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +32,7 @@ public class PostCreationService {
 
   private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
-  private final PostCreationValidationService postCreationValidationService;
+  private final PostValidationService postValidationService;
 
   private final PostRepository postRepository;
   private final UserRepository userRepository;
@@ -40,7 +41,7 @@ public class PostCreationService {
 
   @Transactional
   public Post createPost(PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    postCreationValidationService.validatePost(postCreationDTO);
+    postValidationService.validatePost(postCreationDTO);
 
     var actualCreationDTO = getActualCreationDTO(postCreationDTO);
 
