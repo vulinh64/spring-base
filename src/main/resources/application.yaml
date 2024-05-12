@@ -1,0 +1,45 @@
+server.shutdown: graceful
+spring:
+  application.name: spring-base-project
+  # START: change this to fit your computer's configuration
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
+    username: ${DATABASE_USERNAME:myspringdatabase}
+    password: ${DATABASE_PASSWORD:123456}
+  # END: change this to fit your computer's configuration
+  liquibase:
+    enabled: true
+    change-log: classpath:changelog.yaml
+  security.jwt:
+    public-key: ${PUBLIC_KEY}
+    private-key: ${PRIVATE_KEY}
+    no-authenticated-urls:
+      - /health
+      - /v3/api-docs/**
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /swagger-resources/**
+      - /configuration/ui/**
+      - /configuration/security/**
+      - /webjars/**
+      - /auth/login/**
+      - /auth/register/**
+      - /auth/confirm-user/**
+      - /auth/reset-password/**
+      - /password/**
+    jwt-duration: ${JWT_DURATION:5m}
+    password-reset-code-duration: ${PASSWORD_RESET_CODE_DURATION:1h}
+management.endpoints.web:
+  base-path: ''
+  exposure.including: health
+springdoc.swagger-ui:
+  path: /swagger-ui
+  disable-swagger-default-url: true
+sentry:
+  exception-resolver-order: -2147483647
+  logging.minimum-event-level: error
+  dsn: ${SENTRY_DNS}
+  traces-sample-rate: 1.0
+logging.level:
+  com.vulinh.service.user.UserValidationService: DEBUG
+  com.vulinh.service.post.PostCreationValidationService: DEBUG

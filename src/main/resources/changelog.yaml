@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - include:
+      file: changelogs/0000-create-user-table.sql
+  - include:
+      file: changelogs/0001-init-user-table.sql
+  - include:
+      file: changelogs/0002-create-role-table.sql
+  - include:
+      file: changelogs/0003-init-role-table.sql
+  - include:
+      file: changelogs/0004-create-user-role-mapping-table.sql
+  - include:
+      file: changelogs/0005-init-user-role-mapping-table.sql
+  - include:
+      file: changelogs/0006-create-category-table.sql
+  - include:
+      file: changelogs/0007-init-category-table.sql
+  - include:
+      file: changelogs/0008-create-post-table.sql
+  - include:
+      file: changelogs/0009-create-tag-table.sql
+  - include:
+      file: changelogs/0010-create-post-tag-mapping-table.sql
+  - include:
+      file: changelogs/0011-init-sample-post.sql
+  - include:
+      file: changelogs/0012-create-post-revision-table.sql

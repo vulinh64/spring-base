@@ -1,0 +1,67 @@
+package com.vulinh.exception;
+
+import com.vulinh.data.dto.GenericResponse;
+import com.vulinh.data.dto.bundle.CommonMessage;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+@Slf4j
+public class GlobalExceptionHandler {
+
+  @ExceptionHandler(RuntimeException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public GenericResponse<Object> handleRuntimeErrorException(RuntimeException runtimeException) {
+    log.error("Internal server error", runtimeException);
+
+    return GenericResponse.builder()
+        .code(CommonMessage.MESSAGE_INTERNAL_ERROR.getCode())
+        .message(CommonMessage.MESSAGE_INTERNAL_ERROR.getMessage())
+        .build();
+  }
+
+  @ExceptionHandler(CommonException.class)
+  public ResponseEntity<GenericResponse<Object>> handleCommonException(
+      CommonException commonException) {
+    log.info("Common error", commonException);
+
+    var errorKey = commonException.getErrorKey();
+
+    return ResponseEntity.status(errorKey.getHttpStatusCode())
+        .body(GenericResponse.toGenericResponse(commonException, commonException.getArgs()));
+  }
+
+  @ExceptionHandler(CustomSecurityException.class)
+  public ResponseEntity<GenericResponse<Object>> handleAuthorizationException(
+      CustomSecurityException customSecurityException) {
+    log.info("Authorization error", customSecurityException);
+
+    var commonMessage = customSecurityException.getErrorCode();
+
+    return ResponseEntity.status(commonMessage.getHttpStatusCode())
+        .body(
+            GenericResponse.toGenericResponse(
+                customSecurityException, customSecurityException.getArgs()));
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public void handleEntityNotFoundException(EntityNotFoundException entityNotFoundException) {
+    log.info("Entity not found", entityNotFoundException);
+  }
+
+  @ExceptionHandler(HttpMessageConversionException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public GenericResponse<Object> handleHttpMessageConversionException(
+      HttpMessageConversionException httpMessageConversionException) {
+    log.info("Bad request body format", httpMessageConversionException);
+
+    return GenericResponse.toGenericResponse(CommonMessage.MESSAGE_INVALID_BODY_REQUEST );
+  }
+}
