@@ -22,6 +22,4 @@ databaseChangeLog:
   - include:
       file: changelogs/0010-create-post-tag-mapping-table.sql
   - include:
-      file: changelogs/0011-init-sample-post.sql
-  - include:
-      file: changelogs/0012-create-post-revision-table.sql
+      file: changelogs/0011-create-post-revision-table.sql

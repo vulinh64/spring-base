@@ -42,4 +42,4 @@ sentry:
   traces-sample-rate: 1.0
 logging.level:
   com.vulinh.service.user.UserValidationService: DEBUG
-  com.vulinh.service.post.PostCreationValidationService: DEBUG
+  com.vulinh.service.post.PostEditValidationService: DEBUG

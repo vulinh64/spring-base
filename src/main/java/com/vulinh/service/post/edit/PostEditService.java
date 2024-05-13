@@ -10,14 +10,15 @@ import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.PostUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostEditService {
 
   private final PostRepository postRepository;
@@ -36,12 +37,19 @@ public class PostEditService {
 
     var actualPostCreationDTO = PostUtils.getActualPostEditDTO(postCreationDTO);
 
-    var post = postRepository.findByIdOrFailed(postId);
+    var post = postRepository.findByIdOrFailed(postId, "Post");
 
     postEditValidationService.validateEditPermission(actualPostCreationDTO, userDTO, post);
 
+    // Post unchanged
     if (postEditValidationService.isPostUnchanged(actualPostCreationDTO, post)) {
-      // Post unchanged
+      log.debug(
+          "Post {} ({}) edited by user {} ({}) unchanged",
+          postId,
+          post.getTitle(),
+          userDTO.id(),
+          userDTO.username());
+
       return Optional.empty();
     }
 

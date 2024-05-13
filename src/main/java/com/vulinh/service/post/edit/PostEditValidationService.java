@@ -1,5 +1,6 @@
 package com.vulinh.service.post.edit;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;
@@ -42,7 +43,8 @@ public class PostEditValidationService {
         && Objects.equals(
             PostUtils.normalizeText(postCreationDTO.excerpt()),
             PostUtils.normalizeText(post.getExcerpt()))
-        && Objects.equals(postCreationDTO.categoryId(), post.getCategory().getId())
+        && (isUncategorizedPost(postCreationDTO, post)
+            || Objects.equals(postCreationDTO.categoryId(), post.getCategory().getId()))
         && CollectionUtils.isEqualCollection(
             postCreationDTO.tags(),
             post.getTags().stream()
@@ -94,5 +96,11 @@ public class PostEditValidationService {
 
       return result;
     };
+  }
+
+  private static boolean isUncategorizedPost(PostCreationDTO postCreationDTO, Post post) {
+    return (StringUtils.isBlank(postCreationDTO.categoryId())
+            || CommonConstant.UNCATEGORIZED_ID.equals(postCreationDTO.categoryId()))
+        && CommonConstant.UNCATEGORIZED_ID.equals(post.getCategory().getId());
   }
 }

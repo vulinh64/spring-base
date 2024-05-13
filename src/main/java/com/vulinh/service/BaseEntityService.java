@@ -31,24 +31,6 @@ public interface BaseEntityService<
     return mapper.toDto(getRepository().save(entity));
   }
 
-  default D update(I id, D dto) {
-    var repository = getRepository();
-
-    var mapper = getMapper();
-
-    var entity = repository.findByIdOrFailed(id);
-
-    mapper.merge(dto, entity);
-
-    return mapper.toDto(repository.save(entity));
-  }
-
-  default D findById(I id) {
-    var entity = getRepository().findByIdOrFailed(id);
-
-    return getMapper().toDto(entity);
-  }
-
   default Page<D> findAll(Pageable pageable) {
     return getRepository().findAll(pageable).map(entity -> getMapper().toDto(entity));
   }
