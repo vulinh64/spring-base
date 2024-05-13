@@ -1,7 +1,9 @@
 package com.vulinh.utils;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;
+import com.vulinh.data.entity.Post;
 import com.vulinh.exception.CommonException;
 import com.vulinh.service.post.create.PostCreationValidationService;
 import java.security.SecureRandom;
@@ -86,5 +88,11 @@ public class PostUtils {
                 // Remove extra space
                 .map(PostUtils::normalizeText)
                 .collect(Collectors.toSet()));
+  }
+
+  public static boolean isUncategorizedPost(PostCreationDTO postCreationDTO, Post post) {
+    return (StringUtils.isBlank(postCreationDTO.categoryId())
+            || CommonConstant.UNCATEGORIZED_ID.equals(postCreationDTO.categoryId()))
+        && CommonConstant.UNCATEGORIZED_ID.equals(post.getCategory().getId());
   }
 }

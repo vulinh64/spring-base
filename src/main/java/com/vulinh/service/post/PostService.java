@@ -9,6 +9,7 @@ import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.CommonException;
 import com.vulinh.service.post.create.PostCreationService;
+import com.vulinh.service.post.edit.PostDeletionService;
 import com.vulinh.service.post.edit.PostEditService;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class PostService {
 
   private final PostCreationService postCreationService;
   private final PostEditService postEditService;
+  private final PostDeletionService postDeletionService;
   private final PostRevisionService postRevisionService;
 
   public Page<PrefetchPostProjection> getPostsByCurrentUser(
@@ -70,11 +72,15 @@ public class PostService {
       String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
     return postEditService
         .editPost(postId, postCreationDTO, httpServletRequest)
-        .map(
-            post -> {
-              postRevisionService.createPostEditRevision(post);
-              return true;
-            })
+        .map(postRevisionService::createPostEditRevision)
+        .isPresent();
+  }
+
+  @Transactional
+  public boolean deletePost(String postId, HttpServletRequest httpServletRequest) {
+    return postDeletionService
+        .deletePost(postId, httpServletRequest)
+        .map(postRevisionService::createPostDeletionRevision)
         .isPresent();
   }
 }

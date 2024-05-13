@@ -20,8 +20,17 @@ public class PostRevisionService {
   }
 
   @Transactional
-  public void createPostEditRevision(Post post) {
+  public boolean createPostEditRevision(Post post) {
     createRevisionInternal(post, RevisionType.UPDATED);
+
+    return true;
+  }
+
+  @Transactional
+  public boolean createPostDeletionRevision(Post post) {
+    createRevisionInternal(post, RevisionType.DELETED);
+
+    return true;
   }
 
   private void createRevisionInternal(Post post, RevisionType revisionType) {

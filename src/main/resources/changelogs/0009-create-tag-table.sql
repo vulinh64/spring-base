@@ -5,3 +5,5 @@ CREATE TABLE tag (
 	display_name varchar(1000) NOT NULL,
 	CONSTRAINT tag_pk PRIMARY KEY (id)
 );
+
+CREATE INDEX tag_display_name_idx ON tag USING btree (display_name);

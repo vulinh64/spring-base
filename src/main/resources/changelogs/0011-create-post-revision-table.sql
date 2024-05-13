@@ -13,14 +13,10 @@ CREATE TABLE post_revision (
 	tags text NULL,
 	revision_created_date varchar NULL,
 	revision_created_by varchar(36) NULL,
-	CONSTRAINT post_revision_pk PRIMARY KEY (post_id,revision_number),
-	CONSTRAINT post_revision_post_fk FOREIGN KEY (post_id) REFERENCES post(id),
-	CONSTRAINT post_revision_users_fk FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT post_revision_users_created_by_pk FOREIGN KEY (revision_created_by) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-	CONSTRAINT post_revision_category_fk FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE SET NULL ON UPDATE CASCADE
+	CONSTRAINT post_revision_pk PRIMARY KEY (post_id, revision_number)
 );
-CREATE INDEX post_revision_title_idx ON post_revision (title);
-CREATE INDEX post_revision_slug_idx ON post_revision (slug);
+CREATE INDEX post_revision_slug_idx ON post_revision USING btree (slug);
+CREATE INDEX post_revision_title_idx ON post_revision USING btree (title);
 
 CREATE SEQUENCE IF NOT EXISTS post_revision_seq
 	INCREMENT BY 1

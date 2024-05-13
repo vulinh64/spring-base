@@ -1,5 +1,6 @@
 package com.vulinh.service.post.edit;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
@@ -37,19 +38,12 @@ public class PostEditService {
 
     var actualPostCreationDTO = PostUtils.getActualPostEditDTO(postCreationDTO);
 
-    var post = postRepository.findByIdOrFailed(postId, "Post");
+    var post = postRepository.findByIdOrFailed(postId, CommonConstant.POST_ENTITY);
 
-    postEditValidationService.validateEditPermission(actualPostCreationDTO, userDTO, post);
+    postValidationService.validateModifyingPermission(userDTO, post);
 
     // Post unchanged
     if (postEditValidationService.isPostUnchanged(actualPostCreationDTO, post)) {
-      log.debug(
-          "Post {} ({}) edited by user {} ({}) unchanged",
-          postId,
-          post.getTitle(),
-          userDTO.id(),
-          userDTO.username());
-
       return Optional.empty();
     }
 

@@ -45,4 +45,11 @@ public class PostControllerImpl implements PostController {
         ? ResponseEntity.ok().build()
         : ResponseEntity.noContent().build();
   }
+
+  @Override
+  public ResponseEntity<Void> deletePost(String postId, HttpServletRequest httpServletRequest) {
+    return postService.deletePost(postId, httpServletRequest)
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.notFound().build();
+  }
 }

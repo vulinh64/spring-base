@@ -42,4 +42,8 @@ public class CommonConstant {
       """;
 
   public static final String UNCATEGORIZED_ID = "641ea43f-c426-49ad-bd7b-5ec551a6fa12";
+
+  public static final String POST_ENTITY = "Post";
+
+  public static final String POST_ID_VARIABLE = "postId";
 }

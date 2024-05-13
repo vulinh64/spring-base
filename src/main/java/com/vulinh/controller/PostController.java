@@ -1,5 +1,6 @@
 package com.vulinh.controller;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
@@ -29,7 +30,12 @@ public interface PostController {
 
   @PatchMapping("/{postId}")
   ResponseEntity<Void> editPost(
-      @PathVariable("postId") String postId,
+      @PathVariable(CommonConstant.POST_ID_VARIABLE) String postId,
       @RequestBody PostCreationDTO postCreationDTO,
+      HttpServletRequest httpServletRequest);
+
+  @DeleteMapping("/{postId}")
+  ResponseEntity<Void> deletePost(
+      @PathVariable(CommonConstant.POST_ID_VARIABLE) String postId,
       HttpServletRequest httpServletRequest);
 }
