@@ -1,9 +1,13 @@
 package com.vulinh.utils;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.exception.CommonException;
 import com.vulinh.service.post.create.PostCreationValidationService;
 import java.security.SecureRandom;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +16,10 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostUtils {
 
+  public static String normalizeText(@NonNull String text) {
+    return StringUtils.normalizeSpace(text).toLowerCase();
+  }
+
   public static String createPostSlug(@NonNull String title) {
     var randomNumber = generateRandomNumber();
 
@@ -19,8 +27,7 @@ public class PostUtils {
     var result =
         "%s-%d"
             .formatted(
-                StringUtils.stripAccents(StringUtils.normalizeSpace(title))
-                    .toLowerCase()
+                StringUtils.stripAccents(PostUtils.normalizeText(title))
                     // Replace white space to "-"
                     .replace(' ', '-')
                     // Replace Vietnamese character "đ" by "d"
@@ -47,5 +54,37 @@ public class PostUtils {
       throw new CommonException(
           "Unable to generate random number", CommonMessage.MESSAGE_INTERNAL_ERROR, exception);
     }
+  }
+
+  public static PostCreationDTO getActualCreationDTO(PostCreationDTO postCreationDTO) {
+    var slug = postCreationDTO.slug();
+
+    return getActualPostDTO(
+        postCreationDTO,
+        () ->
+            StringUtils.isBlank(slug)
+                ? createPostSlug(postCreationDTO.title())
+                : createPostSlug(slug));
+  }
+
+  public static PostCreationDTO getActualPostEditDTO(PostCreationDTO postCreationDTO) {
+    var slug = postCreationDTO.slug();
+
+    return getActualPostDTO(
+        postCreationDTO,
+        () -> StringUtils.isBlank(slug) ? createPostSlug(postCreationDTO.title()) : slug);
+  }
+
+  private static PostCreationDTO getActualPostDTO(
+      PostCreationDTO postCreationDTO, Supplier<String> slugGenerator) {
+    return postCreationDTO
+        .withSlug(slugGenerator.get())
+        .withTags(
+            postCreationDTO.tags().stream()
+                .filter(StringUtils::isNotBlank)
+                // Convert all tags to lower case
+                // Remove extra space
+                .map(PostUtils::normalizeText)
+                .collect(Collectors.toSet()));
   }
 }

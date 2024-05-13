@@ -7,6 +7,7 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.service.post.create.PostCreationService;
+import com.vulinh.service.post.edit.PostEditService;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ public class PostService {
   private final PostRepository postRepository;
 
   private final PostCreationService postCreationService;
+  private final PostEditService postEditService;
   private final PostRevisionService postRevisionService;
 
   public Page<PrefetchPostProjection> getPostsByCurrentUser(
@@ -54,8 +56,21 @@ public class PostService {
     var entity = postCreationService.createPost(postCreationDTO, httpServletRequest);
 
     // Delegate to PostRevisionService
-    postRevisionService.createRevision(entity);
+    postRevisionService.createPostCreationRevision(entity);
 
     return POST_MAPPER.toDto(entity);
+  }
+
+  @Transactional
+  public boolean editPost(
+      String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+    return postEditService
+        .editPost(postId, postCreationDTO, httpServletRequest)
+        .map(
+            post -> {
+              postRevisionService.createPostEditRevision(post);
+              return true;
+            })
+        .isPresent();
   }
 }

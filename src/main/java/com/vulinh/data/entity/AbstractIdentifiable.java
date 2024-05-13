@@ -1,10 +1,9 @@
 package com.vulinh.data.entity;
 
+import com.vulinh.utils.Identifiable;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
-
-import com.vulinh.utils.Identifiable;
 import org.hibernate.proxy.HibernateProxy;
 
 // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
@@ -26,7 +25,11 @@ public abstract class AbstractIdentifiable<I> implements Identifiable<I>, Serial
       return false;
     }
 
-    return other instanceof AbstractIdentifiable<?> that && Objects.equals(getId(), that.getId());
+    var id = getId();
+
+    return
+    // Entity without ID will always be different
+    id != null && other instanceof AbstractIdentifiable<?> that && Objects.equals(id, that.getId());
   }
 
   @Override

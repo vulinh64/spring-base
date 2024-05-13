@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(
@@ -42,4 +43,17 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
   @Mapping(target = "revisionCreatedDate", ignore = true)
   @Mapping(target = "revisionCreatedBy", ignore = true)
   PostRevision toPostRevision(Post post, RevisionType revisionType);
+
+  @Mapping(target = "author", ignore = true)
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "createdDate", ignore = true)
+  @Mapping(target = "updatedDate", ignore = true)
+  @Mapping(target = "updatedBy", ignore = true)
+  @Mapping(target = "tags", source = "tags")
+  @Mapping(target = "category", source = "category")
+  void merge(
+      PostCreationDTO postCreationDTO,
+      Category category,
+      Collection<Tag> tags,
+      @MappingTarget Post post);
 }

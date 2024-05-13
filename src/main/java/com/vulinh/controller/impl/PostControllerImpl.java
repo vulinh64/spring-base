@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,5 +36,13 @@ public class PostControllerImpl implements PostController {
   public GenericResponse<PostDTO> createPost(
       PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
     return GenericResponse.success(postService.createPost(postCreationDTO, httpServletRequest));
+  }
+
+  @Override
+  public ResponseEntity<Void> editPost(
+      String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+    return postService.editPost(postId, postCreationDTO, httpServletRequest)
+        ? ResponseEntity.ok().build()
+        : ResponseEntity.noContent().build();
   }
 }

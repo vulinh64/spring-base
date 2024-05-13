@@ -15,7 +15,16 @@ public class PostRevisionService {
   private final PostRevisionRepository postRevisionRepository;
 
   @Transactional
-  public void createRevision(Post post) {
-    postRevisionRepository.save(PostMapper.INSTANCE.toPostRevision(post, RevisionType.CREATED));
+  public void createPostCreationRevision(Post post) {
+    createRevisionInternal(post, RevisionType.CREATED);
+  }
+
+  @Transactional
+  public void createPostEditRevision(Post post) {
+    createRevisionInternal(post, RevisionType.UPDATED);
+  }
+
+  private void createRevisionInternal(Post post, RevisionType revisionType) {
+    postRevisionRepository.save(PostMapper.INSTANCE.toPostRevision(post, revisionType));
   }
 }

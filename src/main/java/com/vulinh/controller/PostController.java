@@ -9,6 +9,7 @@ import com.vulinh.data.projection.PrefetchPostProjection;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(EndpointConstant.ENDPOINT_POST)
@@ -25,4 +26,10 @@ public interface PostController {
   @PostMapping
   GenericResponse<PostDTO> createPost(
       @RequestBody PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest);
+
+  @PatchMapping("/{postId}")
+  ResponseEntity<Void> editPost(
+      @PathVariable("postId") String postId,
+      @RequestBody PostCreationDTO postCreationDTO,
+      HttpServletRequest httpServletRequest);
 }
