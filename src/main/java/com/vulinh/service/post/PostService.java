@@ -11,7 +11,6 @@ import com.vulinh.exception.CommonException;
 import com.vulinh.service.post.create.PostCreationService;
 import com.vulinh.service.post.edit.PostDeletionService;
 import com.vulinh.service.post.edit.PostEditService;
-import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -36,15 +35,13 @@ public class PostService {
   private final PostDeletionService postDeletionService;
   private final PostRevisionService postRevisionService;
 
-  public Page<PrefetchPostProjection> getPostsByCurrentUser(
-      Pageable pageable, HttpServletRequest httpServletRequest) {
-    return postRepository.findByAuthorId(
-        SecurityUtils.getUserDTOOrThrow(httpServletRequest).id(), pageable);
+  public Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable) {
+    return postRepository.findPrefetchPosts(pageable);
   }
 
-  public SinglePostDTO getSinglePost(String identity, HttpServletRequest httpServletRequest) {
+  public SinglePostDTO getSinglePost(String identity) {
     return postRepository
-        .findSinglePost(identity, SecurityUtils.getUserDTOOrThrow(httpServletRequest).id())
+        .findSinglePost(identity)
         .map(POST_MAPPER::toSinglePostDTO)
         .orElseThrow(
             () ->

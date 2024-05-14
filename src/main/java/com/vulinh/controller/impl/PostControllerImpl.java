@@ -21,15 +21,15 @@ public class PostControllerImpl implements PostController {
   private final PostService postService;
 
   @Override
-  public GenericResponse<Page<PrefetchPostProjection>> getPostsByUser(
+  public GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
       Pageable pageable, HttpServletRequest httpServletRequest) {
-    return GenericResponse.success(postService.getPostsByCurrentUser(pageable, httpServletRequest));
+    return GenericResponse.success(postService.findPrefetchPosts(pageable));
   }
 
   @Override
   public GenericResponse<SinglePostDTO> getSinglePost(
       String identity, HttpServletRequest httpServletRequest) {
-    return GenericResponse.success(postService.getSinglePost(identity, httpServletRequest));
+    return GenericResponse.success(postService.getSinglePost(identity));
   }
 
   @Override

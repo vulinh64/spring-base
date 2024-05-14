@@ -13,6 +13,9 @@ spring:
   security.jwt:
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
+    verb-urls:
+      - method: GET
+        url: /post/**
     no-authenticated-urls:
       - /health
       - /v3/api-docs/**

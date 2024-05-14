@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public interface PostController {
 
   @GetMapping
-  GenericResponse<Page<PrefetchPostProjection>> getPostsByUser(
+  GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
       Pageable pageable, HttpServletRequest httpServletRequest);
 
   @GetMapping("/{identity}")

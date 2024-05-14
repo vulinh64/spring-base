@@ -45,7 +45,7 @@ public class Post extends AbstractIdentifiable.StringAbstractIdentifiable {
   @ToString.Exclude
   private Category category;
 
-  @ManyToMany
+  @OneToMany
   @JoinTable(
       name = "post_tag_mapping",
       joinColumns = @JoinColumn(name = "post_id"),

@@ -21,14 +21,12 @@ public interface PostRepository extends BaseRepository<Post, String> {
       p.createdDate as createdDate,
       p.updatedDate as updatedDate,
       p.author as author,
-      p.category as category,
-      p.tags as tags
+      p.category as category
       from Post p
-      where p.author.id = :userId
       """)
-  Page<PrefetchPostProjection> findByAuthorId(String userId, Pageable pageable);
+  // Cannot fetch tags without combining same post entities, for now
+  Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable);
 
-  @Query(
-      "select p from Post p where (p.id = :identity or p.slug = :identity) and p.author.id = :userId")
-  Optional<Post> findSinglePost(String identity, String userId);
+  @Query("select p from Post p where p.id = :identity or p.slug = :identity")
+  Optional<Post> findSinglePost(String identity);
 }

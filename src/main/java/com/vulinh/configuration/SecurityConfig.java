@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -53,16 +54,7 @@ public class SecurityConfig {
         .sessionManagement(
             sessionManagementConfigurer ->
                 sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(
-            authorizeHttpRequestsCustomizer ->
-                authorizeHttpRequestsCustomizer
-                    .requestMatchers(
-                        securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
-                    .permitAll()
-                    .requestMatchers(EndpointConstant.getUrlsWithPrivilege(ROLE_ADMIN))
-                    .hasAuthority(ROLE_ADMIN.name())
-                    .anyRequest()
-                    .authenticated())
+        .authorizeHttpRequests(this::configureAuthorizeHttpRequestCustomizer)
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
@@ -102,6 +94,22 @@ public class SecurityConfig {
     roleHierarchy.setHierarchy(UserRole.toHierarchyPhrase());
 
     return roleHierarchy;
+  }
+
+  private void configureAuthorizeHttpRequestCustomizer(
+      AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
+          authorizeHttpRequestsCustomizer) {
+    for (var verbUrl : securityConfigProperties.verbUrls()) {
+      authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
+    }
+
+    authorizeHttpRequestsCustomizer
+        .requestMatchers(securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
+        .permitAll()
+        .requestMatchers(EndpointConstant.getUrlsWithPrivilege(ROLE_ADMIN))
+        .hasAuthority(ROLE_ADMIN.name())
+        .anyRequest()
+        .authenticated();
   }
 
   private void handleSecurityException(
