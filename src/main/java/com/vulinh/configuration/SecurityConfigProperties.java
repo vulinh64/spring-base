@@ -13,7 +13,8 @@ public record SecurityConfigProperties(
     List<String> noAuthenticatedUrls,
     List<VerbUrl> verbUrls,
     Duration jwtDuration,
-    Duration passwordResetCodeDuration) {
+    Duration passwordResetCodeDuration,
+    String issuer) {
 
   public record VerbUrl(HttpMethod method, String url) {}
 }

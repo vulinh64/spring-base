@@ -11,6 +11,7 @@ spring:
     enabled: true
     change-log: classpath:changelog.yaml
   security.jwt:
+    issuer: spring-base-service
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
     verb-urls:

@@ -35,7 +35,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
     return AccessToken.builder()
         .accessToken(
             JWT.create()
-                .withIssuer("spring-base-service")
+                .withIssuer(securityConfigProperties.issuer())
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiration)
                 .withSubject(users.getId())
@@ -68,7 +68,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
     if (jwtVerifier == null) {
       jwtVerifier =
           JWT.require(getAlgorithm(securityConfigProperties))
-              .withIssuer("spring-base-service")
+              .withIssuer(securityConfigProperties.issuer())
               .build();
     }
 
