@@ -121,8 +121,7 @@ public class SecurityUtils {
       return getRSAKeyFactoryInstance()
           .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
     } catch (Exception exception) {
-      throw ExceptionBuilder.buildCommonException(
-          "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, exception);
+      throw ExceptionBuilder.parsingPublicKeyError(exception);
     }
   }
 

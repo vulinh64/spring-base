@@ -18,10 +18,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtGenerationUtils {
+public class JwtGenerationUtils implements AccessTokenGenerator {
 
   private final SecurityConfigProperties securityConfigProperties;
 
+  @Override
   @SneakyThrows
   public AccessToken generateAccessToken(Users matchedUser) {
     var issuedAt = OffsetDateTime.now();

@@ -2,7 +2,7 @@ package com.vulinh.filter;
 
 import com.vulinh.configuration.CustomAuthenticationManager;
 import com.vulinh.data.dto.security.JwtPayload;
-import com.vulinh.utils.security.JwtValidationUtils;
+import com.vulinh.utils.security.AccessTokenValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class JwtFilter extends OncePerRequestFilter {
 
   private final HandlerExceptionResolver handlerExceptionResolver;
-  private final JwtValidationUtils jwtValidationUtils;
+  private final AccessTokenValidator accessTokenValidator;
   private final CustomAuthenticationManager customAuthenticationManager;
 
   @Override
@@ -35,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
     try {
       Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
           .map(JwtFilter::parseBearerToken)
-          .map(jwtValidationUtils::validate)
+          .map(accessTokenValidator::validateAccessToken)
           .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
           .map(PreAuthenticatedAuthenticationToken::getPrincipal)
           .filter(JwtPayload.class::isInstance)

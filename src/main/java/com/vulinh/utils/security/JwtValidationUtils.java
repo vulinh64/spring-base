@@ -3,9 +3,8 @@ package com.vulinh.utils.security;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.security.JwtPayload;
-import com.vulinh.exception.CommonException;
+import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.StaticContextAccessor;
@@ -17,20 +16,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class JwtValidationUtils {
+public class JwtValidationUtils implements AccessTokenValidator {
 
   private static final ObjectMapper OBJECT_MAPPER = JsonUtils.delegate();
 
-  public JwtPayload validate(String token) {
+  @Override
+  public JwtPayload validateAccessToken(String accessToken) {
     try {
-      var parsingResult = getJwtParser().parseClaimsJws(token).getBody();
+      var parsingResult = getJwtParser().parseClaimsJws(accessToken).getBody();
 
       return OBJECT_MAPPER.convertValue(parsingResult, JwtPayload.class);
     } catch (ExpiredJwtException expiredJwtException) {
-      throw new CommonException(
-          "Credentials token expired",
-          CommonMessage.MESSAGE_CREDENTIALS_EXPIRED,
-          expiredJwtException);
+      throw ExceptionBuilder.expiredAccessToken(expiredJwtException);
     }
   }
 

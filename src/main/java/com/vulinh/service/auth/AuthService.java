@@ -15,7 +15,7 @@ import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.SecurityUtils;
-import com.vulinh.utils.security.JwtGenerationUtils;
+import com.vulinh.utils.security.AccessTokenGenerator;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStepImpl;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,12 +40,12 @@ public class AuthService {
 
   private final PasswordEncoder passwordEncoder;
 
-  private final JwtGenerationUtils jwtGenerationUtils;
-
   private final UserValidationService userValidationService;
   private final PasswordValidationService passwordValidationService;
 
   private final ApplicationEventPublisher applicationEventPublisher;
+
+  private final AccessTokenGenerator accessTokenGenerator;
 
   public AccessToken login(UserLoginDTO userLoginDTO) {
     return userRepository
@@ -53,7 +53,7 @@ public class AuthService {
         .filter(
             matchedUser ->
                 UserValidationService.isPasswordMatched(userLoginDTO, matchedUser, passwordEncoder))
-        .map(jwtGenerationUtils::generateAccessToken)
+        .map(accessTokenGenerator::generateAccessToken)
         .orElseThrow(
             () ->
                 new CommonException(
