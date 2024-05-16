@@ -95,7 +95,7 @@ public class SecurityUtils {
                     .map(SecurityContext::getAuthentication))
         .filter(CustomAuthentication.class::isInstance)
         .map(CustomAuthentication.class::cast)
-        .map(CustomAuthentication::getUserDTO);
+        .map(CustomAuthentication::getPrincipal);
   }
 
   @NonNull

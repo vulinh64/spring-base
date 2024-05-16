@@ -6,7 +6,6 @@ import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.user.RoleDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.Post;
-import com.vulinh.data.entity.Users;
 import com.vulinh.exception.CommonException;
 import com.vulinh.service.post.create.PostCreationValidationService;
 import com.vulinh.utils.validator.ValidatorChain;

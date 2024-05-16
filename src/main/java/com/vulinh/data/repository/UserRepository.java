@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends BaseRepository<Users, String> {
 
   // username is unique
-  Optional<Users> findByUsername(String username);
+  Optional<Users> findByUsernameAndIsActiveIsTrue(String username);
 
   Optional<Users> findByIdAndIsActiveIsTrue(String id);
 
   boolean existsByUsernameIgnoreCase(String username);
 
   boolean existsByEmailIgnoreCase(String email);
-
-  Optional<Users> findByUsernameIgnoreCaseOrEmailIgnoreCase(String username, String email);
 }

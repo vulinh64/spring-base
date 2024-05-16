@@ -33,7 +33,8 @@ public class JwtGenerationUtils {
 
       var accessToken =
           Jwts.builder()
-              .setSubject(matchedUser.getUsername())
+              .setSubject(matchedUser.getId())
+              .setIssuer("spring-base-service")
               .setIssuedAt(toDate(issuedAt))
               .setExpiration(toDate(expiration))
               .addClaims(toClaims(matchedUser))
@@ -54,10 +55,8 @@ public class JwtGenerationUtils {
     }
   }
 
-  private Map<String, Object> toClaims(Users accessTokenRequest) {
-    return Map.ofEntries(
-        Map.entry(Users_.ID, accessTokenRequest.getId()),
-        Map.entry(Users_.USER_ROLES, accessTokenRequest.toRawUserRoles()));
+  private Map<String, Object> toClaims(Users user) {
+    return Map.ofEntries(Map.entry(Users_.USERNAME, user.getUsername()));
   }
 
   private static Date toDate(OffsetDateTime localDateTime) {

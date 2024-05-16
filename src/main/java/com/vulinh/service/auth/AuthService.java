@@ -48,11 +48,10 @@ public class AuthService {
 
   public AccessToken login(UserLoginDTO userLoginDTO) {
     return userRepository
-        .findByUsername(userLoginDTO.username())
+        .findByUsernameAndIsActiveIsTrue(userLoginDTO.username())
         .filter(
             matchedUser ->
                 UserValidationService.isPasswordMatched(userLoginDTO, matchedUser, passwordEncoder))
-        .filter(UserValidationService::isActive)
         .map(jwtGenerationUtils::generateAccessToken)
         .orElseThrow(ExceptionBuilder::invalidCredentials);
   }

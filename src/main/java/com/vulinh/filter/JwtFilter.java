@@ -1,8 +1,7 @@
 package com.vulinh.filter;
 
-import com.vulinh.data.dto.security.CustomAuthentication;
-import com.vulinh.exception.ExceptionBuilder;
-import com.vulinh.service.user.UserService;
+import com.vulinh.configuration.CustomAuthenticationManager;
+import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.utils.security.JwtValidationUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -24,8 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
   private final HandlerExceptionResolver handlerExceptionResolver;
   private final JwtValidationUtils jwtValidationUtils;
-
-  private final UserService userService;
+  private final CustomAuthenticationManager customAuthenticationManager;
 
   @Override
   protected void doFilterInternal(
@@ -36,14 +36,17 @@ public class JwtFilter extends OncePerRequestFilter {
       Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
           .map(JwtFilter::parseBearerToken)
           .map(jwtValidationUtils::validate)
+          .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
+          .map(PreAuthenticatedAuthenticationToken::getPrincipal)
+          .filter(JwtPayload.class::isInstance)
+          .map(JwtPayload.class::cast)
+          .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
+          .map(customAuthenticationManager::authenticate)
           .map(
-              jwtPayload ->
-                  CustomAuthentication.of(
-                      jwtPayload,
-                      userService
-                          .findByIdAndIsActiveIsTrue(jwtPayload.id())
-                          .orElseThrow(ExceptionBuilder::invalidAuthorization),
-                      request))
+              authentication ->
+                  authentication.addDetails(
+                      new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
+                          request, authentication.getAuthorities())))
           .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
 
       filterChain.doFilter(request, response);
@@ -54,5 +57,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
   private static String parseBearerToken(String token) {
     return token.startsWith("Bearer") ? token.substring(7) : token;
+  }
+
+  private static PreAuthenticatedAuthenticationToken getPreAuthenticatedAuthenticationToken(
+      JwtPayload jwtPayload) {
+    return new PreAuthenticatedAuthenticationToken(jwtPayload, null);
   }
 }
