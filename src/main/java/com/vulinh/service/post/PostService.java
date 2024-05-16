@@ -1,13 +1,13 @@
 package com.vulinh.service.post;
 
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.CommonException;
+import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.post.create.PostCreationService;
 import com.vulinh.service.post.edit.PostDeletionService;
 import com.vulinh.service.post.edit.PostEditService;
@@ -45,11 +45,9 @@ public class PostService {
         .map(POST_MAPPER::toSinglePostDTO)
         .orElseThrow(
             () ->
-                new CommonException(
+                ExceptionBuilder.entityNotFound(
                     "Post with either id or slug [%s] not found".formatted(identity),
-                    CommonMessage.MESSAGE_INVALID_ENTITY_ID,
-                    null,
-                    "Post"));
+                    CommonConstant.POST_ENTITY));
   }
 
   @Transactional

@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.security.JwtPayload;
-import com.vulinh.exception.CustomSecurityException;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.exception.CommonException;
 import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.StaticContextAccessor;
@@ -28,12 +27,10 @@ public class JwtValidationUtils {
 
       return OBJECT_MAPPER.convertValue(parsingResult, JwtPayload.class);
     } catch (ExpiredJwtException expiredJwtException) {
-      throw new CustomSecurityException(
+      throw new CommonException(
           "Credentials token expired",
           CommonMessage.MESSAGE_CREDENTIALS_EXPIRED,
           expiredJwtException);
-    } catch (Exception exception) {
-      throw ExceptionBuilder.invalidAuthorization(exception);
     }
   }
 
@@ -41,23 +38,19 @@ public class JwtValidationUtils {
 
   // Single initialization
   private static JwtParser getJwtParser() {
-    try {
-      if (jwtParser == null) {
-        var properties = StaticContextAccessor.getBean(SecurityConfigProperties.class);
+    if (jwtParser == null) {
+      var properties = StaticContextAccessor.getBean(SecurityConfigProperties.class);
 
-        var publicKey = SecurityUtils.generatePublicKey(properties.publicKey());
+      var publicKey = SecurityUtils.generatePublicKey(properties.publicKey());
 
-        jwtParser =
-            Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .deserializeJsonWith(JwtValidationUtils::deserialize)
-                .build();
-      }
-
-      return jwtParser;
-    } catch (Exception exception) {
-      throw new DecodingException("Invalid public key");
+      jwtParser =
+          Jwts.parserBuilder()
+              .setSigningKey(publicKey)
+              .deserializeJsonWith(JwtValidationUtils::deserialize)
+              .build();
     }
+
+    return jwtParser;
   }
 
   private static Map<String, ?> deserialize(byte[] json) {

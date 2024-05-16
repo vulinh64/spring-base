@@ -3,12 +3,14 @@ package com.vulinh.utils;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.user.UserBasicDTO;
-import com.vulinh.exception.CustomSecurityException;
 import com.vulinh.exception.ExceptionBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -29,21 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Slf4j
 public class SecurityUtils {
 
-  private static PrivateKey singletonPrivateKey;
-
-  private static final KeyFactory KEY_FACTORY;
-
-  static {
-    try {
-      KEY_FACTORY = KeyFactory.getInstance("RSA");
-      log.info("Using RSA as default algorithm for KeyFactory");
-    } catch (Exception exception) {
-      throw new CustomSecurityException(
-          "Initializing key factory failed",
-          CommonMessage.MESSAGE_INVALID_CREDENTIALS_ISSUER,
-          exception);
-    }
-  }
+  private static RSAPrivateKey singletonPrivateKey;
 
   private static final Set<String> PUBLIC_KEY_TO_BE_TRIMMED =
       Set.of(
@@ -60,27 +48,38 @@ public class SecurityUtils {
           "-----END RSA PRIVATE KEY-----");
 
   @SneakyThrows
-  public static PublicKey generatePublicKey(String rawPublicKey) {
+  public static RSAPublicKey generatePublicKey(String rawPublicKey) {
     // Remove header and footer if they are present
     // Also remove any whitespace character (\n, \r, space)
     var refinedPrivateKey =
         StringUtils.deleteWhitespace(stripRawKey(rawPublicKey, PUBLIC_KEY_TO_BE_TRIMMED));
 
-    return KEY_FACTORY.generatePublic(
-        new X509EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
+    var result = generateRSAPublicKey(refinedPrivateKey);
+
+    if (!(result instanceof RSAPublicKey rsaPublicKey)) {
+      throw ExceptionBuilder.buildCommonException(
+          "Not an instance of RSAPublicKey", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG);
+    }
+
+    return rsaPublicKey;
   }
 
   @SneakyThrows
-  public static PrivateKey generatePrivateKey(String rawPrivateKey) {
+  public static RSAPrivateKey generatePrivateKey(String rawPrivateKey) {
     if (singletonPrivateKey == null) {
       // Remove header and footer if they are present
       // Also remove any whitespace character (\n, \r, space)
       var refinedPrivateKey =
           StringUtils.deleteWhitespace(stripRawKey(rawPrivateKey, PRIVATE_KEY_TO_BE_TRIMMED));
 
-      singletonPrivateKey =
-          KEY_FACTORY.generatePrivate(
-              new PKCS8EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
+      var result = generateRSAPrivateKey(refinedPrivateKey);
+
+      if (!(result instanceof RSAPrivateKey rsaPrivateKey)) {
+        throw ExceptionBuilder.buildCommonException(
+            "Not an instance of RSAPrivateKey", CommonMessage.MESSAGE_INVALID_PRIVATE_KEY_CONFIG);
+      }
+
+      singletonPrivateKey = rsaPrivateKey;
     }
 
     return singletonPrivateKey;
@@ -111,5 +110,29 @@ public class SecurityUtils {
     }
 
     return result;
+  }
+
+  private static KeyFactory getRSAKeyFactoryInstance() throws NoSuchAlgorithmException {
+    return KeyFactory.getInstance("RSA");
+  }
+
+  private static PublicKey generateRSAPublicKey(String refinedPrivateKey) {
+    try {
+      return getRSAKeyFactoryInstance()
+          .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
+    } catch (Exception exception) {
+      throw ExceptionBuilder.buildCommonException(
+          "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, exception);
+    }
+  }
+
+  private static PrivateKey generateRSAPrivateKey(String refinedPrivateKey) {
+    try {
+      return getRSAKeyFactoryInstance()
+          .generatePrivate(new PKCS8EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
+    } catch (Exception exception) {
+      throw ExceptionBuilder.buildCommonException(
+          "Parsing private key error", CommonMessage.MESSAGE_INVALID_PRIVATE_KEY_CONFIG, exception);
+    }
   }
 }

@@ -1,11 +1,9 @@
 package com.vulinh.utils.security;
 
 import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.security.AccessToken;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.entity.Users_;
-import com.vulinh.exception.CustomSecurityException;
 import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.SecurityUtils;
 import io.jsonwebtoken.Jwts;
@@ -26,33 +24,26 @@ public class JwtGenerationUtils {
 
   @SneakyThrows
   public AccessToken generateAccessToken(Users matchedUser) {
-    try {
-      var issuedAt = OffsetDateTime.now();
+    var issuedAt = OffsetDateTime.now();
 
-      var expiration = issuedAt.plus(securityConfigProperties.jwtDuration());
+    var expiration = issuedAt.plus(securityConfigProperties.jwtDuration());
 
-      var accessToken =
-          Jwts.builder()
-              .setSubject(matchedUser.getId())
-              .setIssuer("spring-base-service")
-              .setIssuedAt(toDate(issuedAt))
-              .setExpiration(toDate(expiration))
-              .addClaims(toClaims(matchedUser))
-              .signWith(SecurityUtils.generatePrivateKey(securityConfigProperties.privateKey()))
-              .serializeToJsonWith(JwtGenerationUtils::serialize)
-              .compact();
+    var accessToken =
+        Jwts.builder()
+            .setSubject(matchedUser.getId())
+            .setIssuer("spring-base-service")
+            .setIssuedAt(toDate(issuedAt))
+            .setExpiration(toDate(expiration))
+            .addClaims(toClaims(matchedUser))
+            .signWith(SecurityUtils.generatePrivateKey(securityConfigProperties.privateKey()))
+            .serializeToJsonWith(JwtGenerationUtils::serialize)
+            .compact();
 
-      return AccessToken.builder()
-          .issuedAt(issuedAt)
-          .expiration(expiration)
-          .accessToken(accessToken)
-          .build();
-    } catch (Exception exception) {
-      throw new CustomSecurityException(
-          "Invalid credentials issuer",
-          CommonMessage.MESSAGE_INVALID_CREDENTIALS_ISSUER,
-          exception);
-    }
+    return AccessToken.builder()
+        .issuedAt(issuedAt)
+        .expiration(expiration)
+        .accessToken(accessToken)
+        .build();
   }
 
   private Map<String, Object> toClaims(Users user) {

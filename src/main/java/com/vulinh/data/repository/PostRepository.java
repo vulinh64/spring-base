@@ -1,7 +1,9 @@
 package com.vulinh.data.repository;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.projection.PrefetchPostProjection;
+import com.vulinh.exception.ExceptionBuilder;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +31,13 @@ public interface PostRepository extends BaseRepository<Post, String> {
 
   @Query("select p from Post p where p.id = :identity or p.slug = :identity")
   Optional<Post> findSinglePost(String identity);
+
+  default Post findByIdOrFailed(String id) {
+    return findById(id)
+        .orElseThrow(
+            () ->
+                ExceptionBuilder.entityNotFound(
+                    "Entity %s with ID %s not found".formatted(CommonConstant.POST_ENTITY, id),
+                    CommonConstant.POST_ENTITY));
+  }
 }

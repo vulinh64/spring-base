@@ -10,6 +10,7 @@ import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
+import com.vulinh.exception.CommonException;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
 import com.vulinh.service.user.UserValidationService;
@@ -53,7 +54,10 @@ public class AuthService {
             matchedUser ->
                 UserValidationService.isPasswordMatched(userLoginDTO, matchedUser, passwordEncoder))
         .map(jwtGenerationUtils::generateAccessToken)
-        .orElseThrow(ExceptionBuilder::invalidCredentials);
+        .orElseThrow(
+            () ->
+                new CommonException(
+                    "Invalid user credentials", CommonMessage.MESSAGE_INVALID_CREDENTIALS));
   }
 
   // Normal user that requires confirmation

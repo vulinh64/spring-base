@@ -41,7 +41,7 @@ springdoc.swagger-ui:
 sentry:
   exception-resolver-order: -2147483647
   logging.minimum-event-level: error
-  dsn: ${SENTRY_DNS}
+  dsn: ${SENTRY_DNS:}
   traces-sample-rate: 1.0
 logging.level:
   com.vulinh.service.user.UserValidationService: DEBUG

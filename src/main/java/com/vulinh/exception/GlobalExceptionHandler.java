@@ -29,25 +29,16 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(CommonException.class)
   public ResponseEntity<GenericResponse<Object>> handleCommonException(
       CommonException commonException) {
-    log.info("Common error", commonException);
-
     var errorKey = commonException.getErrorKey();
+
+    if (errorKey.getHttpStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+      log.error("Internal error", commonException);
+    } else {
+      log.info("Common error", commonException);
+    }
 
     return ResponseEntity.status(errorKey.getHttpStatusCode())
         .body(GenericResponse.toGenericResponse(commonException, commonException.getArgs()));
-  }
-
-  @ExceptionHandler(CustomSecurityException.class)
-  public ResponseEntity<GenericResponse<Object>> handleAuthorizationException(
-      CustomSecurityException customSecurityException) {
-    log.info("Authorization error", customSecurityException);
-
-    var commonMessage = customSecurityException.getErrorCode();
-
-    return ResponseEntity.status(commonMessage.getHttpStatusCode())
-        .body(
-            GenericResponse.toGenericResponse(
-                customSecurityException, customSecurityException.getArgs()));
   }
 
   @ExceptionHandler(EntityNotFoundException.class)
@@ -62,6 +53,6 @@ public class GlobalExceptionHandler {
       HttpMessageConversionException httpMessageConversionException) {
     log.info("Bad request body format", httpMessageConversionException);
 
-    return GenericResponse.toGenericResponse(CommonMessage.MESSAGE_INVALID_BODY_REQUEST );
+    return GenericResponse.toGenericResponse(CommonMessage.MESSAGE_INVALID_BODY_REQUEST);
   }
 }
