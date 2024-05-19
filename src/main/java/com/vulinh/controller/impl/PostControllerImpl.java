@@ -4,8 +4,10 @@ import com.vulinh.controller.PostController;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
+import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.projection.PrefetchPostProjection;
+import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostControllerImpl implements PostController {
 
   private final PostService postService;
+  private final PostRevisionService postRevisionService;
 
   @Override
   public GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
@@ -30,6 +33,12 @@ public class PostControllerImpl implements PostController {
   public GenericResponse<SinglePostDTO> getSinglePost(
       String identity, HttpServletRequest httpServletRequest) {
     return GenericResponse.success(postService.getSinglePost(identity));
+  }
+
+  @Override
+  public GenericResponse<Page<PostRevisionDTO>> getPostRevisions(
+      String identity, Pageable pageable) {
+    return GenericResponse.success(postRevisionService.getPostRevisions(identity, pageable));
   }
 
   @Override
