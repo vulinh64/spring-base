@@ -45,9 +45,4 @@ public class CommonConstant {
 
   public static final String POST_ENTITY = "Post";
 
-  public static final String POST_ID_VARIABLE = "postId";
-  public static final String IDENTITY_VARIABLE = "identity";
-
-  public static final String POST_ID_VARIABLE_FORMAT = "/{postId}";
-  public static final String IDENTITY_VARIABLE_FORMAT = "/{identity}";
 }

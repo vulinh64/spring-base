@@ -1,10 +1,9 @@
 package com.vulinh.constant;
 
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
-
-import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EndpointConstant {
@@ -30,6 +29,18 @@ public class EndpointConstant {
     public static final String DELETE_USER = "/delete-user";
     public static final String DETAILS = "/details";
     public static final String SEARCH = "/search";
+  }
+
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class PostEndpoint {
+
+    public static final String POST_ID_VARIABLE = "postId";
+    public static final String IDENTITY_VARIABLE = "identity";
+
+    public static final String POST_ID_VARIABLE_FORMAT = "/{postId}";
+    public static final String IDENTITY_VARIABLE_FORMAT = "/{identity}";
+
+    public static final String REVISION_ENDPOINT = "/revisions";
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -3,7 +3,7 @@ package com.vulinh.data.entity;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.Set;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -51,5 +51,5 @@ public class Post extends AbstractIdentifiable.StringAbstractIdentifiable {
       joinColumns = @JoinColumn(name = "post_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   @ToString.Exclude
-  private Collection<Tag> tags;
+  private Set<Tag> tags;
 }

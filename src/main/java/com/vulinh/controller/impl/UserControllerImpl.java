@@ -8,12 +8,12 @@ import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.user.UserService;
+import com.vulinh.utils.ResponseUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +30,7 @@ public class UserControllerImpl implements UserController {
 
   @Override
   public ResponseEntity<Void> deleteUser(String id, HttpServletRequest httpServletRequest) {
-    return ResponseEntity.status(
-            userService.delete(id, httpServletRequest) ? HttpStatus.OK : HttpStatus.NO_CONTENT)
-        .build();
+    return ResponseUtils.returnOkOrNoContent(userService.delete(id, httpServletRequest));
   }
 
   @Override

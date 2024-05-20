@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.data.repository.TagRepository;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +16,7 @@ public class TagService {
 
   private final TagRepository tagRepository;
 
-  public Collection<Tag> parseTags(PostCreationDTO postCreationDTO) {
-    var rawTags = postCreationDTO.tags();
-
+  public Set<Tag> parseTags(Collection<String> rawTags) {
     var resultBuilder = ImmutableSet.<Tag>builder();
 
     var existingTags = tagRepository.findByDisplayNameInIgnoreCase(rawTags);
@@ -40,5 +40,13 @@ public class TagService {
     resultBuilder.addAll(tagRepository.saveAll(nonMatchingTags));
 
     return resultBuilder.build();
+  }
+
+  public Set<Tag> parseTags(String rawTagsWithDelimiter) {
+    return parseTags(Arrays.asList(rawTagsWithDelimiter.split(",")));
+  }
+
+  public Set<Tag> parseTags(PostCreationDTO postCreationDTO) {
+    return parseTags(postCreationDTO.tags());
   }
 }

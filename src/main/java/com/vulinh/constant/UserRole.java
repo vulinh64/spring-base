@@ -21,7 +21,7 @@ public enum UserRole {
   private static final Set<String> ROLE_LITERAL_SET =
       Arrays.stream(values()).map(UserRole::name).collect(Collectors.toSet());
 
-  public static Collection<UserRole> fromRawRole(Collection<String> rawRoles) {
+  public static Set<UserRole> fromRawRole(Collection<String> rawRoles) {
     return rawRoles.stream()
         .filter(UserRole::isValidRole)
         .map(String::toUpperCase)

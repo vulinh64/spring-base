@@ -4,12 +4,15 @@ import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Optional;
 
 @RestControllerAdvice
 @Slf4j
@@ -53,6 +56,23 @@ public class GlobalExceptionHandler {
       HttpMessageConversionException httpMessageConversionException) {
     log.info("Bad request body format", httpMessageConversionException);
 
-    return GenericResponse.toGenericResponse(CommonMessage.MESSAGE_INVALID_BODY_REQUEST);
+    return GenericResponse.toGenericResponse(
+        CommonMessage.MESSAGE_INVALID_BODY_REQUEST, "Request body");
+  }
+
+  @ExceptionHandler(TypeMismatchException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public GenericResponse<Object> handleTypeMismatchException(
+      TypeMismatchException typeMismatchException) {
+    log.info("Bad request format", typeMismatchException);
+
+    return GenericResponse.toGenericResponse(
+        CommonMessage.MESSAGE_INVALID_BODY_REQUEST,
+        "field [%s] - type [%s]"
+            .formatted(
+                typeMismatchException.getPropertyName(),
+                Optional.ofNullable(typeMismatchException.getRequiredType())
+                    .map(Class::getCanonicalName)
+                    .orElse("unknown or empty type")));
   }
 }

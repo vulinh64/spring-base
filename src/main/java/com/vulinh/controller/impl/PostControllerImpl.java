@@ -9,6 +9,7 @@ import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;
+import com.vulinh.utils.ResponseUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,9 +51,8 @@ public class PostControllerImpl implements PostController {
   @Override
   public ResponseEntity<Void> editPost(
       String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    return postService.editPost(postId, postCreationDTO, httpServletRequest)
-        ? ResponseEntity.ok().build()
-        : ResponseEntity.noContent().build();
+    return ResponseUtils.returnOkOrNoContent(
+        postService.editPost(postId, postCreationDTO, httpServletRequest));
   }
 
   @Override
@@ -60,5 +60,12 @@ public class PostControllerImpl implements PostController {
     return postService.deletePost(postId, httpServletRequest)
         ? ResponseEntity.ok().build()
         : ResponseEntity.notFound().build();
+  }
+
+  @Override
+  public ResponseEntity<Void> applyRevision(
+      String identity, long revisionNumber, HttpServletRequest httpServletRequest) {
+    return ResponseUtils.returnOkOrNoContent(
+        postRevisionService.applyRevision(identity, revisionNumber, httpServletRequest));
   }
 }

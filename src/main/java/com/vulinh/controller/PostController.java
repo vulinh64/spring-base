@@ -1,7 +1,7 @@
 package com.vulinh.controller;
 
-import com.vulinh.constant.CommonConstant;
 import com.vulinh.constant.EndpointConstant;
+import com.vulinh.constant.EndpointConstant.PostEndpoint;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
@@ -21,27 +21,33 @@ public interface PostController {
   GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
       Pageable pageable, HttpServletRequest httpServletRequest);
 
-  @GetMapping(CommonConstant.IDENTITY_VARIABLE_FORMAT)
+  @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT)
   GenericResponse<SinglePostDTO> getSinglePost(
-      @PathVariable(CommonConstant.IDENTITY_VARIABLE) String identity,
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) String identity,
       HttpServletRequest httpServletRequest);
 
-  @GetMapping(CommonConstant.IDENTITY_VARIABLE_FORMAT + "/revisions")
+  @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   GenericResponse<Page<PostRevisionDTO>> getPostRevisions(
-      @PathVariable(CommonConstant.IDENTITY_VARIABLE) String identity, Pageable pageable);
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) String identity, Pageable pageable);
 
   @PostMapping
   GenericResponse<PostDTO> createPost(
       @RequestBody PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest);
 
-  @PatchMapping(CommonConstant.POST_ID_VARIABLE_FORMAT)
+  @PatchMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   ResponseEntity<Void> editPost(
-      @PathVariable(CommonConstant.POST_ID_VARIABLE) String postId,
+      @PathVariable(PostEndpoint.POST_ID_VARIABLE) String postId,
       @RequestBody PostCreationDTO postCreationDTO,
       HttpServletRequest httpServletRequest);
 
-  @DeleteMapping(CommonConstant.POST_ID_VARIABLE_FORMAT)
+  @DeleteMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   ResponseEntity<Void> deletePost(
-      @PathVariable(CommonConstant.POST_ID_VARIABLE) String postId,
+      @PathVariable(PostEndpoint.POST_ID_VARIABLE) String postId,
+      HttpServletRequest httpServletRequest);
+
+  @PatchMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
+  ResponseEntity<Void> applyRevision(
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) String identity,
+      @RequestParam long revisionNumber,
       HttpServletRequest httpServletRequest);
 }

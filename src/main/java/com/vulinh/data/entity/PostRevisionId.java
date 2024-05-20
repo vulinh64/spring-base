@@ -3,15 +3,13 @@ package com.vulinh.data.entity;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import java.io.Serial;
-import java.io.Serializable;
-
 import jakarta.persistence.SequenceGenerator;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Embeddable
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -33,4 +31,8 @@ public class PostRevisionId implements Serializable {
       sequenceName = POST_REVISION_SEQ,
       allocationSize = 1)
   private Long revisionNumber;
+
+  public static PostRevisionId of(String postId, Long revisionNumber) {
+    return new PostRevisionId(postId, revisionNumber);
+  }
 }

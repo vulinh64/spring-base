@@ -1,10 +1,10 @@
 package com.vulinh.data.entity;
 
-import com.vulinh.constant.UserRole;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.Set;
+
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UuidGenerator;
@@ -51,9 +51,5 @@ public class Users extends AbstractIdentifiable.StringAbstractIdentifiable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   @ToString.Exclude
-  private Collection<Roles> userRoles;
-
-  public Collection<String> toRawUserRoles() {
-    return getUserRoles().stream().map(Roles::getId).map(UserRole::name).toList();
-  }
+  private Set<Roles> userRoles;
 }

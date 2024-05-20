@@ -3,7 +3,6 @@ package com.vulinh.service.user;
 import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
-import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
 import com.vulinh.data.entity.*;
@@ -16,7 +15,7 @@ import com.vulinh.service.BaseEntityService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.SpecificationBuilder;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Optional;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -68,15 +67,11 @@ public class UserService implements BaseEntityService<String, Users, UserDTO, Us
     transientUser
         .setIsActive(true)
         .setUserRoles(
-            roleRepository.findAllById(
-                rawRoleNames.isEmpty() ? Set.of(UserRole.USER) : rawRoleNames));
+            Set.copyOf(
+                roleRepository.findAllById(
+                    rawRoleNames.isEmpty() ? Set.of(UserRole.USER) : rawRoleNames)));
 
     return USER_MAPPER.toDto(repository.save(transientUser));
-  }
-
-  @Transactional
-  public Optional<UserBasicDTO> findByIdAndIsActiveIsTrue(String id) {
-    return repository.findByIdAndIsActiveIsTrue(id).map(USER_MAPPER::toBasicUserDTO);
   }
 
   @Transactional

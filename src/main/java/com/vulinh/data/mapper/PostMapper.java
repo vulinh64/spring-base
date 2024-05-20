@@ -56,4 +56,13 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
       Category category,
       Collection<Tag> tags,
       @MappingTarget Post post);
+
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "updatedBy", ignore = true)
+  @Mapping(target = "createdDate", ignore = true)
+  @Mapping(target = "updatedDate", ignore = true)
+  @Mapping(target = "tags", source = "tags")
+  @Mapping(target = "author", ignore = true)
+  Post applyRevision(
+      PostRevision postRevision, Category category, Collection<Tag> tags, @MappingTarget Post post);
 }
