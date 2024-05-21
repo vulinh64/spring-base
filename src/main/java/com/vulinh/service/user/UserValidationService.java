@@ -25,6 +25,8 @@ public class UserValidationService {
   public static final int PASSWORD_MINIMUM_LENGTH = 8;
   public static final int USERNAME_MAX_LENGTH = 200;
 
+  private static final char UNDERSCORE = '_';
+
   private final UserRepository userRepository;
 
   public static boolean isActive(Users matcherUser) {
@@ -69,6 +71,41 @@ public class UserValidationService {
     }
 
     return result;
+  }
+
+  public static boolean isUsernameValid(UserRegistrationDTO dto) {
+    // Assuming the username is not blank
+    var username = dto.username();
+
+    var firstCharacter = username.charAt(0);
+
+    if (firstCharacter == UNDERSCORE || Character.isDigit(firstCharacter)) {
+      log.debug("Username {} with invalid first character ({})", username, firstCharacter);
+
+      return false;
+    }
+
+    var lastCharacter = username.charAt(username.length() - 1);
+
+    if (lastCharacter == UNDERSCORE) {
+      log.debug("Username {} with invalid last character ({})", username, lastCharacter);
+
+      return false;
+    }
+
+    var charArray = username.toCharArray();
+
+    for (int index = 1; index < charArray.length - 1; index++) {
+      var character = charArray[index];
+
+      if (!(Character.isLetterOrDigit(character) || character == UNDERSCORE)) {
+        log.debug("Username {} with invalid character ({}) at position {}", username, character, index);
+
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public static ValidatorStep<UserRegistrationDTO> availableUsername(
@@ -124,6 +161,14 @@ public class UserValidationService {
         ValidatorStep.noExceededLength(UserRegistrationDTO::username, USERNAME_MAX_LENGTH),
         CommonMessage.MESSAGE_INVALID_USERNAME,
         "Username is too long"),
+    RULE_VALID_USERNAME(
+        UserValidationService::isUsernameValid,
+        CommonMessage.MESSAGE_INVALID_USERNAME,
+        """
+        Invalid username (contains only alphanumeric characters and underscores, \
+        first character cannot be a number or an underscore, and last character \
+        cannot be an underscore)
+        """),
     RULE_NO_BLANK_PASSWORD(
         ValidatorStep.noBlankField(UserRegistrationDTO::password),
         CommonMessage.MESSAGE_INVALID_PASSWORD,

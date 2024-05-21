@@ -6,8 +6,14 @@ import com.vulinh.data.entity.Tag;
 import com.vulinh.data.repository.TagRepository;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.vulinh.utils.PostUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,17 +22,28 @@ public class TagService {
 
   private final TagRepository tagRepository;
 
+  @NonNull
   public Set<Tag> parseTags(Collection<String> rawTags) {
+    if (rawTags.isEmpty()) {
+      return Collections.emptySet();
+    }
+
+    var actualTags =
+        rawTags.stream()
+            .filter(StringUtils::isNotBlank)
+            .map(PostUtils::normalizeText)
+            .collect(Collectors.toSet());
+
     var resultBuilder = ImmutableSet.<Tag>builder();
 
-    var existingTags = tagRepository.findByDisplayNameInIgnoreCase(rawTags);
+    var existingTags = tagRepository.findByDisplayNameInIgnoreCase(actualTags);
 
     if (!existingTags.isEmpty()) {
       resultBuilder.addAll(existingTags);
     }
 
     var nonMatchingTags =
-        rawTags.stream()
+        actualTags.stream()
             .filter(
                 rawTag ->
                     // Tags that did not present within database

@@ -25,6 +25,7 @@ import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -72,8 +73,6 @@ public class PostRevisionService {
     postValidationService.validateModifyingPermission(
         SecurityUtils.getUserDTOOrThrow(httpServletRequest), post);
 
-    var targetRevisionId = PostRevisionId.of(identity, revisionNumber);
-
     var currentRevisionNumber =
         postRevisionJoinJPAQuery()
             .select(QPostRevision.postRevision.id.revisionNumber.max())
@@ -85,7 +84,7 @@ public class PostRevisionService {
     }
 
     return postRevisionRepository
-        .findById(targetRevisionId)
+        .findById(PostRevisionId.of(identity, revisionNumber))
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->
@@ -119,7 +118,10 @@ public class PostRevisionService {
   }
 
   private boolean applyRevisionInternal(PostRevision postRevision, Post post) {
-    var category = categoryService.getCategory(postRevision.getCategoryId());
+    var category =
+        Objects.equals(postRevision.getCategoryId(), post.getCategory().getId())
+            ? null
+            : categoryService.getCategory(postRevision.getCategoryId());
 
     var tags = tagService.parseTags(postRevision.getTags());
 

@@ -6,10 +6,8 @@ import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.entity.*;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(
@@ -63,6 +61,10 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(target = "author", ignore = true)
+  @Mapping(
+      target = "category",
+      source = "category",
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   Post applyRevision(
       PostRevision postRevision, Category category, Collection<Tag> tags, @MappingTarget Post post);
 }
