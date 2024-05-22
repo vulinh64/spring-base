@@ -39,11 +39,6 @@ management.endpoints.web:
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
-sentry:
-  exception-resolver-order: -2147483647
-  logging.minimum-event-level: error
-  dsn: ${SENTRY_DNS:}
-  traces-sample-rate: 1.0
 logging.level:
   com.vulinh.service.user.UserValidationService: DEBUG
   com.vulinh.service.post.PostValidationService: DEBUG

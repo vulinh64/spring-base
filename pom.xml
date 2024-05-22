@@ -20,7 +20,6 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
         <querydsl.version>5.1.0</querydsl.version>
-        <sentry.version>7.8.0</sentry.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -117,12 +116,6 @@
             <artifactId>querydsl-jpa</artifactId>
             <classifier>jakarta</classifier>
             <version>${querydsl.version}</version>
-        </dependency>
-        <!-- Use sentry-spring-boot-starter-jakarta for Spring Boot 3 -->
-        <dependency>
-            <groupId>io.sentry</groupId>
-            <artifactId>sentry-spring-boot-starter-jakarta</artifactId>
-            <version>${sentry.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

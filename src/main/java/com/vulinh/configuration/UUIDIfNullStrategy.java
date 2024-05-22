@@ -3,12 +3,13 @@ package com.vulinh.configuration;
 import java.io.Serial;
 import java.util.Optional;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 /**
- * Only use this strategy if you only need to automatically generate a UUID when you did not
- * explicitly provide one manually.
+ * Use this strategy only if you want to automatically generate a UUID as the ID for an entity. This
+ * applies when the user leaves the <code>@Id</code> field empty.
  *
  * <p>Snippet to use (copy/paste it to the entity's ID field):
  *
@@ -29,6 +30,7 @@ public class UUIDIfNullStrategy implements IdentifierGenerator {
     return Optional.of(session.getEntityPersister(entity.getClass().getName(), entity))
         .map(entityPersister -> entityPersister.getIdentifier(entity, session))
         .map(String::valueOf)
+        .filter(StringUtils::isNotBlank)
         .orElseGet(() -> UUID.randomUUID().toString());
   }
 }

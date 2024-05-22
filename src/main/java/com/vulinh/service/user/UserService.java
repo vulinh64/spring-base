@@ -36,10 +36,12 @@ public class UserService implements BaseEntityService<String, Users, UserDTO, Us
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
-  // This name MUST BE repository, so that Lombok will generate a getRepository() method
-  // And this will help us implement the getRepository() from BaseEntityService interface
-  // If you choose other name, like userRepository, then remember to return this when
-  // implementing your own getRepository() method
+  /*
+   * For Lombok to generate the getRepository() method, the field name must be repository.
+   * This method fulfills the getRepository() requirement of the BaseEntityService interface.
+   * If you use a different name, like userRepository, ensure you return that instance in
+   * your custom getRepository() implementation.
+   */
   private final UserRepository repository;
 
   private final RoleRepository roleRepository;

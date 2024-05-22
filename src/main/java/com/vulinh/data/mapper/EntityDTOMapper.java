@@ -11,8 +11,5 @@ public interface EntityDTOMapper<E extends AbstractIdentifiable<?>, D extends Se
 
   D toDto(E entity);
 
-  // For update operations, depending on your business, you may have to override this method
-  // And do not forget to add @MappingTarget annotation, as it did not support inheritance
-  // (also known as @Inherited annotation)
   void merge(D dto, @MappingTarget E entity);
 }
