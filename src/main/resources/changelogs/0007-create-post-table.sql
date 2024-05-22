@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset vulinh:20240507-0003
+--changeset vulinh:20240507-0002
 CREATE TABLE post (
 	id varchar(36) NOT NULL,
 	title varchar(5000) NOT NULL,

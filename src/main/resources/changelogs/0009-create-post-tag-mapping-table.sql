@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset vulinh:20240507-0005
+--changeset vulinh:20240507-0004
 CREATE TABLE post_tag_mapping (
 	post_id varchar(36) NOT NULL,
 	tag_id varchar(36) NOT NULL,

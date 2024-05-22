@@ -14,12 +14,10 @@ databaseChangeLog:
   - include:
       file: changelogs/0006-create-category-table.sql
   - include:
-      file: changelogs/0007-init-category-table.sql
+      file: changelogs/0007-create-post-table.sql
   - include:
-      file: changelogs/0008-create-post-table.sql
+      file: changelogs/0008-create-tag-table.sql
   - include:
-      file: changelogs/0009-create-tag-table.sql
+      file: changelogs/0009-create-post-tag-mapping-table.sql
   - include:
-      file: changelogs/0010-create-post-tag-mapping-table.sql
-  - include:
-      file: changelogs/0011-create-post-revision-table.sql
+      file: changelogs/0010-create-post-revision-table.sql
