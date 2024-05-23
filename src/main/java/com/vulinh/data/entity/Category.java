@@ -25,5 +25,6 @@ public class Category extends AbstractIdentifiable.StringAbstractIdentifiable {
   @GeneratedValue(generator = UUIDIfNullStrategy.GENERATOR_NAME)
   private String id;
 
+  private String categorySlug;
   private String displayName;
 }

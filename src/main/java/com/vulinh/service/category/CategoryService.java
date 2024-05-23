@@ -36,21 +36,37 @@ public class CategoryService {
         .findById(CommonConstant.UNCATEGORIZED_ID)
         .ifPresentOrElse(
             category -> {
+              var isChanged = false;
+
               if (!CommonConstant.UNCATEGORIZED_NAME.equals(category.getDisplayName())) {
                 category.setDisplayName(CommonConstant.UNCATEGORIZED_NAME);
 
+                isChanged = true;
+              }
+
+              if (!CommonConstant.UNCATEGORIZED_SLUG.equals(category.getCategorySlug())) {
+                category.setCategorySlug(CommonConstant.UNCATEGORIZED_SLUG);
+
+                if (!isChanged) {
+                  isChanged = true;
+                }
+              }
+
+              if (isChanged) {
                 categoryRepository.save(category);
 
                 log.info(
-                    "Changed default category (ID {}) name to {}",
+                    "Changed default category (ID {}) name to {}, slug to {}",
                     CommonConstant.UNCATEGORIZED_ID,
-                    CommonConstant.UNCATEGORIZED_NAME);
+                    CommonConstant.UNCATEGORIZED_NAME,
+                    CommonConstant.UNCATEGORIZED_SLUG);
               }
             },
             () -> {
               categoryRepository.save(
                   Category.builder()
                       .id(CommonConstant.UNCATEGORIZED_ID)
+                      .categorySlug(CommonConstant.UNCATEGORIZED_SLUG)
                       .displayName(CommonConstant.UNCATEGORIZED_NAME)
                       .build());
 

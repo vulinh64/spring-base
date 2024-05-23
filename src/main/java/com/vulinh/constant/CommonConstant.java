@@ -41,8 +41,9 @@ public class CommonConstant {
       }
       """;
 
-  public static final String UNCATEGORIZED_ID = "641ea43f-c426-49ad-bd7b-5ec551a6fa12";
+  public static final String UNCATEGORIZED_ID = "uncategorized";
   public static final String UNCATEGORIZED_NAME = "Uncategorized";
+  public static final String UNCATEGORIZED_SLUG = UNCATEGORIZED_ID;
 
   public static final String POST_ENTITY = "Post";
 }
