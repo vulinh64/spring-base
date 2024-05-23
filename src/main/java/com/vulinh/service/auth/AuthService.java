@@ -10,7 +10,6 @@ import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.exception.CommonException;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
 import com.vulinh.service.user.UserValidationService;
@@ -56,7 +55,7 @@ public class AuthService {
         .map(accessTokenGenerator::generateAccessToken)
         .orElseThrow(
             () ->
-                new CommonException(
+                ExceptionBuilder.buildCommonException(
                     "Invalid user credentials", CommonMessage.MESSAGE_INVALID_CREDENTIALS));
   }
 
@@ -97,7 +96,7 @@ public class AuthService {
   @Transactional
   public void changePassword(
       PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest) {
-    ValidatorChain.<PasswordChangeDTO>of()
+    ValidatorChain.<PasswordChangeDTO>start()
         .addValidator(PasswordChangeRule.values())
         .executeValidation(passwordChangeDTO);
 
@@ -107,7 +106,7 @@ public class AuthService {
             .flatMap(userRepository::findByIdAndIsActiveIsTrue)
             .orElseThrow(ExceptionBuilder::invalidAuthorization);
 
-    ValidatorChain.<PasswordChangeDTO>of()
+    ValidatorChain.<PasswordChangeDTO>start()
         .addValidator(
             ValidatorStepImpl.of(
                 passwordValidationService.isOldPasswordMatched(userEntity),

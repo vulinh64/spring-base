@@ -1,6 +1,6 @@
 package com.vulinh.controller.impl;
 
-import com.vulinh.controller.PostController;
+import com.vulinh.controller.PostAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class PostControllerImpl implements PostController {
+public class PostController implements PostAPI {
 
   private final PostService postService;
   private final PostRevisionService postRevisionService;

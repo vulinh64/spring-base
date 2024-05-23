@@ -1,6 +1,7 @@
 package com.vulinh.exception;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.data.dto.message.WithHttpStatusCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -25,12 +26,13 @@ public class ExceptionBuilder {
         "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, throwable);
   }
 
-  public static CommonException buildCommonException(String message, CommonMessage commonMessage) {
+  public static CommonException buildCommonException(
+      String message, WithHttpStatusCode commonMessage) {
     return buildCommonException(message, commonMessage, null);
   }
 
   public static CommonException buildCommonException(
-      String message, CommonMessage errorMessage, Throwable throwable) {
+      String message, WithHttpStatusCode errorMessage, Throwable throwable) {
     return new CommonException(message, errorMessage, throwable);
   }
 

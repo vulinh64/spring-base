@@ -2,6 +2,8 @@ package com.vulinh.data.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.vulinh.data.dto.category.CategoryDTO;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;

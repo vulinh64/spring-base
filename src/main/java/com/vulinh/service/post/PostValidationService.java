@@ -6,7 +6,7 @@ import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.user.RoleDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.Post;
-import com.vulinh.exception.CommonException;
+import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.post.create.PostCreationValidationService;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
@@ -26,10 +26,13 @@ public class PostValidationService {
 
   public static final int TAG_MAX_LENGTH = 1000;
 
+  public static final ValidatorChain<PostCreationDTO> BASIC_POST_VALIDATOR =
+      ValidatorChain.<PostCreationDTO>start().addValidator(PostRule.values());
+
   public void validateModifyingPermission(UserBasicDTO userDTO, Post post) {
     if (!(PostValidationService.isOwner(userDTO, post)
         || PostValidationService.isPowerUser(userDTO))) {
-      throw new CommonException(
+      throw ExceptionBuilder.buildCommonException(
           "Invalid author or no permission to edit",
           CommonMessage.MESSAGE_INVALID_OWNER_OR_NO_RIGHT);
     }
@@ -77,9 +80,7 @@ public class PostValidationService {
   }
 
   public void validatePost(@NonNull PostCreationDTO postCreationDTO) {
-    ValidatorChain.<PostCreationDTO>of()
-        .addValidator(PostRule.values())
-        .executeValidation(postCreationDTO);
+    BASIC_POST_VALIDATOR.executeValidation(postCreationDTO);
   }
 
   @Getter

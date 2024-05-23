@@ -201,11 +201,11 @@ public class SpecificationBuilder {
   @NonNull
   private static <E> Specification<E> combineSpecifications(
       BinaryOperator<Specification<E>> combiner, Specification<E>... specifications) {
-    var result = SpecificationBuilder.<E>always();
-
     if (ArrayUtils.isEmpty(specifications)) {
-      return result;
+      return SpecificationBuilder.always();
     }
+
+    var result = SpecificationBuilder.<E>never();
 
     for (var specification : specifications) {
       if (specification != null) {

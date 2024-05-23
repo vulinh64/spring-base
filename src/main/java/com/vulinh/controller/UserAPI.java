@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(
     name = "User management controller",
     description = "Support various user management operations")
-public interface UserController {
+public interface UserAPI {
 
   @PostMapping(UserEndpoint.CREATE_USER)
   @ResponseStatus(HttpStatus.CREATED)

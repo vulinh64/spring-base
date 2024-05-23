@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(EndpointConstant.ENDPOINT_POST)
-public interface PostController {
+public interface PostAPI {
 
   @GetMapping
   GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(

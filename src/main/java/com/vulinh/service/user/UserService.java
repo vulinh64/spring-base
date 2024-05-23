@@ -10,12 +10,11 @@ import com.vulinh.data.mapper.EntityDTOMapper;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.exception.CommonException;
+import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.service.BaseEntityService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.SpecificationBuilder;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -82,7 +81,7 @@ public class UserService implements BaseEntityService<String, Users, UserDTO, Us
         .filter(user -> user.id().equals(id))
         .ifPresent(
             ignored -> {
-              throw new CommonException(
+              throw ExceptionBuilder.buildCommonException(
                   "Cannot delete self", CommonMessage.MESSAGE_NO_SELF_DESTRUCTION);
             });
 

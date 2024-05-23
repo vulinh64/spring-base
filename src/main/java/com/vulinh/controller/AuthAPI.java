@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
     name = "Authentication controller",
     description =
         "Public controller that allows user login, user registration and user confirmation")
-public interface AuthController {
+public interface AuthAPI {
 
   @PostMapping(AuthEndpoint.LOGIN)
   @Operation(

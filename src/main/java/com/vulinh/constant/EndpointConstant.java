@@ -12,6 +12,7 @@ public class EndpointConstant {
   public static final String ENDPOINT_USER = "/user";
   public static final String ENDPOINT_PASSWORD = "/password";
   public static final String ENDPOINT_POST = "/post";
+  public static final String ENDPOIT_CATEGORY = "/category";
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class AuthEndpoint {
@@ -61,7 +62,8 @@ public class EndpointConstant {
               new String[] {
                 combine(ENDPOINT_USER, UserEndpoint.CREATE_USER),
                 combine(ENDPOINT_USER, UserEndpoint.DELETE_USER),
-                combine(ENDPOINT_USER, UserEndpoint.SEARCH)
+                combine(ENDPOINT_USER, UserEndpoint.SEARCH),
+                "%s/**".formatted(ENDPOIT_CATEGORY)
               }));
 
   private static String combine(Object... path) {

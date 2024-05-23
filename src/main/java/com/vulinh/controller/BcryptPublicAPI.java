@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Tag(
     name = "Password Generator",
     description = "Public controller that helps generate BCrypt encoded password")
-public interface BcryptPublicController {
+public interface BcryptPublicAPI {
 
   @PostMapping(EndpointConstant.BcryptEndpoint.GENERATE)
   @Operation(

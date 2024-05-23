@@ -1,10 +1,9 @@
 package com.vulinh.utils.validator;
 
-import com.vulinh.exception.CommonException;
+import com.vulinh.exception.ExceptionBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.lang.NonNull;
 
@@ -16,7 +15,7 @@ public final class ValidatorChain<T> {
     validatorSteps = new ArrayList<>();
   }
 
-  public static <T> ValidatorChain<T> of() {
+  public static <T> ValidatorChain<T> start() {
     return new ValidatorChain<>();
   }
 
@@ -37,7 +36,7 @@ public final class ValidatorChain<T> {
 
     for (var validatorStep : validatorSteps) {
       if (!validatorStep.getPredicate().test(object)) {
-        throw new CommonException(
+        throw ExceptionBuilder.buildCommonException(
             validatorStep.getAdditionalMessage(), validatorStep.getErrorMessage());
       }
     }

@@ -1,6 +1,6 @@
 package com.vulinh.controller.impl;
 
-import com.vulinh.controller.AuthController;
+import com.vulinh.controller.AuthAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthControllerImpl implements AuthController {
+public class AuthController implements AuthAPI {
 
   private final AuthService authService;
 

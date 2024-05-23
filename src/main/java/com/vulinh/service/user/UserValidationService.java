@@ -144,7 +144,7 @@ public class UserValidationService {
   }
 
   public void validateUserCreation(UserRegistrationDTO userRegistrationDTO) {
-    ValidatorChain.<UserRegistrationDTO>of()
+    ValidatorChain.<UserRegistrationDTO>start()
         .addValidator(UserRule.values())
         .addValidator(availableUsername(userRepository), availableEmail(userRepository))
         .executeValidation(userRegistrationDTO);
@@ -153,15 +153,15 @@ public class UserValidationService {
   @Getter
   @RequiredArgsConstructor
   public enum UserRule implements ValidatorStep<UserRegistrationDTO> {
-    RULE_NO_BLANK_USERNAME(
+    USER_NO_BLANK_USERNAME(
         ValidatorStep.noBlankField(UserRegistrationDTO::username),
         CommonMessage.MESSAGE_INVALID_USERNAME,
         "Blank username is not allowed"),
-    RULE_LONG_ENOUGH_USERNAME(
+    USER_LONG_ENOUGH_USERNAME(
         ValidatorStep.noExceededLength(UserRegistrationDTO::username, USERNAME_MAX_LENGTH),
         CommonMessage.MESSAGE_INVALID_USERNAME,
         "Username is too long"),
-    RULE_VALID_USERNAME(
+    USER_VALID_USERNAME(
         UserValidationService::isUsernameValid,
         CommonMessage.MESSAGE_INVALID_USERNAME,
         """
@@ -169,15 +169,15 @@ public class UserValidationService {
         first character cannot be a number or an underscore, and last character \
         cannot be an underscore)
         """),
-    RULE_NO_BLANK_PASSWORD(
+    USER_NO_BLANK_PASSWORD(
         ValidatorStep.noBlankField(UserRegistrationDTO::password),
         CommonMessage.MESSAGE_INVALID_PASSWORD,
         "Blank password is not allowed"),
-    RULE_NO_BLANK_EMAIL(
+    USER_NO_BLANK_EMAIL(
         ValidatorStep.noBlankField(UserRegistrationDTO::email),
         CommonMessage.MESSAGE_INVALID_EMAIL,
         "Blank email is not allowed"),
-    RULE_NO_INVALID_EMAIL(
+    USER_NO_INVALID_EMAIL(
         UserValidationService::isEmailAvailable,
         CommonMessage.MESSAGE_INVALID_EMAIL,
         "Wrong email format");

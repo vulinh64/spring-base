@@ -1,6 +1,6 @@
 package com.vulinh.controller.impl;
 
-import com.vulinh.controller.UserController;
+import com.vulinh.controller.UserAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class UserControllerImpl implements UserController {
+public class UserController implements UserAPI {
 
   private final UserService userService;
 
