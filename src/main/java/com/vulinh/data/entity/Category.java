@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 @ToString
 @Builder
 @With
-public class Category extends AbstractIdentifiable.StringAbstractIdentifiable {
+public class Category extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = 106688923162808538L;
 

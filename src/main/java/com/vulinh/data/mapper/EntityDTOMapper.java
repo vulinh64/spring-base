@@ -1,11 +1,10 @@
 package com.vulinh.data.mapper;
 
 import com.vulinh.data.entity.AbstractIdentifiable;
+import java.io.Serializable;
 import org.mapstruct.MappingTarget;
 
-import java.io.Serializable;
-
-public interface EntityDTOMapper<E extends AbstractIdentifiable<?>, D extends Serializable> {
+public interface EntityDTOMapper<E extends AbstractIdentifiable, D extends Serializable> {
 
   E toEntity(D dto);
 

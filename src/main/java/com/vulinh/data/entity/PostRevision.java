@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @With
-public class PostRevision extends AbstractIdentifiable<PostRevisionId> {
+public class PostRevision extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = -4374526557871349803L;
 

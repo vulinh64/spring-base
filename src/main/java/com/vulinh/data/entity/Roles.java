@@ -13,7 +13,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class Roles extends AbstractIdentifiable<UserRole> {
+public class Roles extends AbstractIdentifiable {
 
   public static final Comparator<Roles> COMPARATOR =
       Comparator.comparing(Roles::getSuperiority, Comparator.nullsLast(Comparator.reverseOrder()));

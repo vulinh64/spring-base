@@ -14,7 +14,7 @@ import org.hibernate.annotations.UuidGenerator;
 @ToString
 @Builder
 @With
-public class Tag extends AbstractIdentifiable.StringAbstractIdentifiable {
+public class Tag extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = 5399822567855696869L;
 

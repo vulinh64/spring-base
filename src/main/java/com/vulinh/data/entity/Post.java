@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @With
-public class Post extends AbstractIdentifiable.StringAbstractIdentifiable {
+public class Post extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = -2260038525808618984L;
 

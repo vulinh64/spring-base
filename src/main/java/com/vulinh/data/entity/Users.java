@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Set;
-
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UuidGenerator;
@@ -21,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @Accessors(chain = true)
-public class Users extends AbstractIdentifiable.StringAbstractIdentifiable {
+public class Users extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = -2867497192634401616L;
 
