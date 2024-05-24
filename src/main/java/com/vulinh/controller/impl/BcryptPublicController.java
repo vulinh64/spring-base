@@ -1,6 +1,6 @@
-package com.vulinh.controller;
+package com.vulinh.controller.impl;
 
-import com.vulinh.api.BcryptPublicAPI;
+import com.vulinh.controller.api.BcryptPublicAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordRequestDTO;
 import com.vulinh.data.dto.auth.PasswordResponseDTO;

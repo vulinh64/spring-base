@@ -1,6 +1,6 @@
-package com.vulinh.controller;
+package com.vulinh.controller.impl;
 
-import com.vulinh.api.CategoryAPI;
+import com.vulinh.controller.api.CategoryAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
