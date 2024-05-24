@@ -1,6 +1,6 @@
-package com.vulinh.controller.impl;
+package com.vulinh.controller;
 
-import com.vulinh.controller.AuthAPI;
+import com.vulinh.api.AuthAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;

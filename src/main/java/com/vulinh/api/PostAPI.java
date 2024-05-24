@@ -1,4 +1,4 @@
-package com.vulinh.controller;
+package com.vulinh.api;
 
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.PostEndpoint;
