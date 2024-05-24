@@ -1,0 +1,3 @@
+services:
+  spring-base:
+    image: spring-base
