@@ -44,7 +44,9 @@ public class CategoryValidationService {
 
     if (!availableCategory(categoryCreationDTO, categorySlug)) {
       throw ExceptionBuilder.buildCommonException(
-          "Category display name %s or slug %s existed", CommonMessage.MESSAGE_EXISTED_CATEGORY);
+          "Category display name %s or slug %s existed"
+              .formatted(categoryCreationDTO.displayName(), categorySlug),
+          CommonMessage.MESSAGE_EXISTED_CATEGORY);
     }
   }
 
