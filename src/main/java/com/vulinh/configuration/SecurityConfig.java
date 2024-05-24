@@ -91,14 +91,6 @@ public class SecurityConfig {
   private void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer) {
-    authorizeHttpRequestsCustomizer
-        .requestMatchers(securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
-        .permitAll()
-        .requestMatchers(SecurityUrlUtils.getUrlsWithPrivilege(ROLE_ADMIN))
-        .hasAuthority(ROLE_ADMIN.name())
-        .anyRequest()
-        .authenticated();
-
     for (var verbUrl : securityConfigProperties.verbUrls()) {
       authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
     }
@@ -108,6 +100,14 @@ public class SecurityConfig {
           .requestMatchers(privilegeVerbUrl.method(), privilegeVerbUrl.url())
           .hasAuthority(ROLE_ADMIN.name());
     }
+
+    authorizeHttpRequestsCustomizer
+        .requestMatchers(securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
+        .permitAll()
+        .requestMatchers(SecurityUrlUtils.getUrlsWithPrivilege(ROLE_ADMIN))
+        .hasAuthority(ROLE_ADMIN.name())
+        .anyRequest()
+        .authenticated();
   }
 
   private void handleSecurityException(
