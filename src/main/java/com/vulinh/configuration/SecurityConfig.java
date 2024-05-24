@@ -1,10 +1,10 @@
 package com.vulinh.configuration;
 
-import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.filter.JwtFilter;
+import com.vulinh.utils.SecurityUrlUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -91,17 +91,23 @@ public class SecurityConfig {
   private void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer) {
+    authorizeHttpRequestsCustomizer
+        .requestMatchers(securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
+        .permitAll()
+        .requestMatchers(SecurityUrlUtils.getUrlsWithPrivilege(ROLE_ADMIN))
+        .hasAuthority(ROLE_ADMIN.name())
+        .anyRequest()
+        .authenticated();
+
     for (var verbUrl : securityConfigProperties.verbUrls()) {
       authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
     }
 
-    authorizeHttpRequestsCustomizer
-        .requestMatchers(securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
-        .permitAll()
-        .requestMatchers(EndpointConstant.getUrlsWithPrivilege(ROLE_ADMIN))
-        .hasAuthority(ROLE_ADMIN.name())
-        .anyRequest()
-        .authenticated();
+    for (var privilegeVerbUrl : SecurityUrlUtils.getVerbUrlsWithPrivilege(ROLE_ADMIN)) {
+      authorizeHttpRequestsCustomizer
+          .requestMatchers(privilegeVerbUrl.method(), privilegeVerbUrl.url())
+          .hasAuthority(ROLE_ADMIN.name());
+    }
   }
 
   private void handleSecurityException(

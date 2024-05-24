@@ -1,10 +1,13 @@
 package com.vulinh.utils;
 
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Root;
 import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.function.BinaryOperator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -153,7 +156,6 @@ public class SpecificationBuilder {
 
   // field like '%pattern%' escape '\\'
   // if pattern is empty, it is equal to always()
-  @SuppressWarnings("unchecked")
   @Nullable
   public static <E, F> Specification<E> like(
       SingularAttribute<? super E, F> attribute, @Nullable String keyword) {
@@ -161,7 +163,7 @@ public class SpecificationBuilder {
     var patternKeyword =
         StringUtils.isBlank(keyword)
             ? StringUtils.EMPTY
-            : "%%%s%%".formatted(EscapeCharacter.DEFAULT.escape(keyword.toLowerCase()));
+            : "%%%s%%".formatted(EscapeCharacter.DEFAULT.escape(keyword));
 
     if (StringUtils.isBlank(patternKeyword)) {
       return null;
@@ -169,10 +171,8 @@ public class SpecificationBuilder {
 
     return (root, query, criteriaBuilder) ->
         criteriaBuilder.like(
-            String.class.isAssignableFrom(attribute.getJavaType())
-                ? root.get((SingularAttribute<E, String>) attribute)
-                : root.get(attribute).as(String.class),
-            patternKeyword);
+            criteriaBuilder.lower(getStringExpression(attribute, root)),
+            criteriaBuilder.lower(criteriaBuilder.literal(patternKeyword)));
   }
 
   // field not like '%pattern%' escape '\\'
@@ -188,24 +188,26 @@ public class SpecificationBuilder {
   @SafeVarargs
   @NonNull
   public static <E> Specification<E> and(Specification<E>... specifications) {
-    return combineSpecifications(Specification::and, specifications);
+    return combineSpecifications(SpecificationOperation.AND, Specification::and, specifications);
   }
 
   @SafeVarargs
   @NonNull
   public static <E> Specification<E> or(Specification<E>... specifications) {
-    return combineSpecifications(Specification::or, specifications);
+    return combineSpecifications(SpecificationOperation.OR, Specification::or, specifications);
   }
 
   @SafeVarargs
   @NonNull
   private static <E> Specification<E> combineSpecifications(
-      BinaryOperator<Specification<E>> combiner, Specification<E>... specifications) {
+      SpecificationOperation specificationOperation,
+      BinaryOperator<Specification<E>> combiner,
+      Specification<E>... specifications) {
     if (ArrayUtils.isEmpty(specifications)) {
       return SpecificationBuilder.always();
     }
 
-    var result = SpecificationBuilder.<E>never();
+    var result = specificationOperation.<E>getFirstChainSpecification();
 
     for (var specification : specifications) {
       if (specification != null) {
@@ -214,5 +216,26 @@ public class SpecificationBuilder {
     }
 
     return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <E, F> Expression<String> getStringExpression(
+      SingularAttribute<? super E, F> attribute, Root<E> root) {
+    return String.class.isAssignableFrom(attribute.getJavaType())
+        ? root.get((SingularAttribute<E, String>) attribute)
+        : root.get(attribute).as(String.class);
+  }
+
+  @RequiredArgsConstructor
+  public enum SpecificationOperation {
+    AND(SpecificationBuilder.always()),
+    OR(SpecificationBuilder.never());
+
+    private final Specification<?> firstChainSpecification;
+
+    @SuppressWarnings("unchecked")
+    private <T> Specification<T> getFirstChainSpecification() {
+      return (Specification<T>) firstChainSpecification;
+    }
   }
 }

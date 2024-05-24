@@ -17,6 +17,8 @@ spring:
     verb-urls:
       - method: GET
         url: /post/**
+      - method: GET
+        url: /category/search/**
     no-authenticated-urls:
       - /health
       - /v3/api-docs/**

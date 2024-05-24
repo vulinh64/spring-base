@@ -1,9 +1,7 @@
 package com.vulinh.constant;
 
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EndpointConstant {
@@ -12,7 +10,9 @@ public class EndpointConstant {
   public static final String ENDPOINT_USER = "/user";
   public static final String ENDPOINT_PASSWORD = "/password";
   public static final String ENDPOINT_POST = "/post";
-  public static final String ENDPOIT_CATEGORY = "/category";
+  public static final String ENDPOINT_CATEGORY = "/category";
+
+  public static final String COMMON_SEARCH_ENDPOINT = "/search";
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class AuthEndpoint {
@@ -29,7 +29,7 @@ public class EndpointConstant {
     public static final String CREATE_USER = "/create-user";
     public static final String DELETE_USER = "/delete-user";
     public static final String DETAILS = "/details";
-    public static final String SEARCH = "/search";
+    public static final String SEARCH = COMMON_SEARCH_ENDPOINT;
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -50,23 +50,9 @@ public class EndpointConstant {
     public static final String GENERATE = "/generate";
   }
 
-  @NonNull
-  public static String[] getUrlsWithPrivilege(@NonNull UserRole userRole) {
-    return HIGH_PRIVILEGES_URLS.getOrDefault(userRole, new String[] {});
-  }
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  public static class CategoryEndpoint {
 
-  private static final Map<UserRole, String[]> HIGH_PRIVILEGES_URLS =
-      Map.ofEntries(
-          Map.entry(
-              UserRole.ADMIN,
-              new String[] {
-                combine(ENDPOINT_USER, UserEndpoint.CREATE_USER),
-                combine(ENDPOINT_USER, UserEndpoint.DELETE_USER),
-                combine(ENDPOINT_USER, UserEndpoint.SEARCH),
-                "%s/**".formatted(ENDPOIT_CATEGORY)
-              }));
-
-  private static String combine(Object... path) {
-    return "%s%s/**".formatted(path);
+    public static final String SEARCH = COMMON_SEARCH_ENDPOINT;
   }
 }

@@ -4,14 +4,20 @@ import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
+import com.vulinh.data.dto.category.CategorySearchDTO;
 import com.vulinh.data.entity.Category;
+import com.vulinh.data.entity.Category_;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.utils.PostUtils;
 import java.util.Optional;
+
+import com.vulinh.utils.SpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,5 +101,36 @@ public class CategoryService {
 
     return CATEGORY_MAPPER.toDto(
         categoryRepository.save(CATEGORY_MAPPER.toCategory(categoryCreationDTO, slug)));
+  }
+
+  @Transactional
+  public Page<CategoryDTO> searchCategories(
+      CategorySearchDTO categorySearchDTO, Pageable pageable) {
+    return categoryRepository
+        .findAll(
+            SpecificationBuilder.and(
+                SpecificationBuilder.like(Category_.displayName, categorySearchDTO.displayName()),
+                SpecificationBuilder.like(
+                    Category_.categorySlug, categorySearchDTO.categorySlug())),
+            pageable)
+        .map(CATEGORY_MAPPER::toDto);
+  }
+
+  @Transactional
+  public boolean deleteCategory(String categoryId) {
+    if (CommonConstant.UNCATEGORIZED_ID.equals(categoryId)) {
+      throw ExceptionBuilder.buildCommonException(
+          "Cannot delete default category", CommonMessage.MESSAGE_DEFAULT_CATEGORY_IMMORTAL);
+    }
+
+    return categoryRepository
+        .findById(categoryId)
+        .map(
+            category -> {
+              categoryRepository.delete(category);
+
+              return true;
+            })
+        .isPresent();
   }
 }
