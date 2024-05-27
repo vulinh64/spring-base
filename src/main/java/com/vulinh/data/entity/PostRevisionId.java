@@ -4,12 +4,13 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
-import lombok.*;
-
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.*;
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString

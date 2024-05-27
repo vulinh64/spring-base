@@ -45,3 +45,6 @@ logging.level:
   com.vulinh.service.user.UserValidationService: DEBUG
   com.vulinh.service.post.PostValidationService: DEBUG
   com.vulinh.service.post.edit.PostEditValidationService: DEBUG
+elasticsearch:
+  host: ${ELASTICSEARCH_HOST:localhost}
+  port: ${ELASTICSEARCH_PORT:9200}
