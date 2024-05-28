@@ -9,6 +9,8 @@
     * [Setting up environment variables](#setting-up-environment-variables)
 <!-- TOC -->
 
+This is a demo project using Spring Boot to work as a blog site's backend.
+
 ## Project setup
 
 ### Prerequisite
@@ -40,7 +42,7 @@ CREATE ROLE myspringdatabase WITH
 	
 CREATE DATABASE myspringdatabase
     WITH
-    OWNER = notification
+    OWNER = myspringdatabase
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
