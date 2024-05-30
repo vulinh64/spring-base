@@ -2,6 +2,7 @@ package com.vulinh.exception;
 
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.factory.GenericResponseFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
@@ -17,6 +18,8 @@ import java.util.Optional;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+  private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
 
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -41,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     return ResponseEntity.status(errorKey.getHttpStatusCode())
-        .body(GenericResponse.toGenericResponse(commonException, commonException.getArgs()));
+        .body(RESPONSE_FACTORY.toGenericResponse(commonException, commonException.getArgs()));
   }
 
   @ExceptionHandler(EntityNotFoundException.class)
@@ -56,7 +59,7 @@ public class GlobalExceptionHandler {
       HttpMessageConversionException httpMessageConversionException) {
     log.info("Bad request body format", httpMessageConversionException);
 
-    return GenericResponse.toGenericResponse(
+    return RESPONSE_FACTORY.toGenericResponse(
         CommonMessage.MESSAGE_INVALID_BODY_REQUEST, "Request body");
   }
 
@@ -66,7 +69,7 @@ public class GlobalExceptionHandler {
       TypeMismatchException typeMismatchException) {
     log.info("Bad request format", typeMismatchException);
 
-    return GenericResponse.toGenericResponse(
+    return RESPONSE_FACTORY.toGenericResponse(
         CommonMessage.MESSAGE_INVALID_BODY_REQUEST,
         "field [%s] - type [%s]"
             .formatted(

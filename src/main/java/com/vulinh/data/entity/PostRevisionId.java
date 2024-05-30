@@ -32,8 +32,4 @@ public class PostRevisionId implements Serializable {
       sequenceName = POST_REVISION_SEQ,
       allocationSize = 1)
   private Long revisionNumber;
-
-  public static PostRevisionId of(String postId, Long revisionNumber) {
-    return new PostRevisionId(postId, revisionNumber);
-  }
 }

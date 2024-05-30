@@ -6,9 +6,9 @@ import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.repository.UserRepository;
+import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
-import com.vulinh.utils.validator.ValidatorStepImpl;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class UserValidationService {
+
+  private static final ValidatorStepFactory VALIDATOR_STEP_FACTORY = ValidatorStepFactory.INSTANCE;
 
   public static final int PASSWORD_MINIMUM_LENGTH = 8;
   public static final int USERNAME_MAX_LENGTH = 200;
@@ -99,7 +101,8 @@ public class UserValidationService {
       var character = charArray[index];
 
       if (!(Character.isLetterOrDigit(character) || character == UNDERSCORE)) {
-        log.debug("Username {} with invalid character ({}) at position {}", username, character, index);
+        log.debug(
+            "Username {} with invalid character ({}) at position {}", username, character, index);
 
         return false;
       }
@@ -110,7 +113,7 @@ public class UserValidationService {
 
   public static ValidatorStep<UserRegistrationDTO> availableUsername(
       UserRepository userRepository) {
-    return ValidatorStepImpl.of(
+    return VALIDATOR_STEP_FACTORY.build(
         dto -> {
           var username = dto.username();
 
@@ -127,7 +130,7 @@ public class UserValidationService {
   }
 
   public static ValidatorStep<UserRegistrationDTO> availableEmail(UserRepository userRepository) {
-    return ValidatorStepImpl.of(
+    return VALIDATOR_STEP_FACTORY.build(
         dto -> {
           var email = dto.email();
 
@@ -154,11 +157,11 @@ public class UserValidationService {
   @RequiredArgsConstructor
   public enum UserRule implements ValidatorStep<UserRegistrationDTO> {
     USER_NO_BLANK_USERNAME(
-        ValidatorStep.noBlankField(UserRegistrationDTO::username),
+        ValidatorStepFactory.noBlankField(UserRegistrationDTO::username),
         CommonMessage.MESSAGE_INVALID_USERNAME,
         "Blank username is not allowed"),
     USER_LONG_ENOUGH_USERNAME(
-        ValidatorStep.noExceededLength(UserRegistrationDTO::username, USERNAME_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(UserRegistrationDTO::username, USERNAME_MAX_LENGTH),
         CommonMessage.MESSAGE_INVALID_USERNAME,
         "Username is too long"),
     USER_VALID_USERNAME(
@@ -170,11 +173,11 @@ public class UserValidationService {
         cannot be an underscore)
         """),
     USER_NO_BLANK_PASSWORD(
-        ValidatorStep.noBlankField(UserRegistrationDTO::password),
+        ValidatorStepFactory.noBlankField(UserRegistrationDTO::password),
         CommonMessage.MESSAGE_INVALID_PASSWORD,
         "Blank password is not allowed"),
     USER_NO_BLANK_EMAIL(
-        ValidatorStep.noBlankField(UserRegistrationDTO::email),
+        ValidatorStepFactory.noBlankField(UserRegistrationDTO::email),
         CommonMessage.MESSAGE_INVALID_EMAIL,
         "Blank email is not allowed"),
     USER_NO_INVALID_EMAIL(

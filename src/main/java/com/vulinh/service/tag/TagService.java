@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.vulinh.factory.PostFactory;
 import com.vulinh.utils.PostUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +52,7 @@ public class TagService {
                         || existingTags.stream()
                             .map(Tag::getDisplayName)
                             .noneMatch(tag -> tag.equalsIgnoreCase(rawTag)))
-            .map(Tag::of)
+            .map(PostFactory.INSTANCE::createTag)
             .toList();
 
     resultBuilder.addAll(tagRepository.saveAll(nonMatchingTags));

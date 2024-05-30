@@ -7,6 +7,7 @@ import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.user.UserService;
 import com.vulinh.utils.ResponseUtils;
 import com.vulinh.utils.SecurityUtils;
@@ -21,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController implements UserAPI {
 
+  private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
+
   private final UserService userService;
 
   @Override
   public GenericResponse<UserDTO> createUser(UserRegistrationDTO userRegistrationDTO) {
-    return GenericResponse.success(userService.createUser(userRegistrationDTO));
+    return RESPONSE_FACTORY.success(userService.createUser(userRegistrationDTO));
   }
 
   @Override
@@ -37,13 +40,13 @@ public class UserController implements UserAPI {
   public ResponseEntity<GenericResponse<UserBasicDTO>> getSelfDetail(
       HttpServletRequest httpServletRequest) {
     return SecurityUtils.getUserDTO(httpServletRequest)
-        .map(GenericResponse::success)
+        .map(RESPONSE_FACTORY::success)
         .map(ResponseEntity::ok)
         .orElseThrow(ExceptionBuilder::invalidAuthorization);
   }
 
   @Override
   public GenericResponse<Page<UserDTO>> search(UserSearchDTO userSearchDTO, Pageable pageable) {
-    return GenericResponse.success(userService.search(userSearchDTO, pageable));
+    return RESPONSE_FACTORY.success(userService.search(userSearchDTO, pageable));
   }
 }

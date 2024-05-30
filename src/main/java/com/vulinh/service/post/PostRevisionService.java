@@ -9,6 +9,7 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.PostFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
@@ -84,7 +85,7 @@ public class PostRevisionService {
     }
 
     return postRevisionRepository
-        .findById(PostRevisionId.of(identity, revisionNumber))
+        .findById(PostFactory.INSTANCE.createRevisionId(identity, revisionNumber))
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->

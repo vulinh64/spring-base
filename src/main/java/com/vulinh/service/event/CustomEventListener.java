@@ -1,4 +1,4 @@
-package com.vulinh.event;
+package com.vulinh.service.event;
 
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.AuthEndpoint;

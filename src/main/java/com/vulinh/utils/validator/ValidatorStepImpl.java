@@ -8,11 +8,6 @@ public record ValidatorStepImpl<T>(
     Predicate<T> predicate, CommonMessage errorMessage, String additionalMessage)
     implements ValidatorStep<T> {
 
-  public static <T> ValidatorStepImpl<T> of(
-      Predicate<T> predicate, CommonMessage commonMessage, String additionalMessage) {
-    return new ValidatorStepImpl<>(predicate, commonMessage, additionalMessage);
-  }
-
   @Override
   public Predicate<T> getPredicate() {
     return predicate;

@@ -16,11 +16,7 @@ public class CustomAuthentication extends AbstractAuthenticationToken {
 
   private final UserBasicDTO principal;
 
-  public static CustomAuthentication of(UserBasicDTO userDTOAsPrincipal) {
-    return new CustomAuthentication(userDTOAsPrincipal);
-  }
-
-  private CustomAuthentication(UserBasicDTO userBasicDTO) {
+  public CustomAuthentication(UserBasicDTO userBasicDTO) {
     super(
         userBasicDTO.userRoles().stream()
             .map(RoleDTO::id)

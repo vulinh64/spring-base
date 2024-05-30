@@ -4,14 +4,14 @@ import com.vulinh.configuration.VerbUrl;
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.UserEndpoint;
 import com.vulinh.constant.UserRole;
+import com.vulinh.factory.VerbUrlFactory;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUrlUtils {
@@ -41,7 +41,7 @@ public class SecurityUrlUtils {
           Map.entry(
               UserRole.ADMIN,
               List.of(
-                  VerbUrl.of(
+                  VerbUrlFactory.INSTANCE.of(
                       HttpMethod.DELETE, "%s/**".formatted(EndpointConstant.ENDPOINT_CATEGORY)))));
 
   private static String combineDouble(Object... path) {

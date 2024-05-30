@@ -7,6 +7,7 @@ import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.projection.PrefetchPostProjection;
+import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;
 import com.vulinh.utils.ResponseUtils;
@@ -21,31 +22,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PostController implements PostAPI {
 
+  private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
+
   private final PostService postService;
   private final PostRevisionService postRevisionService;
 
   @Override
   public GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
       Pageable pageable, HttpServletRequest httpServletRequest) {
-    return GenericResponse.success(postService.findPrefetchPosts(pageable));
+    return RESPONSE_FACTORY.success(postService.findPrefetchPosts(pageable));
   }
 
   @Override
   public GenericResponse<SinglePostDTO> getSinglePost(
       String identity, HttpServletRequest httpServletRequest) {
-    return GenericResponse.success(postService.getSinglePost(identity));
+    return RESPONSE_FACTORY.success(postService.getSinglePost(identity));
   }
 
   @Override
   public GenericResponse<Page<PostRevisionDTO>> getPostRevisions(
       String identity, Pageable pageable) {
-    return GenericResponse.success(postRevisionService.getPostRevisions(identity, pageable));
+    return RESPONSE_FACTORY.success(postRevisionService.getPostRevisions(identity, pageable));
   }
 
   @Override
   public GenericResponse<PostDTO> createPost(
       PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    return GenericResponse.success(postService.createPost(postCreationDTO, httpServletRequest));
+    return RESPONSE_FACTORY.success(postService.createPost(postCreationDTO, httpServletRequest));
   }
 
   @Override

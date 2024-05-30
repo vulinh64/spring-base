@@ -7,6 +7,7 @@ import com.vulinh.data.dto.user.RoleDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.Post;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.service.post.create.PostCreationValidationService;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
@@ -87,16 +88,16 @@ public class PostValidationService {
   @RequiredArgsConstructor
   public enum PostRule implements ValidatorStep<PostCreationDTO> {
     POST_NO_BLANK_TITLE(
-        ValidatorStep.noBlankField(PostCreationDTO::title),
+        ValidatorStepFactory.noBlankField(PostCreationDTO::title),
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
         "Blank title is not allowed"),
     POST_LONG_ENOUGH_TITLE(
-        ValidatorStep.noExceededLength(
+        ValidatorStepFactory.noExceededLength(
             PostCreationDTO::title, PostCreationValidationService.TITLE_MAX_LENGTH),
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
         "Title length is too long"),
     POST_NO_EMPTY_CONTENT(
-        ValidatorStep.noBlankField(PostCreationDTO::postContent),
+        ValidatorStepFactory.noBlankField(PostCreationDTO::postContent),
         CommonMessage.MESSAGE_POST_INVALID_CONTENT,
         "Empty content is not allowed"),
     POST_NO_INVALID_TAG(

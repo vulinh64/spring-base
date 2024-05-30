@@ -6,6 +6,7 @@ import com.vulinh.data.dto.auth.PasswordRequestDTO;
 import com.vulinh.data.dto.auth.PasswordResponseDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.user.UserValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class BcryptPublicController implements BcryptPublicAPI {
 
     log.info("\nRaw password: {}\nEncoded password: {}", rawPassword, encodedPassword);
 
-    return GenericResponse.success(
+    return GenericResponseFactory.INSTANCE.success(
         PasswordResponseDTO.builder()
             .rawPassword(rawPassword)
             .encodedPassword(encodedPassword)

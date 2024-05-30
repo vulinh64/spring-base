@@ -8,6 +8,7 @@ import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.security.AccessToken;
 import com.vulinh.data.dto.user.UserDTO;
+import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +19,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController implements AuthAPI {
 
+  private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
+
   private final AuthService authService;
 
   @Override
   public GenericResponse<AccessToken> login(UserLoginDTO userLoginDTO) {
-    return GenericResponse.success(authService.login(userLoginDTO));
+    return RESPONSE_FACTORY.success(authService.login(userLoginDTO));
   }
 
   @Override
   public GenericResponse<UserDTO> register(UserRegistrationDTO userRegistrationDTO) {
-    return GenericResponse.success(authService.registerUser(userRegistrationDTO));
+    return RESPONSE_FACTORY.success(authService.registerUser(userRegistrationDTO));
   }
 
   @Override
@@ -35,14 +38,14 @@ public class AuthController implements AuthAPI {
     boolean isUserConfirmed = authService.confirmUser(userId, code);
 
     return isUserConfirmed
-        ? ResponseEntity.ok(GenericResponse.success())
+        ? ResponseEntity.ok(GenericResponseFactory.INSTANCE.success())
         : ResponseEntity.status(CommonMessage.MESSAGE_INVALID_CONFIRMATION.getHttpStatusCode())
-            .body(GenericResponse.toGenericResponse(CommonMessage.MESSAGE_INVALID_CONFIRMATION));
+            .body(RESPONSE_FACTORY.toGenericResponse(CommonMessage.MESSAGE_INVALID_CONFIRMATION));
   }
 
   @Override
   public ResponseEntity<Object> changePassword(
-          PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest) {
+      PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest) {
     authService.changePassword(passwordChangeDTO, httpServletRequest);
 
     return ResponseEntity.ok().build();

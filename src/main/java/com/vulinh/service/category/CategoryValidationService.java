@@ -6,10 +6,11 @@ import com.vulinh.data.dto.message.WithHttpStatusCode;
 import com.vulinh.data.entity.Category_;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.utils.SpecificationBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
-import com.vulinh.utils.validator.ValidatorStepImpl;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.Getter;
@@ -35,8 +36,8 @@ public class CategoryValidationService {
   public void validateCategorySlug(CategoryCreationDTO categoryCreationDTO, String categorySlug) {
     ValidatorChain.<String>start()
         .addValidator(
-            ValidatorStepImpl.of(
-                ValidatorStep.noExceededLength(
+            ValidatorStepFactory.INSTANCE.build(
+                ValidatorStepFactory.noExceededLength(
                     Function.identity(), CategoryValidationService.CATEGORY_SLUG_MAX_LENGTH),
                 CommonMessage.MESSAGE_INVALID_CATEGORY_SLUG,
                 "Category slug is too long"))
@@ -61,10 +62,10 @@ public class CategoryValidationService {
   @Getter
   public enum CategoryRule implements ValidatorStep<CategoryCreationDTO> {
     CATEGORY_NOT_EMPTY(
-        ValidatorStep.noBlankField(CategoryCreationDTO::displayName),
+        ValidatorStepFactory.noBlankField(CategoryCreationDTO::displayName),
         "Blank category is not allowed"),
     CATEGORY_NOT_TOO_LONG(
-        ValidatorStep.noExceededLength(CategoryCreationDTO::displayName, CATEGORY_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(CategoryCreationDTO::displayName, CATEGORY_MAX_LENGTH),
         "Category must be 500 characters or less");
 
     private final Predicate<CategoryCreationDTO> predicate;

@@ -4,19 +4,19 @@ import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
-import com.vulinh.data.dto.event.UserRegistrationEventDTO;
 import com.vulinh.data.dto.security.AccessToken;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.UserRegistrationEventFactory;
+import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.security.AccessTokenGenerator;
 import com.vulinh.utils.validator.ValidatorChain;
-import com.vulinh.utils.validator.ValidatorStepImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AuthService {
 
+  private static final ValidatorStepFactory VALIDATOR_STEP_FACTORY = ValidatorStepFactory.INSTANCE;
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
   private final UserRepository userRepository;
@@ -72,7 +73,7 @@ public class AuthService {
             USER_MAPPER.toUserWithRegistrationCode(
                 registrationWithEncodedPassword, UUID.randomUUID().toString()));
 
-    applicationEventPublisher.publishEvent(UserRegistrationEventDTO.of(newUser));
+    applicationEventPublisher.publishEvent(UserRegistrationEventFactory.INSTANCE.fromUser(newUser));
 
     return USER_MAPPER.toUserDTO(newUser);
   }
@@ -108,11 +109,11 @@ public class AuthService {
 
     ValidatorChain.<PasswordChangeDTO>start()
         .addValidator(
-            ValidatorStepImpl.of(
+            VALIDATOR_STEP_FACTORY.build(
                 passwordValidationService.isOldPasswordMatched(userEntity),
                 CommonMessage.MESSAGE_PASSWORD_MISMATCHED,
                 "Invalid old password"),
-            ValidatorStepImpl.of(
+            VALIDATOR_STEP_FACTORY.build(
                 passwordValidationService.isNewPasswordNotMatched(userEntity),
                 CommonMessage.MESSAGE_SAME_OLD_PASSWORD,
                 "New password cannot be the same as old password"))
