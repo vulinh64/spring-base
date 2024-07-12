@@ -12,6 +12,7 @@ import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.utils.PostUtils;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.vulinh.utils.SpecificationBuilder;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class CategoryService {
 
   private final CategoryValidationService categoryValidationService;
 
-  public Category getCategory(String categoryId) {
+  public Category getCategory(UUID categoryId) {
     return Optional.ofNullable(categoryId)
         .or(() -> Optional.of(CommonConstant.UNCATEGORIZED_ID))
         .flatMap(categoryRepository::findById)
@@ -117,7 +118,7 @@ public class CategoryService {
   }
 
   @Transactional
-  public boolean deleteCategory(String categoryId) {
+  public boolean deleteCategory(UUID categoryId) {
     if (CommonConstant.UNCATEGORIZED_ID.equals(categoryId)) {
       throw ExceptionBuilder.buildCommonException(
           "Cannot delete default category", CommonMessage.MESSAGE_DEFAULT_CATEGORY_IMMORTAL);

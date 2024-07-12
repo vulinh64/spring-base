@@ -1,7 +1,7 @@
 --liquibase formatted sql
 --changeset vulinh:20240507-0003
 CREATE TABLE tag (
-	id varchar(36) NOT NULL,
+	id uuid NOT NULL,
 	display_name varchar(1000) NOT NULL,
 	CONSTRAINT tag_pk PRIMARY KEY (id)
 );

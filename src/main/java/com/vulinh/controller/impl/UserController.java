@@ -12,6 +12,7 @@ import com.vulinh.service.user.UserService;
 import com.vulinh.utils.ResponseUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class UserController implements UserAPI {
   }
 
   @Override
-  public ResponseEntity<Void> deleteUser(String id, HttpServletRequest httpServletRequest) {
+  public ResponseEntity<Void> deleteUser(UUID id, HttpServletRequest httpServletRequest) {
     return ResponseUtils.returnOkOrNoContent(userService.delete(id, httpServletRequest));
   }
 

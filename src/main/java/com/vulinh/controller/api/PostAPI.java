@@ -9,6 +9,7 @@ import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,12 @@ public interface PostAPI {
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT)
   GenericResponse<SinglePostDTO> getSinglePost(
-      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) String identity,
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId,
       HttpServletRequest httpServletRequest);
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   GenericResponse<Page<PostRevisionDTO>> getPostRevisions(
-      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) String identity, Pageable pageable);
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId, Pageable pageable);
 
   @PostMapping
   GenericResponse<PostDTO> createPost(
@@ -36,18 +37,18 @@ public interface PostAPI {
 
   @PatchMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   ResponseEntity<Void> editPost(
-      @PathVariable(PostEndpoint.POST_ID_VARIABLE) String postId,
+      @PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId,
       @RequestBody PostCreationDTO postCreationDTO,
       HttpServletRequest httpServletRequest);
 
   @DeleteMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   ResponseEntity<Void> deletePost(
-      @PathVariable(PostEndpoint.POST_ID_VARIABLE) String postId,
+      @PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId,
       HttpServletRequest httpServletRequest);
 
   @PatchMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   ResponseEntity<Void> applyRevision(
-      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) String identity,
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId,
       @RequestParam long revisionNumber,
       HttpServletRequest httpServletRequest);
 }

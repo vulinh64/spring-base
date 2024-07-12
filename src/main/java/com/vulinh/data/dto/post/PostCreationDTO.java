@@ -1,6 +1,7 @@
 package com.vulinh.data.dto.post;
 
 import java.util.Set;
+import java.util.UUID;
 import lombok.With;
 import org.apache.commons.collections4.SetUtils;
 
@@ -10,7 +11,7 @@ public record PostCreationDTO(
     String excerpt,
     String postContent,
     String slug,
-    String categoryId,
+    UUID categoryId,
     Set<String> tags) {
 
   public PostCreationDTO(
@@ -18,7 +19,7 @@ public record PostCreationDTO(
       String excerpt,
       String postContent,
       String slug,
-      String categoryId,
+      UUID categoryId,
       Set<String> tags) {
     this.title = title;
     this.excerpt = excerpt;

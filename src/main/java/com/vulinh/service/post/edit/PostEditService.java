@@ -11,6 +11,7 @@ import com.vulinh.utils.PostUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class PostEditService {
 
   @Transactional
   public Optional<Post> editPost(
-      String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+      UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
     postValidationService.validatePost(postCreationDTO);
 
     var userDTO = SecurityUtils.getUserDTOOrThrow(httpServletRequest);

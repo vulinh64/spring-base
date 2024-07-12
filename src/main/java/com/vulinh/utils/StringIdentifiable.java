@@ -1,3 +1,5 @@
 package com.vulinh.utils;
 
-public interface StringIdentifiable extends Identifiable<String> {}
+import java.util.UUID;
+
+public interface StringIdentifiable extends Identifiable<UUID> {}

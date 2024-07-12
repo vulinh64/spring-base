@@ -3,6 +3,8 @@ package com.vulinh.constant;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonConstant {
 
@@ -41,9 +43,9 @@ public class CommonConstant {
       }
       """;
 
-  public static final String UNCATEGORIZED_ID = "uncategorized";
+  public static final UUID UNCATEGORIZED_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
   public static final String UNCATEGORIZED_NAME = "Uncategorized";
-  public static final String UNCATEGORIZED_SLUG = UNCATEGORIZED_ID;
+  public static final String UNCATEGORIZED_SLUG = "uncategorized";
 
   public static final String POST_ENTITY = "Post";
 }

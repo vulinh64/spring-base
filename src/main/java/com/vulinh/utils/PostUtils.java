@@ -91,7 +91,7 @@ public class PostUtils {
   }
 
   public static boolean isUncategorizedPost(PostCreationDTO postCreationDTO, Post post) {
-    return (StringUtils.isBlank(postCreationDTO.categoryId())
+    return (postCreationDTO.categoryId() == null
             || CommonConstant.UNCATEGORIZED_ID.equals(postCreationDTO.categoryId()))
         && CommonConstant.UNCATEGORIZED_ID.equals(post.getCategory().getId());
   }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -180,10 +181,9 @@ public interface AuthAPI {
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
   ResponseEntity<GenericResponse<Object>> confirmUser(
-      @RequestParam String userId, @RequestParam String code);
+      @RequestParam UUID userId, @RequestParam String code);
 
   @PatchMapping(AuthEndpoint.CHANGE_PASSWORD)
   ResponseEntity<Object> changePassword(
-      @RequestBody PasswordChangeDTO passwordChangeDTO,
-      HttpServletRequest httpServletRequest);
+      @RequestBody PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest);
 }

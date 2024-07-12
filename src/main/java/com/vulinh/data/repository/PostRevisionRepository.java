@@ -3,6 +3,7 @@ package com.vulinh.data.repository;
 import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.entity.PostRevision;
 import com.vulinh.data.entity.PostRevisionId;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -27,7 +28,7 @@ public interface PostRevisionRepository extends BaseRepository<PostRevision, Pos
       from PostRevision pr
       inner join Post p
       on pr.id.postId = p.id
-      where p.id = :identity or p.slug = :identity
+      where p.id = :postId
       """)
-  Page<PostRevisionDTO> findByPostIdOrPostSlug(String identity, Pageable pageable);
+  Page<PostRevisionDTO> findByPostIdOrPostSlug(UUID postId, Pageable pageable);
 }

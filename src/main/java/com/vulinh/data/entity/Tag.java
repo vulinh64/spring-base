@@ -3,6 +3,8 @@ package com.vulinh.data.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.io.Serial;
+import java.util.UUID;
+
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -18,7 +20,7 @@ public class Tag extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = 5399822567855696869L;
 
-  @Id @UuidGenerator private String id;
+  @Id @UuidGenerator private UUID id;
 
   private String displayName;
 

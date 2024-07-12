@@ -1,8 +1,8 @@
 --liquibase formatted sql
 --changeset vulinh:20240419-0004
 CREATE TABLE user_role_mapping (
-	user_id varchar(36) NOT NULL,
-	role_id varchar(36) NOT NULL,
+	user_id uuid NOT NULL,
+	role_id varchar(50) NOT NULL,
 	CONSTRAINT user_role_mapping_pk PRIMARY KEY (user_id, role_id)
 );
 

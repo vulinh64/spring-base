@@ -2,12 +2,13 @@ package com.vulinh.factory;
 
 import com.vulinh.data.entity.PostRevisionId;
 import com.vulinh.data.entity.Tag;
+import java.util.UUID;
 
 @SuppressWarnings("java:S6548")
 public enum PostFactory {
   INSTANCE;
 
-  public PostRevisionId createRevisionId(String postId, Long revisionNumber) {
+  public PostRevisionId createRevisionId(UUID postId, Long revisionNumber) {
     return new PostRevisionId(postId, revisionNumber);
   }
 

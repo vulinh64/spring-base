@@ -16,6 +16,9 @@ import com.vulinh.utils.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,9 +28,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +45,8 @@ public class PostRevisionService {
   @PersistenceContext private final EntityManager entityManager;
 
   @Transactional
-  public Page<PostRevisionDTO> getPostRevisions(String identity, Pageable pageable) {
-    throwIfPostNotExists(identity);
+  public Page<PostRevisionDTO> getPostRevisions(UUID postId, Pageable pageable) {
+    throwIfPostNotExists(postId);
 
     var actualPageable =
         PageRequest.of(
@@ -54,21 +54,20 @@ public class PostRevisionService {
             pageable.getPageSize(),
             Sort.by(Order.desc(PostRevision_.REVISION_CREATED_DATE)));
 
-    return postRevisionRepository.findByPostIdOrPostSlug(identity, actualPageable);
+    return postRevisionRepository.findByPostIdOrPostSlug(postId, actualPageable);
   }
 
   @Transactional
   public boolean applyRevision(
-      String identity, long revisionNumber, HttpServletRequest httpServletRequest) {
+      UUID postId, long revisionNumber, HttpServletRequest httpServletRequest) {
     var post =
         postRepository
             .findBy(
-                checkPostRevisionJPAQuery(identity).exists(),
-                FluentQuery.FetchableFluentQuery::first)
+                checkPostRevisionJPAQuery(postId).exists(), FluentQuery.FetchableFluentQuery::first)
             .orElseThrow(
                 () ->
                     ExceptionBuilder.entityNotFound(
-                        "Post with ID %s or slug %s not found".formatted(identity, identity),
+                        "Post with ID %s or slug %s not found".formatted(postId, postId),
                         CommonConstant.POST_ENTITY));
 
     postValidationService.validateModifyingPermission(
@@ -85,13 +84,13 @@ public class PostRevisionService {
     }
 
     return postRevisionRepository
-        .findById(PostFactory.INSTANCE.createRevisionId(identity, revisionNumber))
+        .findById(PostFactory.INSTANCE.createRevisionId(postId, revisionNumber))
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->
                 ExceptionBuilder.entityNotFound(
                     "Post revision number %s for post ID %s not existed"
-                        .formatted(revisionNumber, identity),
+                        .formatted(revisionNumber, postId),
                     "Post Revision"));
   }
 
@@ -135,22 +134,21 @@ public class PostRevisionService {
     return true;
   }
 
-  private void throwIfPostNotExists(String identity) {
-    var predicate = checkPostRevisionJPAQuery(identity).notExists();
+  private void throwIfPostNotExists(UUID postId) {
+    var predicate = checkPostRevisionJPAQuery(postId).notExists();
 
     if (postRevisionRepository.exists(predicate)) {
       throw ExceptionBuilder.entityNotFound(
-          "Post with ID %s or slug %s not found".formatted(identity, identity),
+          "Post with ID %s or slug %s not found".formatted(postId, postId),
           CommonConstant.POST_ENTITY);
     }
   }
 
-  private JPAQuery<Post> checkPostRevisionJPAQuery(String identity) {
+  private JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {
     var postEntry = QPost.post;
     var postIdEntry = postEntry.id;
 
-    return postRevisionJoinJPAQuery()
-        .where(postIdEntry.eq(identity).or(postEntry.slug.eq(identity)));
+    return postRevisionJoinJPAQuery().where(postIdEntry.eq(identity));
   }
 
   private JPAQuery<Post> postRevisionJoinJPAQuery() {

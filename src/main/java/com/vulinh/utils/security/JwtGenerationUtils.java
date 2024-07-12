@@ -31,7 +31,7 @@ public class JwtGenerationUtils implements AccessTokenGenerator {
 
     var accessToken =
         Jwts.builder()
-            .setSubject(matchedUser.getId())
+            .setSubject(matchedUser.getId().toString())
             .setIssuer("spring-base-service")
             .setIssuedAt(toDate(issuedAt))
             .setExpiration(toDate(expiration))

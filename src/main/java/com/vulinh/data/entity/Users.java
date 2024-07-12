@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
+
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UuidGenerator;
@@ -24,7 +26,7 @@ public class Users extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = -2867497192634401616L;
 
-  @Id @UuidGenerator private String id;
+  @Id @UuidGenerator private UUID id;
 
   private String username;
   private String fullName;

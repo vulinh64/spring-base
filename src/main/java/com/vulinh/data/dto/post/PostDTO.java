@@ -7,10 +7,11 @@ import com.vulinh.data.dto.category.CategoryDTO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 @JsonInclude(Include.NON_NULL)
 public record PostDTO(
-    String id,
+    UUID id,
     String title,
     String excerpt,
     String slug,

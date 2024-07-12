@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
+
 import lombok.*;
 
 @Embeddable
@@ -24,7 +26,7 @@ public class PostRevisionId implements Serializable {
   public static final String POST_REVISION_SEQ = "post_revision_seq";
   public static final String POST_REVISION_SEQ_NAME = POST_REVISION_SEQ + "_generator";
 
-  private String postId;
+  private UUID postId;
 
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = POST_REVISION_SEQ_NAME)
   @SequenceGenerator(

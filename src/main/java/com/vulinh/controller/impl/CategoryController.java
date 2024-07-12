@@ -8,6 +8,7 @@ import com.vulinh.data.dto.category.CategorySearchDTO;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.utils.ResponseUtils;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class CategoryController implements CategoryAPI {
   }
 
   @Override
-  public ResponseEntity<Void> deleteCategory(String categoryId) {
+  public ResponseEntity<Void> deleteCategory(UUID categoryId) {
     return ResponseUtils.returnOkOrNoContent(categoryService.deleteCategory(categoryId));
   }
 }

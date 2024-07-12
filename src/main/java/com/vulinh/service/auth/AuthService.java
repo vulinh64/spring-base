@@ -80,8 +80,8 @@ public class AuthService {
 
   // Confirm normal user
   @Transactional
-  public boolean confirmUser(String userId, String code) {
-    if (StringUtils.isBlank(userId) || StringUtils.isBlank(code)) {
+  public boolean confirmUser(UUID userId, String code) {
+    if (userId == null || StringUtils.isBlank(code)) {
       return false;
     }
 

@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.UUID;
+
 import lombok.*;
 
 @Builder
 @With
 @JsonInclude(Include.NON_NULL)
 public record UserDTO(
-    String id,
+    UUID id,
     String username,
     String fullName,
     String email,

@@ -5,6 +5,7 @@ import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
 import com.vulinh.data.dto.category.CategorySearchDTO;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,5 @@ public interface CategoryAPI {
       CategorySearchDTO categorySearchDTO, Pageable pageable);
 
   @DeleteMapping("/{categoryId}")
-  ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") String categoryId);
+  ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") UUID categoryId);
 }

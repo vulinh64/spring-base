@@ -1,14 +1,11 @@
 package com.vulinh.configuration;
 
 import com.vulinh.constant.UserRole;
-import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.filter.JwtFilter;
 import com.vulinh.utils.SecurityUrlUtils;
-import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -83,11 +80,7 @@ public class SecurityConfig {
 
   @Bean
   public RoleHierarchy roleHierarchy() {
-    var roleHierarchy = new RoleHierarchyImpl();
-
-    roleHierarchy.setHierarchy(UserRole.toHierarchyPhrase());
-
-    return roleHierarchy;
+    return RoleHierarchyImpl.fromHierarchy(UserRole.toHierarchyPhrase());
   }
 
   private void configureAuthorizeHttpRequestCustomizer(
@@ -114,16 +107,6 @@ public class SecurityConfig {
 
   private void handleSecurityException(
       HttpServletRequest request, HttpServletResponse response, Throwable authException) {
-    var userDTO = SecurityUtils.getUserDTO(request);
-
-    log.info(
-        "User {{ User ID = {}; Unique ID = {}; Roles = {} }} accessed resource [{} {}] failed",
-        userDTO.map(UserBasicDTO::username).orElse("Unknown"),
-        userDTO.map(UserBasicDTO::id).orElse("Invalid ID"),
-        userDTO.map(UserBasicDTO::userRoles).stream().flatMap(Collection::stream).toList(),
-        request.getMethod(),
-        request.getRequestURI());
-
     handlerExceptionResolver.resolveException(
         request, response, null, ExceptionBuilder.invalidAuthorization(authException));
   }

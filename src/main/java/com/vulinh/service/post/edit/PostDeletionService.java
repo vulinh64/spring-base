@@ -6,6 +6,8 @@ import com.vulinh.service.post.PostValidationService;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,7 @@ public class PostDeletionService {
   private final PostValidationService postValidationService;
 
   @Transactional
-  public Optional<Post> deletePost(String postId, HttpServletRequest httpServletRequest) {
+  public Optional<Post> deletePost(UUID postId, HttpServletRequest httpServletRequest) {
 
     return postRepository
         .findById(postId)

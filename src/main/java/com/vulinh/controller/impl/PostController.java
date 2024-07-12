@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 public class PostController implements PostAPI {
@@ -35,14 +37,13 @@ public class PostController implements PostAPI {
 
   @Override
   public GenericResponse<SinglePostDTO> getSinglePost(
-      String identity, HttpServletRequest httpServletRequest) {
-    return RESPONSE_FACTORY.success(postService.getSinglePost(identity));
+          UUID postId, HttpServletRequest httpServletRequest) {
+    return RESPONSE_FACTORY.success(postService.getSinglePost(postId));
   }
 
   @Override
-  public GenericResponse<Page<PostRevisionDTO>> getPostRevisions(
-      String identity, Pageable pageable) {
-    return RESPONSE_FACTORY.success(postRevisionService.getPostRevisions(identity, pageable));
+  public GenericResponse<Page<PostRevisionDTO>> getPostRevisions(UUID postId, Pageable pageable) {
+    return RESPONSE_FACTORY.success(postRevisionService.getPostRevisions(postId, pageable));
   }
 
   @Override
@@ -53,13 +54,13 @@ public class PostController implements PostAPI {
 
   @Override
   public ResponseEntity<Void> editPost(
-      String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+      UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
     return ResponseUtils.returnOkOrNoContent(
         postService.editPost(postId, postCreationDTO, httpServletRequest));
   }
 
   @Override
-  public ResponseEntity<Void> deletePost(String postId, HttpServletRequest httpServletRequest) {
+  public ResponseEntity<Void> deletePost(UUID postId, HttpServletRequest httpServletRequest) {
     return postService.deletePost(postId, httpServletRequest)
         ? ResponseEntity.ok().build()
         : ResponseEntity.notFound().build();
@@ -67,8 +68,8 @@ public class PostController implements PostAPI {
 
   @Override
   public ResponseEntity<Void> applyRevision(
-      String identity, long revisionNumber, HttpServletRequest httpServletRequest) {
+      UUID postId, long revisionNumber, HttpServletRequest httpServletRequest) {
     return ResponseUtils.returnOkOrNoContent(
-        postRevisionService.applyRevision(identity, revisionNumber, httpServletRequest));
+        postRevisionService.applyRevision(postId, revisionNumber, httpServletRequest));
   }
 }

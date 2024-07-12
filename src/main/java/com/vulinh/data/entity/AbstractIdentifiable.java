@@ -27,9 +27,10 @@ public abstract class AbstractIdentifiable implements Identifiable<Serializable>
 
     var id = getId();
 
-    return
     // Entity without ID will always be different
-    id != null && other instanceof AbstractIdentifiable that && Objects.equals(id, that.getId());
+    return id != null
+        && other instanceof AbstractIdentifiable that
+        && Objects.equals(id, that.getId());
   }
 
   @Override

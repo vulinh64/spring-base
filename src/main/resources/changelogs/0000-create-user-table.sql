@@ -1,7 +1,7 @@
 --liquibase formatted sql
 --changeset vulinh:20240419-0000
 CREATE TABLE "users" (
-	id varchar(36) NOT NULL,
+	id uuid NOT NULL,
 	username varchar(200) NOT NULL,
 	full_name varchar(200) NULL,
 	"email" varchar(200) NOT NULL,

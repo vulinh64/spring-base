@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -129,7 +130,7 @@ public interface UserAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  ResponseEntity<Void> deleteUser(@PathVariable String id, HttpServletRequest httpServletRequest);
+  ResponseEntity<Void> deleteUser(@PathVariable UUID id, HttpServletRequest httpServletRequest);
 
   @GetMapping(UserEndpoint.DETAILS)
   @Operation(

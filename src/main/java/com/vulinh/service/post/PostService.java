@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -39,14 +41,14 @@ public class PostService {
     return postRepository.findPrefetchPosts(pageable);
   }
 
-  public SinglePostDTO getSinglePost(String identity) {
+  public SinglePostDTO getSinglePost(UUID postId) {
     return postRepository
-        .findSinglePost(identity)
+        .findSinglePost(postId)
         .map(POST_MAPPER::toSinglePostDTO)
         .orElseThrow(
             () ->
                 ExceptionBuilder.entityNotFound(
-                    "Post with either id or slug [%s] not found".formatted(identity),
+                    "Post with either id or slug [%s] not found".formatted(postId),
                     CommonConstant.POST_ENTITY));
   }
 
@@ -64,7 +66,7 @@ public class PostService {
 
   @Transactional
   public boolean editPost(
-      String postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+      UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
     return postEditService
         .editPost(postId, postCreationDTO, httpServletRequest)
         .map(postRevisionService::createPostEditRevision)
@@ -72,7 +74,7 @@ public class PostService {
   }
 
   @Transactional
-  public boolean deletePost(String postId, HttpServletRequest httpServletRequest) {
+  public boolean deletePost(UUID postId, HttpServletRequest httpServletRequest) {
     return postDeletionService
         .deletePost(postId, httpServletRequest)
         .map(postRevisionService::createPostDeletionRevision)

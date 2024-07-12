@@ -5,13 +5,14 @@ import com.vulinh.data.entity.Post;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.exception.ExceptionBuilder;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepository extends BaseRepository<Post, String> {
+public interface PostRepository extends BaseRepository<Post, UUID> {
 
   @Query(
       """
@@ -29,10 +30,10 @@ public interface PostRepository extends BaseRepository<Post, String> {
   // Cannot fetch tags without combining same post entities, for now
   Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable);
 
-  @Query("select p from Post p where p.id = :identity or p.slug = :identity")
-  Optional<Post> findSinglePost(String identity);
+  @Query("select p from Post p where p.id = :identity")
+  Optional<Post> findSinglePost(UUID identity);
 
-  default Post findByIdOrFailed(String id) {
+  default Post findByIdOrFailed(UUID id) {
     return findById(id)
         .orElseThrow(
             () ->

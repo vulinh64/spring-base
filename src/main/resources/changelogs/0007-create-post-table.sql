@@ -1,16 +1,16 @@
 --liquibase formatted sql
 --changeset vulinh:20240507-0002
 CREATE TABLE post (
-	id varchar(36) NOT NULL,
+	id uuid NOT NULL,
 	title varchar(5000) NOT NULL,
 	slug varchar(5000) NOT NULL,
 	excerpt varchar(500) NULL,
 	post_content text NOT NULL,
-	author_id varchar(36) NULL,
-	category_id varchar(36) NULL DEFAULT '641ea43f-c426-49ad-bd7b-5ec551a6fa12',
+	author_id uuid NULL,
+	category_id uuid NULL DEFAULT '00000000-0000-0000-0000-000000000000',
 	created_date timestamp NULL,
 	updated_date timestamp NULL,
-	updated_by varchar(36) NULL,
+	updated_by uuid NULL,
 	CONSTRAINT post_pk PRIMARY KEY (id),
 	CONSTRAINT post_unique UNIQUE (slug),
 	CONSTRAINT post_category_fk FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,

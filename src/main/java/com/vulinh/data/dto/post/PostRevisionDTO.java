@@ -3,18 +3,19 @@ package com.vulinh.data.dto.post;
 import com.vulinh.data.entity.RevisionType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record PostRevisionDTO(
-    String postId,
+    UUID postId,
     Long revisionNumber,
     RevisionType revisionType,
     String title,
     String slug,
     String excerpt,
     String postContent,
-    String authorId,
-    String categoryId,
+    UUID authorId,
+    UUID categoryId,
     String tags,
     LocalDateTime revisionCreatedDate,
-    String revisionCreatedBy)
+    UUID revisionCreatedBy)
     implements Serializable {}

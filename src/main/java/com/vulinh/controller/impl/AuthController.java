@@ -11,6 +11,7 @@ import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class AuthController implements AuthAPI {
   }
 
   @Override
-  public ResponseEntity<GenericResponse<Object>> confirmUser(String userId, String code) {
+  public ResponseEntity<GenericResponse<Object>> confirmUser(UUID userId, String code) {
     boolean isUserConfirmed = authService.confirmUser(userId, code);
 
     return isUserConfirmed

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
+
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,7 +26,7 @@ public class Post extends AbstractIdentifiable {
 
   @Serial private static final long serialVersionUID = -2260038525808618984L;
 
-  @Id @UuidGenerator private String id;
+  @Id @UuidGenerator private UUID id;
 
   private String title;
   private String slug;
@@ -35,7 +37,7 @@ public class Post extends AbstractIdentifiable {
 
   @LastModifiedDate private LocalDateTime updatedDate;
 
-  @LastModifiedBy private String updatedBy;
+  @LastModifiedBy private UUID updatedBy;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude

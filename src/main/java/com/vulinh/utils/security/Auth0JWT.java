@@ -12,6 +12,7 @@ import com.vulinh.data.entity.Users_;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Instant;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;
@@ -38,7 +39,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
                 .withIssuer(securityConfigProperties.issuer())
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiration)
-                .withSubject(users.getId())
+                .withSubject(users.getId().toString())
                 .withClaim(Users_.USERNAME, users.getUsername())
                 .sign(getAlgorithm(securityConfigProperties)))
         .issuedAt(issuedAt)
@@ -54,7 +55,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
 
       return JwtPayload.builder()
           .issuer(decodedJWT.getIssuer())
-          .subject(decodedJWT.getSubject())
+          .subject(UUID.fromString(decodedJWT.getSubject()))
           .username(decodedJWT.getClaim(Users_.USERNAME).asString())
           .build();
     } catch (TokenExpiredException tokenExpiredException) {

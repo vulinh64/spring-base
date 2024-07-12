@@ -16,6 +16,7 @@ import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.SpecificationBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Getter
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements BaseEntityService<String, Users, UserDTO, UserRepository> {
+public class UserService implements BaseEntityService<UUID, Users, UserDTO, UserRepository> {
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
@@ -76,7 +77,7 @@ public class UserService implements BaseEntityService<String, Users, UserDTO, Us
   }
 
   @Transactional
-  public boolean delete(String id, HttpServletRequest httpServletRequest) {
+  public boolean delete(UUID id, HttpServletRequest httpServletRequest) {
     SecurityUtils.getUserDTO(httpServletRequest)
         .filter(user -> user.id().equals(id))
         .ifPresent(
