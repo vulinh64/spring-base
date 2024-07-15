@@ -43,7 +43,7 @@ public class PostService {
 
   public SinglePostDTO getSinglePost(UUID postId) {
     return postRepository
-        .findSinglePost(postId)
+        .findById(postId)
         .map(POST_MAPPER::toSinglePostDTO)
         .orElseThrow(
             () ->

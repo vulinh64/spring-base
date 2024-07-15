@@ -4,7 +4,6 @@ import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.exception.ExceptionBuilder;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,9 +28,6 @@ public interface PostRepository extends BaseRepository<Post, UUID> {
       """)
   // Cannot fetch tags without combining same post entities, for now
   Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable);
-
-  @Query("select p from Post p where p.id = :identity")
-  Optional<Post> findSinglePost(UUID identity);
 
   default Post findByIdOrFailed(UUID id) {
     return findById(id)
