@@ -20,6 +20,7 @@ spring:
       - method: GET
         url: /category/search/**
     no-authenticated-urls:
+      - /free/**
       - /health
       - /v3/api-docs/**
       - /swagger-ui.html
