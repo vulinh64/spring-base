@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
+        <version>3.3.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>Spring Base project</name>
     <description>Sample text here</description>
 
@@ -67,17 +67,6 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
             <version>${spring.data.elasticsearch.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.parsson</groupId>
-                    <artifactId>parsson</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.parsson</groupId>
-            <artifactId>parsson</artifactId>
-            <version>1.1.6</version>
         </dependency>
         <!-- END: Elasticsearch -->
 
@@ -88,16 +77,23 @@
         </dependency>
         <!-- END: Liquibase -->
 
+        <!-- BEGIN: PostgreSQL-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- END: PostgreSQL-->
+
+        <!-- BEGIN: Project Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- END: Project Lombok -->
+
+        <!-- BEGIN: Mapstruct /w annotation processor-->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -108,16 +104,25 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+        <!-- END: Mapstruct /w annotation processor-->
+
+        <!-- BEGIN: SQL spying library -->
         <dependency>
             <groupId>com.github.gavlyukovskiy</groupId>
             <artifactId>p6spy-spring-boot-starter</artifactId>
             <version>1.9.1</version>
         </dependency>
+        <!-- END: SQL spying library -->
+
+        <!-- BEGIN: JMail validation library -->
         <dependency>
             <groupId>com.sanctionco.jmail</groupId>
             <artifactId>jmail</artifactId>
-            <version>1.6.2</version>
+            <version>1.6.3</version>
         </dependency>
+        <!-- END: JMail validation library -->
+
+        <!-- BEGIN: JWT Validation libraries -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -129,10 +134,21 @@
             <version>${jsonwebtoken.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <!-- END: JWT Validation libraries -->
+
+        <!-- BEGIN: Swagger UI -->
+        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.5.0</version>
+            <version>2.6.0</version>
         </dependency>
+        <!-- END: Swagger UI -->
+
+        <!-- BEGIN: QueryDSL /w annotation processor -->
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
@@ -145,21 +161,23 @@
             <classifier>jakarta</classifier>
             <version>${querydsl.version}</version>
         </dependency>
+        <!-- END: QueryDSL /w annotation processor -->
+
+        <!-- BEGIN: Hibernate JPA Modelgen /w annotation processor -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+        <!-- END: Hibernate JPA Modelgen /w annotation processor -->
+
+        <!-- BEGIN: Google Guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.0-jre</version>
+            <version>33.2.1-jre</version>
         </dependency>
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>4.4.0</version>
-        </dependency>
+        <!-- END: Google Guava -->
     </dependencies>
 
     <build>
@@ -219,5 +237,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
