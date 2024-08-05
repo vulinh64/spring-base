@@ -10,6 +10,6 @@ public interface I18NCapable extends Serializable {
   String getCode();
 
   default String getMessage(Object... args) {
-    return LocalizationSupport.getRawMessage(getCode(), args);
+    return LocalizationSupport.getParsedMessage(getCode(), args);
   }
 }

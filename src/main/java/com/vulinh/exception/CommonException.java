@@ -11,7 +11,7 @@ public class CommonException extends RuntimeException implements I18NCapable {
 
   @Serial private static final long serialVersionUID = 944218762645229018L;
 
-  private final transient WithHttpStatusCode errorKey;
+  private final WithHttpStatusCode errorKey;
   private final transient Object[] args;
 
   public CommonException(
@@ -19,10 +19,6 @@ public class CommonException extends RuntimeException implements I18NCapable {
     super(message, throwable);
     this.errorKey = errorKey;
     this.args = args;
-  }
-
-  public CommonException(String message, WithHttpStatusCode errorKey, Object... args) {
-    this(message, errorKey, null, args);
   }
 
   @Override
