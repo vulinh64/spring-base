@@ -99,11 +99,6 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
         <!-- END: Mapstruct /w annotation processor-->
 
         <!-- BEGIN: SQL spying library -->
