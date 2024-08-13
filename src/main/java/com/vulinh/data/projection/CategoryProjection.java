@@ -1,8 +1,8 @@
 package com.vulinh.data.projection;
 
-import com.vulinh.utils.StringIdentifiable;
+import com.vulinh.utils.UUIDIdentifiable;
 
-public interface CategoryProjection extends StringIdentifiable {
+public interface CategoryProjection extends UUIDIdentifiable {
 
   String getDisplayName();
 }
