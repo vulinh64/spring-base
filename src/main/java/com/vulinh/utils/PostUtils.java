@@ -95,8 +95,4 @@ public class PostUtils {
             || CommonConstant.UNCATEGORIZED_ID.equals(postCreationDTO.categoryId()))
         && CommonConstant.UNCATEGORIZED_ID.equals(post.getCategory().getId());
   }
-
-  public static String capitalize(String text) {
-    return StringUtils.capitalize(StringUtils.normalizeSpace(text));
-  }
 }
