@@ -5,19 +5,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <name>Spring Base project</name>
     <description>Sample text here</description>
 
     <properties>
-        <java.version>17</java.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <java.version>21</java.version>
+        <mapstruct.version>1.6.0</mapstruct.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
         <querydsl.version>5.1.0</querydsl.version>
         <spring.data.elasticsearch.version>5.2.6</spring.data.elasticsearch.version>
@@ -105,7 +105,7 @@
         <dependency>
             <groupId>com.github.gavlyukovskiy</groupId>
             <artifactId>p6spy-spring-boot-starter</artifactId>
-            <version>1.9.1</version>
+            <version>1.9.2</version>
         </dependency>
         <!-- END: SQL spying library -->
 
@@ -170,7 +170,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.1-jre</version>
+            <version>33.3.0-jre</version>
         </dependency>
         <!-- END: Google Guava -->
     </dependencies>
