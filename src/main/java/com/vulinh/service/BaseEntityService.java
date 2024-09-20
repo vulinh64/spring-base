@@ -77,7 +77,7 @@ public interface BaseEntityService<
     return deleteInternal(matchedByIds);
   }
 
-  private boolean deleteInternal(Iterable<E> matchedByIds) {
+  private boolean deleteInternal(Iterable<? extends E> matchedByIds) {
     getRepository().deleteAll(matchedByIds);
 
     return true;

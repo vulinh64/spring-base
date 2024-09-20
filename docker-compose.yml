@@ -6,5 +6,15 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "8080:8080"
-    env_file:
-      - .env
+    environment:
+      - DATABASE_HOST=postgresql
+      - DATABASE_USERNAME=postgres
+  db:
+    image: 'postgres:latest'
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=myspringdatabase
