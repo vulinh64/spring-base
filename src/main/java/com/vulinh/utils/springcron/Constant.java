@@ -23,4 +23,8 @@ final class Constant {
   static final int MAX_MONTH = 12;
 
   static final int MAX_DAY_OF_WEEK = 7;
+
+  static final int MIN_NTH_WEEK_DAY = 0;
+
+  static final int MAX_NTH_WEEK_DAY = 5;
 }

@@ -24,6 +24,7 @@ public enum DayExpression implements DateExpression {
           Utils.isValidListWithinBounds(
               list, Constant.MIN_DAY_MONTH_DAY_OF_WEEK, Constant.MAX_MONTH),
       list -> ExpressionUtils.separateByComma(list, ExpressionUtils.MONTHS_MAPPING::get));
+
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
 }

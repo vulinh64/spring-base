@@ -1,5 +1,6 @@
 package com.vulinh.utils.springcron;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -25,6 +26,10 @@ public interface PartExpression {
 
   default String getRules() {
     return StringUtils.EMPTY;
+  }
+
+  default String generateExpression(int... arguments) {
+    return generateExpression(Arrays.stream(arguments).boxed().toList());
   }
 
   default String generateExpression(@Nullable List<Integer> arguments) {
