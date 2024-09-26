@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -17,10 +17,9 @@
 
     <properties>
         <java.version>21</java.version>
-        <mapstruct.version>1.6.0</mapstruct.version>
+        <mapstruct.version>1.6.2</mapstruct.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
         <querydsl.version>5.1.0</querydsl.version>
-        <spring.data.elasticsearch.version>5.2.6</spring.data.elasticsearch.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -66,7 +65,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
-            <version>${spring.data.elasticsearch.version}</version>
         </dependency>
         <!-- END: Elasticsearch -->
 
@@ -173,6 +171,13 @@
             <version>33.3.0-jre</version>
         </dependency>
         <!-- END: Google Guava -->
+
+        <!-- BEGIN: JUnit Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
