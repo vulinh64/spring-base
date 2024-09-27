@@ -1,21 +1,20 @@
 package com.vulinh.utils.springcron;
 
+import com.google.common.collect.ImmutableMap;
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.util.*;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.ImmutableMap;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ExpressionUtils {
+final class ExpressionUtils {
 
   static final Map<Integer, String> MONTHS_MAPPING =
       Arrays.stream(Month.values())
-          .collect(Collectors.toMap(Month::getValue, m -> firstThreeChars(m.name())));
+          .collect(Collectors.toMap(Month::getValue, ExpressionUtils::firstThreeChars));
 
   static final Map<Integer, String> WEEK_DAYS_MAPPING =
       ImmutableMap.<Integer, String>builder()
@@ -30,17 +29,9 @@ public class ExpressionUtils {
 
                             return k.getValue();
                           },
-                          m -> firstThreeChars(m.name()))))
-          .put(7, firstThreeChars(DayOfWeek.SUNDAY.name()))
+                          ExpressionUtils::firstThreeChars)))
+          .put(7, firstThreeChars(DayOfWeek.SUNDAY))
           .build();
-
-  static String firstThreeChars(String name) {
-    return name.substring(0, 3);
-  }
-
-  public static void main(String[] args) {
-    System.out.println(WEEK_DAYS_MAPPING);
-  }
 
   static String timeEveryInterval(List<Integer> list) {
     return "0/%s".formatted(list.getFirst());
@@ -56,7 +47,7 @@ public class ExpressionUtils {
 
   static String everyBetween(List<Integer> list, IntFunction<String> converter) {
     return "%s-%s"
-        .formatted(converter.apply(list.getFirst()), converter.apply(secondElement(list)));
+        .formatted(converter.apply(list.getFirst()), converter.apply(Utils.secondElement(list)));
   }
 
   static String separateByComma(List<Integer> list) {
@@ -67,7 +58,7 @@ public class ExpressionUtils {
     return list.stream().mapToInt(a -> a).mapToObj(converter).collect(Collectors.joining(","));
   }
 
-  static int secondElement(List<Integer> list) {
-    return list.get(1);
+  static String firstThreeChars(Enum<?> namedEnum) {
+    return namedEnum.name().substring(0, 3);
   }
 }

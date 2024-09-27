@@ -16,13 +16,18 @@ public enum HourExpression implements TimeExpression {
   EVERY_HOUR_BETWEEN(
       list ->
           Utils.isBinaryList(list)
-              && Utils.isBetweenInclusive(list.getFirst(), Constant.ZERO, Utils.secondElement(list))
-              && Utils.isBetweenInclusive(
-                  Utils.secondElement(list), Constant.ZERO, Constant.MAX_HOUR),
+              && Utils.isFirstTwoArgumentsCorrect(list, Constant.ZERO, Constant.MAX_HOUR),
       ExpressionUtils::everyBetween),
   SPECIFIC_HOURS(
       list -> Utils.isValidListWithinBounds(list, Constant.ZERO, Constant.MAX_HOUR),
-      ExpressionUtils::separateByComma);
+      ExpressionUtils::separateByComma),
+  EVERY_HOUR_INTERVAL_BETWEEN(
+      list ->
+          Utils.isTriList(list)
+              && Utils.isFirstTwoArgumentsCorrect(list, Constant.ZERO, Constant.MAX_HOUR)
+              && Utils.isBetweenInclusive(
+                  Utils.thirdElement(list), Constant.MIN_INTERVAL, Constant.MAX_HOUR),
+      list -> "%s/%s".formatted(ExpressionUtils.everyBetween(list), Utils.thirdElement(list)));
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;

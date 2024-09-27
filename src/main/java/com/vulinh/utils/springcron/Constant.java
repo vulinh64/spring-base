@@ -12,6 +12,8 @@ final class Constant {
 
   static final int ZERO = 0;
 
+  static final int MIN_INTERVAL = 1;
+
   static final int MAX_SECOND_MINUTE = 59;
 
   static final int MAX_HOUR = 23;

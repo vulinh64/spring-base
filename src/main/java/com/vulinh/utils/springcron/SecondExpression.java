@@ -16,13 +16,18 @@ public enum SecondExpression implements TimeExpression {
   EVERY_SECOND_BETWEEN(
       list ->
           Utils.isBinaryList(list)
-              && Utils.isBetweenInclusive(list.getFirst(), Constant.ZERO, Utils.secondElement(list))
-              && Utils.isBetweenInclusive(
-                  Utils.secondElement(list), Constant.ZERO, Constant.MAX_SECOND_MINUTE),
+              && Utils.isFirstTwoArgumentsCorrect(list, Constant.ZERO, Constant.MAX_SECOND_MINUTE),
       ExpressionUtils::everyBetween),
   SPECIFIC_SECONDS(
       list -> Utils.isValidListWithinBounds(list, Constant.ZERO, Constant.MAX_SECOND_MINUTE),
-      ExpressionUtils::separateByComma);
+      ExpressionUtils::separateByComma),
+  EVERY_SECOND_INTERVAL_BETWEEN(
+      list ->
+          Utils.isTriList(list)
+              && Utils.isFirstTwoArgumentsCorrect(list, Constant.ZERO, Constant.MAX_SECOND_MINUTE)
+              && Utils.isBetweenInclusive(
+                  Utils.thirdElement(list), Constant.MIN_INTERVAL, Constant.MAX_SECOND_MINUTE),
+      list -> "%s/%s".formatted(ExpressionUtils.everyBetween(list), Utils.thirdElement(list)));
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;

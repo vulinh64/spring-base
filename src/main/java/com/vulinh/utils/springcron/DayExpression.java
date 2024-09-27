@@ -16,8 +16,8 @@ public enum DayExpression implements DateExpression {
   EVERY_DAYS_BETWEEN(
       list ->
           Utils.isBinaryList(list)
-              && Utils.isBetweenInclusive(
-                  list.getFirst(), Constant.MIN_DAY_MONTH_DAY_OF_WEEK, Constant.MAX_DAY),
+              && Utils.isFirstTwoArgumentsCorrect(
+                  list, Constant.MIN_DAY_MONTH_DAY_OF_WEEK, Constant.MAX_DAY),
       ExpressionUtils::everyBetween),
   SPECIFIC_DAYS(
       list ->

@@ -16,7 +16,7 @@ public interface PartExpression {
 
     @Override
     default Predicate<List<Integer>> getValidator() {
-      return Predicate.not(List::isEmpty);
+      return List::isEmpty;
     }
   }
 
