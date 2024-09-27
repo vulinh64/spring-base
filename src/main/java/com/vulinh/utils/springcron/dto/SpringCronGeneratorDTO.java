@@ -1,7 +1,9 @@
 package com.vulinh.utils.springcron.dto;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
+import lombok.Builder;
 
+@Builder
 public record SpringCronGeneratorDTO(
     SecondExpressionObject second,
     MinuteExpressionObject minute,
@@ -9,6 +11,16 @@ public record SpringCronGeneratorDTO(
     DayExpressionObject day,
     MonthExpressionObject month,
     DayOfWeekExpressionObject dayOfWeek) {
+
+  public static SpringCronGeneratorDTO of(
+      SecondExpressionObject second,
+      MinuteExpressionObject minute,
+      HourExpressionObject hour,
+      DayExpressionObject dayOfWeek,
+      MonthExpressionObject month,
+      DayOfWeekExpressionObject dayOfMonth) {
+    return new SpringCronGeneratorDTO(second, minute, hour, dayOfWeek, month, dayOfMonth);
+  }
 
   public static SpringCronGeneratorDTO defaultObject() {
     return new SpringCronGeneratorDTO(null, null, null, null, null, null);
@@ -25,12 +37,9 @@ public record SpringCronGeneratorDTO(
 
   public String toCronExpression() {
     return "%s %s %s %s %s %s"
-        .formatted(toExpressions(second, minute, hour, day, month, dayOfWeek));
-  }
-
-  private static Object[] toExpressions(ExpressionObject... expressionObjects) {
-    return Arrays.stream(expressionObjects)
-        .map(e -> e.expression().generateExpression(e.arguments()))
-        .toArray(Object[]::new);
+        .formatted(
+            Stream.of(second, minute, hour, day, month, dayOfWeek)
+                .map(e -> e.expression().generateExpression(e.arguments()))
+                .toArray(Object[]::new));
   }
 }
