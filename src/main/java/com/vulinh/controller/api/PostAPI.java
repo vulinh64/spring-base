@@ -8,6 +8,7 @@ import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.projection.PrefetchPostProjection;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(EndpointConstant.ENDPOINT_POST)
+@Tag(name = "Post controller", description = "Manage posts")
 public interface PostAPI {
 
   @GetMapping
