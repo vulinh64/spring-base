@@ -8,6 +8,7 @@ import com.vulinh.data.dto.category.CategorySearchDTO;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.utils.ResponseUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Category controller", description = "Manage post categories")
 public class CategoryController implements CategoryAPI {
 
   private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
