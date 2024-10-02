@@ -20,7 +20,11 @@ public enum MonthExpression implements DateExpression {
               && list.stream().allMatch(ExpressionUtils.MONTHS_MAPPING::containsKey),
       list -> ExpressionUtils.everyBetween(list, ExpressionUtils.MONTHS_MAPPING::get)),
   SPECIFIC_MONTHS(
-      list -> Utils.isValidMatchedItems(list, ExpressionUtils.MONTHS_MAPPING::containsKey),
+      list ->
+          !list.isEmpty()
+              && list.stream()
+                  .filter(Objects::nonNull)
+                  .allMatch(ExpressionUtils.MONTHS_MAPPING::containsKey),
       list -> ExpressionUtils.separateByComma(list, ExpressionUtils.MONTHS_MAPPING::get));
 
   private final Predicate<List<Integer>> validator;

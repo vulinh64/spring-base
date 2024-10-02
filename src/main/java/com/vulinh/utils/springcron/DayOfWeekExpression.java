@@ -25,7 +25,7 @@ public enum DayOfWeekExpression implements DateExpression {
       list ->
           Utils.isValidListWithinBounds(
               list, Constant.MIN_DAY_MONTH_DAY_OF_WEEK, Constant.MAX_DAY_OF_WEEK),
-      list -> ExpressionUtils.separateByComma(list, ExpressionUtils.MONTHS_MAPPING::get)),
+      list -> ExpressionUtils.separateByComma(list, ExpressionUtils.WEEK_DAYS_MAPPING::get)),
   NTH_OCCURRENCE(
       list ->
           Utils.isBinaryList(list)

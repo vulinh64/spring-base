@@ -2,7 +2,7 @@ package com.vulinh.utils.springcron;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.IntPredicate;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -24,11 +24,6 @@ final class Utils {
   static boolean isValidListWithinBounds(List<Integer> list, int min, int max) {
     return !list.isEmpty()
         && list.stream().allMatch(e -> e != null && isBetweenInclusive(e, min, max));
-  }
-
-  static boolean isValidMatchedItems(List<Integer> list, IntPredicate predicate) {
-    return !list.isEmpty()
-        && list.stream().filter(Objects::nonNull).mapToInt(a -> a).allMatch(predicate);
   }
 
   static boolean isUnaryWithinBounds(List<Integer> list, int lowerBound, int upperBound) {
