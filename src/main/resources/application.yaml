@@ -38,7 +38,7 @@ spring:
     password-reset-code-duration: ${PASSWORD_RESET_CODE_DURATION:1h}
 management.endpoints.web:
   base-path: ''
-  exposure.including: health
+  exposure.include: health
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
