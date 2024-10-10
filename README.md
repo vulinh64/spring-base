@@ -2,16 +2,19 @@
 
 <!-- TOC -->
   * [Table of Contents](#table-of-contents)
-  * [Project setup](#project-setup)
+  * [Project setup (non-Docker approach)](#project-setup-non-docker-approach)
     * [Prerequisite](#prerequisite)
     * [Setting up database](#setting-up-database)
       * [SQL Script:](#sql-script)
     * [Setting up environment variables](#setting-up-environment-variables)
+    * [Public key](#public-key)
+    * [Private key](#private-key)
+  * [Docker-based Setup](#docker-based-setup)
 <!-- TOC -->
 
 This is a demo project using Spring Boot to work as a blog site's backend.
 
-## Project setup
+## Project setup (non-Docker approach)
 
 ### Prerequisite
 
@@ -73,8 +76,25 @@ PRIVATE_KEY=insert your private key here
 # Other environment variables down below
 #
 ```
-Currently, a pair of RSA public and private keys is written in a single line, for example:
+Currently, an RSA public or private key is written in a single line, for example:
 
-```text
------BEGIN PUBLIC KEY-----<single line here>-----END PUBLIC KEY-----
+### Public key
+```properties
+PUBLIC_KEY=-----BEGIN PUBLIC KEY-----<single line here>-----END PUBLIC KEY-----
 ```
+
+### Private key
+```properties
+PRIVATE_KEY=-----BEGIN PRIVATE KEY-----<single line here>-----END PRIVATE KEY-----
+```
+
+## Docker-based Setup
+
+Run the project using Docker:
+```shell
+docker compose up
+```
+
+Verify at `http://localhost:8080/health` once containers are running.
+
+This approach bypasses manual prerequisite installation.

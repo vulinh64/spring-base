@@ -22,6 +22,11 @@
         <querydsl.version>5.1.0</querydsl.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <guava.version>33.3.1-jre</guava.version>
+        <springdoc.openapi.version>2.6.0</springdoc.openapi.version>
+        <java-jwt.version>4.4.0</java-jwt.version>
+        <jmail.version>1.6.3</jmail.version>
+        <p6spy-springboot.version>1.9.2</p6spy-springboot.version>
     </properties>
 
     <dependencies>
@@ -102,7 +107,7 @@
         <dependency>
             <groupId>com.github.gavlyukovskiy</groupId>
             <artifactId>p6spy-spring-boot-starter</artifactId>
-            <version>1.9.2</version>
+            <version>${p6spy-springboot.version}</version>
         </dependency>
         <!-- END: SQL spying library -->
 
@@ -110,7 +115,7 @@
         <dependency>
             <groupId>com.sanctionco.jmail</groupId>
             <artifactId>jmail</artifactId>
-            <version>1.6.3</version>
+            <version>${jmail.version}</version>
         </dependency>
         <!-- END: JMail validation library -->
 
@@ -128,7 +133,7 @@
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>4.4.0</version>
+            <version>${java-jwt.version}</version>
         </dependency>
         <!-- END: JWT Validation libraries -->
 
@@ -136,7 +141,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.6.0</version>
+            <version>${springdoc.openapi.version}</version>
         </dependency>
         <!-- END: Swagger UI -->
 
@@ -167,7 +172,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.3.0-jre</version>
+            <version>${guava.version}</version>
         </dependency>
         <!-- END: Google Guava -->
 
