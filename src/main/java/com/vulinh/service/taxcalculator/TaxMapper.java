@@ -1,5 +1,9 @@
 package com.vulinh.service.taxcalculator;
 
+import com.vulinh.service.taxcalculator.TaxDetail.Insurance;
+import com.vulinh.service.taxcalculator.TaxDetail.PersonalTax;
+import com.vulinh.service.taxcalculator.TaxDetailDTO.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxDetailDTO.PersonalTaxDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
@@ -8,7 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface TaxMapper {
+interface TaxMapper {
 
   TaxMapper INSTANCE = Mappers.getMapper(TaxMapper.class);
 

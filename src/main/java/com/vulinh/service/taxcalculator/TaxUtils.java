@@ -1,15 +1,15 @@
 package com.vulinh.service.taxcalculator;
 
 import com.google.common.collect.ImmutableMap;
+import com.vulinh.service.taxcalculator.TaxDetailDTO.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxDetailDTO.PersonalTaxDTO;
 import java.util.Collections;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import static com.vulinh.service.taxcalculator.TaxLevel.LEVEL_0;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaxUtils {
+class TaxUtils {
 
   public static InsuranceDTO calculateInsurance(TaxDetailDTO taxDetailDTO) {
     var basicSalary = taxDetailDTO.basicSalary();
@@ -76,7 +76,7 @@ public class TaxUtils {
     // Tính bậc thuế
     var taxLevel = calculateTaxLevel(taxableIncome);
 
-    if (taxLevel == LEVEL_0) {
+    if (taxLevel == TaxLevel.LEVEL_0) {
       return Collections.emptyMap();
     }
 
@@ -104,7 +104,7 @@ public class TaxUtils {
   }
 
   private static TaxLevel calculateTaxLevel(double taxableIncome) {
-    var taxLevel = LEVEL_0;
+    var taxLevel = TaxLevel.LEVEL_0;
 
     while (taxableIncome > taxLevel.threshold()) {
       taxLevel = TaxLevel.parseTaxLevel(taxLevel.ordinal() + 1);

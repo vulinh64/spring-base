@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Getter
 @Accessors(fluent = true)
-public enum TaxLevel {
+enum TaxLevel {
   LEVEL_0(0.0, 0.0),
   LEVEL_1(5_000_000.0, 0.05),
   LEVEL_2(10_000_000.0, 0.10),

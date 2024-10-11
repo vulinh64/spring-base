@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @RequiredArgsConstructor
 @Getter
 @Accessors(fluent = true)
-public enum TaxConstant {
+enum TaxConstant {
   NON_TAXABLE_INCOME(11_000_000),
   DEDUCTION_PER_DEPENDANTS(4_400_000);
 
