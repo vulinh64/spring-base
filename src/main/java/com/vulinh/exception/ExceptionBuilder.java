@@ -22,8 +22,13 @@ public class ExceptionBuilder {
   }
 
   public static CommonException parsingPublicKeyError(Throwable throwable) {
-    return ExceptionBuilder.buildCommonException(
+    return buildCommonException(
         "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, throwable);
+  }
+
+  public static CommonException expiredAccessToken(Throwable tokenExpiredException) {
+    return buildCommonException(
+        "Access token expired", CommonMessage.MESSAGE_CREDENTIALS_EXPIRED, tokenExpiredException);
   }
 
   public static CommonException buildCommonException(
@@ -34,10 +39,5 @@ public class ExceptionBuilder {
   public static CommonException buildCommonException(
       String message, WithHttpStatusCode errorMessage, Throwable throwable) {
     return new CommonException(message, errorMessage, throwable);
-  }
-
-  public static CommonException expiredAccessToken(Throwable tokenExpiredException) {
-    return new CommonException(
-        "Access token expired", CommonMessage.MESSAGE_CREDENTIALS_EXPIRED, tokenExpiredException);
   }
 }
