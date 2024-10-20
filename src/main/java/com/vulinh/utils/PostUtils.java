@@ -5,7 +5,7 @@ import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.entity.Post;
 import com.vulinh.exception.ExceptionBuilder;
-import com.vulinh.service.post.create.PostCreationValidationService;
+
 import java.security.SecureRandom;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -17,6 +17,10 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostUtils {
 
+  public static final int TITLE_MAX_LENGTH = 5000;
+  public static final int SLUG_MAX_LENGTH = 5000;
+  public static final int TAG_MAX_LENGTH = 1000;
+
   public static String normalizeText(@NonNull String text) {
     return StringUtils.normalizeSpace(text).toLowerCase();
   }
@@ -27,10 +31,9 @@ public class PostUtils {
     // Remove character accents, normalize white spaces and turn text to lowercase
     var result = "%s-%d".formatted(createBasicSlug(title), randomNumber);
 
-    if (result.length() > PostCreationValidationService.SLUG_MAX_LENGTH) {
+    if (result.length() > SLUG_MAX_LENGTH) {
       throw ExceptionBuilder.buildCommonException(
-          "Post's slug exceeded %d characters"
-              .formatted(PostCreationValidationService.SLUG_MAX_LENGTH),
+          "Post's slug exceeded %d characters".formatted(SLUG_MAX_LENGTH),
           CommonMessage.MESSAGE_POST_INVALID_SLUG);
     }
 

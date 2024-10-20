@@ -20,7 +20,6 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -28,7 +27,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Slf4j
 public class SecurityUtils {
 
   private static RSAPrivateKey singletonPrivateKey;

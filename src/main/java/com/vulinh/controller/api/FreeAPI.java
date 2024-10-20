@@ -5,9 +5,11 @@ import com.vulinh.utils.springcron.dto.SpringCronGeneratorDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(EndpointConstant.ENDPOINT_FREE)
+@Tag(name = "Free API controller", description = "Public test API")
 public interface FreeAPI {
 
   @GetMapping("/tax-calculator")

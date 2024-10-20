@@ -12,20 +12,15 @@ import com.vulinh.service.post.create.PostCreationService;
 import com.vulinh.service.post.edit.PostDeletionService;
 import com.vulinh.service.post.edit.PostEditService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
-@Slf4j
-@Getter
 public class PostService {
 
   private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;

@@ -19,6 +19,7 @@ public class CustomEventListener {
 
   private static final String USER_REGISTRATION_LOG_MESSAGE =
       """
+      {}
       Sending email to {}
 
       Registering link:
@@ -32,6 +33,7 @@ public class CustomEventListener {
 
     log.info(
         USER_REGISTRATION_LOG_MESSAGE,
+        Thread.currentThread(),
         user.getEmail(),
         EndpointConstant.ENDPOINT_AUTH,
         AuthEndpoint.CONFIRM_USER,

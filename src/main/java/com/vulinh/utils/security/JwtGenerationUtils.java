@@ -12,12 +12,10 @@ import java.util.Date;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtGenerationUtils implements AccessTokenGenerator {
 
   private final SecurityConfigProperties securityConfigProperties;

@@ -20,7 +20,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Getter
 @RequiredArgsConstructor
-@Slf4j
 public class UserService implements BaseEntityService<UUID, Users, UserDTO, UserRepository> {
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;

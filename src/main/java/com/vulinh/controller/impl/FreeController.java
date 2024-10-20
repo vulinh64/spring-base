@@ -5,7 +5,6 @@ import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.taxcalculator.TaxDetailDTO;
 import com.vulinh.service.taxcalculator.TaxService;
 import com.vulinh.utils.springcron.dto.SpringCronGeneratorDTO;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Authentication controller", description = "Public test API")
 public class FreeController implements FreeAPI {
 
   private final TaxService taxService;

@@ -12,9 +12,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostEditValidationService {
 
   public boolean isPostUnchanged(PostCreationDTO postCreationDTO, Post post) {

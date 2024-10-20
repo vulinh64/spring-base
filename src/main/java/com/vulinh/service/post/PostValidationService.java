@@ -8,7 +8,7 @@ import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.Post;
 import com.vulinh.exception.ExceptionBuilder;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.service.post.create.PostCreationValidationService;
+import com.vulinh.utils.PostUtils;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.Objects;
@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class PostValidationService {
-
-  public static final int TAG_MAX_LENGTH = 1000;
 
   public static final ValidatorChain<PostCreationDTO> BASIC_POST_VALIDATOR =
       ValidatorChain.<PostCreationDTO>start().addValidator(PostRule.values());
@@ -92,8 +90,7 @@ public class PostValidationService {
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
         "Blank title is not allowed"),
     POST_LONG_ENOUGH_TITLE(
-        ValidatorStepFactory.noExceededLength(
-            PostCreationDTO::title, PostCreationValidationService.TITLE_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(PostCreationDTO::title, PostUtils.TITLE_MAX_LENGTH),
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
         "Title length is too long"),
     POST_NO_EMPTY_CONTENT(
@@ -111,7 +108,7 @@ public class PostValidationService {
 
     private static boolean isValidTags(PostCreationDTO dto) {
       for (var tag : dto.tags()) {
-        if (StringUtils.isBlank(tag) || tag.length() > TAG_MAX_LENGTH) {
+        if (StringUtils.isBlank(tag) || tag.length() > PostUtils.TAG_MAX_LENGTH) {
           log.debug("Tag {} is empty or too long", tag);
 
           return false;

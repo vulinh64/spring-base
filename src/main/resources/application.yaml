@@ -1,5 +1,7 @@
 server.shutdown: graceful
 spring:
+  # Make your default spring boot logging colorful (if you are using Community version lmao)
+  output.ansi.enabled: ALWAYS
   application.name: spring-base-project
   # START: change this to fit your computer's configuration
   datasource:
@@ -11,7 +13,7 @@ spring:
     enabled: true
     change-log: classpath:changelog.yaml
   security.jwt:
-    issuer: spring-base-service
+    issuer: ${SECURITY_ISSUER:spring-base-service}
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
     verb-urls:
