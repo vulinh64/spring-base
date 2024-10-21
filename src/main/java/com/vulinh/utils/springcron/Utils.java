@@ -49,6 +49,20 @@ final class Utils {
     return list.get(2);
   }
 
+  static boolean isIncrementalPairInList(List<Integer> list) {
+    if (list.size() % 2 != 0) {
+      return false;
+    }
+
+    for (int i = 0; i < list.size() - 1; i += 2) {
+      if (list.get(i) > list.get(i + 1)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   private static boolean noNullElement(List<Integer> list) {
     return list.stream().noneMatch(Objects::isNull);
   }

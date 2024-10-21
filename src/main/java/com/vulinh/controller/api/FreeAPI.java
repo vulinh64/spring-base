@@ -50,6 +50,7 @@ public interface FreeAPI {
                   - `EVERY_DAY_INTERVAL`
                   - `EVERY_DAYS_BETWEEN`
                   - `SPECIFIC_DAYS`
+                  - `BETWEEN_MULTIPLE_RANGES`
 
                   ## Month expressions:
                   - `EVERY_MONTH`
