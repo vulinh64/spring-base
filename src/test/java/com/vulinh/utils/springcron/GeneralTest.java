@@ -25,4 +25,13 @@ class GeneralTest {
 
     assertEquals(expected, actual);
   }
+
+  @Test
+  void test02() {
+    var expected = "* * * * * *";
+
+    var actual = SpringCronGeneratorDTO.defaultObject().toCronExpression();
+
+    assertEquals(expected, actual);
+  }
 }

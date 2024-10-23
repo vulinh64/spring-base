@@ -12,11 +12,7 @@ public interface ExpressionObject {
   List<Integer> arguments();
 
   static <T> T defaultIfNull(T object, Supplier<T> supplier) {
-    if (object == null) {
-      return supplier.get();
-    }
-
-    return object;
+    return object != null ? object : supplier.get();
   }
 
   static List<Integer> box(int... arguments) {

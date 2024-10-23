@@ -13,6 +13,4 @@ public record SecurityConfigProperties(
     List<VerbUrl> verbUrls,
     Duration jwtDuration,
     Duration passwordResetCodeDuration,
-    String issuer) {
-
-}
+    String issuer) {}

@@ -1,7 +1,5 @@
 package com.vulinh.utils;
 
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Root;
 import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.function.BinaryOperator;
@@ -157,6 +155,7 @@ public class SpecificationBuilder {
   // field like '%pattern%' escape '\\'
   // if pattern is empty, it is equal to always()
   @Nullable
+  @SuppressWarnings("unchecked")
   public static <E, F> Specification<E> like(
       SingularAttribute<? super E, F> attribute, @Nullable String keyword) {
     // Wrap the pattern keyword with % character as prefix and suffix
@@ -171,7 +170,10 @@ public class SpecificationBuilder {
 
     return (root, query, criteriaBuilder) ->
         criteriaBuilder.like(
-            criteriaBuilder.lower(getStringExpression(attribute, root)),
+            criteriaBuilder.lower(
+                String.class.isAssignableFrom(attribute.getJavaType())
+                    ? root.get((SingularAttribute<E, String>) attribute)
+                    : root.get(attribute).as(String.class)),
             criteriaBuilder.lower(criteriaBuilder.literal(patternKeyword)));
   }
 
@@ -216,14 +218,6 @@ public class SpecificationBuilder {
     }
 
     return result;
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <E, F> Expression<String> getStringExpression(
-      SingularAttribute<? super E, F> attribute, Root<E> root) {
-    return String.class.isAssignableFrom(attribute.getJavaType())
-        ? root.get((SingularAttribute<E, String>) attribute)
-        : root.get(attribute).as(String.class);
   }
 
   @RequiredArgsConstructor
