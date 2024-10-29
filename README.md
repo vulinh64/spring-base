@@ -13,6 +13,7 @@
   * [Virtual threads](#virtual-threads)
     * [Spring Boot 3.2+](#spring-boot-32)
     * [Before Spring Boot 3.2](#before-spring-boot-32)
+  * [Windows and Unix line separators](#windows-and-unix-line-separators)
 <!-- TOC -->
 
 This is a demo project using Spring Boot to work as a blog site's backend.
@@ -49,7 +50,8 @@ CREATE ROLE myspringdatabase WITH
     CONNECTION LIMIT -1
     PASSWORD '123456';
 
-CREATE DATABASE myspringdatabase
+CREATE
+DATABASE myspringdatabase
     WITH
     OWNER = myspringdatabase
     ENCODING = 'UTF8'
@@ -151,26 +153,48 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ConditionalOnProperty(prefix = "spring.threads", value = "virtual", havingValue = "true")
 public class ThreadConfig {
 
-  @Bean
-  public AsyncTaskExecutor applicationTaskExecutor() {
-    return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
-  }
+    @Bean
+    public AsyncTaskExecutor applicationTaskExecutor() {
+        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
+    }
 
-  @Bean
-  public TomcatProtocolHandlerCustomizer<ProtocolHandler>
-      protocolHandlerVirtualThreadExecutorCustomizer() {
-    return protocolHandler ->
-        protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
-  }
+    @Bean
+    public TomcatProtocolHandlerCustomizer<ProtocolHandler>
+    protocolHandlerVirtualThreadExecutorCustomizer() {
+        return protocolHandler ->
+                protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+    }
 }
 
 ```
 
 Source: [Baeldung](https://www.baeldung.com/spring-6-virtual-threads)
 
-Make API call (without authorization) to 
+Make API call (without authorization) to
+
 ```text
 /free/tax-calculator?basicSalary=5100000&totalSalary=6100000
 ```
 
 to verify that Virtual Thread is indeed in use (use console log!)
+
+## Windows and Unix line separators
+
+When using Windows, your `mvnw` file might have Windows-style `CRLF` line endings instead of Unix-style `LF` when
+committing, which can cause image build failures. To fix this issue using PowerShell, run:
+
+```shell
+(Get-Content mvnw -Raw).Replace("`r`n", "`n") | Set-Content mvnw -NoNewline -Force
+```
+
+In some cases, you may need to make the `mvnw` file executable by setting the `+x` permission attribute, like this:
+
+```shell
+git update-index --chmod=+x mvnw
+```
+
+You can use Windows Subsystem for Linux to achieve the same:
+
+```shell
+chmod +x mvnw
+```
