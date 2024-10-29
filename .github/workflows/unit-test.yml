@@ -2,9 +2,7 @@ name: Java CI with Maven
 
 on:
   pull_request:
-    branches-ignore:
-      - main
-      - master
+    branches: ["main", "master"]
 
 jobs:
   build:
