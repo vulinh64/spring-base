@@ -1,5 +1,6 @@
 package com.vulinh.service.post.create;
 
+import com.vulinh.data.dto.event.NewPostElasticsearchEvent;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.Post;
@@ -14,6 +15,7 @@ import com.vulinh.utils.PostUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,8 @@ public class PostCreationService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final CategoryService categoryService;
+
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Transactional
   public Post createPost(PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
@@ -48,6 +52,14 @@ public class PostCreationService {
 
     var tags = tagService.parseTags(postCreationDTO);
 
-    return postRepository.save(POST_MAPPER.toEntity(actualCreationDTO, author, category, tags));
+    var result =
+        postRepository.save(POST_MAPPER.toEntity(actualCreationDTO, author, category, tags));
+
+    // Experimental usage of Spring Event
+    // Can also use post-commit annotations
+    applicationEventPublisher.publishEvent(
+        NewPostElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(result)));
+
+    return result;
   }
 }

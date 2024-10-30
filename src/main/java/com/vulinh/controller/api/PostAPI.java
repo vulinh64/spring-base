@@ -2,6 +2,7 @@ package com.vulinh.controller.api;
 
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.PostEndpoint;
+import com.vulinh.data.document.EPost.ESimplePost;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
@@ -23,6 +24,9 @@ public interface PostAPI {
   @GetMapping
   GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
       Pageable pageable, HttpServletRequest httpServletRequest);
+
+  @GetMapping("/quick-search")
+  GenericResponse<Page<ESimplePost>> quickSearchPosts(String keyword, Pageable pageable);
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT)
   GenericResponse<SinglePostDTO> getSinglePost(

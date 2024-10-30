@@ -1,9 +1,11 @@
 package com.vulinh.service.post;
 
 import com.vulinh.constant.CommonConstant;
+import com.vulinh.data.document.EPost.ESimplePost;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
+import com.vulinh.data.elasticsearch.EPostRepository;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
@@ -26,6 +28,7 @@ public class PostService {
   private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
   private final PostRepository postRepository;
+  private final EPostRepository ePostRepository;
 
   private final PostCreationService postCreationService;
   private final PostEditService postEditService;
@@ -74,5 +77,12 @@ public class PostService {
         .deletePost(postId, httpServletRequest)
         .map(postRevisionService::createPostDeletionRevision)
         .isPresent();
+  }
+
+  public Page<ESimplePost> quickSearch(String keyword, Pageable pageable) {
+    return ePostRepository
+        .findByTitleContainingIgnoreCaseOrPostContentContainingIgnoreCase(
+            keyword, keyword, pageable)
+        .map(ePost -> POST_MAPPER.toESimplePost(ePost, keyword));
   }
 }

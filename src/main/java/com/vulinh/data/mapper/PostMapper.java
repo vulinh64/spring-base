@@ -1,18 +1,20 @@
 package com.vulinh.data.mapper;
 
+import com.vulinh.data.document.EPost;
+import com.vulinh.data.document.EPost.ESimplePost;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.entity.*;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(
     builder = @Builder(disableBuilder = true),
-    imports = {Tag.class, Collectors.class, PostRevisionId.class})
+    imports = {Tag.class, Collectors.class, PostRevisionId.class, StringUtils.class})
 public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
 
   PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
@@ -67,4 +69,21 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
       nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   Post applyRevision(
       PostRevision postRevision, Category category, Collection<Tag> tags, @MappingTarget Post post);
+
+  EPost toDocumentedPost(Post post);
+
+  @Mapping(
+      target = "shortContent",
+      expression =
+          """
+          java(
+            StringUtils.abbreviate(
+              post.postContent(),
+              StringUtils.normalizeSpace(post.postContent())
+                .toLowerCase()
+                .indexOf(keyword.toLowerCase()),
+              50)
+          )
+          """)
+  ESimplePost toESimplePost(EPost post, String keyword);
 }
