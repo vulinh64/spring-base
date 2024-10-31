@@ -2,6 +2,7 @@ package com.vulinh.service.post;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.document.EPost.ESimplePost;
+import com.vulinh.data.dto.event.PostElasticsearchEvent;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
@@ -16,6 +17,7 @@ import com.vulinh.service.post.edit.PostEditService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,8 @@ public class PostService {
   private final PostEditService postEditService;
   private final PostDeletionService postDeletionService;
   private final PostRevisionService postRevisionService;
+
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   public Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable) {
     return postRepository.findPrefetchPosts(pageable);
@@ -58,6 +62,11 @@ public class PostService {
 
     // Delegate to PostRevisionService
     postRevisionService.createPostCreationRevision(entity);
+
+    // Experimental usage of Spring Event
+    // Can also use post-commit annotations
+    applicationEventPublisher.publishEvent(
+        PostElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(entity)));
 
     return POST_MAPPER.toDto(entity);
   }
