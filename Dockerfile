@@ -4,7 +4,9 @@ COPY mvnw mvnw
 COPY .mvn .mvn
 COPY pom.xml pom.xml
 COPY src src
-RUN ./mvnw clean package && java -Djarmode=tools -jar target/app.jar extract --layers --destination extracted
+RUN ./mvnw dependency:go-offline && \
+    ./mvnw clean package && \
+    java -Djarmode=tools -jar target/app.jar extract --layers --destination extracted
 
 FROM eclipse-temurin:21-jre
 WORKDIR /application
@@ -17,6 +19,6 @@ COPY --from=builder --chown=spring:spring /builder/extracted/dependencies/ ./
 COPY --from=builder --chown=spring:spring /builder/extracted/spring-boot-loader/ ./
 COPY --from=builder --chown=spring:spring /builder/extracted/snapshot-dependencies/ ./
 COPY --from=builder --chown=spring:spring /builder/extracted/application/ ./
-EXPOSE 8080
+EXPOSE 8443
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-XX:InitialRAMPercentage=50.0", "-XX:+UseG1GC", "-jar", "app.jar"]
 

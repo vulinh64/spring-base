@@ -109,7 +109,7 @@ Run the project using Docker:
 docker compose up
 ```
 
-Verify at `http://localhost:8080/health` once containers are running.
+Verify at `http://localhost:8443/health` once containers are running.
 
 This approach bypasses manual prerequisite installation.
 
