@@ -1,8 +1,20 @@
-server.shutdown: graceful
+server:
+  ssl:
+    key-store-type: pkcs12
+    key-store: 'classpath:localhost.p12'
+    key-store-password: ''
+    key-alias: localhost
+    key-password: ''
+  port: 8443
+  shutdown: graceful
+  # Require configuration on the server to enable HTTP/2
+  # You can try https://brytecode.be/articles/using-http-2-in-your-spring-boot-application/
+  http2.enabled: true
+  servlet.application-display-name: ${application.name}
 spring:
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
-  application.name: spring-base-project
+  application.name: spring-base
   # START: change this to fit your computer's configuration
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
@@ -48,6 +60,11 @@ springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
 logging.level:
-  com.vulinh.service.user.UserValidationService: DEBUG
-  com.vulinh.service.post.PostValidationService: DEBUG
-  com.vulinh.service.post.edit.PostEditValidationService: DEBUG
+  com.vulinh.service:
+    taxcalculator.TaxService: DEBUG
+    user.UserValidationService: DEBUG
+    post:
+      PostValidationService: DEBUG
+      edit.PostEditValidationService: DEBUG
+    category.CategoryService: DEBUG
+    service.eventlistener.CustomEventListener: DEBUG

@@ -6,8 +6,4 @@ import lombok.With;
 @With
 public record PostDeletionElasticsearchEvent(EPost elasticsearchDocument)
     implements WithDocumentElasticsearchEvent {
-
-  public static PostDeletionElasticsearchEvent of(EPost post) {
-    return new PostDeletionElasticsearchEvent(post);
-  }
 }

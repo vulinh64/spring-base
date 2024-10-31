@@ -31,7 +31,7 @@ public class CustomEventListener {
   public void listenUserRegistrationEvent(UserRegistrationEventDTO userRegistrationEventDTO) {
     var user = userRegistrationEventDTO.user();
 
-    log.info(
+    log.debug(
         USER_REGISTRATION_LOG_MESSAGE,
         Thread.currentThread(),
         user.getEmail(),

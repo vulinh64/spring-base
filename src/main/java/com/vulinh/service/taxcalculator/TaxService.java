@@ -10,7 +10,7 @@ public class TaxService {
   private static final TaxMapper TAX_MAPPER = TaxMapper.INSTANCE;
 
   public TaxDetail calculate(TaxDetailDTO taxDetailDTO) {
-    log.info(
+    log.debug(
         "Inside calculating personal tax according to Law of Vietnam... Looking at thread: {}",
         Thread.currentThread());
 

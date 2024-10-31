@@ -2,8 +2,6 @@ package com.vulinh.service.post;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.document.EPost.ESimplePost;
-import com.vulinh.data.dto.event.PostDeletionElasticsearchEvent;
-import com.vulinh.data.dto.event.PostElasticsearchEvent;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
@@ -13,6 +11,7 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ElasticsearchEventFactory;
 import com.vulinh.service.post.create.PostCreationService;
 import com.vulinh.service.post.edit.PostDeletionService;
 import com.vulinh.service.post.edit.PostEditService;
@@ -30,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
   private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
+
+  private static final ElasticsearchEventFactory ELASTICSEARCH_EVENT_FACTORY =
+      ElasticsearchEventFactory.INSTANCE;
 
   private final PostRepository postRepository;
   private final EPostRepository ePostRepository;
@@ -98,7 +100,7 @@ public class PostService {
       postRevisionService.createPostDeletionRevision(post);
 
       applicationEventPublisher.publishEvent(
-          PostDeletionElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(post)));
+          ELASTICSEARCH_EVENT_FACTORY.ofDeletion(POST_MAPPER.toDocumentedPost(post)));
 
       return true;
     }
@@ -115,6 +117,6 @@ public class PostService {
 
   private void publishPersistedElasticsearchPostDocument(Post post) {
     applicationEventPublisher.publishEvent(
-        PostElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(post)));
+        ELASTICSEARCH_EVENT_FACTORY.ofPersistence(POST_MAPPER.toDocumentedPost(post)));
   }
 }

@@ -9,6 +9,7 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
 import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ElasticsearchEventFactory;
 import com.vulinh.factory.PostFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,8 @@ public class PostRevisionService {
   private final PostValidationService postValidationService;
   private final CategoryService categoryService;
   private final TagService tagService;
+
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @PersistenceContext private final EntityManager entityManager;
 
@@ -126,6 +130,9 @@ public class PostRevisionService {
     createRevisionInternal(post, RevisionType.UPDATED);
 
     postRevisionRepository.deleteById(postRevision.getId());
+
+    applicationEventPublisher.publishEvent(
+        ElasticsearchEventFactory.INSTANCE.ofPersistence(POST_MAPPER.toDocumentedPost(post)));
 
     return true;
   }

@@ -69,7 +69,7 @@ public class CategoryService {
               if (isChanged) {
                 categoryRepository.save(category);
 
-                log.info(
+                log.debug(
                     "Changed default category (ID {}) name to {}, slug to {}",
                     CommonConstant.UNCATEGORIZED_ID,
                     CommonConstant.UNCATEGORIZED_NAME,
@@ -84,7 +84,7 @@ public class CategoryService {
                       .displayName(CommonConstant.UNCATEGORIZED_NAME)
                       .build());
 
-              log.info(
+              log.debug(
                   "Initialized first category: {} - {}",
                   CommonConstant.UNCATEGORIZED_ID,
                   CommonConstant.UNCATEGORIZED_NAME);
