@@ -1,5 +1,6 @@
 package com.vulinh.service.eventlistener;
 
+import com.vulinh.data.dto.event.PostDeletionElasticsearchEvent;
 import com.vulinh.data.dto.event.PostElasticsearchEvent;
 import com.vulinh.data.dto.event.WithDocumentElasticsearchEvent;
 import com.vulinh.data.elasticsearch.EPostRepository;
@@ -20,6 +21,7 @@ public class ElasticsearchEventListener {
     try {
       switch (event) {
         case PostElasticsearchEvent(var post) -> ePostRepository.save(post);
+        case PostDeletionElasticsearchEvent(var post) -> ePostRepository.delete(post);
       }
     } catch (Exception e) {
       log.warn("Error while handling Elasticsearch event", e);

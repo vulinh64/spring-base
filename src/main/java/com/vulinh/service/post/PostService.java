@@ -2,11 +2,13 @@ package com.vulinh.service.post;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.document.EPost.ESimplePost;
+import com.vulinh.data.dto.event.PostDeletionElasticsearchEvent;
 import com.vulinh.data.dto.event.PostElasticsearchEvent;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.elasticsearch.EPostRepository;
+import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
@@ -63,10 +65,7 @@ public class PostService {
     // Delegate to PostRevisionService
     postRevisionService.createPostCreationRevision(entity);
 
-    // Experimental usage of Spring Event
-    // Can also use post-commit annotations
-    applicationEventPublisher.publishEvent(
-        PostElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(entity)));
+    publishPersistedElasticsearchPostDocument(entity);
 
     return POST_MAPPER.toDto(entity);
   }
@@ -74,18 +73,37 @@ public class PostService {
   @Transactional
   public boolean editPost(
       UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    return postEditService
-        .editPost(postId, postCreationDTO, httpServletRequest)
-        .map(postRevisionService::createPostEditRevision)
-        .isPresent();
+    var possiblePost = postEditService.editPost(postId, postCreationDTO, httpServletRequest);
+
+    if (possiblePost.isPresent()) {
+      var post = possiblePost.get();
+
+      postRevisionService.createPostEditRevision(post);
+
+      publishPersistedElasticsearchPostDocument(post);
+
+      return true;
+    }
+
+    return false;
   }
 
   @Transactional
   public boolean deletePost(UUID postId, HttpServletRequest httpServletRequest) {
-    return postDeletionService
-        .deletePost(postId, httpServletRequest)
-        .map(postRevisionService::createPostDeletionRevision)
-        .isPresent();
+    var possiblePost = postDeletionService.deletePost(postId, httpServletRequest);
+
+    if (possiblePost.isPresent()) {
+      var post = possiblePost.get();
+
+      postRevisionService.createPostDeletionRevision(post);
+
+      applicationEventPublisher.publishEvent(
+          PostDeletionElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(post)));
+
+      return true;
+    }
+
+    return false;
   }
 
   public Page<ESimplePost> quickSearch(String keyword, Pageable pageable) {
@@ -93,5 +111,10 @@ public class PostService {
         .findByTitleContainingIgnoreCaseOrPostContentContainingIgnoreCase(
             keyword, keyword, pageable)
         .map(ePost -> POST_MAPPER.toESimplePost(ePost, keyword));
+  }
+
+  private void publishPersistedElasticsearchPostDocument(Post post) {
+    applicationEventPublisher.publishEvent(
+        PostElasticsearchEvent.of(POST_MAPPER.toDocumentedPost(post)));
   }
 }
