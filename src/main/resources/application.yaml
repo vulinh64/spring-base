@@ -68,3 +68,6 @@ logging.level:
       edit.PostEditValidationService: DEBUG
     category.CategoryService: DEBUG
     service.eventlistener.CustomEventListener: DEBUG
+decorator.datasource.p6spy:
+  custom-appender-class: com.vulinh.configuration.MyP6SpyLogging
+  logging: custom
