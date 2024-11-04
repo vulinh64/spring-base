@@ -14,6 +14,11 @@
     * [Spring Boot 3.2+](#spring-boot-32)
     * [Before Spring Boot 3.2](#before-spring-boot-32)
   * [Windows and Unix line separators](#windows-and-unix-line-separators)
+  * [IntelliJ plugins](#intellij-plugins)
+    * [**Save Actions X**](#save-actions-x)
+    * [**JPA Buddy** (Freemium)](#jpa-buddy-freemium)
+    * [**MapStruct Support** (if you plan to use MapStruct in your project](#mapstruct-support-if-you-plan-to-use-mapstruct-in-your-project)
+    * [And the (in)famous **Sonarlint**](#and-the-infamous-sonarlint)
 <!-- TOC -->
 
 This is a demo project using Spring Boot to work as a blog site's backend.
@@ -28,6 +33,12 @@ This is a demo project using Spring Boot to work as a blog site's backend.
 - PostgreSQL (https://www.postgresql.org/download/) installed on your local machine.
     - Because database changelogs use native PostgreSQL dialect, you will need to use PostgreSQL. If you planned to use
       another RDBMS, then you will have to rewrite the changelog files.
+- Elasticsearch on port `9200` and `9300`
+
+If you use Docker (Windows), you can run one of the following batch files:
+
+- [PostgreSQL CMD](run-postgresql-docker-windows.cmd) or [Postgresql PS1](run-postgresql-docker-windows.ps1)
+- [Elasticsearch CMD](run-elasticsearch-docker-windows.cmd) or [Elasticsearch PS1](run-elasticsearch-docker-windows.ps1)
 
 ### Setting up database
 
@@ -198,3 +209,33 @@ You can use Windows Subsystem for Linux to achieve the same:
 ```shell
 chmod +x mvnw
 ```
+
+## IntelliJ plugins
+
+You might have mixed feelings about Google Java Format plugins, but I've found them very useful for catching those
+tricky-to-spot errors – especially when dealing with nested parentheses. If you're curious, I'd definitely recommend
+giving it a shot. Just head to the IntelliJ plugins menu, search for "Google Java Format," and you're all set.
+
+Or here is the link:
+
+> https://plugins.jetbrains.com/plugin/8527-google-java-format
+
+Other useful plugins I can recommend:
+
+### **Save Actions X**
+
+> https://plugins.jetbrains.com/plugin/22113-save-actions-x
+
+### **JPA Buddy** (Freemium)
+
+> https://plugins.jetbrains.com/plugin/15075-jpa-buddy
+
+### **MapStruct Support** (if you plan to use MapStruct in your project
+
+> https://plugins.jetbrains.com/plugin/10036-mapstruct-support
+
+### And the (in)famous **Sonarlint**
+
+> https://plugins.jetbrains.com/plugin/7973-sonarlint).
+
+You may hold it dear as if it God's gospel, or anything else I really can't care more.

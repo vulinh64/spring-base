@@ -1,9 +1,5 @@
 package com.vulinh.service.taxcalculator;
 
-import com.vulinh.service.taxcalculator.TaxDetail.Insurance;
-import com.vulinh.service.taxcalculator.TaxDetail.PersonalTax;
-import com.vulinh.service.taxcalculator.TaxDetailDTO.InsuranceDTO;
-import com.vulinh.service.taxcalculator.TaxDetailDTO.PersonalTaxDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
@@ -25,9 +21,9 @@ interface TaxMapper {
         .collect(Collectors.toMap(Map.Entry::getKey, entry -> toBigDecimal(entry.getValue())));
   }
 
-  Insurance toInsurance(InsuranceDTO insuranceDTO);
+  TaxDetail.Insurance toInsurance(TaxDetailDTO.InsuranceDTO insuranceDTO);
 
-  PersonalTax toPersonalTax(PersonalTaxDTO personalTaxDTO);
+  TaxDetail.PersonalTax toPersonalTax(TaxDetailDTO.PersonalTaxDTO personalTaxDTO);
 
   TaxDetail toTaxDetail(TaxDetailDTO taxDetailDTO);
 }

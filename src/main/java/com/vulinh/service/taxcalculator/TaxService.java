@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TaxService {
 
-  private static final TaxMapper TAX_MAPPER = TaxMapper.INSTANCE;
-
   public TaxDetail calculate(TaxDetailDTO taxDetailDTO) {
     log.debug(
         "Inside calculating personal tax according to Law of Vietnam... Looking at thread: {}",
@@ -20,7 +18,7 @@ public class TaxService {
     // Thuế TNCN
     var personalTax = TaxUtils.calculatePersonalTax(taxDetailDTO, insurance);
 
-    return TAX_MAPPER.toTaxDetail(
+    return TaxMapper.INSTANCE.toTaxDetail(
         taxDetailDTO.withPersonalTax(personalTax).withInsurance(insurance));
   }
 }

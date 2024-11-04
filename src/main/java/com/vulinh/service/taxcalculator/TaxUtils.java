@@ -3,10 +3,17 @@ package com.vulinh.service.taxcalculator;
 import com.google.common.collect.ImmutableMap;
 import com.vulinh.service.taxcalculator.TaxDetailDTO.InsuranceDTO;
 import com.vulinh.service.taxcalculator.TaxDetailDTO.PersonalTaxDTO;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class TaxUtils {
@@ -111,5 +118,51 @@ class TaxUtils {
     }
 
     return taxLevel;
+  }
+
+  @RequiredArgsConstructor
+  @Getter
+  @Accessors(fluent = true)
+  private enum InsuranceRate {
+    SOCIAL_INSURANCE(0.08),
+    HEALTH_INSURANCE(0.015),
+    UNEMPLOYMENT_INSURANCE(0.01);
+
+    private final double rate;
+  }
+
+  @RequiredArgsConstructor
+  @Getter
+  @Accessors(fluent = true)
+  private enum TaxConstant {
+    NON_TAXABLE_INCOME(11_000_000),
+    DEDUCTION_PER_DEPENDANTS(4_400_000);
+
+    private final double value;
+  }
+
+  @RequiredArgsConstructor
+  @Getter
+  @Accessors(fluent = true)
+  private enum TaxLevel {
+    LEVEL_0(0.0, 0.0),
+    LEVEL_1(5_000_000.0, 0.05),
+    LEVEL_2(10_000_000.0, 0.10),
+    LEVEL_3(18_000_000.0, 0.15),
+    LEVEL_4(32_000_000.0, 0.2),
+    LEVEL_5(52_000_000.0, 0.25),
+    LEVEL_6(80_000_000.0, 0.3),
+    LEVEL_7(Double.MAX_VALUE, 0.35); // Your income cannot be more than total assets of the world!!!
+
+    private final double threshold;
+    private final double rate;
+
+    private static final Map<Integer, TaxLevel> MAPS =
+        Arrays.stream(values()).collect(Collectors.toMap(TaxLevel::ordinal, Function.identity()));
+
+    public static TaxLevel parseTaxLevel(int taxLevel) {
+      return Optional.ofNullable(MAPS.get(taxLevel))
+          .orElseThrow(() -> new IllegalArgumentException("taxLevel = %d".formatted(taxLevel)));
+    }
   }
 }

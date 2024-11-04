@@ -1,11 +1,11 @@
 package com.vulinh.data.entity;
 
+import com.vulinh.data.entity.AbstractIdentifiable.UUIDJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @With
-public class Post extends AbstractIdentifiable {
+public class Post extends UUIDJpaEntity {
 
   @Serial private static final long serialVersionUID = -2260038525808618984L;
 
