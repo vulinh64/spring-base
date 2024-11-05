@@ -34,7 +34,7 @@ public class PostEditService {
 
     var userDTO = SecurityUtils.getUserDTOOrThrow(httpServletRequest);
 
-    var actualPostCreationDTO = PostUtils.getActualPostEditDTO(postCreationDTO);
+    var actualPostCreationDTO = PostUtils.getActualDTO(postCreationDTO);
 
     var post = postRepository.findByIdOrFailed(postId);
 

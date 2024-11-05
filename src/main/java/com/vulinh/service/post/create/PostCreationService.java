@@ -34,7 +34,7 @@ public class PostCreationService {
   public Post createPost(PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
     postValidationService.validatePost(postCreationDTO);
 
-    var actualCreationDTO = PostUtils.getActualCreationDTO(postCreationDTO);
+    var actualCreationDTO = PostUtils.getActualDTO(postCreationDTO);
 
     var author =
         SecurityUtils.getUserDTO(httpServletRequest)

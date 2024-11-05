@@ -10,7 +10,7 @@ import com.vulinh.data.entity.Category_;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.ExceptionBuilder;
-import com.vulinh.utils.PostUtils;
+import com.vulinh.utils.SlugUtils;
 import com.vulinh.utils.SpecificationBuilder;
 import java.util.Optional;
 import java.util.UUID;
@@ -95,7 +95,7 @@ public class CategoryService {
   public CategoryDTO createCategory(CategoryCreationDTO categoryCreationDTO) {
     categoryValidationService.validateCategoryCreation(categoryCreationDTO);
 
-    var slug = PostUtils.createBasicSlug(categoryCreationDTO.displayName());
+    var slug = SlugUtils.createBasicSlug(categoryCreationDTO.displayName());
 
     categoryValidationService.validateCategorySlug(categoryCreationDTO, slug);
 

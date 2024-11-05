@@ -148,10 +148,7 @@ public class PostRevisionService {
   }
 
   private JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {
-    var postEntry = QPost.post;
-    var postIdEntry = postEntry.id;
-
-    return postRevisionJoinJPAQuery().where(postIdEntry.eq(identity));
+    return postRevisionJoinJPAQuery().where(QPost.post.id.eq(identity));
   }
 
   private JPAQuery<Post> postRevisionJoinJPAQuery() {
