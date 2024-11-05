@@ -5,6 +5,7 @@ server:
     key-store-password: ''
     key-alias: localhost
     key-password: ''
+    enabled: true
   port: 8443
   shutdown: graceful
   # Require configuration on the server to enable HTTP/2

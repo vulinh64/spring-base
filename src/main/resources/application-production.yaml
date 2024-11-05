@@ -1,0 +1,2 @@
+# Disable p6spy logging on production (hypothetical)
+decorator.datasource.p6spy.enable-logging: false
