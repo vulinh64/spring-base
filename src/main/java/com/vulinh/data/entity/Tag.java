@@ -23,8 +23,4 @@ public class Tag extends UUIDJpaEntity {
   @Id @UuidGenerator private UUID id;
 
   private String displayName;
-
-  public static Tag of(String displayName) {
-    return Tag.builder().displayName(displayName).build();
-  }
 }

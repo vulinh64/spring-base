@@ -10,7 +10,7 @@ import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ElasticsearchEventFactory;
 import com.vulinh.service.post.create.PostCreationService;
 import com.vulinh.service.post.edit.PostDeletionService;
@@ -53,7 +53,7 @@ public class PostService {
         .map(POST_MAPPER::toSinglePostDTO)
         .orElseThrow(
             () ->
-                ExceptionBuilder.entityNotFound(
+                ExceptionFactory.INSTANCE.entityNotFound(
                     "Post with either id or slug [%s] not found".formatted(postId),
                     CommonConstant.POST_ENTITY));
   }

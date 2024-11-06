@@ -9,7 +9,7 @@ import com.vulinh.data.entity.Category;
 import com.vulinh.data.entity.Category_;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SlugUtils;
 import com.vulinh.utils.SpecificationBuilder;
 import java.util.Optional;
@@ -28,6 +28,8 @@ public class CategoryService {
 
   private static final CategoryMapper CATEGORY_MAPPER = CategoryMapper.INSTANCE;
 
+  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
+
   private final CategoryRepository categoryRepository;
 
   private final CategoryValidationService categoryValidationService;
@@ -38,7 +40,7 @@ public class CategoryService {
         .flatMap(categoryRepository::findById)
         .orElseThrow(
             () ->
-                ExceptionBuilder.buildCommonException(
+                EXCEPTION_FACTORY.buildCommonException(
                     "Invalid provided category ID: %s, or default category [%s] did not exist"
                         .formatted(categoryId, CommonConstant.UNCATEGORIZED_ID),
                     CommonMessage.MESSAGE_INVALID_CATEGORY));
@@ -119,7 +121,7 @@ public class CategoryService {
   @Transactional
   public boolean deleteCategory(UUID categoryId) {
     if (CommonConstant.UNCATEGORIZED_ID.equals(categoryId)) {
-      throw ExceptionBuilder.buildCommonException(
+      throw EXCEPTION_FACTORY.buildCommonException(
           "Cannot delete default category", CommonMessage.MESSAGE_DEFAULT_CATEGORY_IMMORTAL);
     }
 

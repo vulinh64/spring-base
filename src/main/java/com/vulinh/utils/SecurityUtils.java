@@ -3,7 +3,7 @@ package com.vulinh.utils;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.user.UserBasicDTO;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +28,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtils {
+
+  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
 
   private static RSAPrivateKey singletonPrivateKey;
 
@@ -55,7 +57,7 @@ public class SecurityUtils {
     var result = generateRSAPublicKey(refinedPrivateKey);
 
     if (!(result instanceof RSAPublicKey rsaPublicKey)) {
-      throw ExceptionBuilder.buildCommonException(
+      throw EXCEPTION_FACTORY.buildCommonException(
           "Not an instance of RSAPublicKey", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG);
     }
 
@@ -73,7 +75,7 @@ public class SecurityUtils {
       var result = generateRSAPrivateKey(refinedPrivateKey);
 
       if (!(result instanceof RSAPrivateKey rsaPrivateKey)) {
-        throw ExceptionBuilder.buildCommonException(
+        throw EXCEPTION_FACTORY.buildCommonException(
             "Not an instance of RSAPrivateKey", CommonMessage.MESSAGE_INVALID_PRIVATE_KEY_CONFIG);
       }
 
@@ -97,7 +99,7 @@ public class SecurityUtils {
 
   @NonNull
   public static UserBasicDTO getUserDTOOrThrow(HttpServletRequest httpServletRequest) {
-    return getUserDTO(httpServletRequest).orElseThrow(ExceptionBuilder::invalidAuthorization);
+    return getUserDTO(httpServletRequest).orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
   }
 
   private static String stripRawKey(String rawKey, Collection<String> toBeRemoved) {
@@ -119,7 +121,7 @@ public class SecurityUtils {
       return getRSAKeyFactoryInstance()
           .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
     } catch (Exception exception) {
-      throw ExceptionBuilder.parsingPublicKeyError(exception);
+      throw EXCEPTION_FACTORY.parsingPublicKeyError(exception);
     }
   }
 
@@ -128,7 +130,7 @@ public class SecurityUtils {
       return getRSAKeyFactoryInstance()
           .generatePrivate(new PKCS8EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
     } catch (Exception exception) {
-      throw ExceptionBuilder.buildCommonException(
+      throw EXCEPTION_FACTORY.buildCommonException(
           "Parsing private key error", CommonMessage.MESSAGE_INVALID_PRIVATE_KEY_CONFIG, exception);
     }
   }

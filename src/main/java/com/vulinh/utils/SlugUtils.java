@@ -1,7 +1,7 @@
 package com.vulinh.utils;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class SlugUtils {
     var result = "%s-%s".formatted(createBasicSlug(title), randomUUID);
 
     if (result.length() > SLUG_MAX_LENGTH) {
-      throw ExceptionBuilder.buildCommonException(
+      throw ExceptionFactory.INSTANCE.buildCommonException(
           "Post's slug exceeded %d characters".formatted(SLUG_MAX_LENGTH),
           CommonMessage.MESSAGE_POST_INVALID_SLUG);
     }

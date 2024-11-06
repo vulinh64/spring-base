@@ -9,7 +9,7 @@ import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.UserRegistrationEventFactory;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
@@ -32,6 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
   private static final ValidatorStepFactory VALIDATOR_STEP_FACTORY = ValidatorStepFactory.INSTANCE;
+
+  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
+
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
   private final UserRepository userRepository;
@@ -54,7 +57,7 @@ public class AuthService {
         .map(accessTokenGenerator::generateAccessToken)
         .orElseThrow(
             () ->
-                ExceptionBuilder.buildCommonException(
+                EXCEPTION_FACTORY.buildCommonException(
                     "Invalid user credentials", CommonMessage.MESSAGE_INVALID_CREDENTIALS));
   }
 
@@ -103,7 +106,7 @@ public class AuthService {
         SecurityUtils.getUserDTO(httpServletRequest)
             .map(UserBasicDTO::id)
             .flatMap(userRepository::findByIdAndIsActiveIsTrue)
-            .orElseThrow(ExceptionBuilder::invalidAuthorization);
+            .orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
 
     ValidatorChain.<PasswordChangeDTO>start()
         .addValidator(

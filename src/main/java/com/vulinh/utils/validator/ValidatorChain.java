@@ -1,6 +1,6 @@
 package com.vulinh.utils.validator;
 
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public final class ValidatorChain<T> {
 
     for (var validatorStep : validatorSteps) {
       if (!validatorStep.getPredicate().test(object)) {
-        throw ExceptionBuilder.buildCommonException(
+        throw ExceptionFactory.INSTANCE.buildCommonException(
             validatorStep.getAdditionalMessage(), validatorStep.getErrorMessage());
       }
     }

@@ -8,7 +8,7 @@ import com.vulinh.data.entity.*;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ElasticsearchEventFactory;
 import com.vulinh.factory.PostFactory;
 import com.vulinh.service.category.CategoryService;
@@ -36,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostRevisionService {
 
   private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
+
+  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
 
   private final PostRepository postRepository;
   private final PostRevisionRepository postRevisionRepository;
@@ -70,7 +72,7 @@ public class PostRevisionService {
                 checkPostRevisionJPAQuery(postId).exists(), FluentQuery.FetchableFluentQuery::first)
             .orElseThrow(
                 () ->
-                    ExceptionBuilder.entityNotFound(
+                    EXCEPTION_FACTORY.entityNotFound(
                         "Post with ID %s or slug %s not found".formatted(postId, postId),
                         CommonConstant.POST_ENTITY));
 
@@ -92,7 +94,7 @@ public class PostRevisionService {
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->
-                ExceptionBuilder.entityNotFound(
+                EXCEPTION_FACTORY.entityNotFound(
                     "Post revision number %s for post ID %s not existed"
                         .formatted(revisionNumber, postId),
                     "Post Revision"));
@@ -141,7 +143,7 @@ public class PostRevisionService {
     var predicate = checkPostRevisionJPAQuery(postId).notExists();
 
     if (postRevisionRepository.exists(predicate)) {
-      throw ExceptionBuilder.entityNotFound(
+      throw EXCEPTION_FACTORY.entityNotFound(
           "Post with ID %s or slug %s not found".formatted(postId, postId),
           CommonConstant.POST_ENTITY);
     }

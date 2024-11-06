@@ -11,16 +11,7 @@ import lombok.With;
 public record UserRegistrationDTO(
     String username, String password, String fullName, String email, Collection<String> userRoles) {
 
-  public UserRegistrationDTO(
-      String username,
-      String password,
-      String fullName,
-      String email,
-      Collection<String> userRoles) {
-    this.username = username;
-    this.password = password;
-    this.fullName = fullName;
-    this.email = email;
-    this.userRoles = userRoles == null ? Set.of(UserRole.USER.name()) : userRoles;
+  public UserRegistrationDTO {
+    userRoles = userRoles == null ? Set.of(UserRole.USER.name()) : userRoles;
   }
 }

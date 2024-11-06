@@ -1,42 +1,41 @@
-package com.vulinh.exception;
+package com.vulinh.factory;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.vulinh.exception.CommonException;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ExceptionBuilder {
+@SuppressWarnings("java:S6548")
+public enum ExceptionFactory {
+  INSTANCE;
 
-  public static CommonException entityNotFound(String message, String entityName) {
+  public CommonException entityNotFound(String message, String entityName) {
     return new CommonException(message, CommonMessage.MESSAGE_INVALID_ENTITY_ID, null, entityName);
   }
 
-  public static CommonException invalidAuthorization() {
+  public CommonException invalidAuthorization() {
     return invalidAuthorization(null);
   }
 
-  public static CommonException invalidAuthorization(Throwable exception) {
+  public CommonException invalidAuthorization(Throwable exception) {
     return buildCommonException(
         "Invalid authorization", CommonMessage.MESSAGE_INVALID_AUTHORIZATION, exception);
   }
 
-  public static CommonException parsingPublicKeyError(Throwable throwable) {
+  public CommonException parsingPublicKeyError(Throwable throwable) {
     return buildCommonException(
         "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, throwable);
   }
 
-  public static CommonException expiredAccessToken(Throwable tokenExpiredException) {
+  public CommonException expiredAccessToken(Throwable tokenExpiredException) {
     return buildCommonException(
         "Access token expired", CommonMessage.MESSAGE_CREDENTIALS_EXPIRED, tokenExpiredException);
   }
 
-  public static CommonException buildCommonException(
-      String message, WithHttpStatusCode commonMessage) {
+  public CommonException buildCommonException(String message, WithHttpStatusCode commonMessage) {
     return buildCommonException(message, commonMessage, null);
   }
 
-  public static CommonException buildCommonException(
+  public CommonException buildCommonException(
       String message, WithHttpStatusCode errorMessage, Throwable throwable) {
     return new CommonException(message, errorMessage, throwable);
   }

@@ -6,7 +6,7 @@ import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.user.UserService;
 import com.vulinh.utils.ResponseUtils;
@@ -43,7 +43,7 @@ public class UserController implements UserAPI {
     return SecurityUtils.getUserDTO(httpServletRequest)
         .map(RESPONSE_FACTORY::success)
         .map(ResponseEntity::ok)
-        .orElseThrow(ExceptionBuilder::invalidAuthorization);
+        .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
   }
 
   @Override

@@ -10,7 +10,7 @@ import com.vulinh.data.mapper.EntityDTOMapper;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.BaseEntityService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.SpecificationBuilder;
@@ -80,7 +80,7 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
         .filter(user -> user.id().equals(id))
         .ifPresent(
             ignored -> {
-              throw ExceptionBuilder.buildCommonException(
+              throw ExceptionFactory.INSTANCE.buildCommonException(
                   "Cannot delete self", CommonMessage.MESSAGE_NO_SELF_DESTRUCTION);
             });
 

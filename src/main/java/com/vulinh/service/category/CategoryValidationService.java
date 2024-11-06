@@ -5,12 +5,11 @@ import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import com.vulinh.data.entity.Category_;
 import com.vulinh.data.repository.CategoryRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.utils.SpecificationBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
-
 import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.Getter;
@@ -44,7 +43,7 @@ public class CategoryValidationService {
         .executeValidation(categorySlug);
 
     if (!availableCategory(categoryCreationDTO, categorySlug)) {
-      throw ExceptionBuilder.buildCommonException(
+      throw ExceptionFactory.INSTANCE.buildCommonException(
           "Category display name %s or slug %s existed"
               .formatted(categoryCreationDTO.displayName(), categorySlug),
           CommonMessage.MESSAGE_EXISTED_CATEGORY);
@@ -65,7 +64,8 @@ public class CategoryValidationService {
         ValidatorStepFactory.noBlankField(CategoryCreationDTO::displayName),
         "Blank category is not allowed"),
     CATEGORY_NOT_TOO_LONG(
-        ValidatorStepFactory.noExceededLength(CategoryCreationDTO::displayName, CATEGORY_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(
+            CategoryCreationDTO::displayName, CATEGORY_MAX_LENGTH),
         "Category must be 500 characters or less");
 
     private final Predicate<CategoryCreationDTO> predicate;

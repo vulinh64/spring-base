@@ -9,7 +9,7 @@ import com.vulinh.data.dto.security.AccessToken;
 import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.entity.Users_;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Instant;
 import java.util.UUID;
@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
+
+  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
 
   private static Algorithm rsaAlgorithm;
   private static JWTVerifier jwtVerifier;
@@ -59,9 +61,9 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
           .username(decodedJWT.getClaim(Users_.USERNAME).asString())
           .build();
     } catch (TokenExpiredException tokenExpiredException) {
-      throw ExceptionBuilder.expiredAccessToken(tokenExpiredException);
+      throw EXCEPTION_FACTORY.expiredAccessToken(tokenExpiredException);
     } catch (Exception exception) {
-      throw ExceptionBuilder.parsingPublicKeyError(exception);
+      throw EXCEPTION_FACTORY.parsingPublicKeyError(exception);
     }
   }
 

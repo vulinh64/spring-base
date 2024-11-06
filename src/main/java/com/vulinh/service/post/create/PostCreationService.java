@@ -6,7 +6,7 @@ import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.post.PostValidationService;
 import com.vulinh.service.tag.TagService;
@@ -40,7 +40,7 @@ public class PostCreationService {
         SecurityUtils.getUserDTO(httpServletRequest)
             .map(UserBasicDTO::id)
             .flatMap(userRepository::findById)
-            .orElseThrow(ExceptionBuilder::invalidAuthorization);
+            .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
 
     var categoryId = postCreationDTO.categoryId();
 

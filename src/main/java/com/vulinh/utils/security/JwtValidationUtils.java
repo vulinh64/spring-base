@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.security.JwtPayload;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.StaticContextAccessor;
@@ -27,7 +27,7 @@ public class JwtValidationUtils implements AccessTokenValidator {
 
       return OBJECT_MAPPER.convertValue(parsingResult, JwtPayload.class);
     } catch (ExpiredJwtException expiredJwtException) {
-      throw ExceptionBuilder.expiredAccessToken(expiredJwtException);
+      throw ExceptionFactory.INSTANCE.expiredAccessToken(expiredJwtException);
     }
   }
 

@@ -14,18 +14,7 @@ public record PostCreationDTO(
     UUID categoryId,
     Set<String> tags) {
 
-  public PostCreationDTO(
-      String title,
-      String excerpt,
-      String postContent,
-      String slug,
-      UUID categoryId,
-      Set<String> tags) {
-    this.title = title;
-    this.excerpt = excerpt;
-    this.postContent = postContent;
-    this.slug = slug;
-    this.categoryId = categoryId;
-    this.tags = SetUtils.emptyIfNull(tags);
+  public PostCreationDTO {
+    tags = SetUtils.emptyIfNull(tags);
   }
 }

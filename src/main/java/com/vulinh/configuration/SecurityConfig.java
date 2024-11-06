@@ -1,7 +1,7 @@
 package com.vulinh.configuration;
 
 import com.vulinh.constant.UserRole;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.filter.JwtFilter;
 import com.vulinh.utils.SecurityUrlUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -106,6 +106,6 @@ public class SecurityConfig {
   private void handleSecurityException(
       HttpServletRequest request, HttpServletResponse response, Throwable authException) {
     handlerExceptionResolver.resolveException(
-        request, response, null, ExceptionBuilder.invalidAuthorization(authException));
+        request, response, null, ExceptionFactory.INSTANCE.invalidAuthorization(authException));
   }
 }

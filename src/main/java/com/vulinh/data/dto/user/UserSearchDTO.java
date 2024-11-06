@@ -10,8 +10,7 @@ import lombok.With;
 @With
 public record UserSearchDTO(String identity, Collection<String> roles) {
 
-  public UserSearchDTO(String identity, Collection<String> roles) {
-    this.identity = identity;
-    this.roles = Optional.ofNullable(roles).orElse(Collections.emptySet());
+  public UserSearchDTO {
+    roles = Optional.ofNullable(roles).orElse(Collections.emptySet());
   }
 }

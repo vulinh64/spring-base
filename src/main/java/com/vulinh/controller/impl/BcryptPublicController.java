@@ -5,7 +5,7 @@ import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordRequestDTO;
 import com.vulinh.data.dto.auth.PasswordResponseDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.user.UserValidationService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class BcryptPublicController implements BcryptPublicAPI {
 
     if (StringUtils.isBlank(rawPassword)
         || rawPassword.length() < UserValidationService.PASSWORD_MINIMUM_LENGTH) {
-      throw ExceptionBuilder.buildCommonException(
+      throw ExceptionFactory.INSTANCE.buildCommonException(
           "Invalid password", CommonMessage.MESSAGE_INVALID_PASSWORD);
     }
 

@@ -3,7 +3,7 @@ package com.vulinh.data.repository;
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.projection.PrefetchPostProjection;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public interface PostRepository extends BaseRepository<Post, UUID> {
     return findById(id)
         .orElseThrow(
             () ->
-                ExceptionBuilder.entityNotFound(
+                ExceptionFactory.INSTANCE.entityNotFound(
                     "Entity %s with ID %s not found".formatted(CommonConstant.POST_ENTITY, id),
                     CommonConstant.POST_ENTITY));
   }

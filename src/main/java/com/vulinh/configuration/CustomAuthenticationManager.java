@@ -4,7 +4,7 @@ import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.exception.ExceptionBuilder;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.CustomAuthenticationFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -33,6 +33,6 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         .findByIdAndIsActiveIsTrue(payload.subject())
         .map(UserMapper.INSTANCE::toBasicUserDTO)
         .map(CustomAuthenticationFactory.INSTANCE::fromUserBasicDTO)
-        .orElseThrow(ExceptionBuilder::invalidAuthorization);
+        .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
   }
 }
