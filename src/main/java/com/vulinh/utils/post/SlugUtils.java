@@ -1,4 +1,4 @@
-package com.vulinh.utils;
+package com.vulinh.utils.post;
 
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.factory.ExceptionFactory;

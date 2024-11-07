@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.vulinh.factory.PostFactory;
-import com.vulinh.utils.PostUtils;
+import com.vulinh.utils.post.PostUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;

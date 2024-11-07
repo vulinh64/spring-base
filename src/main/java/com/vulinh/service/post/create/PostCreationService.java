@@ -10,7 +10,7 @@ import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.post.PostValidationService;
 import com.vulinh.service.tag.TagService;
-import com.vulinh.utils.PostUtils;
+import com.vulinh.utils.post.PostUtils;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

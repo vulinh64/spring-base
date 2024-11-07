@@ -3,7 +3,7 @@ package com.vulinh.service.post.edit;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.entity.Tag;
-import com.vulinh.utils.PostUtils;
+import com.vulinh.utils.post.PostUtils;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
