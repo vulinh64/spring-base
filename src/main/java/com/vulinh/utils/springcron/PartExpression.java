@@ -11,15 +11,6 @@ import org.springframework.lang.Nullable;
 
 public interface PartExpression {
 
-  @FunctionalInterface
-  interface NoCarePartExpression extends PartExpression {
-
-    @Override
-    default Predicate<List<Integer>> getValidator() {
-      return List::isEmpty;
-    }
-  }
-
   Predicate<List<Integer>> getValidator();
 
   Function<List<Integer>, String> getGenerator();

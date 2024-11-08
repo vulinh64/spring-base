@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MinuteExpression implements TimeExpression {
+public enum MinuteExpression implements PartExpression {
   EVERY_MINUTE(List::isEmpty, Constant.ALL),
   EVERY_MINUTE_INTERVAL(
       list -> Utils.isUnaryWithinBounds(list, Constant.ZERO, Constant.MAX_SECOND_MINUTE),
@@ -31,4 +31,8 @@ public enum MinuteExpression implements TimeExpression {
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
+
+  public static MinuteExpression defaultExpression() {
+    return EVERY_MINUTE;
+  }
 }
