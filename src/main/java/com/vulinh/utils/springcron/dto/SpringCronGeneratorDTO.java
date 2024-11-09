@@ -1,8 +1,9 @@
 package com.vulinh.utils.springcron.dto;
 
 import com.vulinh.utils.springcron.*;
-import java.util.stream.Stream;
 import lombok.Builder;
+
+import java.util.stream.Stream;
 
 @Builder
 public record SpringCronGeneratorDTO(

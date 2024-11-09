@@ -2,9 +2,7 @@ package com.vulinh.utils.springcron.dto;
 
 import com.vulinh.utils.springcron.DayOfWeekExpression;
 import java.util.List;
-import lombok.Builder;
 
-@Builder
 public record DayOfWeekExpressionObject(DayOfWeekExpression expression, List<Integer> arguments)
     implements ExpressionObject<DayOfWeekExpression> {
 
@@ -23,8 +21,7 @@ public record DayOfWeekExpressionObject(DayOfWeekExpression expression, List<Int
   }
 
   public DayOfWeekExpressionObject {
-    expression =
-        ExpressionObject.defaultIfNull(expression, DayOfWeekExpression::defaultExpression);
+    expression = ExpressionObject.defaultIfNull(expression, DayOfWeekExpression::defaultExpression);
     arguments = ExpressionObject.emptyIfNull(arguments);
   }
 }

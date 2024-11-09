@@ -2,9 +2,7 @@ package com.vulinh.utils.springcron.dto;
 
 import com.vulinh.utils.springcron.SecondExpression;
 import java.util.List;
-import lombok.Builder;
 
-@Builder
 public record SecondExpressionObject(SecondExpression expression, List<Integer> arguments)
     implements ExpressionObject<SecondExpression> {
 
