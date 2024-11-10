@@ -34,6 +34,8 @@ spring:
         url: /post/**
       - method: GET
         url: /category/search/**
+      - method: GET
+        url: /comment/**
     no-authenticated-urls:
       - /free/**
       - /health
@@ -60,15 +62,6 @@ management.endpoints.web:
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
-logging.level:
-  com.vulinh.service:
-    taxcalculator.TaxService: DEBUG
-    user.UserValidationService: DEBUG
-    post:
-      PostValidationService: DEBUG
-      edit.PostEditValidationService: DEBUG
-    category.CategoryService: DEBUG
-    service.eventlistener.CustomEventListener: DEBUG
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.configuration.MyP6SpyLogging
   logging: custom

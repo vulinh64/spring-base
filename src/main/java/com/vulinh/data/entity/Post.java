@@ -1,9 +1,11 @@
 package com.vulinh.data.entity;
 
+import com.vulinh.data.DateTimeAuditable;
 import com.vulinh.data.entity.AbstractIdentifiable.UUIDJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.*;
@@ -22,7 +24,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @With
-public class Post extends UUIDJpaEntity {
+public class Post extends UUIDJpaEntity implements DateTimeAuditable {
 
   @Serial private static final long serialVersionUID = -2260038525808618984L;
 
@@ -53,5 +55,13 @@ public class Post extends UUIDJpaEntity {
       joinColumns = @JoinColumn(name = "post_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   @ToString.Exclude
+  @OrderBy("displayName asc")
   private Set<Tag> tags;
+
+  // This generates many delete statement, fixing...
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "post_id", updatable = false, insertable = false)
+  @OrderBy("createdDate desc")
+  @ToString.Exclude
+  private List<Comment> comments;
 }

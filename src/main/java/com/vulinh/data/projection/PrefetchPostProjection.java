@@ -1,19 +1,15 @@
 package com.vulinh.data.projection;
 
+import com.vulinh.data.DateTimeAuditable;
 import com.vulinh.utils.UUIDIdentifiable;
-import java.time.LocalDateTime;
 
-public interface PrefetchPostProjection extends UUIDIdentifiable {
+public interface PrefetchPostProjection extends UUIDIdentifiable, DateTimeAuditable {
 
   String getTitle();
 
   String getExcerpt();
 
   String getSlug();
-
-  LocalDateTime getCreatedDate();
-
-  LocalDateTime getUpdatedDate();
 
   AuthorProjection getAuthor();
 

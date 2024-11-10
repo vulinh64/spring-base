@@ -14,6 +14,7 @@ public class EndpointConstant {
   public static final String ENDPOINT_FREE = "/free";
 
   public static final String COMMON_SEARCH_ENDPOINT = "/search";
+  public static final String ENDPOINT_COMMENT = "/comment";
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class AuthEndpoint {

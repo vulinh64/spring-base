@@ -1,0 +1,9 @@
+logging.level:
+  com.vulinh.service:
+    taxcalculator.TaxService: DEBUG
+    user.UserValidationService: DEBUG
+    post:
+      PostValidationService: DEBUG
+      edit.PostEditValidationService: DEBUG
+    category.CategoryService: DEBUG
+    service.eventlistener.CustomEventListener: DEBUG
