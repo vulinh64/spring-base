@@ -6,6 +6,7 @@
     * [Prerequisite](#prerequisite)
     * [Setting up database](#setting-up-database)
       * [SQL Script:](#sql-script)
+      * [Validate Liquibase's changelogs using Liquibase Maven Plugins](#validate-liquibases-changelogs-using-liquibase-maven-plugins)
     * [Setting up environment variables](#setting-up-environment-variables)
     * [Public key](#public-key)
     * [Private key](#private-key)
@@ -69,6 +70,16 @@ DATABASE myspringdatabase
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 ```
+
+#### Validate Liquibase's changelogs using Liquibase Maven Plugins
+
+Run the following command:
+
+```shell
+liquibase:validate -Dliquibase.changeLogFile=src/main/resources/changelog.yaml -Dliquibase.url=jdbc:postgresql://localhost:5432/myspringdatabase -Dliquibase.username=postgres -Dliquibase.password=123456 -f pom.xml
+```
+
+Replace `-Dliquibase.username` and `-Dliquibase.password` with your actual username and password.
 
 ### Setting up environment variables
 
