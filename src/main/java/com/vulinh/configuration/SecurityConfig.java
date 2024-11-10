@@ -84,7 +84,7 @@ public class SecurityConfig {
   private void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer) {
-    for (var verbUrl : securityConfigProperties.verbUrls()) {
+    for (var verbUrl : securityConfigProperties.allowedVerbUrls()) {
       authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
     }
 

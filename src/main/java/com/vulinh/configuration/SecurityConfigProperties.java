@@ -10,7 +10,7 @@ public record SecurityConfigProperties(
     String publicKey,
     String privateKey,
     List<String> noAuthenticatedUrls,
-    List<VerbUrl> verbUrls,
+    List<VerbUrl> allowedVerbUrls,
     Duration jwtDuration,
     Duration passwordResetCodeDuration,
     String issuer) {}

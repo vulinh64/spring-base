@@ -29,7 +29,7 @@ spring:
     issuer: ${SECURITY_ISSUER:spring-base-service}
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
-    verb-urls:
+    allowed-verb-urls:
       - method: GET
         url: /post/**
       - method: GET
