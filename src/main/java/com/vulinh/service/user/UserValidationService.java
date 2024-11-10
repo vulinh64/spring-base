@@ -163,7 +163,13 @@ public class UserValidationService {
     USER_LONG_ENOUGH_USERNAME(
         ValidatorStepFactory.noExceededLength(UserRegistrationDTO::username, USERNAME_MAX_LENGTH),
         CommonMessage.MESSAGE_INVALID_USERNAME,
-        "Username is too long"),
+        "Username exceeded %s characters".formatted(USERNAME_MAX_LENGTH)) {
+
+      @Override
+      public Object[] getArguments() {
+        return new Integer[] {USERNAME_MAX_LENGTH};
+      }
+    },
     USER_VALID_USERNAME(
         UserValidationService::isUsernameValid,
         CommonMessage.MESSAGE_INVALID_USERNAME,
@@ -176,6 +182,16 @@ public class UserValidationService {
         ValidatorStepFactory.noBlankField(UserRegistrationDTO::password),
         CommonMessage.MESSAGE_INVALID_PASSWORD,
         "Blank password is not allowed"),
+    USER_PASSWORD_LONG(
+        ValidatorStepFactory.atLeastLength(UserRegistrationDTO::password, PASSWORD_MINIMUM_LENGTH),
+        CommonMessage.MESSAGE_INVALID_PASSWORD,
+        "Password has to be %s characters or more".formatted(PASSWORD_MINIMUM_LENGTH)) {
+
+      @Override
+      public Object[] getArguments() {
+        return new Integer[] {PASSWORD_MINIMUM_LENGTH};
+      }
+    },
     USER_NO_BLANK_EMAIL(
         ValidatorStepFactory.noBlankField(UserRegistrationDTO::email),
         CommonMessage.MESSAGE_INVALID_EMAIL,
@@ -188,5 +204,6 @@ public class UserValidationService {
     private final Predicate<UserRegistrationDTO> predicate;
     private final CommonMessage errorMessage;
     private final String additionalMessage;
+    private final Object[] arguments = {};
   }
 }

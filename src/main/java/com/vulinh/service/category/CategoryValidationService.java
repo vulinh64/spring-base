@@ -39,7 +39,8 @@ public class CategoryValidationService {
                 ValidatorStepFactory.noExceededLength(
                     Function.identity(), CategoryValidationService.CATEGORY_SLUG_MAX_LENGTH),
                 CommonMessage.MESSAGE_INVALID_CATEGORY_SLUG,
-                "Category slug is too long"))
+                "Category slug exceeded %s characters".formatted(CATEGORY_SLUG_MAX_LENGTH),
+                CATEGORY_SLUG_MAX_LENGTH))
         .executeValidation(categorySlug);
 
     if (!availableCategory(categoryCreationDTO, categorySlug)) {
@@ -66,14 +67,11 @@ public class CategoryValidationService {
     CATEGORY_NOT_TOO_LONG(
         ValidatorStepFactory.noExceededLength(
             CategoryCreationDTO::displayName, CATEGORY_MAX_LENGTH),
-        "Category must be 500 characters or less");
+        "Category exceeded %s characters".formatted(CATEGORY_MAX_LENGTH));
 
     private final Predicate<CategoryCreationDTO> predicate;
     private final String additionalMessage;
-
-    @Override
-    public WithHttpStatusCode getErrorMessage() {
-      return CommonMessage.MESSAGE_INVALID_CATEGORY;
-    }
+    private final Object[] arguments = {CATEGORY_MAX_LENGTH};
+    private final WithHttpStatusCode errorMessage = CommonMessage.MESSAGE_INVALID_CATEGORY;
   }
 }

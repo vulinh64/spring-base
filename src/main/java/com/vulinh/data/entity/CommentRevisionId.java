@@ -18,15 +18,15 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 @With
-public class PostRevisionId implements UUIDRevisionId {
+public class CommentRevisionId implements UUIDRevisionId {
 
-  @Serial private static final long serialVersionUID = 944099295600818675L;
+  @Serial private static final long serialVersionUID = 8157034868720893573L;
 
-  public static final String TABLE_NAME = "post";
+  public static final String TABLE_NAME = "comment";
   public static final String REVISION_SEQ = TABLE_NAME + "_revision_seq";
   public static final String REVISION_SEQ_NAME = REVISION_SEQ + "_generator";
 
-  private UUID postId;
+  private UUID commentId;
 
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = REVISION_SEQ_NAME)
   @SequenceGenerator(name = REVISION_SEQ_NAME, sequenceName = REVISION_SEQ, allocationSize = 1)
@@ -34,6 +34,6 @@ public class PostRevisionId implements UUIDRevisionId {
 
   @Override
   public UUID getId() {
-    return postId;
+    return commentId;
   }
 }

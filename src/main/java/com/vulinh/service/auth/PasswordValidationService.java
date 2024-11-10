@@ -3,11 +3,10 @@ package com.vulinh.service.auth;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.entity.Users;
-import java.util.function.Predicate;
-
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.validator.ValidatorStep;
+import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PasswordValidationService {
+
+  private static final int PASSWORD_MIN_LENGTH = 8;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -42,10 +43,17 @@ public class PasswordValidationService {
         ValidatorStepFactory.atLeastLength(
             PasswordChangeDTO::newPassword, UserValidationService.PASSWORD_MINIMUM_LENGTH),
         CommonMessage.MESSAGE_INVALID_NEW_PASSWORD,
-        "New password must have more than 8 characters");
+        "New password must have more than %s characters".formatted(PASSWORD_MIN_LENGTH)) {
+
+      @Override
+      public Integer[] getArguments() {
+        return new Integer[] {PASSWORD_MIN_LENGTH};
+      }
+    };
 
     private final Predicate<PasswordChangeDTO> predicate;
     private final CommonMessage errorMessage;
     private final String additionalMessage;
+    private final Object[] arguments = {};
   }
 }

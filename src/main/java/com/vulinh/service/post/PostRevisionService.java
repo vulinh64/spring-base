@@ -2,14 +2,13 @@ package com.vulinh.service.post;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.entity.*;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
-import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ElasticsearchEventFactory;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.PostFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
@@ -70,11 +69,7 @@ public class PostRevisionService {
         postRepository
             .findBy(
                 checkPostRevisionJPAQuery(postId).exists(), FluentQuery.FetchableFluentQuery::first)
-            .orElseThrow(
-                () ->
-                    EXCEPTION_FACTORY.entityNotFound(
-                        "Post with ID %s or slug %s not found".formatted(postId, postId),
-                        CommonConstant.POST_ENTITY));
+            .orElseThrow(() -> PostValidationService.postOrSlugNotFound(postId));
 
     postValidationService.validateModifyingPermission(
         SecurityUtils.getUserDTOOrThrow(httpServletRequest), post);
@@ -143,9 +138,7 @@ public class PostRevisionService {
     var predicate = checkPostRevisionJPAQuery(postId).notExists();
 
     if (postRevisionRepository.exists(predicate)) {
-      throw EXCEPTION_FACTORY.entityNotFound(
-          "Post with ID %s or slug %s not found".formatted(postId, postId),
-          CommonConstant.POST_ENTITY);
+      throw PostValidationService.postOrSlugNotFound(postId);
     }
   }
 

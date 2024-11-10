@@ -1,16 +1,19 @@
 package com.vulinh.service.post;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.user.RoleDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.Post;
+import com.vulinh.exception.CommonException;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -26,6 +29,12 @@ public class PostValidationService {
 
   private static final int TITLE_MAX_LENGTH = 5000;
   private static final int TAG_MAX_LENGTH = 1000;
+
+  public static CommonException postOrSlugNotFound(UUID postId) {
+    return ExceptionFactory.INSTANCE.entityNotFound(
+        "Post with ID %s or slug %s not found".formatted(postId, postId),
+        CommonConstant.POST_ENTITY);
+  }
 
   public static final ValidatorChain<PostCreationDTO> BASIC_POST_VALIDATOR =
       ValidatorChain.<PostCreationDTO>start().addValidator(PostRule.values());
@@ -107,6 +116,7 @@ public class PostValidationService {
     private final Predicate<PostCreationDTO> predicate;
     private final CommonMessage errorMessage;
     private final String additionalMessage;
+    private final Object[] arguments = {};
 
     private static boolean isValidTags(PostCreationDTO dto) {
       for (var tag : dto.tags()) {

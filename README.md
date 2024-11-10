@@ -73,10 +73,10 @@ DATABASE myspringdatabase
 
 #### Validate Liquibase's changelogs using Liquibase Maven Plugins
 
-Run the following command:
+Create a Run configuration based on `liquibase:validate` goal, using following command:
 
 ```shell
-liquibase:validate -Dliquibase.changeLogFile=src/main/resources/changelog.yaml -Dliquibase.url=jdbc:postgresql://localhost:5432/myspringdatabase -Dliquibase.username=postgres -Dliquibase.password=123456 -f pom.xml
+clean compile liquibase:validate -Dliquibase.changeLogFile=src/main/resources/changelog.yaml -Dliquibase.url=jdbc:postgresql://localhost:5432/myspringdatabase -Dliquibase.username=postgres -Dliquibase.password=123456 -f pom.xml
 ```
 
 Replace `-Dliquibase.username` and `-Dliquibase.password` with your actual username and password.

@@ -11,4 +11,6 @@ public interface ValidatorStep<T> {
   WithHttpStatusCode getErrorMessage();
 
   String getAdditionalMessage();
+
+  Object[] getArguments();
 }

@@ -1,12 +1,18 @@
 package com.vulinh.factory;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import com.vulinh.exception.CommonException;
+import java.util.UUID;
 
 @SuppressWarnings("java:S6548")
 public enum ExceptionFactory {
   INSTANCE;
+
+  public CommonException postNotFound(UUID id) {
+    return entityNotFound("Post ID %s not found".formatted(id), CommonConstant.POST_ENTITY);
+  }
 
   public CommonException entityNotFound(String message, String entityName) {
     return new CommonException(message, CommonMessage.MESSAGE_INVALID_ENTITY_ID, null, entityName);
@@ -31,12 +37,17 @@ public enum ExceptionFactory {
         "Access token expired", CommonMessage.MESSAGE_CREDENTIALS_EXPIRED, tokenExpiredException);
   }
 
-  public CommonException buildCommonException(String message, WithHttpStatusCode commonMessage) {
-    return buildCommonException(message, commonMessage, null);
+  public CommonException buildCommonException(String message, WithHttpStatusCode errorMessage) {
+    return new CommonException(message, errorMessage, null);
   }
 
   public CommonException buildCommonException(
       String message, WithHttpStatusCode errorMessage, Throwable throwable) {
     return new CommonException(message, errorMessage, throwable);
+  }
+
+  public CommonException buildCommonException(
+      String message, WithHttpStatusCode errorMessage, Object... arguments) {
+    return new CommonException(message, errorMessage, null, arguments);
   }
 }

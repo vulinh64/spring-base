@@ -21,3 +21,7 @@ databaseChangeLog:
       file: changelogs/0009-create-post-tag-mapping-table.sql
   - include:
       file: changelogs/0010-create-post-revision-table.sql
+  - include:
+      file: changelogs/0011-create-comment-table.sql
+  - include:
+      file: changelogs/0012-create-comment-revision-table.sql

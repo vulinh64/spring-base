@@ -25,7 +25,7 @@ public enum ValidatorStepFactory {
   }
 
   public <T> ValidatorStep<T> build(
-      Predicate<T> predicate, CommonMessage commonMessage, String additionalMessage) {
-    return new ValidatorStepImpl<>(predicate, commonMessage, additionalMessage);
+      Predicate<T> predicate, CommonMessage commonMessage, String additionalMessage, Object... args) {
+    return new ValidatorStepImpl<>(predicate, commonMessage, additionalMessage, args);
   }
 }

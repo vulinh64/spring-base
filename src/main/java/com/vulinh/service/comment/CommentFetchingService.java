@@ -4,9 +4,9 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.vulinh.data.dto.comment.CommentDTO;
 import com.vulinh.data.entity.QComment;
 import com.vulinh.data.entity.QUsers;
-import com.vulinh.data.dto.comment.CommentDTO;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ExceptionFactory;
 import jakarta.persistence.EntityManager;
@@ -28,8 +28,7 @@ public class CommentFetchingService {
 
   public Page<CommentDTO> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
-      throw ExceptionFactory.INSTANCE.entityNotFound(
-          "Post ID %s not found".formatted(postId), "post");
+      throw ExceptionFactory.INSTANCE.postNotFound(postId);
     }
 
     return PageableExecutionUtils.getPage(

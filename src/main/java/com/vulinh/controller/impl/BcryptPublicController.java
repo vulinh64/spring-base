@@ -29,7 +29,9 @@ public class BcryptPublicController implements BcryptPublicAPI {
     if (StringUtils.isBlank(rawPassword)
         || rawPassword.length() < UserValidationService.PASSWORD_MINIMUM_LENGTH) {
       throw ExceptionFactory.INSTANCE.buildCommonException(
-          "Invalid password", CommonMessage.MESSAGE_INVALID_PASSWORD);
+          "Invalid password",
+          CommonMessage.MESSAGE_INVALID_PASSWORD,
+          UserValidationService.PASSWORD_MINIMUM_LENGTH);
     }
 
     var encodedPassword = passwordEncoder.encode(rawPassword);

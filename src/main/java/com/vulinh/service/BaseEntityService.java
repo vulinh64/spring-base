@@ -13,7 +13,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface BaseEntityService<
     I extends Serializable,
-    E extends AbstractIdentifiable,
+    E extends AbstractIdentifiable<I>,
     D extends Serializable,
     R extends BaseRepository<E, I>> {
 

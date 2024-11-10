@@ -1,6 +1,5 @@
 package com.vulinh.service.post;
 
-import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.document.EPost.ESimplePost;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
@@ -10,8 +9,8 @@ import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ElasticsearchEventFactory;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.post.create.PostCreationService;
 import com.vulinh.service.post.edit.PostDeletionService;
 import com.vulinh.service.post.edit.PostEditService;
@@ -51,11 +50,7 @@ public class PostService {
     return postRepository
         .findById(postId)
         .map(POST_MAPPER::toSinglePostDTO)
-        .orElseThrow(
-            () ->
-                ExceptionFactory.INSTANCE.entityNotFound(
-                    "Post with either id or slug [%s] not found".formatted(postId),
-                    CommonConstant.POST_ENTITY));
+        .orElseThrow(() -> ExceptionFactory.INSTANCE.postNotFound(postId));
   }
 
   @Transactional

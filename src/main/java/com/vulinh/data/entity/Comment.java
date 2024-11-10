@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -24,7 +25,7 @@ public class Comment extends UUIDJpaEntity {
 
   @Serial private static final long serialVersionUID = 8024056047258352378L;
 
-  @Id private UUID id;
+  @Id @UuidGenerator private UUID id;
 
   private String content;
 
@@ -35,6 +36,6 @@ public class Comment extends UUIDJpaEntity {
   @CreatedBy private UUID createdBy;
 
   // So that mapping on Post works
-  @Column(name = "post_id", insertable = false, updatable = false)
+  @Column(name = "post_id")
   private UUID postId;
 }
