@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum DayExpression implements DateExpression {
+public enum DayExpression implements PartExpression {
   EVERY_DAY(List::isEmpty, Constant.ALL),
   EVERY_DAY_INTERVAL(
       list -> Utils.isUnaryWithinBounds(list, Constant.MIN_DAY_MONTH_DAY_OF_WEEK, Constant.MAX_DAY),
@@ -38,4 +38,8 @@ public enum DayExpression implements DateExpression {
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
+
+  public static DayExpression defaultExpression() {
+    return EVERY_DAY;
+  }
 }

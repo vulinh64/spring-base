@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum DayOfWeekExpression implements DateExpression {
+public enum DayOfWeekExpression implements PartExpression {
   EVERY_WEEK_DAY(List::isEmpty, Constant.ALL),
   EVERY_WEEK_DAY_INTERVAL(
       list ->
@@ -41,4 +41,8 @@ public enum DayOfWeekExpression implements DateExpression {
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
+
+  public static DayOfWeekExpression defaultExpression() {
+    return EVERY_WEEK_DAY;
+  }
 }

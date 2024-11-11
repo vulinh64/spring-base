@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MonthExpression implements DateExpression {
+public enum MonthExpression implements PartExpression {
   EVERY_MONTH(List::isEmpty, Constant.ALL),
   EVERY_MONTHS_INTERVAL(
       list ->
@@ -29,4 +29,8 @@ public enum MonthExpression implements DateExpression {
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
+
+  public static MonthExpression defaultExpression() {
+    return EVERY_MONTH;
+  }
 }

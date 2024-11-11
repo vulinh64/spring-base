@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum SecondExpression implements TimeExpression {
+public enum SecondExpression implements PartExpression {
   EVERY_SECOND(List::isEmpty, Constant.ALL),
   EVERY_SECOND_INTERVAL(
       list -> Utils.isUnaryWithinBounds(list, Constant.ZERO, Constant.MAX_SECOND_MINUTE),
@@ -31,4 +31,8 @@ public enum SecondExpression implements TimeExpression {
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
+
+  public static SecondExpression defaultExpression() {
+    return EVERY_SECOND;
+  }
 }

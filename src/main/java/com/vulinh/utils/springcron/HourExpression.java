@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum HourExpression implements TimeExpression {
+public enum HourExpression implements PartExpression {
   EVERY_HOUR(List::isEmpty, Constant.ALL),
   EVERY_HOUR_INTERVAL(
       list -> Utils.isUnaryWithinBounds(list, Constant.ZERO, Constant.MAX_HOUR),
@@ -31,4 +31,8 @@ public enum HourExpression implements TimeExpression {
 
   private final Predicate<List<Integer>> validator;
   private final Function<List<Integer>, String> generator;
+
+  public static HourExpression defaultExpression() {
+    return EVERY_HOUR;
+  }
 }
