@@ -110,15 +110,12 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
               .map(Roles::getId)
               .collect(Collectors.toSet());
 
-      // TODO: NOT YET FULLY TESTED
       specification =
           CustomQueryDslUtils.and(
               specification,
               roles.isEmpty()
                   ? CustomQueryDslUtils.never()
-                  : CustomQueryDslUtils.and(
-                      CustomQueryDslUtils.in(QRoles.roles.id, roles),
-                      QUsers.users.userRoles.any().eq(QRoles.roles)));
+                  : QUsers.users.userRoles.any().id.in(roles));
     }
 
     return specification;
