@@ -3,11 +3,11 @@ package com.vulinh.service.category;
 import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
-import com.vulinh.data.entity.Category_;
+import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.utils.SpecificationBuilder;
+import com.vulinh.utils.CustomQueryDslUtils;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.function.Function;
@@ -52,10 +52,12 @@ public class CategoryValidationService {
   }
 
   public boolean availableCategory(CategoryCreationDTO postCreationDTO, String categorySlug) {
+    var qCategory = QCategory.category;
+
     return !categoryRepository.exists(
-        SpecificationBuilder.or(
-            SpecificationBuilder.eq(Category_.displayName, postCreationDTO.displayName()),
-            SpecificationBuilder.eq(Category_.categorySlug, categorySlug)));
+        CustomQueryDslUtils.or(
+            CustomQueryDslUtils.eqic(qCategory.displayName, postCreationDTO.displayName()),
+            CustomQueryDslUtils.eqic(qCategory.categorySlug, categorySlug)));
   }
 
   @RequiredArgsConstructor

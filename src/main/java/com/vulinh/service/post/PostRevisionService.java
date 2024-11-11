@@ -57,7 +57,9 @@ public class PostRevisionService {
         PageRequest.of(
             pageable.getPageNumber(),
             pageable.getPageSize(),
-            Sort.by(Order.desc(PostRevision_.REVISION_CREATED_DATE)));
+            Sort.by(
+                Order.desc(
+                    QPostRevision.postRevision.revisionCreatedDate.getMetadata().getName())));
 
     return postRevisionRepository.findByPostIdOrPostSlug(postId, actualPageable);
   }

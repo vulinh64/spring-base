@@ -8,7 +8,6 @@ import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.security.AccessToken;
 import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.data.entity.Users;
-import com.vulinh.data.entity.Users_;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Instant;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Component;
 public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
 
   private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
+  private static final String USERNAME_CLAIM = "username";
 
   private static Algorithm rsaAlgorithm;
   private static JWTVerifier jwtVerifier;
@@ -42,7 +42,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiration)
                 .withSubject(users.getId().toString())
-                .withClaim(Users_.USERNAME, users.getUsername())
+                .withClaim(USERNAME_CLAIM, users.getUsername())
                 .sign(getAlgorithm(securityConfigProperties)))
         .issuedAt(issuedAt)
         .expiration(expiration)
@@ -58,7 +58,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
       return JwtPayload.builder()
           .issuer(decodedJWT.getIssuer())
           .subject(UUID.fromString(decodedJWT.getSubject()))
-          .username(decodedJWT.getClaim(Users_.USERNAME).asString())
+          .username(decodedJWT.getClaim(USERNAME_CLAIM).asString())
           .build();
     } catch (TokenExpiredException tokenExpiredException) {
       throw EXCEPTION_FACTORY.expiredAccessToken(tokenExpiredException);

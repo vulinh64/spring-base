@@ -1,5 +1,6 @@
 package com.vulinh.service.user;
 
+import com.querydsl.core.types.Predicate;
 import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.bundle.CommonMessage;
@@ -12,8 +13,8 @@ import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.BaseEntityService;
+import com.vulinh.utils.CustomQueryDslUtils;
 import com.vulinh.utils.SecurityUtils;
-import com.vulinh.utils.SpecificationBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +23,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,15 +91,16 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
     return findAll(buildSpecification(userSearchDTO), pageable);
   }
 
-  private Specification<Users> buildSpecification(UserSearchDTO userSearchDTO) {
+  private Predicate buildSpecification(UserSearchDTO userSearchDTO) {
     var identity = userSearchDTO.identity();
+    var qUser = QUsers.users;
 
     var specification =
-        SpecificationBuilder.or(
-            SpecificationBuilder.like(Users_.id, identity),
-            SpecificationBuilder.like(Users_.username, identity),
-            SpecificationBuilder.like(Users_.email, identity),
-            SpecificationBuilder.like(Users_.fullName, identity));
+        CustomQueryDslUtils.or(
+            CustomQueryDslUtils.like(qUser.id, identity),
+            CustomQueryDslUtils.like(qUser.username, identity),
+            CustomQueryDslUtils.like(qUser.email, identity),
+            CustomQueryDslUtils.like(qUser.fullName, identity));
 
     var searchRoles = UserRole.fromRawRole(userSearchDTO.roles());
 
@@ -109,13 +110,15 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
               .map(Roles::getId)
               .collect(Collectors.toSet());
 
+      // TODO: NOT YET FULLY TESTED
       specification =
-          SpecificationBuilder.and(
+          CustomQueryDslUtils.and(
               specification,
               roles.isEmpty()
-                  ? SpecificationBuilder.never()
-                  : (root, query, criteriaBuilder) ->
-                      root.join(Users_.userRoles).get(Roles_.id).in(roles));
+                  ? CustomQueryDslUtils.never()
+                  : CustomQueryDslUtils.and(
+                      CustomQueryDslUtils.in(QRoles.roles.id, roles),
+                      QUsers.users.userRoles.any().eq(QRoles.roles)));
     }
 
     return specification;
