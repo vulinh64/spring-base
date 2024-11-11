@@ -51,7 +51,7 @@ public class CategoryValidationService {
     }
   }
 
-  public boolean availableCategory(CategoryCreationDTO postCreationDTO, String categorySlug) {
+  private boolean availableCategory(CategoryCreationDTO postCreationDTO, String categorySlug) {
     var qCategory = QCategory.category;
 
     return !categoryRepository.exists(

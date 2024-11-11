@@ -97,10 +97,10 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
 
     var specification =
         CustomQueryDslUtils.or(
-            CustomQueryDslUtils.like(qUser.id, identity),
-            CustomQueryDslUtils.like(qUser.username, identity),
-            CustomQueryDslUtils.like(qUser.email, identity),
-            CustomQueryDslUtils.like(qUser.fullName, identity));
+            CustomQueryDslUtils.likeIgnoreCase(qUser.id, identity),
+            CustomQueryDslUtils.likeIgnoreCase(qUser.username, identity),
+            CustomQueryDslUtils.likeIgnoreCase(qUser.email, identity),
+            CustomQueryDslUtils.likeIgnoreCase(qUser.fullName, identity));
 
     var searchRoles = UserRole.fromRawRole(userSearchDTO.roles());
 

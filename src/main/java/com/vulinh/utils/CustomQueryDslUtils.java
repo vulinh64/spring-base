@@ -18,6 +18,8 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomQueryDslUtils {
 
+  private static final char ESCAPE = '\\';
+
   public static Predicate always() {
     return Expressions.asBoolean(true).isTrue();
   }
@@ -124,7 +126,8 @@ public class CustomQueryDslUtils {
   }
 
   private static Predicate likeExpressionInternal(
-      Expression<?> expression, String keyword, boolean isIgnoreCase) {
+      Expression<?> expression, String keyword, boolean isCaseInsensitive) {
+    // Spaces are considered none
     if (StringUtils.isBlank(keyword)) {
       return always();
     }
@@ -132,14 +135,16 @@ public class CustomQueryDslUtils {
     var patternKeyword = "%%%s%%".formatted(EscapeCharacter.DEFAULT.escape(keyword));
 
     if (expression instanceof StringExpression se) {
-      return isIgnoreCase ? se.likeIgnoreCase(patternKeyword) : se.like(patternKeyword);
+      return isCaseInsensitive
+          ? se.likeIgnoreCase(patternKeyword, ESCAPE)
+          : se.like(patternKeyword, ESCAPE);
     }
 
     var stringOperation = Expressions.stringOperation(Ops.STRING_CAST, expression);
 
-    return isIgnoreCase
-        ? stringOperation.likeIgnoreCase(patternKeyword)
-        : stringOperation.like(patternKeyword);
+    return isCaseInsensitive
+        ? stringOperation.likeIgnoreCase(patternKeyword, ESCAPE)
+        : stringOperation.like(patternKeyword, ESCAPE);
   }
 
   private static Predicate concatenatePredicates(
