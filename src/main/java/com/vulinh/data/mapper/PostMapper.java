@@ -29,6 +29,7 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "tags", source = "tags")
+  @Mapping(target = "comments", ignore = true)
   Post toEntity(PostCreationDTO dto, Users author, Category category, Collection<Tag> tags);
 
   @Mapping(
@@ -51,6 +52,7 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(target = "category", source = "category")
+  @Mapping(target = "comments", ignore = true)
   void merge(
       PostCreationDTO postCreationDTO,
       Category category,
@@ -61,8 +63,9 @@ public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "updatedDate", ignore = true)
-  @Mapping(target = "tags", source = "tags")
   @Mapping(target = "author", ignore = true)
+  @Mapping(target = "comments", ignore = true)
+  @Mapping(target = "tags", source = "tags")
   @Mapping(
       target = "category",
       source = "category",

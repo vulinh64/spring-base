@@ -6,12 +6,12 @@ import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
 import com.vulinh.data.dto.category.CategorySearchDTO;
 import com.vulinh.data.entity.Category;
-import com.vulinh.data.entity.Category_;
+import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.utils.QueryDSLPredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
-import com.vulinh.utils.SpecificationBuilder;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -108,12 +108,15 @@ public class CategoryService {
   @Transactional
   public Page<CategoryDTO> searchCategories(
       CategorySearchDTO categorySearchDTO, Pageable pageable) {
+    QCategory qCategory = QCategory.category;
+
     return categoryRepository
         .findAll(
-            SpecificationBuilder.and(
-                SpecificationBuilder.like(Category_.displayName, categorySearchDTO.displayName()),
-                SpecificationBuilder.like(
-                    Category_.categorySlug, categorySearchDTO.categorySlug())),
+            QueryDSLPredicateBuilder.and(
+                QueryDSLPredicateBuilder.likeIgnoreCase(
+                    qCategory.displayName, categorySearchDTO.displayName()),
+                QueryDSLPredicateBuilder.likeIgnoreCase(
+                    qCategory.categorySlug, categorySearchDTO.categorySlug())),
             pageable)
         .map(CATEGORY_MAPPER::toDto);
   }
