@@ -13,7 +13,7 @@ import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.BaseEntityService;
-import com.vulinh.utils.CustomQueryDslUtils;
+import com.vulinh.utils.QueryDSLPredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -96,11 +96,11 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
     var qUser = QUsers.users;
 
     var specification =
-        CustomQueryDslUtils.or(
-            CustomQueryDslUtils.likeIgnoreCase(qUser.id, identity),
-            CustomQueryDslUtils.likeIgnoreCase(qUser.username, identity),
-            CustomQueryDslUtils.likeIgnoreCase(qUser.email, identity),
-            CustomQueryDslUtils.likeIgnoreCase(qUser.fullName, identity));
+        QueryDSLPredicateBuilder.or(
+            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.id, identity),
+            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.username, identity),
+            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.email, identity),
+            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.fullName, identity));
 
     var searchRoles = UserRole.fromRawRole(userSearchDTO.roles());
 
@@ -111,10 +111,10 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
               .collect(Collectors.toSet());
 
       specification =
-          CustomQueryDslUtils.and(
+          QueryDSLPredicateBuilder.and(
               specification,
               roles.isEmpty()
-                  ? CustomQueryDslUtils.never()
+                  ? QueryDSLPredicateBuilder.never()
                   : QUsers.users.userRoles.any().id.in(roles));
     }
 

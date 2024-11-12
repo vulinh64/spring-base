@@ -7,7 +7,7 @@ import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.utils.CustomQueryDslUtils;
+import com.vulinh.utils.QueryDSLPredicateBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.function.Function;
@@ -55,9 +55,9 @@ public class CategoryValidationService {
     var qCategory = QCategory.category;
 
     return !categoryRepository.exists(
-        CustomQueryDslUtils.or(
-            CustomQueryDslUtils.eqic(qCategory.displayName, postCreationDTO.displayName()),
-            CustomQueryDslUtils.eqic(qCategory.categorySlug, categorySlug)));
+        QueryDSLPredicateBuilder.or(
+            QueryDSLPredicateBuilder.eqic(qCategory.displayName, postCreationDTO.displayName()),
+            QueryDSLPredicateBuilder.eqic(qCategory.categorySlug, categorySlug)));
   }
 
   @RequiredArgsConstructor

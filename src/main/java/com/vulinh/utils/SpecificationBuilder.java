@@ -15,7 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * @deprecated Gradually replaced by {@link CustomQueryDslUtils}
+ * @deprecated Gradually replaced by {@link QueryDSLPredicateBuilder}
  */
 @Deprecated(forRemoval = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

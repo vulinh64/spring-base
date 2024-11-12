@@ -1,9 +1,7 @@
 package com.vulinh.utils;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Ops;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +14,7 @@ import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.lang.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CustomQueryDslUtils {
+public class QueryDSLPredicateBuilder {
 
   private static final char ESCAPE = '\\';
 
@@ -32,6 +30,7 @@ public class CustomQueryDslUtils {
     return expression.eq(value);
   }
 
+  // equals ignore case
   public static Predicate eqic(StringExpression expression, String value) {
     return expression.lower().equalsIgnoreCase(value);
   }
@@ -123,6 +122,10 @@ public class CustomQueryDslUtils {
 
   public static Predicate not(Predicate predicate) {
     return predicate == null ? null : predicate.not();
+  }
+
+  public static String getFieldName(Path<?> expression) {
+    return expression.getMetadata().getName();
   }
 
   private static Predicate likeExpressionInternal(

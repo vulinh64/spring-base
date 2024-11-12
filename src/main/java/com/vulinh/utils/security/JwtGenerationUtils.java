@@ -2,8 +2,10 @@ package com.vulinh.utils.security;
 
 import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.security.AccessToken;
+import com.vulinh.data.entity.QUsers;
 import com.vulinh.data.entity.Users;
 import com.vulinh.utils.JsonUtils;
+import com.vulinh.utils.QueryDSLPredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import io.jsonwebtoken.Jwts;
 import java.time.OffsetDateTime;
@@ -45,7 +47,9 @@ public class JwtGenerationUtils implements AccessTokenGenerator {
   }
 
   private Map<String, Object> toClaims(Users user) {
-    return Map.ofEntries(Map.entry("username", user.getUsername()));
+    return Map.ofEntries(
+        Map.entry(
+            QueryDSLPredicateBuilder.getFieldName(QUsers.users.username), user.getUsername()));
   }
 
   private static Date toDate(OffsetDateTime localDateTime) {
