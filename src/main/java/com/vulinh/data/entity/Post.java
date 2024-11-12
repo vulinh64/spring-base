@@ -23,7 +23,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @ToString
 @Builder
-@With
 public class Post extends UUIDJpaEntity implements DateTimeAuditable {
 
   @Serial private static final long serialVersionUID = -2260038525808618984L;
