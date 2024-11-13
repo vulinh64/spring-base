@@ -1,6 +1,6 @@
 package com.vulinh.utils.post;
 
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.factory.ExceptionFactory;
 import java.util.UUID;
 import lombok.AccessLevel;

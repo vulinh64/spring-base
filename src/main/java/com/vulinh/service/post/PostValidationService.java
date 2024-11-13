@@ -2,7 +2,7 @@ package com.vulinh.service.post;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.constant.UserRole;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.user.RoleDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;

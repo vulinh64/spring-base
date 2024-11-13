@@ -1,7 +1,7 @@
 package com.vulinh.exception;
 
 import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.factory.GenericResponseFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;

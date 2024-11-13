@@ -1,4 +1,4 @@
-package com.vulinh.data.dto.bundle;
+package com.vulinh.locale;
 
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import lombok.Getter;

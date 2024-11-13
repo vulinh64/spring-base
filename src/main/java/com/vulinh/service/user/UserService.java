@@ -3,7 +3,7 @@ package com.vulinh.service.user;
 import com.querydsl.core.types.Predicate;
 import com.vulinh.constant.UserRole;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
 import com.vulinh.data.entity.*;

@@ -1,6 +1,6 @@
 package com.vulinh.service.comment;
 
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.comment.NewCommentDTO;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.utils.validator.ValidatorChain;

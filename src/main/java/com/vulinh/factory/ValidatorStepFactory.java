@@ -1,6 +1,6 @@
 package com.vulinh.factory;
 
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.validator.ValidatorStep;
 import com.vulinh.utils.validator.ValidatorStepImpl;
 import org.apache.commons.lang3.StringUtils;

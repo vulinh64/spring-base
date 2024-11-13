@@ -1,7 +1,7 @@
 package com.vulinh.service.category;
 
 import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
 import com.vulinh.data.dto.category.CategorySearchDTO;

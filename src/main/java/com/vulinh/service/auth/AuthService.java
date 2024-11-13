@@ -3,7 +3,7 @@ package com.vulinh.service.auth;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.security.AccessToken;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;

@@ -1,6 +1,6 @@
 package com.vulinh.utils.validator;
 
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import java.util.Arrays;
 import java.util.Objects;

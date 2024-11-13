@@ -3,7 +3,7 @@ package com.vulinh.service.user;
 import com.sanctionco.jmail.JMail;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ValidatorStepFactory;

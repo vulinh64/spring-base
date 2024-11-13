@@ -1,7 +1,7 @@
 package com.vulinh.service.auth;
 
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.service.user.UserValidationService;

@@ -1,7 +1,7 @@
 package com.vulinh.factory;
 
 import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.message.I18NCapable;
 import org.springframework.lang.Nullable;
 

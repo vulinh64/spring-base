@@ -1,7 +1,7 @@
 package com.vulinh.factory;
 
 import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.bundle.CommonMessage;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import com.vulinh.exception.CommonException;
 import java.util.UUID;
