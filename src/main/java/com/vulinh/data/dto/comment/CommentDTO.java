@@ -1,6 +1,7 @@
 package com.vulinh.data.dto.comment;
 
-import com.vulinh.data.RecordDateTimeAuditable;
+import com.vulinh.data.base.RecordDateTimeAuditable;
+import com.vulinh.data.base.RecordUuidIdentifiable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,4 +12,4 @@ public record CommentDTO(
     LocalDateTime updatedDate,
     String username,
     String fullName)
-    implements RecordDateTimeAuditable {}
+    implements RecordUuidIdentifiable, RecordDateTimeAuditable {}

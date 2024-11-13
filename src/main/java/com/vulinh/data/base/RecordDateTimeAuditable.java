@@ -1,4 +1,4 @@
-package com.vulinh.data;
+package com.vulinh.data.base;
 
 import java.time.LocalDateTime;
 

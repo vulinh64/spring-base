@@ -1,5 +1,6 @@
 package com.vulinh.data.mapper;
 
+import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;

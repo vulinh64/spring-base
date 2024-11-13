@@ -1,5 +1,6 @@
 package com.vulinh.data.mapper;
 
+import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
 import com.vulinh.data.entity.Category;

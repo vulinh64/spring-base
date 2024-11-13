@@ -1,6 +1,6 @@
 package com.vulinh.data.entity;
 
-import com.vulinh.data.entity.AbstractIdentifiable.UUIDJpaEntity;
+import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.io.Serial;
@@ -16,7 +16,7 @@ import org.hibernate.annotations.UuidGenerator;
 @ToString
 @Builder
 @With
-public class Tag extends UUIDJpaEntity {
+public class Tag extends UuidJpaEntity {
 
   @Serial private static final long serialVersionUID = 5399822567855696869L;
 

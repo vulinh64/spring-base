@@ -7,7 +7,7 @@ import com.vulinh.data.dto.bundle.CommonMessage;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
 import com.vulinh.data.entity.*;
-import com.vulinh.data.mapper.EntityDTOMapper;
+import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;

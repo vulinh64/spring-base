@@ -1,7 +1,7 @@
 package com.vulinh.data.entity;
 
-import com.vulinh.data.DateTimeAuditable;
-import com.vulinh.data.entity.AbstractIdentifiable.UUIDJpaEntity;
+import com.vulinh.data.base.DateTimeAuditable;
+import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @Accessors(chain = true)
-public class Users extends UUIDJpaEntity implements DateTimeAuditable {
+public class Users extends UuidJpaEntity implements DateTimeAuditable {
 
   @Serial private static final long serialVersionUID = -2867497192634401616L;
 

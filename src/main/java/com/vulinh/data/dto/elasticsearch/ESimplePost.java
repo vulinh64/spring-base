@@ -1,7 +1,7 @@
-package com.vulinh.data.dto.category;
+package com.vulinh.data.dto.elasticsearch;
 
 import com.vulinh.data.base.RecordUuidIdentifiable;
 import java.util.UUID;
 
-public record CategoryDTO(UUID id, String categorySlug, String displayName)
+public record ESimplePost(UUID id, String title, String shortContent)
     implements RecordUuidIdentifiable {}

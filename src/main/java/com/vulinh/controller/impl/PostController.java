@@ -1,7 +1,7 @@
 package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.PostAPI;
-import com.vulinh.data.document.EPost.ESimplePost;
+import com.vulinh.data.dto.elasticsearch.ESimplePost;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;

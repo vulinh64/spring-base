@@ -1,8 +1,8 @@
 package com.vulinh.service;
 
 import com.querydsl.core.types.Predicate;
-import com.vulinh.data.entity.AbstractIdentifiable;
-import com.vulinh.data.mapper.EntityDTOMapper;
+import com.vulinh.data.base.AbstractIdentifiable;
+import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.repository.BaseRepository;
 import java.io.Serializable;
 import org.springframework.data.domain.Page;

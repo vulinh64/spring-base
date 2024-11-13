@@ -2,7 +2,7 @@ package com.vulinh.controller.api;
 
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.PostEndpoint;
-import com.vulinh.data.document.EPost.ESimplePost;
+import com.vulinh.data.dto.elasticsearch.ESimplePost;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;

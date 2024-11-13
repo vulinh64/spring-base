@@ -2,9 +2,9 @@ package com.vulinh.data.dto.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.vulinh.data.RecordDateTimeAuditable;
+import com.vulinh.data.base.RecordDateTimeAuditable;
+import com.vulinh.data.base.RecordUuidIdentifiable;
 import com.vulinh.data.dto.category.CategoryDTO;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
@@ -20,4 +20,4 @@ public record PostDTO(
     AuthorDTO author,
     CategoryDTO category,
     Collection<TagDTO> tags)
-    implements Serializable, RecordDateTimeAuditable {}
+    implements RecordUuidIdentifiable, RecordDateTimeAuditable {}

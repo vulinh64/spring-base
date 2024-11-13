@@ -1,4 +1,4 @@
-package com.vulinh.utils;
+package com.vulinh.data.base;
 
 import java.io.Serializable;
 
@@ -8,6 +8,7 @@ import java.io.Serializable;
  *
  * @param <I> The data type of ID
  */
+@FunctionalInterface
 public interface Identifiable<I> extends Serializable {
 
   I getId();

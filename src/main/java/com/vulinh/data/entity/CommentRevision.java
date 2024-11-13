@@ -1,5 +1,6 @@
 package com.vulinh.data.entity;
 
+import com.vulinh.data.base.AbstractIdentifiable;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;

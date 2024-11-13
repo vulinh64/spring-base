@@ -1,5 +1,6 @@
 package com.vulinh.data.dto.post;
 
+import com.vulinh.data.base.RecordUuidIdentifiable;
 import com.vulinh.data.dto.category.CategoryDTO;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,4 +20,4 @@ public record SinglePostDTO(
     AuthorDTO author,
     CategoryDTO category,
     List<TagDTO> tags)
-    implements Serializable {}
+    implements RecordUuidIdentifiable, Serializable {}

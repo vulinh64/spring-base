@@ -1,5 +1,6 @@
 package com.vulinh.data.dto.user;
 
+import com.vulinh.data.base.RecordUuidIdentifiable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -13,4 +14,4 @@ public record UserBasicDTO(
     LocalDateTime createdDate,
     LocalDateTime updatedDate,
     Collection<RoleDTO> userRoles)
-    implements Serializable {}
+    implements RecordUuidIdentifiable, Serializable {}

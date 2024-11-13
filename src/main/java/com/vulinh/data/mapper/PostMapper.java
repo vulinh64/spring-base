@@ -1,7 +1,8 @@
 package com.vulinh.data.mapper;
 
+import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.document.EPost;
-import com.vulinh.data.document.EPost.ESimplePost;
+import com.vulinh.data.dto.elasticsearch.ESimplePost;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;

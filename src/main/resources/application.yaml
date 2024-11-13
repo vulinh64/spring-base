@@ -7,7 +7,7 @@ server:
     key-password: ''
     enabled: true
   port: 8443
-  shutdown: graceful
+  shutdown: GRACEFUL
   # Require configuration on the server to enable HTTP/2
   # You can try https://brytecode.be/articles/using-http-2-in-your-spring-boot-application/
   http2.enabled: true
@@ -64,4 +64,4 @@ springdoc.swagger-ui:
   disable-swagger-default-url: true
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.configuration.MyP6SpyLogging
-  logging: custom
+  logging: CUSTOM

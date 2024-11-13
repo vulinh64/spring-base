@@ -1,6 +1,6 @@
 package com.vulinh.data.repository;
 
-import com.vulinh.data.entity.AbstractIdentifiable;
+import com.vulinh.data.base.AbstractIdentifiable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;

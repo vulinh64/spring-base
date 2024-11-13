@@ -1,21 +1,13 @@
-package com.vulinh.data.entity;
+package com.vulinh.data.base;
 
-import com.vulinh.utils.Identifiable;
 import java.io.Serial;
 import java.util.Objects;
-import java.util.UUID;
 import org.hibernate.proxy.HibernateProxy;
 
 // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
 public abstract class AbstractIdentifiable<I> implements Identifiable<I> {
 
   @Serial private static final long serialVersionUID = 6946378021605529170L;
-
-  // Every JPA entity MUST extend this class to use equals and hashCode!!!
-  public abstract static class UUIDJpaEntity extends AbstractIdentifiable<UUID> {
-
-    @Serial private static final long serialVersionUID = -7023656451162094548L;
-  }
 
   @Override
   public final boolean equals(Object other) {

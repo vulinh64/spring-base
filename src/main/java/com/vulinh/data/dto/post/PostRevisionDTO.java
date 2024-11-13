@@ -1,5 +1,6 @@
 package com.vulinh.data.dto.post;
 
+import com.vulinh.data.base.RevisionId;
 import com.vulinh.data.entity.RevisionType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,4 +19,14 @@ public record PostRevisionDTO(
     String tags,
     LocalDateTime revisionCreatedDate,
     UUID revisionCreatedBy)
-    implements Serializable {}
+    implements RevisionId<UUID>, Serializable {
+  @Override
+  public UUID getId() {
+    return postId;
+  }
+
+  @Override
+  public Long getRevisionNumber() {
+    return revisionNumber;
+  }
+}
