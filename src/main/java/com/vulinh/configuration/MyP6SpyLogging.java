@@ -42,7 +42,7 @@ public class MyP6SpyLogging extends Slf4JLogger {
     if (StringUtils.isBlank(sql)) {
       if (LogCategory.SETS.contains(categoryName)) {
         log.info(
-            "#{} [{}] - {}",
+            "#{} [ {} ] - {}",
             "%04d".formatted(connectionId),
             "%9s".formatted(categoryName),
             switch (LogCategory.valueOf(categoryName)) {

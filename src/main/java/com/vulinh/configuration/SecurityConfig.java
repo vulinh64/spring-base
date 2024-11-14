@@ -1,16 +1,22 @@
 package com.vulinh.configuration;
 
 import com.vulinh.constant.UserRole;
+import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.filter.JwtFilter;
 import com.vulinh.utils.SecurityUrlUtils;
+import com.vulinh.utils.security.AccessTokenValidator;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
@@ -19,26 +25,34 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(SecurityConfigProperties.class)
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
+
+  private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
   private static final UserRole ROLE_ADMIN = UserRole.ADMIN;
 
   private final SecurityConfigProperties securityConfigProperties;
 
-  private final JwtFilter jwtFilter;
-
   private final HandlerExceptionResolver handlerExceptionResolver;
+  private final AccessTokenValidator accessTokenValidator;
+  private final CustomAuthenticationManager customAuthenticationManager;
 
   @Bean
   @SneakyThrows
@@ -50,8 +64,8 @@ public class SecurityConfig {
             sessionManagementConfigurer ->
                 sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(this::configureAuthorizeHttpRequestCustomizer)
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(corsFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(createCorsFilter(), UsernamePasswordAuthenticationFilter.class)
         .exceptionHandling(
             exceptionHandlingCustomizer ->
                 exceptionHandlingCustomizer
@@ -61,7 +75,11 @@ public class SecurityConfig {
   }
 
   @Bean
-  public CorsFilter corsFilter() {
+  public RoleHierarchy roleHierarchy() {
+    return RoleHierarchyImpl.fromHierarchy(UserRole.toHierarchyPhrase());
+  }
+
+  private CorsFilter createCorsFilter() {
     var config = new CorsConfiguration();
 
     config.setAllowCredentials(true);
@@ -74,11 +92,6 @@ public class SecurityConfig {
     source.registerCorsConfiguration("/**", config);
 
     return new CorsFilter(source);
-  }
-
-  @Bean
-  public RoleHierarchy roleHierarchy() {
-    return RoleHierarchyImpl.fromHierarchy(UserRole.toHierarchyPhrase());
   }
 
   private void configureAuthorizeHttpRequestCustomizer(
@@ -107,5 +120,87 @@ public class SecurityConfig {
       HttpServletRequest request, HttpServletResponse response, Throwable authException) {
     handlerExceptionResolver.resolveException(
         request, response, null, ExceptionFactory.INSTANCE.invalidAuthorization(authException));
+  }
+
+  // Temporary solution to avoid filter being called twice for every request
+  private class JwtFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(
+        @NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response,
+        @NonNull FilterChain filterChain) {
+      try {
+        Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
+            .map(JwtFilter::parseBearerToken)
+            .map(accessTokenValidator::validateAccessToken)
+            .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
+            .map(PreAuthenticatedAuthenticationToken::getPrincipal)
+            .filter(JwtPayload.class::isInstance)
+            .map(JwtPayload.class::cast)
+            .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
+            .map(customAuthenticationManager::authenticate)
+            .map(
+                authentication ->
+                    authentication.addDetails(
+                        new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
+                            request, authentication.getAuthorities())))
+            .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
+
+        filterChain.doFilter(request, response);
+      } catch (Exception exception) {
+        handlerExceptionResolver.resolveException(request, response, null, exception);
+      }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+      var requestURI = request.getRequestURI();
+
+      return securityConfigProperties.noAuthenticatedUrls().stream()
+              .anyMatch(
+                  antUrl -> {
+                    var result = ANT_PATH_MATCHER.match(antUrl, requestURI);
+
+                    if (result) {
+                      log.debug(
+                          "Request URI [{}] matched against ant pattern [{}]", requestURI, antUrl);
+                    }
+
+                    return result;
+                  })
+          || securityConfigProperties.allowedVerbUrls().stream()
+              .anyMatch(
+                  verbAntUrl -> {
+                    var requestMethod = request.getMethod();
+
+                    var antUrl = verbAntUrl.url();
+                    var antMethod = verbAntUrl.method();
+
+                    var result =
+                        antMethod.name().equals(requestMethod)
+                            && ANT_PATH_MATCHER.match(antUrl, requestURI);
+
+                    if (result) {
+                      log.debug(
+                          "Request URI [{} {}] matched against ant pattern [{} {}]",
+                          requestMethod,
+                          requestURI,
+                          antMethod,
+                          antUrl);
+                    }
+
+                    return result;
+                  });
+    }
+
+    private static String parseBearerToken(String token) {
+      return token.startsWith("Bearer") ? token.substring(7) : token;
+    }
+
+    private static PreAuthenticatedAuthenticationToken getPreAuthenticatedAuthenticationToken(
+        JwtPayload jwtPayload) {
+      return new PreAuthenticatedAuthenticationToken(jwtPayload, null);
+    }
   }
 }
