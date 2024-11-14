@@ -8,7 +8,7 @@ CREATE TABLE post
     excerpt      varchar(500)  NULL,
     post_content text          NOT NULL,
     author_id    uuid          NULL,
-    category_id  uuid          NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    category_id  uuid          NULL DEFAULT '00000000-0000-0000-0000-000000000000'::uuid,
     created_date timestamp     NULL,
     updated_date timestamp     NULL,
     updated_by   uuid          NULL,
