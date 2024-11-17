@@ -10,6 +10,7 @@ import java.util.UUID;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,7 +28,9 @@ public class Users extends UuidJpaEntity implements DateTimeAuditable {
 
   @Serial private static final long serialVersionUID = -2867497192634401616L;
 
-  @Id @UuidGenerator private UUID id;
+  @Id
+  @UuidGenerator(style = Style.TIME)
+  private UUID id;
 
   private String username;
   private String fullName;

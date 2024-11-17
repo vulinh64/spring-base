@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,7 +26,9 @@ public class Comment extends UuidJpaEntity {
 
   @Serial private static final long serialVersionUID = 8024056047258352378L;
 
-  @Id @UuidGenerator private UUID id;
+  @Id
+  @UuidGenerator(style = Style.TIME)
+  private UUID id;
 
   private String content;
 

@@ -7,6 +7,7 @@ import java.io.Serial;
 import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
 
 @Entity
 @NoArgsConstructor
@@ -20,7 +21,9 @@ public class Tag extends UuidJpaEntity {
 
   @Serial private static final long serialVersionUID = 5399822567855696869L;
 
-  @Id @UuidGenerator private UUID id;
+  @Id
+  @UuidGenerator(style = Style.TIME)
+  private UUID id;
 
   private String displayName;
 }
