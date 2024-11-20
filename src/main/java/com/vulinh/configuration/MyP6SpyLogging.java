@@ -57,6 +57,8 @@ public class MyP6SpyLogging extends Slf4JLogger {
       }
 
       super.logSQL(connectionId, time, elapsed, category, prepared, sql, url);
+
+      return;
     }
 
     log.info(sql);

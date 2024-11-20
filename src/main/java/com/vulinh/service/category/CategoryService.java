@@ -1,7 +1,6 @@
 package com.vulinh.service.category;
 
 import com.vulinh.constant.CommonConstant;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.category.CategoryDTO;
 import com.vulinh.data.dto.category.CategorySearchDTO;
@@ -10,6 +9,7 @@ import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.QueryDSLPredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
 import java.util.Optional;
@@ -50,47 +50,7 @@ public class CategoryService {
   public void initializeFirstCategory() {
     categoryRepository
         .findById(CommonConstant.UNCATEGORIZED_ID)
-        .ifPresentOrElse(
-            category -> {
-              var isChanged = false;
-
-              if (!CommonConstant.UNCATEGORIZED_NAME.equals(category.getDisplayName())) {
-                category.setDisplayName(CommonConstant.UNCATEGORIZED_NAME);
-
-                isChanged = true;
-              }
-
-              if (!CommonConstant.UNCATEGORIZED_SLUG.equals(category.getCategorySlug())) {
-                category.setCategorySlug(CommonConstant.UNCATEGORIZED_SLUG);
-
-                if (!isChanged) {
-                  isChanged = true;
-                }
-              }
-
-              if (isChanged) {
-                categoryRepository.save(category);
-
-                log.debug(
-                    "Changed default category (ID {}) name to {}, slug to {}",
-                    CommonConstant.UNCATEGORIZED_ID,
-                    CommonConstant.UNCATEGORIZED_NAME,
-                    CommonConstant.UNCATEGORIZED_SLUG);
-              }
-            },
-            () -> {
-              categoryRepository.save(
-                  Category.builder()
-                      .id(CommonConstant.UNCATEGORIZED_ID)
-                      .categorySlug(CommonConstant.UNCATEGORIZED_SLUG)
-                      .displayName(CommonConstant.UNCATEGORIZED_NAME)
-                      .build());
-
-              log.debug(
-                  "Initialized first category: {} - {}",
-                  CommonConstant.UNCATEGORIZED_ID,
-                  CommonConstant.UNCATEGORIZED_NAME);
-            });
+        .ifPresentOrElse(this::checkExistingDefaultCategory, this::createDefaultCategory);
   }
 
   @Transactional
@@ -137,5 +97,47 @@ public class CategoryService {
               return true;
             })
         .isPresent();
+  }
+
+  private void createDefaultCategory() {
+    categoryRepository.save(
+        Category.builder()
+            .id(CommonConstant.UNCATEGORIZED_ID)
+            .categorySlug(CommonConstant.UNCATEGORIZED_SLUG)
+            .displayName(CommonConstant.UNCATEGORIZED_NAME)
+            .build());
+
+    log.debug(
+        "Initialized first category: {} - {}",
+        CommonConstant.UNCATEGORIZED_ID,
+        CommonConstant.UNCATEGORIZED_NAME);
+  }
+
+  private void checkExistingDefaultCategory(Category category) {
+    var isChanged = false;
+
+    if (!CommonConstant.UNCATEGORIZED_NAME.equals(category.getDisplayName())) {
+      category.setDisplayName(CommonConstant.UNCATEGORIZED_NAME);
+
+      isChanged = true;
+    }
+
+    if (!CommonConstant.UNCATEGORIZED_SLUG.equals(category.getCategorySlug())) {
+      category.setCategorySlug(CommonConstant.UNCATEGORIZED_SLUG);
+
+      if (!isChanged) {
+        isChanged = true;
+      }
+    }
+
+    if (isChanged) {
+      categoryRepository.save(category);
+
+      log.debug(
+          "Changed default category (ID {}) name to {}, slug to {}",
+          CommonConstant.UNCATEGORIZED_ID,
+          CommonConstant.UNCATEGORIZED_NAME,
+          CommonConstant.UNCATEGORIZED_SLUG);
+    }
   }
 }

@@ -30,12 +30,9 @@ spring:
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
     allowed-verb-urls:
-      - method: GET
-        url: /post/**
-      - method: GET
-        url: /category/search/**
-      - method: GET
-        url: /comment/**
+      - { method: GET, url: /post/** }
+      - { method: GET, url: /category/search/** }
+      - { method: GET, url: /comment/** }
     no-authenticated-urls:
       - /free/**
       - /health
