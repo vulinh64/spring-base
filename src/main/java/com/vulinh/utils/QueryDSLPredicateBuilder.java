@@ -151,7 +151,9 @@ public class QueryDSLPredicateBuilder {
   }
 
   private static Predicate concatenatePredicates(
-      PredicateConcatenationFunction combiner, Predicate firstPredicate, Predicate... predicates) {
+      BiFunction<BooleanBuilder, Predicate, Predicate> combiner,
+      Predicate firstPredicate,
+      Predicate... predicates) {
     var builder = new BooleanBuilder(firstPredicate);
 
     if (ArrayUtils.isNotEmpty(predicates)) {
@@ -162,7 +164,4 @@ public class QueryDSLPredicateBuilder {
 
     return builder;
   }
-
-  private interface PredicateConcatenationFunction
-      extends BiFunction<BooleanBuilder, Predicate, Predicate> {}
 }
