@@ -18,13 +18,15 @@ public class AsyncSpringEventsConfig {
 
     var taskExecutor = new SimpleAsyncTaskExecutor();
 
-    var isJava21OrAbove = Integer.parseInt(JavaVersion.getJavaVersion().toString()) >= 21;
-
     // Use virtual threads only if Java version is 21
     // Not that it is necessary, but a safeguard nonetheless
-    taskExecutor.setVirtualThreads(isJava21OrAbove);
+    if (JavaVersion.getJavaVersion().isEqualOrNewerThan(JavaVersion.TWENTY_ONE)) {
+      taskExecutor.setVirtualThreads(true);
 
-    log.info("Virtual Threads possibility: {}", isJava21OrAbove ? "YES" : "NO");
+      log.info("Virtual Threads possibility: YES");
+    } else {
+      log.info("Virtual Thread not supported, using thread pools...");
+    }
 
     eventMulticaster.setTaskExecutor(taskExecutor);
 

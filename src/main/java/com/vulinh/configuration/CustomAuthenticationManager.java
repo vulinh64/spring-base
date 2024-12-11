@@ -4,10 +4,9 @@ import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.CustomAuthenticationFactory;
+import com.vulinh.factory.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-@Primary
 public class CustomAuthenticationManager implements AuthenticationManager {
 
   private final UserRepository userRepository;
