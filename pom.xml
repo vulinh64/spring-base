@@ -5,26 +5,27 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>Spring Base project</name>
     <description>Sample text here</description>
 
     <properties>
         <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <mapstruct.version>1.6.3</mapstruct.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
 
         <!-- The property "querydsl.version" is reserved by Spring, do not use that! -->
         <openfeign.querydsl.version>6.9</openfeign.querydsl.version>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <guava.version>33.3.1-jre</guava.version>
         <springdoc.openapi.version>2.7.0</springdoc.openapi.version>
         <java-jwt.version>4.4.0</java-jwt.version>
