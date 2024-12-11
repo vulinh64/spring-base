@@ -1,9 +1,10 @@
 package com.vulinh.exception;
 
 import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.factory.GenericResponseFactory;
+import com.vulinh.locale.CommonMessage;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.Optional;
 
 @RestControllerAdvice
 @Slf4j
@@ -35,15 +34,26 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(CommonException.class)
   public ResponseEntity<GenericResponse<Object>> handleCommonException(
       CommonException commonException) {
-    var errorKey = commonException.getErrorKey();
+    var statusCode = commonException.getErrorKey().getHttpStatusCode();
 
-    if (errorKey.getHttpStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
-      log.error("Internal error", commonException);
+    var errorMessage =
+        (switch (statusCode) {
+              case HttpStatus.NOT_FOUND -> "Resource not found: %s";
+              case HttpStatus.INTERNAL_SERVER_ERROR -> "Internal server error: %s";
+              case HttpStatus.BAD_REQUEST -> "Bad request: %s";
+              case HttpStatus.UNAUTHORIZED -> "Authentication/Authorization error: %s";
+              case HttpStatus.FORBIDDEN -> "Access to the resource denied: %s";
+              default -> "Unknown error: %s";
+            })
+            .formatted(commonException.getMessage());
+
+    if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR) {
+      log.error(errorMessage, commonException);
     } else {
-      log.info("Common error", commonException);
+      log.info(errorMessage, commonException);
     }
 
-    return ResponseEntity.status(errorKey.getHttpStatusCode())
+    return ResponseEntity.status(statusCode)
         .body(RESPONSE_FACTORY.toGenericResponse(commonException, commonException.getArgs()));
   }
 
