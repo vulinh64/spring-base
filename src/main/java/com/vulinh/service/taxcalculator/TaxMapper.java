@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.vulinh.service.taxcalculator.TaxDetail.Insurance;
+import com.vulinh.service.taxcalculator.TaxDetail.PersonalTax;
+import com.vulinh.service.taxcalculator.TaxDetailRequestDTO.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxDetailRequestDTO.PersonalTaxDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -21,9 +26,10 @@ interface TaxMapper {
         .collect(Collectors.toMap(Map.Entry::getKey, entry -> toBigDecimal(entry.getValue())));
   }
 
-  TaxDetail.Insurance toInsurance(TaxDetailDTO.InsuranceDTO insuranceDTO);
+  Insurance toInsurance(InsuranceDTO insuranceDTO);
 
-  TaxDetail.PersonalTax toPersonalTax(TaxDetailDTO.PersonalTaxDTO personalTaxDTO);
+  PersonalTax toPersonalTax(PersonalTaxDTO personalTaxDTO);
 
-  TaxDetail toTaxDetail(TaxDetailDTO taxDetailDTO);
+  TaxDetail toTaxDetail(
+      TaxDetailRequestDTO taxDetailRequestDTO, InsuranceDTO insurance, PersonalTaxDTO personalTax);
 }
