@@ -17,22 +17,18 @@ public class CustomEventListener {
 
   private final CategoryService categoryService;
 
-  private static final String USER_REGISTRATION_LOG_MESSAGE =
-      """
-      {}
-      Sending email to {}
-
-      Registering link:
-
-      {}{}?userId={}&code={}
-      """;
-
   @EventListener
   public void listenUserRegistrationEvent(UserRegistrationEventDTO userRegistrationEventDTO) {
     var user = userRegistrationEventDTO.user();
 
     log.debug(
-        USER_REGISTRATION_LOG_MESSAGE,
+        """
+        {}
+        
+        Sending email to {}
+        
+        Registering link: {}{}?userId={}&code={}
+        """,
         Thread.currentThread(),
         user.getEmail(),
         EndpointConstant.ENDPOINT_AUTH,

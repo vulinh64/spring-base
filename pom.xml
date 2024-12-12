@@ -5,28 +5,32 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>Spring Base project</name>
     <description>Sample text here</description>
 
     <properties>
         <java.version>21</java.version>
-        <mapstruct.version>1.6.2</mapstruct.version>
-        <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
-        <querydsl.version>5.1.0</querydsl.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
+
+        <!-- The property "querydsl.version" is reserved by Spring, do not use that! -->
+        <openfeign.querydsl.version>6.9</openfeign.querydsl.version>
+
         <guava.version>33.3.1-jre</guava.version>
-        <springdoc.openapi.version>2.6.0</springdoc.openapi.version>
+        <springdoc.openapi.version>2.7.0</springdoc.openapi.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <jmail.version>1.6.3</jmail.version>
-        <p6spy-springboot.version>1.9.2</p6spy-springboot.version>
+        <p6spy-springboot.version>1.10.0</p6spy-springboot.version>
     </properties>
 
     <dependencies>
@@ -146,11 +150,12 @@
         <!-- END: Swagger UI -->
 
         <!-- BEGIN: QueryDSL /wo annotation processor -->
+        <!-- The original QueryDSL is no longer maintained (2024-11-12) -->
+        <!-- Switching to OpenFeign's QueryDSL -->
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
-            <classifier>jakarta</classifier>
-            <version>${querydsl.version}</version>
+            <version>${openfeign.querydsl.version}</version>
         </dependency>
         <!-- END: QueryDSL /wo annotation processor -->
 
@@ -213,12 +218,16 @@
                             <artifactId>hibernate-jpamodelgen</artifactId>
                             <version>${hibernate.version}</version>
                         </path>
+
+                        <!-- The original QueryDSL is no longer maintained (2024-11-12) -->
+                        <!-- Switching to OpenFeign's QueryDSL -->
                         <path>
-                            <groupId>com.querydsl</groupId>
+                            <groupId>io.github.openfeign.querydsl</groupId>
                             <artifactId>querydsl-apt</artifactId>
-                            <version>${querydsl.version}</version>
+                            <version>${openfeign.querydsl.version}</version>
                             <classifier>jakarta</classifier>
                         </path>
+
                         <!-- Required to make querydsl-apt works! -->
                         <!-- See https://github.com/querydsl/querydsl/issues/3131#issuecomment-1549255382 -->
                         <path>

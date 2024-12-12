@@ -15,8 +15,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+/**
+ * @deprecated In favor of auth0's {@link Auth0JWT}
+ */
 @Component
 @RequiredArgsConstructor
+@Deprecated(forRemoval = true)
 public class JwtGenerationUtils implements AccessTokenGenerator {
 
   private final SecurityConfigProperties securityConfigProperties;
