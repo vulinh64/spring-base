@@ -1,9 +1,9 @@
 package com.vulinh.factory;
 
 import com.vulinh.data.dto.GenericResponse;
+import com.vulinh.data.dto.message.I18NCapable;
 import com.vulinh.exception.CommonException;
 import com.vulinh.locale.CommonMessage;
-import com.vulinh.data.dto.message.I18NCapable;
 import org.springframework.lang.Nullable;
 
 @SuppressWarnings("java:S6548")
@@ -22,7 +22,8 @@ public enum GenericResponseFactory {
     return createResponse(i18NKey, null, args);
   }
 
-  public <T> GenericResponse<T> toExceptionResponse(CommonException commonException, Object... args) {
+  public <T> GenericResponse<T> toExceptionResponse(
+      CommonException commonException, Object... args) {
     return createResponse(commonException.getErrorKey(), null, args);
   }
 
@@ -30,8 +31,8 @@ public enum GenericResponseFactory {
       I18NCapable i18NCapable, @Nullable T data, @Nullable Object... args) {
     return GenericResponse.<T>builder()
         .data(data)
-        .code(i18NCapable.getCode())
-        .message(i18NCapable.getDisplayMessage(args))
+        .errorCode(i18NCapable.getErrorCode())
+        .displayMessage(i18NCapable.getDisplayMessage(args))
         .build();
   }
 }

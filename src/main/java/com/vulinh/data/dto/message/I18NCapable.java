@@ -7,9 +7,9 @@ import org.springframework.lang.NonNull;
 public interface I18NCapable extends Serializable {
 
   @NonNull
-  String getCode();
+  String getErrorCode();
 
   default String getDisplayMessage(Object... args) {
-    return LocalizationSupport.getParsedMessage(getCode(), args);
+    return LocalizationSupport.getParsedMessage(getErrorCode(), args);
   }
 }

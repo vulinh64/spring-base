@@ -66,8 +66,8 @@ public interface UserAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0000",
-                                  "message": "Success",
+                                  "errorCode": "M0000",
+                                  "displayMessage": "Success",
                                   "data": {
                                     "id": "user-uuid-here",
                                     "username": "Username",
@@ -118,8 +118,8 @@ public interface UserAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0010",
-                                  "message": "Cannot delete self"
+                                  "errorCode": "M0010",
+                                  "displayMessage": "Cannot delete self"
                                 }
                                 """))),
         @ApiResponse(
@@ -146,8 +146,8 @@ public interface UserAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0000",
-                                  "message": "Success",
+                                  "errorCode": "M0000",
+                                  "displayMessage": "Success",
                                   "data": {
                                     "id": "user-uuid-here",
                                     "username": "user-name-here",
@@ -197,8 +197,8 @@ public interface UserAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0000",
-                                  "message": "Success",
+                                  "errorCode": "M0000",
+                                  "displayMessage": "Success",
                                   "data": {
                                     "content": [
                                       {
