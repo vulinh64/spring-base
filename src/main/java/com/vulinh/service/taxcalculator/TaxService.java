@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TaxService {
 
-  public TaxDetail calculate(TaxDetailRequestDTO taxDetailRequestDTO) {
+  public TaxDetail calculate(TaxRequestDTO taxRequestDTO) {
     log.debug(
         "Inside calculating personal tax according to Law of Vietnam... Looking at thread: {}",
         Thread.currentThread());
 
     // Bảo hiểm - BHYT (1.5%), BHXH (8%), BH thất nghiệp (1%)
-    var insurance = TaxUtils.calculateInsurance(taxDetailRequestDTO);
+    var insurance = TaxUtils.calculateInsurance(taxRequestDTO);
 
     // Thuế TNCN
-    var personalTax = TaxUtils.calculatePersonalTax(taxDetailRequestDTO, insurance);
+    var personalTax = TaxUtils.calculatePersonalTax(taxRequestDTO, insurance);
 
-    return TaxMapper.INSTANCE.toTaxDetail(taxDetailRequestDTO, insurance, personalTax);
+    return TaxMapper.INSTANCE.toTaxDetail(taxRequestDTO, insurance, personalTax);
   }
 }

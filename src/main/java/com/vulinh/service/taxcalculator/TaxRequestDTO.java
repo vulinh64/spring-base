@@ -13,11 +13,11 @@ import org.springframework.lang.NonNull;
 
 @Builder
 @With
-public record TaxDetailRequestDTO(double totalSalary, double basicSalary, int numberOfDependants) {
+public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOfDependants) {
 
   static final String PLACEHOLDER_ERROR_CODE = "OTHER";
 
-  public TaxDetailRequestDTO {
+  public TaxRequestDTO {
     var maxBasicSalary = TaxConstant.MAX_BASIC_SALARY.value();
     var minBasicSalary = TaxConstant.MIN_BASIC_SALARY.value();
 

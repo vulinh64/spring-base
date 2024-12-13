@@ -1,8 +1,8 @@
 package com.vulinh.service.taxcalculator;
 
 import com.google.common.collect.ImmutableMap;
-import com.vulinh.service.taxcalculator.TaxDetailRequestDTO.InsuranceDTO;
-import com.vulinh.service.taxcalculator.TaxDetailRequestDTO.PersonalTaxDTO;
+import com.vulinh.service.taxcalculator.TaxRequestDTO.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxRequestDTO.PersonalTaxDTO;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -17,11 +17,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class TaxUtils {
 
-  public static InsuranceDTO calculateInsurance(TaxDetailRequestDTO taxDetailRequestDTO) {
-    var basicSalary = taxDetailRequestDTO.basicSalary();
+  public static InsuranceDTO calculateInsurance(TaxRequestDTO taxRequestDTO) {
+    var basicSalary = taxRequestDTO.basicSalary();
 
     // Được đóng bảo hiểm khi tổng lương >= Lương đóng bảo hiểm
-    var isEligibleForInsurance = taxDetailRequestDTO.totalSalary() >= basicSalary;
+    var isEligibleForInsurance = taxRequestDTO.totalSalary() >= basicSalary;
 
     var healthInsurance =
         isEligibleForInsurance ? basicSalary * InsuranceRate.HEALTH_INSURANCE.rate() : 0;
@@ -41,8 +41,8 @@ class TaxUtils {
   }
 
   public static PersonalTaxDTO calculatePersonalTax(
-      TaxDetailRequestDTO taxDetailRequestDTO, InsuranceDTO insuranceDTO) {
-    var totalSalary = taxDetailRequestDTO.totalSalary();
+      TaxRequestDTO taxRequestDTO, InsuranceDTO insuranceDTO) {
+    var totalSalary = taxRequestDTO.totalSalary();
 
     // Tổng đóng BH
     var totalInsurance = insuranceDTO.totalInsurance();
@@ -52,7 +52,7 @@ class TaxUtils {
 
     // Người phụ thuộc * Giảm trừ mỗi người phụ thuộc
     var dependantDeduction =
-        TaxConstant.DEDUCTION_PER_DEPENDANTS.value() * taxDetailRequestDTO.numberOfDependants();
+        TaxConstant.DEDUCTION_PER_DEPENDANTS.value() * taxRequestDTO.numberOfDependants();
 
     // Thu nhập chịu thuế = Thu nhập trước thuế - Thu nhập miễn thuế - Giảm trừ người phụ thuộc
     var taxableIncome =
@@ -93,6 +93,8 @@ class TaxUtils {
 
       var nextTaxLevel = TaxLevel.parseTaxLevel(taxLevelOrdinal + 1);
 
+      // TN chịu thuế lớn hơn bậc tiếp -> (bậc tiếp - bậc hiện tại) * mức thuế bậc tiếp
+      // TN chịu thuế nhỏ hơn bậc tiếp -> (TN chịu thuế - bậc hiện tại) * mức thuế bậc tiếp
       var delta =
           taxableIncome < nextTaxLevel.threshold()
               ? taxableIncome - taxLevel.threshold()

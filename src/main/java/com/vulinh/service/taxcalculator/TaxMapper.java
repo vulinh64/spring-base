@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import com.vulinh.service.taxcalculator.TaxDetail.Insurance;
 import com.vulinh.service.taxcalculator.TaxDetail.PersonalTax;
-import com.vulinh.service.taxcalculator.TaxDetailRequestDTO.InsuranceDTO;
-import com.vulinh.service.taxcalculator.TaxDetailRequestDTO.PersonalTaxDTO;
+import com.vulinh.service.taxcalculator.TaxRequestDTO.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxRequestDTO.PersonalTaxDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -31,5 +31,5 @@ interface TaxMapper {
   PersonalTax toPersonalTax(PersonalTaxDTO personalTaxDTO);
 
   TaxDetail toTaxDetail(
-      TaxDetailRequestDTO taxDetailRequestDTO, InsuranceDTO insurance, PersonalTaxDTO personalTax);
+      TaxRequestDTO taxRequestDTO, InsuranceDTO insurance, PersonalTaxDTO personalTax);
 }

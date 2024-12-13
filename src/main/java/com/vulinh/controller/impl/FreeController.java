@@ -2,7 +2,7 @@ package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.FreeAPI;
 import com.vulinh.factory.GenericResponseFactory;
-import com.vulinh.service.taxcalculator.TaxDetailRequestDTO;
+import com.vulinh.service.taxcalculator.TaxRequestDTO;
 import com.vulinh.service.taxcalculator.TaxService;
 import com.vulinh.utils.springcron.dto.SpringCronGeneratorDTO;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class FreeController implements FreeAPI {
   public Object calculateTax(Double totalSalary, Double basicSalary, Integer numberOfDependants) {
     return GenericResponseFactory.INSTANCE.success(
         taxService.calculate(
-            TaxDetailRequestDTO.builder()
+            TaxRequestDTO.builder()
                 .totalSalary(totalSalary)
                 .basicSalary(basicSalary)
                 .numberOfDependants(numberOfDependants)
