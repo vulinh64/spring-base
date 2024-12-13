@@ -47,8 +47,8 @@ public interface BcryptPublicAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0000",
-                                  "message": "Success",
+                                  "errorCode": "M0000",
+                                  "displayMessage": "Success",
                                   "data": {
                                     "rawPassword": "Raw password",
                                     "encodedPassword": "Bcrypt encoded password"

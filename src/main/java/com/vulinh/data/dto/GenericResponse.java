@@ -7,4 +7,4 @@ import lombok.*;
 @Builder
 @With
 @JsonInclude(Include.NON_NULL)
-public record GenericResponse<T>(String code, String message, T data) {}
+public record GenericResponse<T>(String errorCode, String displayMessage, T data) {}

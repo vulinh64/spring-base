@@ -66,13 +66,14 @@ public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOf
             @Serial private static final long serialVersionUID = 5869679594561484928L;
 
             @Override
+            @NonNull
             public HttpStatusCode getHttpStatusCode() {
               return HttpStatus.BAD_REQUEST;
             }
 
             @Override
             @NonNull
-            public String getCode() {
+            public String getErrorCode() {
               return PLACEHOLDER_ERROR_CODE;
             }
 

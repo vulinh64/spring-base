@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     log.error("Internal server error", runtimeException);
 
     return GenericResponse.builder()
-        .code(CommonMessage.MESSAGE_INTERNAL_ERROR.getCode())
-        .message(CommonMessage.MESSAGE_INTERNAL_ERROR.getDisplayMessage())
+        .errorCode(CommonMessage.MESSAGE_INTERNAL_ERROR.getErrorCode())
+        .displayMessage(CommonMessage.MESSAGE_INTERNAL_ERROR.getDisplayMessage())
         .build();
   }
 

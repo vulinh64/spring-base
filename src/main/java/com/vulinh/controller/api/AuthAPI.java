@@ -55,8 +55,8 @@ public interface AuthAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0000",
-                                  "message": "Success",
+                                  "errorCode": "M0000",
+                                  "displayMessage": "Success",
                                   "data": {
                                     "accessToken": "your-access-token",
                                     "issuedAt": "ISO Date and Time",
@@ -74,8 +74,8 @@ public interface AuthAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0401",
-                                  "message": "Invalid credentials"
+                                  "errorCode": "M0401",
+                                  "displayMessage": "Invalid credentials"
                                 }
                                 """))),
         @ApiResponse(
@@ -118,8 +118,8 @@ public interface AuthAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0000",
-                                  "message": "Success",
+                                  "errorCode": "M0000",
+                                  "displayMessage": "Success",
                                   "data": {
                                     "id": "user-uuid-here",
                                     "username": "username",
@@ -168,8 +168,8 @@ public interface AuthAPI {
                             value =
                                 """
                                 {
-                                  "code": "M0405",
-                                  "message": "Invalid user confirmation"
+                                  "errorCode": "M0405",
+                                  "displayMessage": "Invalid user confirmation"
                                 }
                                 """))),
         @ApiResponse(

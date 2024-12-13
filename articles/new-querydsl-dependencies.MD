@@ -1,4 +1,4 @@
-> Thank to this [comment](https://github.com/querydsl/querydsl/issues/3131#issuecomment-1549255382) that QueryDSL can
+> Thanks to this [comment](https://github.com/querydsl/querydsl/issues/3131#issuecomment-1549255382) that QueryDSL can
 > now be used without the outdated `com.mysema.maven:apt-maven-plugin` maven plugin.
 
 You now only have to include this line in `org.apache.maven.plugins:maven-compiler-plugin` to make QueryDSL APT work:
