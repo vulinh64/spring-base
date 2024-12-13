@@ -54,7 +54,7 @@ public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOf
       double taxableIncome,
       double deductedAmount,
       double taxAmount,
-      Map<String, Double> progressiveTax,
+      Map<String, Double> progressiveTaxLevels,
       double netIncome) {}
 
   static class TaxCalculatorException extends CommonException {

@@ -64,17 +64,17 @@ class TaxUtils {
     }
 
     // Thuế lũy tiến
-    var progressiveTax = calculateProgressiveTax(taxableIncome);
+    var progressiveTaxLevels = calculateProgressiveTax(taxableIncome);
 
     // Tổng thuế từ các bậc
-    var taxAmount = progressiveTax.values().stream().mapToDouble(Double::doubleValue).sum();
+    var taxAmount = progressiveTaxLevels.values().stream().mapToDouble(Double::doubleValue).sum();
 
     return PersonalTaxDTO.builder()
         .pretaxSalary(pretaxSalary)
         .deductedAmount(dependantDeduction)
         .taxableIncome(taxableIncome)
         .taxAmount(taxAmount)
-        .progressiveTax(progressiveTax)
+        .progressiveTaxLevels(progressiveTaxLevels)
         .netIncome(totalSalary - taxAmount - totalInsurance)
         .build();
   }
