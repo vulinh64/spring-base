@@ -118,4 +118,17 @@ class TaxServiceTest {
                     .numberOfDependants(0)
                     .build()));
   }
+
+  @Test
+  void calculateTax05() {
+    assertThrows(
+        TaxRequestDTO.TaxCalculatorException.class,
+        () ->
+            taxService.calculate(
+                TaxRequestDTO.builder()
+                    .basicSalary(4_800_000)
+                    .totalSalary(8_000_000L)
+                    .numberOfDependants(0)
+                    .build()));
+  }
 }
