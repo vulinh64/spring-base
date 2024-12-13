@@ -79,6 +79,35 @@ class TaxServiceTest {
 
   @Test
   void calculateTax03() {
+    var result =
+        taxService.calculate(
+            TaxRequestDTO.builder()
+                .totalSalary(12_000_000L)
+                .basicSalary(11_000_000L)
+                .numberOfDependants(0)
+                .build());
+
+    var socialCoverage = result.insurance();
+
+    assertEquals(TaxMapper.toBigDecimal(880_000), socialCoverage.socialInsurance());
+    assertEquals(TaxMapper.toBigDecimal(165_000), socialCoverage.healthInsurance());
+    assertEquals(TaxMapper.toBigDecimal(110_000), socialCoverage.unemploymentInsurance());
+    assertEquals(TaxMapper.toBigDecimal(1_155_000), socialCoverage.totalInsurance());
+
+    var personalTax = result.personalTax();
+
+    assertEquals(TaxMapper.toBigDecimal(10_845_000), personalTax.pretaxSalary());
+    assertEquals(TaxMapper.toBigDecimal(0), personalTax.taxableIncome());
+
+    assertEquals(TaxMapper.toBigDecimal(0), personalTax.taxAmount());
+    assertEquals(TaxMapper.toBigDecimal(0), personalTax.deductedAmount());
+    assertEquals(TaxMapper.toBigDecimal(10_845_000), personalTax.netIncome());
+
+    assertTrue(personalTax.progressiveTaxLevels().isEmpty());
+  }
+
+  @Test
+  void calculateTax04() {
     assertThrows(
         TaxRequestDTO.TaxCalculatorException.class,
         () ->

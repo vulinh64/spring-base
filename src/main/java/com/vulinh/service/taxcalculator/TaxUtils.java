@@ -20,17 +20,11 @@ class TaxUtils {
   public static InsuranceDTO calculateInsurance(TaxRequestDTO taxRequestDTO) {
     var basicSalary = taxRequestDTO.basicSalary();
 
-    // Được đóng bảo hiểm khi tổng lương >= Lương đóng bảo hiểm
-    var isEligibleForInsurance = taxRequestDTO.totalSalary() >= basicSalary;
+    var healthInsurance = basicSalary * InsuranceRate.HEALTH_INSURANCE.rate();
 
-    var healthInsurance =
-        isEligibleForInsurance ? basicSalary * InsuranceRate.HEALTH_INSURANCE.rate() : 0;
+    var socialInsurance = basicSalary * InsuranceRate.SOCIAL_INSURANCE.rate();
 
-    var socialInsurance =
-        isEligibleForInsurance ? basicSalary * InsuranceRate.SOCIAL_INSURANCE.rate() : 0;
-
-    var unemploymentInsurance =
-        isEligibleForInsurance ? basicSalary * InsuranceRate.UNEMPLOYMENT_INSURANCE.rate() : 0;
+    var unemploymentInsurance = basicSalary * InsuranceRate.UNEMPLOYMENT_INSURANCE.rate();
 
     return InsuranceDTO.builder()
         .healthInsurance(healthInsurance)
@@ -87,7 +81,9 @@ class TaxUtils {
     while (true) {
       var taxLevel = TaxLevel.parseTaxLevel(taxLevelOrdinal);
 
-      if (taxableIncome < taxLevel.threshold()) {
+      var deltaToNextLevel = taxableIncome - taxLevel.threshold();
+
+      if (deltaToNextLevel < 0) {
         break;
       }
 
@@ -97,10 +93,12 @@ class TaxUtils {
       // TN chịu thuế nhỏ hơn bậc tiếp -> (TN chịu thuế - bậc hiện tại) * mức thuế bậc tiếp
       var delta =
           taxableIncome < nextTaxLevel.threshold()
-              ? taxableIncome - taxLevel.threshold()
+              ? deltaToNextLevel
               : nextTaxLevel.threshold() - taxLevel.threshold();
 
-      resultBuilder.put(taxLevel.name(), nextTaxLevel.rate() * delta);
+      if (delta > 0) {
+        resultBuilder.put(taxLevel.name(), nextTaxLevel.rate() * delta);
+      }
 
       taxLevelOrdinal++;
     }
