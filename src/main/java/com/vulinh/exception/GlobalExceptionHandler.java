@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 
     return GenericResponse.builder()
         .code(CommonMessage.MESSAGE_INTERNAL_ERROR.getCode())
-        .message(CommonMessage.MESSAGE_INTERNAL_ERROR.getMessage())
+        .message(CommonMessage.MESSAGE_INTERNAL_ERROR.getDisplayMessage())
         .build();
   }
 
@@ -37,15 +37,15 @@ public class GlobalExceptionHandler {
     var statusCode = commonException.getErrorKey().getHttpStatusCode();
 
     var errorMessage =
-        (switch (statusCode) {
-              case HttpStatus.NOT_FOUND -> "Resource not found: %s";
-              case HttpStatus.INTERNAL_SERVER_ERROR -> "Internal server error: %s";
-              case HttpStatus.BAD_REQUEST -> "Bad request: %s";
-              case HttpStatus.UNAUTHORIZED -> "Authentication/Authorization error: %s";
-              case HttpStatus.FORBIDDEN -> "Access to the resource denied: %s";
-              default -> "Unknown error: %s";
-            })
-            .formatted(commonException.getMessage());
+        switch (statusCode) {
+          case HttpStatus.BAD_REQUEST -> "Bad request";
+          case HttpStatus.UNAUTHORIZED -> "Authentication/Authorization error";
+          case HttpStatus.FORBIDDEN -> "Access to the resource denied";
+          case HttpStatus.NOT_FOUND -> "Resource not found";
+          case HttpStatus.CONFLICT -> "Resource already existed";
+          case HttpStatus.INTERNAL_SERVER_ERROR -> "Internal server error";
+          default -> "Unknown error";
+        };
 
     if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR) {
       log.error(errorMessage, commonException);
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     }
 
     return ResponseEntity.status(statusCode)
-        .body(RESPONSE_FACTORY.toGenericResponse(commonException, commonException.getArgs()));
+        .body(RESPONSE_FACTORY.toExceptionResponse(commonException, commonException.getArgs()));
   }
 
   @ExceptionHandler(EntityNotFoundException.class)

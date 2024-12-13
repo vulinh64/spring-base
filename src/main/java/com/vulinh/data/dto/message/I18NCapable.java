@@ -9,7 +9,7 @@ public interface I18NCapable extends Serializable {
   @NonNull
   String getCode();
 
-  default String getMessage(Object... args) {
+  default String getDisplayMessage(Object... args) {
     return LocalizationSupport.getParsedMessage(getCode(), args);
   }
 }
