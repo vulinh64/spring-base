@@ -62,13 +62,10 @@ public class CommentFetchingService {
 
   private <T> JPAQuery<T> buildBasicQuery(UUID postId, Expression<T> select) {
     var eComment = QComment.comment;
-    var eUsers = QUsers.users;
 
     return new JPAQueryFactory(entityManager)
         .selectFrom(eComment)
         .select(select)
-        .join(eUsers)
-        .on(eUsers.id.eq(eComment.createdBy))
         .where(eComment.postId.eq(postId));
   }
 }

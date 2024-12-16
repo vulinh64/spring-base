@@ -48,4 +48,5 @@ public class CommonConstant {
   public static final String UNCATEGORIZED_SLUG = "uncategorized";
 
   public static final String POST_ENTITY = "Post";
+  public static final String COMMENT_ENTITY = "Comment";
 }

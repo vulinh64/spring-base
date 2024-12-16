@@ -8,7 +8,6 @@ import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -36,9 +35,12 @@ public class Comment extends UuidJpaEntity {
 
   @LastModifiedDate private LocalDateTime updatedDate;
 
-  @CreatedBy private UUID createdBy;
-
   // So that mapping on Post works
   @Column(name = "post_id")
   private UUID postId;
+
+  @ToString.Exclude
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "created_by")
+  private Users createdBy;
 }
