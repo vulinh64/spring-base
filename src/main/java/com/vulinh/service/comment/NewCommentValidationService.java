@@ -1,8 +1,8 @@
 package com.vulinh.service.comment;
 
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.comment.NewCommentDTO;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.function.Predicate;
@@ -40,8 +40,8 @@ public class NewCommentValidationService {
     };
 
     private final Predicate<NewCommentDTO> predicate;
-    private final CommonMessage errorMessage;
-    private final String additionalMessage;
+    private final CommonMessage error;
+    private final String exceptionMessage;
     private final Object[] arguments = {};
   }
 }

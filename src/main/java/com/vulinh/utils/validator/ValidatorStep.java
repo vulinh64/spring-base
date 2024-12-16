@@ -8,9 +8,9 @@ public interface ValidatorStep<T> {
 
   Predicate<T> getPredicate();
 
-  WithHttpStatusCode getErrorMessage();
+  WithHttpStatusCode getError();
 
-  String getAdditionalMessage();
+  String getExceptionMessage();
 
   Object[] getArguments();
 }

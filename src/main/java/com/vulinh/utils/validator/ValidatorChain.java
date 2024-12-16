@@ -37,8 +37,8 @@ public final class ValidatorChain<T> {
     for (var validatorStep : validatorSteps) {
       if (!validatorStep.getPredicate().test(object)) {
         throw ExceptionFactory.INSTANCE.buildCommonException(
-            validatorStep.getAdditionalMessage(),
-            validatorStep.getErrorMessage(),
+            validatorStep.getExceptionMessage(),
+            validatorStep.getError(),
             validatorStep.getArguments());
       }
     }

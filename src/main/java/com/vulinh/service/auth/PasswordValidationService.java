@@ -1,9 +1,9 @@
 package com.vulinh.service.auth;
 
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.function.Predicate;
@@ -52,8 +52,8 @@ public class PasswordValidationService {
     };
 
     private final Predicate<PasswordChangeDTO> predicate;
-    private final CommonMessage errorMessage;
-    private final String additionalMessage;
+    private final CommonMessage error;
+    private final String exceptionMessage;
     private final Object[] arguments = {};
   }
 }

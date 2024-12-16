@@ -2,7 +2,6 @@ package com.vulinh.service.post;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.constant.UserRole;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.user.RoleDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
@@ -10,6 +9,7 @@ import com.vulinh.data.entity.Post;
 import com.vulinh.exception.CommonException;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.Objects;
@@ -114,8 +114,8 @@ public class PostValidationService {
         "Empty tag or tag is too long");
 
     private final Predicate<PostCreationDTO> predicate;
-    private final CommonMessage errorMessage;
-    private final String additionalMessage;
+    private final CommonMessage error;
+    private final String exceptionMessage;
     private final Object[] arguments = {};
 
     private static boolean isValidTags(PostCreationDTO dto) {

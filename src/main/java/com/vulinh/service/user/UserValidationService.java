@@ -202,8 +202,8 @@ public class UserValidationService {
         "Wrong email format");
 
     private final Predicate<UserRegistrationDTO> predicate;
-    private final CommonMessage errorMessage;
-    private final String additionalMessage;
+    private final CommonMessage error;
+    private final String exceptionMessage;
     private final Object[] arguments = {};
   }
 }

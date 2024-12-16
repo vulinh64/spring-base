@@ -23,12 +23,12 @@ public record ValidatorStepImpl<T>(
   }
 
   @Override
-  public WithHttpStatusCode getErrorMessage() {
+  public WithHttpStatusCode getError() {
     return errorMessage;
   }
 
   @Override
-  public String getAdditionalMessage() {
+  public String getExceptionMessage() {
     return additionalMessage;
   }
 

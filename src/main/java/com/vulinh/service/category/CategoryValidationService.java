@@ -72,8 +72,8 @@ public class CategoryValidationService {
         "Category exceeded %s characters".formatted(CATEGORY_MAX_LENGTH));
 
     private final Predicate<CategoryCreationDTO> predicate;
-    private final String additionalMessage;
+    private final String exceptionMessage;
     private final Object[] arguments = {CATEGORY_MAX_LENGTH};
-    private final WithHttpStatusCode errorMessage = CommonMessage.MESSAGE_INVALID_CATEGORY;
+    private final WithHttpStatusCode error = CommonMessage.MESSAGE_INVALID_CATEGORY;
   }
 }
