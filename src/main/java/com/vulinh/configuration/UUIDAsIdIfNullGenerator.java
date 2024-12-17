@@ -1,5 +1,6 @@
 package com.vulinh.configuration;
 
+import com.vulinh.constant.CommonConstant;
 import java.io.Serial;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -38,7 +39,19 @@ public @interface UUIDAsIdIfNullGenerator {
       return Optional.of(entityPersister)
           .map(persist -> persist.getIdentifier(entity, session))
           .map(UUID.class::cast)
-          .orElseGet(UUID::randomUUID);
+          .orElseGet(UUIDIfNullGeneratorImpl::tryGeneratingUUID);
+    }
+
+    // Chance of generating 00000000-0000-0000-000000000000 is even lower
+    // than the chance you can have a girlfriend, lmao
+    static UUID tryGeneratingUUID() {
+      while (true) {
+        var result = UUID.randomUUID();
+
+        if (!CommonConstant.UNCATEGORIZED_ID.equals(result)) {
+          return result;
+        }
+      }
     }
   }
 }

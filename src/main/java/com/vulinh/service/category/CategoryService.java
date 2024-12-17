@@ -47,13 +47,6 @@ public class CategoryService {
   }
 
   @Transactional
-  public void initializeFirstCategory() {
-    categoryRepository
-        .findById(CommonConstant.UNCATEGORIZED_ID)
-        .ifPresentOrElse(this::checkExistingDefaultCategory, this::createDefaultCategory);
-  }
-
-  @Transactional
   public CategoryDTO createCategory(CategoryCreationDTO categoryCreationDTO) {
     categoryValidationService.validateCategoryCreation(categoryCreationDTO);
 
@@ -97,47 +90,5 @@ public class CategoryService {
               return true;
             })
         .isPresent();
-  }
-
-  private void createDefaultCategory() {
-    categoryRepository.save(
-        Category.builder()
-            .id(CommonConstant.UNCATEGORIZED_ID)
-            .categorySlug(CommonConstant.UNCATEGORIZED_SLUG)
-            .displayName(CommonConstant.UNCATEGORIZED_NAME)
-            .build());
-
-    log.debug(
-        "Initialized first category: {} - {}",
-        CommonConstant.UNCATEGORIZED_ID,
-        CommonConstant.UNCATEGORIZED_NAME);
-  }
-
-  private void checkExistingDefaultCategory(Category category) {
-    var isChanged = false;
-
-    if (!CommonConstant.UNCATEGORIZED_NAME.equals(category.getDisplayName())) {
-      category.setDisplayName(CommonConstant.UNCATEGORIZED_NAME);
-
-      isChanged = true;
-    }
-
-    if (!CommonConstant.UNCATEGORIZED_SLUG.equals(category.getCategorySlug())) {
-      category.setCategorySlug(CommonConstant.UNCATEGORIZED_SLUG);
-
-      if (!isChanged) {
-        isChanged = true;
-      }
-    }
-
-    if (isChanged) {
-      categoryRepository.save(category);
-
-      log.debug(
-          "Changed default category (ID {}) name to {}, slug to {}",
-          CommonConstant.UNCATEGORIZED_ID,
-          CommonConstant.UNCATEGORIZED_NAME,
-          CommonConstant.UNCATEGORIZED_SLUG);
-    }
   }
 }
