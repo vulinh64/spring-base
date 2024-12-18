@@ -15,8 +15,8 @@ public class CommentRevisionService {
   private final CommentRevisionRepository commentRevisionRepository;
 
   @Transactional
-  public void createNewCommentRevision(Comment persistedComment) {
+  public void createNewCommentRevision(Comment persistedComment, RevisionType revisionType) {
     commentRevisionRepository.save(
-        CommentMapper.INSTANCE.fromComment(persistedComment, RevisionType.CREATED));
+        CommentMapper.INSTANCE.fromComment(persistedComment, revisionType));
   }
 }

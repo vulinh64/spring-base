@@ -1,9 +1,9 @@
 package com.vulinh.factory;
 
 import com.vulinh.constant.CommonConstant;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import com.vulinh.exception.CommonException;
+import com.vulinh.locale.CommonMessage;
 import java.util.UUID;
 
 @SuppressWarnings("java:S6548")
@@ -12,6 +12,12 @@ public enum ExceptionFactory {
 
   public CommonException postNotFound(UUID id) {
     return entityNotFound("Post ID %s not found".formatted(id), CommonConstant.POST_ENTITY);
+  }
+
+  public CommonException commentNotFound(UUID postId, UUID commentId) {
+    return entityNotFound(
+        "Comment ID %s in post %s not found".formatted(commentId, postId),
+        CommonConstant.COMMENT_ENTITY);
   }
 
   public CommonException entityNotFound(String message, String entityName) {
