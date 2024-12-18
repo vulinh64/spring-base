@@ -1,5 +1,6 @@
 package com.vulinh.service.comment;
 
+import com.vulinh.data.dto.comment.CommentDTO;
 import com.vulinh.data.dto.comment.NewCommentDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.RevisionType;
@@ -11,6 +12,8 @@ import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,7 @@ public class CommentService {
 
   private final NewCommentValidationService commentValidationService;
   private final CommentRevisionService commentRevisionService;
+  private final CommentFetchingService commentFetchingService;
 
   @Transactional
   public UUID addComment(UUID postId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
@@ -51,5 +55,9 @@ public class CommentService {
     var newComment = commentRepository.save(comment.withContent(newCommentDTO.content()));
 
     commentRevisionService.createNewCommentRevision(newComment, RevisionType.UPDATED);
+  }
+
+  public Page<CommentDTO> fetchComments(UUID postId, Pageable pageable) {
+    return commentFetchingService.fetchComments(postId, pageable);
   }
 }

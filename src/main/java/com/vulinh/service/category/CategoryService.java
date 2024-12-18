@@ -10,7 +10,7 @@ import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.locale.CommonMessage;
-import com.vulinh.utils.QueryDSLPredicateBuilder;
+import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
 import java.util.Optional;
 import java.util.UUID;
@@ -65,10 +65,10 @@ public class CategoryService {
 
     return categoryRepository
         .findAll(
-            QueryDSLPredicateBuilder.and(
-                QueryDSLPredicateBuilder.likeIgnoreCase(
+            PredicateBuilder.and(
+                PredicateBuilder.likeIgnoreCase(
                     qCategory.displayName, categorySearchDTO.displayName()),
-                QueryDSLPredicateBuilder.likeIgnoreCase(
+                PredicateBuilder.likeIgnoreCase(
                     qCategory.categorySlug, categorySearchDTO.categorySlug())),
             pageable)
         .map(CATEGORY_MAPPER::toDto);

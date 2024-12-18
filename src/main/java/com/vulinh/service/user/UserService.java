@@ -2,18 +2,18 @@ package com.vulinh.service.user;
 
 import com.querydsl.core.types.Predicate;
 import com.vulinh.constant.UserRole;
+import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.dto.user.UserSearchDTO;
 import com.vulinh.data.entity.*;
-import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.BaseEntityService;
-import com.vulinh.utils.QueryDSLPredicateBuilder;
+import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -96,11 +96,11 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
     var qUser = QUsers.users;
 
     var specification =
-        QueryDSLPredicateBuilder.or(
-            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.id, identity),
-            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.username, identity),
-            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.email, identity),
-            QueryDSLPredicateBuilder.likeIgnoreCase(qUser.fullName, identity));
+        PredicateBuilder.or(
+            PredicateBuilder.likeIgnoreCase(qUser.id, identity),
+            PredicateBuilder.likeIgnoreCase(qUser.username, identity),
+            PredicateBuilder.likeIgnoreCase(qUser.email, identity),
+            PredicateBuilder.likeIgnoreCase(qUser.fullName, identity));
 
     var searchRoles = UserRole.fromRawRole(userSearchDTO.roles());
 
@@ -111,11 +111,11 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
               .collect(Collectors.toSet());
 
       specification =
-          QueryDSLPredicateBuilder.and(
+          PredicateBuilder.and(
               specification,
               roles.isEmpty()
-                  ? QueryDSLPredicateBuilder.never()
-                  : QUsers.users.userRoles.any().id.in(roles));
+                  ? PredicateBuilder.never()
+                  : PredicateBuilder.in(QUsers.users.userRoles.any().id, roles));
     }
 
     return specification;

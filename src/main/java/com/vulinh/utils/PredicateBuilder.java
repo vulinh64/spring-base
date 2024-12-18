@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.lang.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class QueryDSLPredicateBuilder {
+public class PredicateBuilder {
 
   private static final char ESCAPE = '\\';
 
@@ -26,8 +26,12 @@ public class QueryDSLPredicateBuilder {
     return not(always());
   }
 
-  public static <T> Predicate eq(SimpleExpression<T> expression, T value) {
+  public static <T> Predicate eq(SimpleExpression<T> expression, @NonNull T value) {
     return expression.eq(value);
+  }
+
+  public static <T> Predicate eq(SimpleExpression<T> left, SimpleExpression<T> right) {
+    return left.eq(right);
   }
 
   // equals ignore case
@@ -35,8 +39,12 @@ public class QueryDSLPredicateBuilder {
     return expression.lower().equalsIgnoreCase(value);
   }
 
-  public static <T> Predicate neq(SimpleExpression<T> expression, T value) {
+  public static <T> Predicate neq(SimpleExpression<T> expression, @NonNull T value) {
     return expression.ne(value);
+  }
+
+  public static <T> Predicate neq(SimpleExpression<T> left, SimpleExpression<T> right) {
+    return left.ne(right);
   }
 
   public static <T extends Comparable<? super T>> Predicate gt(

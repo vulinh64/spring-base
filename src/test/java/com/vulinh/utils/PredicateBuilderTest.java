@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.vulinh.data.entity.QUsers;
 import org.junit.jupiter.api.Test;
 
-class QueryDSLPredicateBuilderTest {
+class PredicateBuilderTest {
 
   @Test
   void testGetFieldName() {
     var expected = "username";
 
-    assertEquals(expected, QueryDSLPredicateBuilder.getFieldName(QUsers.users.username));
+    assertEquals(expected, PredicateBuilder.getFieldName(QUsers.users.username));
   }
 }

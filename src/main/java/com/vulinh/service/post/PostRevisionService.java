@@ -12,6 +12,7 @@ import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.PostFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
+import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -145,7 +146,7 @@ public class PostRevisionService {
   }
 
   private JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {
-    return postRevisionJoinJPAQuery().where(QPost.post.id.eq(identity));
+    return postRevisionJoinJPAQuery().where(PredicateBuilder.eq(QPost.post.id, identity));
   }
 
   private JPAQuery<Post> postRevisionJoinJPAQuery() {
@@ -155,6 +156,6 @@ public class PostRevisionService {
     return new JPAQueryFactory(entityManager)
         .selectFrom(postEntry)
         .join(postRevisionEntry)
-        .on(postEntry.id.eq(postRevisionEntry.id.postId));
+        .on(PredicateBuilder.eq(postEntry.id, postRevisionEntry.id.postId));
   }
 }

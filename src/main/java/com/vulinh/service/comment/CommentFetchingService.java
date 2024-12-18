@@ -11,6 +11,7 @@ import com.vulinh.data.entity.QCommentRevision;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.utils.PredicateBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.UUID;
@@ -64,8 +65,9 @@ public class CommentFetchingService {
                     getQueryFactory()
                         .selectFrom(qCommentRevision)
                         .where(
-                            qCommentRevision.id.commentId.eq(qCommentId),
-                            qCommentRevision.revisionType.eq(RevisionType.UPDATED))
+                            PredicateBuilder.eq(qCommentId, qCommentRevision.id.commentId),
+                            PredicateBuilder.eq(
+                                qCommentRevision.revisionType, RevisionType.UPDATED))
                         .exists())
                 .then(true)
                 .otherwise(false));
@@ -79,7 +81,10 @@ public class CommentFetchingService {
   private <T> JPAQuery<T> buildBasicQuery(UUID postId, Expression<T> select) {
     var eComment = QComment.comment;
 
-    return getQueryFactory().selectFrom(eComment).select(select).where(eComment.postId.eq(postId));
+    return getQueryFactory()
+        .selectFrom(eComment)
+        .select(select)
+        .where(PredicateBuilder.eq(eComment.postId, postId));
   }
 
   private JPAQueryFactory getQueryFactory() {

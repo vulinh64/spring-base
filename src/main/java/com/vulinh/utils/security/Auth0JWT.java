@@ -10,7 +10,7 @@ import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.data.entity.QUsers;
 import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.utils.QueryDSLPredicateBuilder;
+import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Instant;
 import java.util.UUID;
@@ -26,7 +26,7 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
 
   private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
   private static final String USERNAME_CLAIM =
-      QueryDSLPredicateBuilder.getFieldName(QUsers.users.username);
+      PredicateBuilder.getFieldName(QUsers.users.username);
 
   private static Algorithm rsaAlgorithm;
   private static JWTVerifier jwtVerifier;
