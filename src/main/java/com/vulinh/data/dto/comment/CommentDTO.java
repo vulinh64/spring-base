@@ -11,5 +11,6 @@ public record CommentDTO(
     LocalDateTime createdDate,
     LocalDateTime updatedDate,
     String username,
-    String fullName)
+    String fullName,
+    Boolean isEdited)
     implements RecordUuidIdentifiable, RecordDateTimeAuditable {}

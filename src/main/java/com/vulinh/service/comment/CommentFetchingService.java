@@ -2,11 +2,13 @@ package com.vulinh.service.comment;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.vulinh.data.dto.comment.CommentDTO;
 import com.vulinh.data.entity.QComment;
-import com.vulinh.data.entity.QUsers;
+import com.vulinh.data.entity.QCommentRevision;
+import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ExceptionFactory;
 import jakarta.persistence.EntityManager;
@@ -26,6 +28,8 @@ public class CommentFetchingService {
 
   private final PostRepository postRepository;
 
+  private JPAQueryFactory queryFactory;
+
   public Page<CommentDTO> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
       throw ExceptionFactory.INSTANCE.postNotFound(postId);
@@ -41,18 +45,30 @@ public class CommentFetchingService {
 
   private JPAQuery<CommentDTO> buildFetchQuery(UUID postId, Pageable pageable) {
     var qComment = QComment.comment;
-    var qUsers = QUsers.users;
     var qCommentCreatedDate = qComment.createdDate;
+    var qCommentRevision = QCommentRevision.commentRevision;
+    var qCommentAuthor = qComment.createdBy;
+    var qCommentId = qComment.id;
 
     var select =
         Projections.constructor(
             CommentDTO.class,
-            qComment.id,
+            qCommentId,
             qComment.content,
             qCommentCreatedDate,
             qComment.updatedDate,
-            qUsers.username,
-            qUsers.fullName);
+            qCommentAuthor.username,
+            qCommentAuthor.fullName,
+            new CaseBuilder()
+                .when(
+                    getQueryFactory()
+                        .selectFrom(qCommentRevision)
+                        .where(
+                            qCommentRevision.id.commentId.eq(qCommentId),
+                            qCommentRevision.revisionType.eq(RevisionType.UPDATED))
+                        .exists())
+                .then(true)
+                .otherwise(false));
 
     return buildBasicQuery(postId, select)
         .orderBy(qCommentCreatedDate.desc())
@@ -63,9 +79,14 @@ public class CommentFetchingService {
   private <T> JPAQuery<T> buildBasicQuery(UUID postId, Expression<T> select) {
     var eComment = QComment.comment;
 
-    return new JPAQueryFactory(entityManager)
-        .selectFrom(eComment)
-        .select(select)
-        .where(eComment.postId.eq(postId));
+    return getQueryFactory().selectFrom(eComment).select(select).where(eComment.postId.eq(postId));
+  }
+
+  private JPAQueryFactory getQueryFactory() {
+    if (queryFactory == null) {
+      queryFactory = new JPAQueryFactory(entityManager);
+    }
+
+    return queryFactory;
   }
 }
