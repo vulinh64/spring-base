@@ -1,6 +1,4 @@
-package com.vulinh.utils;
-
-import com.vulinh.data.base.Identifiable;
+package com.vulinh.data.base;
 
 import java.util.UUID;
 

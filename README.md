@@ -8,6 +8,7 @@
       * [SQL Script:](#sql-script)
       * [Validate Liquibase's changelogs using Liquibase Maven Plugins](#validate-liquibases-changelogs-using-liquibase-maven-plugins)
     * [Setting up environment variables](#setting-up-environment-variables)
+      * [Spring Security](#spring-security)
     * [Public key](#public-key)
     * [Private key](#private-key)
   * [Docker-based Setup](#docker-based-setup)
@@ -28,9 +29,7 @@ This is a demo project using Spring Boot to work as a blog site's backend.
 
 ### Prerequisite
 
-- JDK 17 or higher, you can download:
-    - **Oracle JDK** from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html;
-    - or **GraalVM** for JDK 17 from https://www.graalvm.org/release-notes/JDK_17/
+- JDK 21 or higher
 - PostgreSQL (https://www.postgresql.org/download/) installed on your local machine.
     - Because database changelogs use native PostgreSQL dialect, you will need to use PostgreSQL. If you planned to use
       another RDBMS, then you will have to rewrite the changelog files.
@@ -83,6 +82,10 @@ Replace `-Dliquibase.username` and `-Dliquibase.password` with your actual usern
 
 ### Setting up environment variables
 
+For `SPRING_PROFILES_ACTIVE`, you can use `development` most of the time.
+
+#### Spring Security
+
 Spring Security uses these environment variables for authentication and authorization:
 
 | Variable name | Description                                                          | Remarks                             |
@@ -108,6 +111,8 @@ PRIVATE_KEY=insert your private key here
 # Other environment variables down below
 #
 ```
+
+You can check the example  on `.env-example` file.
 
 Currently, an RSA public or private key is written in a single line, for example:
 
