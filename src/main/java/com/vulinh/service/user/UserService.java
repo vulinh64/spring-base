@@ -115,7 +115,7 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
               specification,
               roles.isEmpty()
                   ? PredicateBuilder.never()
-                  : PredicateBuilder.in(QUsers.users.userRoles.any().id, roles));
+                  : qUser.userRoles.any().id.in(roles));
     }
 
     return specification;
