@@ -1,5 +1,6 @@
 package com.vulinh.data.repository;
 
+import com.vulinh.data.base.BaseRepository;
 import com.vulinh.data.entity.CommentRevision;
 import com.vulinh.data.entity.CommentRevisionId;
 import org.springframework.stereotype.Repository;

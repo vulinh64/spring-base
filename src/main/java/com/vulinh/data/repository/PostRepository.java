@@ -1,6 +1,7 @@
 package com.vulinh.data.repository;
 
 import com.vulinh.constant.NamedQueryConstant;
+import com.vulinh.data.base.BaseRepository;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import java.util.UUID;

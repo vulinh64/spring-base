@@ -1,6 +1,7 @@
 package com.vulinh.data.repository;
 
 import com.vulinh.constant.NamedQueryConstant;
+import com.vulinh.data.base.BaseRepository;
 import com.vulinh.data.dto.post.PostRevisionDTO;
 import com.vulinh.data.entity.PostRevision;
 import com.vulinh.data.entity.PostRevisionId;

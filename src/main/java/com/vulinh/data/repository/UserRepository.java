@@ -1,5 +1,6 @@
 package com.vulinh.data.repository;
 
+import com.vulinh.data.base.BaseRepository;
 import com.vulinh.data.entity.Users;
 import java.util.Optional;
 import java.util.UUID;
