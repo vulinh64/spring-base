@@ -13,7 +13,7 @@
     <artifactId>spring-base</artifactId>
     <version>1.0.4</version>
     <name>Spring Base project</name>
-    <description>Sample text here</description>
+    <description>Your dumb comments go boom!</description>
 
     <properties>
         <java.version>21</java.version>
@@ -26,7 +26,7 @@
         <!-- The property "querydsl.version" is reserved by Spring, do not use that! -->
         <openfeign.querydsl.version>6.10.1</openfeign.querydsl.version>
 
-        <guava.version>33.3.1-jre</guava.version>
+        <guava.version>33.4.0-jre</guava.version>
         <springdoc.openapi.version>2.7.0</springdoc.openapi.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <jmail.version>1.6.3</jmail.version>
