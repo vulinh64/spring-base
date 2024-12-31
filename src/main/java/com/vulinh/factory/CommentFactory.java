@@ -1,7 +1,7 @@
 package com.vulinh.factory;
 
 import com.vulinh.data.entity.Comment;
-import com.vulinh.data.entity.CommentRevisionId;
+import com.vulinh.data.entity.ids.CommentRevisionId;
 
 @SuppressWarnings("java:S6548")
 public enum CommentFactory {
