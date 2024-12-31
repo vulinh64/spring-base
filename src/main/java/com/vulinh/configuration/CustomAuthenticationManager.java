@@ -28,7 +28,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     }
 
     return userRepository
-        .findByIdAndIsActiveIsTrue(payload.subject())
+        .findByIdAndIsActiveIsTrue(payload.userId())
         .map(UserMapper.INSTANCE::toBasicUserDTO)
         .map(CustomAuthenticationFactory.INSTANCE::fromUserBasicDTO)
         .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);

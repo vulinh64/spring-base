@@ -3,8 +3,7 @@ package com.vulinh.service.auth;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.locale.CommonMessage;
-import com.vulinh.data.dto.security.AccessToken;
+import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
@@ -12,7 +11,9 @@ import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.UserRegistrationEventFactory;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
+import com.vulinh.service.sessions.UserSessionService;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.security.AccessTokenGenerator;
@@ -43,18 +44,20 @@ public class AuthService {
 
   private final UserValidationService userValidationService;
   private final PasswordValidationService passwordValidationService;
+  private final UserSessionService userSessionService;
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
   private final AccessTokenGenerator accessTokenGenerator;
 
-  public AccessToken login(UserLoginDTO userLoginDTO) {
+  public TokenResponse login(UserLoginDTO userLoginDTO) {
     return userRepository
         .findByUsernameAndIsActiveIsTrue(userLoginDTO.username())
         .filter(
             matchedUser ->
                 UserValidationService.isPasswordMatched(userLoginDTO, matchedUser, passwordEncoder))
-        .map(accessTokenGenerator::generateAccessToken)
+        .map(users -> accessTokenGenerator.generateAccessToken(users, UUID.randomUUID()))
+        .map(userSessionService::createUserSession)
         .orElseThrow(
             () ->
                 EXCEPTION_FACTORY.buildCommonException(

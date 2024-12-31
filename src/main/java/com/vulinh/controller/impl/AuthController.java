@@ -6,7 +6,7 @@ import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.locale.CommonMessage;
-import com.vulinh.data.dto.security.AccessToken;
+import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.auth.AuthService;
@@ -25,7 +25,7 @@ public class AuthController implements AuthAPI {
   private final AuthService authService;
 
   @Override
-  public GenericResponse<AccessToken> login(UserLoginDTO userLoginDTO) {
+  public GenericResponse<TokenResponse> login(UserLoginDTO userLoginDTO) {
     return RESPONSE_FACTORY.success(authService.login(userLoginDTO));
   }
 

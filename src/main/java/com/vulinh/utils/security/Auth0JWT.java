@@ -5,12 +5,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.security.AccessToken;
+import com.vulinh.data.dto.security.AccessTokenContainer;
 import com.vulinh.data.dto.security.JwtPayload;
-import com.vulinh.data.entity.QUsers;
+import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.entity.Users;
+import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Instant;
 import java.util.UUID;
@@ -25,8 +25,6 @@ import org.springframework.stereotype.Component;
 public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
 
   private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
-  private static final String USERNAME_CLAIM =
-      PredicateBuilder.getFieldName(QUsers.users.username);
 
   private static Algorithm rsaAlgorithm;
   private static JWTVerifier jwtVerifier;
@@ -34,21 +32,26 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
   private final SecurityConfigProperties securityConfigProperties;
 
   @Override
-  public AccessToken generateAccessToken(Users users) {
+  public AccessTokenContainer generateAccessToken(Users users, UUID sessionId) {
     var issuedAt = Instant.now();
     var expiration = issuedAt.plus(securityConfigProperties.jwtDuration());
+    var userId = users.getId();
+    var userSessionId = UserSessionId.of(userId, sessionId);
 
-    return AccessToken.builder()
-        .accessToken(
-            JWT.create()
-                .withIssuer(securityConfigProperties.issuer())
-                .withIssuedAt(issuedAt)
-                .withExpiresAt(expiration)
-                .withSubject(users.getId().toString())
-                .withClaim(USERNAME_CLAIM, users.getUsername())
-                .sign(getAlgorithm(securityConfigProperties)))
-        .issuedAt(issuedAt)
-        .expiration(expiration)
+    return AccessTokenContainer.builder()
+        .tokenResponse(
+            TokenResponse.builder()
+                .accessToken(
+                    JWT.create()
+                        .withIssuer(securityConfigProperties.issuer())
+                        .withExpiresAt(expiration)
+                        .withClaim("userId", String.valueOf(userSessionId.userId()))
+                        .withClaim("sessionId", String.valueOf(userSessionId.sessionId()))
+                        .withIssuedAt(issuedAt)
+                        .sign(getAlgorithm(securityConfigProperties)))
+                .build())
+        .userId(userId)
+        .sessionId(sessionId)
         .build();
   }
 
@@ -60,8 +63,8 @@ public class Auth0JWT implements AccessTokenGenerator, AccessTokenValidator {
 
       return JwtPayload.builder()
           .issuer(decodedJWT.getIssuer())
-          .subject(UUID.fromString(decodedJWT.getSubject()))
-          .username(decodedJWT.getClaim(USERNAME_CLAIM).asString())
+          .userId(UUID.fromString(decodedJWT.getClaim("userId").asString()))
+          .sessionId(UUID.fromString(decodedJWT.getClaim("sessionId").asString()))
           .build();
     } catch (TokenExpiredException tokenExpiredException) {
       throw EXCEPTION_FACTORY.expiredAccessToken(tokenExpiredException);
