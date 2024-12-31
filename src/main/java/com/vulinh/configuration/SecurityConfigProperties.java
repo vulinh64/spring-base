@@ -11,5 +11,6 @@ public record SecurityConfigProperties(
     List<String> noAuthenticatedUrls,
     List<VerbUrl> allowedVerbUrls,
     Duration jwtDuration,
+    Duration refreshJwtDuration,
     Duration passwordResetCodeDuration,
     String issuer) {}

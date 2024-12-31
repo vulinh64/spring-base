@@ -2,6 +2,8 @@ package com.vulinh.factory;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
+import com.vulinh.data.dto.security.AccessTokenType;
+import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.exception.CommonException;
 import com.vulinh.locale.CommonMessage;
 import java.util.UUID;
@@ -41,6 +43,24 @@ public enum ExceptionFactory {
   public CommonException expiredAccessToken(Throwable tokenExpiredException) {
     return buildCommonException(
         "Access token expired", CommonMessage.MESSAGE_CREDENTIALS_EXPIRED, tokenExpiredException);
+  }
+
+  public CommonException missingClaim(String claimName) {
+    return buildCommonException(
+        "Claim %s is missing".formatted(claimName), CommonMessage.MESSAGE_INVALID_AUTHORIZATION);
+  }
+
+  public CommonException invalidUserSession(UserSessionId userSessionId) {
+    return buildCommonException(
+        "Session ID %s for user ID %s did not exist or has been invalidated"
+            .formatted(userSessionId.sessionId(), userSessionId.userId()),
+        CommonMessage.MESSAGE_INVALID_SESSION);
+  }
+
+  public Exception invalidTokenType(AccessTokenType actual, AccessTokenType expected) {
+    return buildCommonException(
+        "Expected token type %s, but actual token was %s".formatted(expected, actual),
+        CommonMessage.MESSAGE_INVALID_TOKEN_TYPE);
   }
 
   public CommonException buildCommonException(String message, WithHttpStatusCode errorMessage) {

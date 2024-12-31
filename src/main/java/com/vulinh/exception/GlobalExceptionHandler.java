@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         switch (statusCode) {
           case HttpStatus.BAD_REQUEST -> "Bad request";
           case HttpStatus.UNAUTHORIZED -> "Authentication/Authorization error";
-          case HttpStatus.FORBIDDEN -> "Access to the resource denied";
+          case HttpStatus.FORBIDDEN -> commonException.getMessage();
           case HttpStatus.NOT_FOUND -> "Resource not found";
           case HttpStatus.CONFLICT -> "Resource already existed";
           case HttpStatus.INTERNAL_SERVER_ERROR -> "Internal server error";

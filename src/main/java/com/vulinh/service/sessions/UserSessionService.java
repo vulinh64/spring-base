@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+
 @Service
 @RequiredArgsConstructor
 public class UserSessionService {
@@ -20,6 +22,11 @@ public class UserSessionService {
     userSessionRepository.save(
         UserSession.builder()
             .id(UserSessionId.of(container.userId(), container.sessionId()))
+            .expirationDate(
+                container
+                    .refreshTokenExpirationDate()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime())
             .build());
 
     return container.tokenResponse();

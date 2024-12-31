@@ -8,5 +8,6 @@ import lombok.With;
 
 @Builder
 @With
-public record JwtPayload(@JsonProperty("iss") String issuer, UUID userId, UUID sessionId)
+public record JwtPayload(
+    @JsonProperty("iss") String issuer, UUID userId, UUID sessionId, AccessTokenType tokenType)
     implements Serializable {}

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.LinkedList;
 import org.junit.jupiter.api.Test;
 
-class JsonUtilsTest {
+class JsonAuth0UtilsTest {
 
   @Test
   void toMinimizedJSON() {

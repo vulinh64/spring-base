@@ -29,4 +29,6 @@ public class UserSession extends AbstractIdentifiable<UserSessionId> {
   @CreatedDate private LocalDateTime createdDate;
 
   @LastModifiedDate private LocalDateTime updatedDate;
+
+  private LocalDateTime expirationDate;
 }

@@ -2,11 +2,14 @@ package com.vulinh.configuration;
 
 import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.security.JwtPayload;
+import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
+import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.factory.CustomAuthenticationFactory;
 import com.vulinh.factory.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -17,20 +20,34 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
 
+  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
+
   private final UserRepository userRepository;
+  private final UserSessionRepository userSessionRepository;
 
   @Override
   @Transactional
+  @NonNull
   public CustomAuthentication authenticate(Authentication authentication) {
     if (!(authentication.getPrincipal() instanceof JwtPayload payload)) {
       throw new InternalAuthenticationServiceException(
           "Invalid authentication principal: %s".formatted(authentication));
     }
 
-    return userRepository
-        .findByIdAndIsActiveIsTrue(payload.userId())
-        .map(UserMapper.INSTANCE::toBasicUserDTO)
-        .map(CustomAuthenticationFactory.INSTANCE::fromUserBasicDTO)
-        .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
+    var userSessionId = UserSessionId.of(payload.userId(), payload.sessionId());
+
+    var session =
+        userSessionRepository
+            .findById(userSessionId)
+            .orElseThrow(() -> EXCEPTION_FACTORY.invalidUserSession(userSessionId));
+
+    var user =
+        userRepository
+            .findByIdAndIsActiveIsTrue(payload.userId())
+            .orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
+
+    var userDTO = UserMapper.INSTANCE.toBasicUserDTO(user, session);
+
+    return CustomAuthenticationFactory.INSTANCE.fromUserBasicDTO(userDTO);
   }
 }
