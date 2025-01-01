@@ -1,4 +1,4 @@
-package com.vulinh.data.entity;
+package com.vulinh.data.entity.ids;
 
 import com.vulinh.data.base.UUIDRevisionId;
 import jakarta.persistence.Embeddable;

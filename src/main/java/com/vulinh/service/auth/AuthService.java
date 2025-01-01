@@ -1,10 +1,11 @@
 package com.vulinh.service.auth;
 
+import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
+import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.locale.CommonMessage;
-import com.vulinh.data.dto.security.AccessToken;
+import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
@@ -12,12 +13,16 @@ import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.UserRegistrationEventFactory;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.auth.PasswordValidationService.PasswordChangeRule;
+import com.vulinh.service.sessions.UserSessionService;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.security.AccessTokenGenerator;
+import com.vulinh.utils.security.RefreshTokenValidator;
 import com.vulinh.utils.validator.ValidatorChain;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -37,24 +42,31 @@ public class AuthService {
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
+  private final SecurityConfigProperties securityConfigProperties;
+
   private final UserRepository userRepository;
 
   private final PasswordEncoder passwordEncoder;
 
   private final UserValidationService userValidationService;
   private final PasswordValidationService passwordValidationService;
+  private final UserSessionService userSessionService;
+
+  private final RefreshTokenValidator refreshTokenValidator;
+  private final AccessTokenGenerator accessTokenGenerator;
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  private final AccessTokenGenerator accessTokenGenerator;
+  public TokenResponse login(UserLoginDTO userLoginDTO) {
+    var now = Instant.now();
 
-  public AccessToken login(UserLoginDTO userLoginDTO) {
     return userRepository
         .findByUsernameAndIsActiveIsTrue(userLoginDTO.username())
         .filter(
             matchedUser ->
                 UserValidationService.isPasswordMatched(userLoginDTO, matchedUser, passwordEncoder))
-        .map(accessTokenGenerator::generateAccessToken)
+        .map(user -> accessTokenGenerator.generateAccessToken(user.getId(), UUID.randomUUID(), now))
+        .map(userSessionService::createUserSession)
         .orElseThrow(
             () ->
                 EXCEPTION_FACTORY.buildCommonException(
@@ -122,5 +134,39 @@ public class AuthService {
 
     userRepository.save(
         userEntity.setPassword(passwordEncoder.encode(passwordChangeDTO.newPassword())));
+  }
+
+  // TODO: Use ID to check the existence of entities
+  @Transactional
+  public TokenResponse refreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO) {
+    var refreshToken = refreshTokenRequestDTO.refreshToken();
+
+    if (StringUtils.isBlank(refreshToken)) {
+      throw EXCEPTION_FACTORY.buildCommonException(
+          "Empty refresh token", CommonMessage.MESSAGE_INVALID_TOKEN);
+    }
+
+    var decodedJwtPayload = refreshTokenValidator.validateRefreshToken(refreshToken);
+
+    var user = userRepository.findActiveUser(decodedJwtPayload.userId());
+
+    var userSession =
+        userSessionService.findUserSession(user.getId(), decodedJwtPayload.sessionId());
+
+    var issuedAt = Instant.now();
+
+    userSessionService.updateUserSession(
+        userSession, issuedAt.plus(securityConfigProperties.refreshJwtDuration()));
+
+    var tokenResult =
+        accessTokenGenerator
+            .generateAccessToken(
+                decodedJwtPayload.userId(), decodedJwtPayload.sessionId(), issuedAt)
+            .tokenResponse();
+
+    return TokenResponse.builder()
+        .accessToken(tokenResult.accessToken())
+        .refreshToken(tokenResult.refreshToken())
+        .build();
   }
 }

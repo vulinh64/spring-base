@@ -14,12 +14,6 @@ public enum ExceptionFactory {
     return entityNotFound("Post ID %s not found".formatted(id), CommonConstant.POST_ENTITY);
   }
 
-  public CommonException commentNotFound(UUID postId, UUID commentId) {
-    return entityNotFound(
-        "Comment ID %s in post %s not found".formatted(commentId, postId),
-        CommonConstant.COMMENT_ENTITY);
-  }
-
   public CommonException entityNotFound(String message, String entityName) {
     return new CommonException(message, CommonMessage.MESSAGE_INVALID_ENTITY_ID, null, entityName);
   }
@@ -36,11 +30,6 @@ public enum ExceptionFactory {
   public CommonException parsingPublicKeyError(Throwable throwable) {
     return buildCommonException(
         "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, throwable);
-  }
-
-  public CommonException expiredAccessToken(Throwable tokenExpiredException) {
-    return buildCommonException(
-        "Access token expired", CommonMessage.MESSAGE_CREDENTIALS_EXPIRED, tokenExpiredException);
   }
 
   public CommonException buildCommonException(String message, WithHttpStatusCode errorMessage) {

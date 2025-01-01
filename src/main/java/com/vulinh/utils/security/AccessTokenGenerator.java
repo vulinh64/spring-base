@@ -1,9 +1,12 @@
 package com.vulinh.utils.security;
 
-import com.vulinh.data.dto.security.AccessToken;
-import com.vulinh.data.entity.Users;
+import com.vulinh.data.dto.security.AccessTokenContainer;
+import java.time.Instant;
+import java.util.UUID;
+import org.springframework.lang.NonNull;
 
 public interface AccessTokenGenerator {
 
-  AccessToken generateAccessToken(Users users);
+  @NonNull
+  AccessTokenContainer generateAccessToken(UUID userId, UUID sessionId, Instant issuedAt);
 }

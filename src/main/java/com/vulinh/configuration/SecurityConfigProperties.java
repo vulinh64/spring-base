@@ -1,9 +1,8 @@
 package com.vulinh.configuration;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.time.Duration;
 import java.util.List;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.security.jwt")
 public record SecurityConfigProperties(
@@ -12,5 +11,6 @@ public record SecurityConfigProperties(
     List<String> noAuthenticatedUrls,
     List<VerbUrl> allowedVerbUrls,
     Duration jwtDuration,
+    Duration refreshJwtDuration,
     Duration passwordResetCodeDuration,
     String issuer) {}

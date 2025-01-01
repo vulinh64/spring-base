@@ -4,6 +4,7 @@ import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
+import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.Users;
 import java.util.stream.Collectors;
 import org.mapstruct.Builder;
@@ -21,7 +22,11 @@ public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
   @Mapping(target = "userRoles", ignore = true)
   UserDTO toUserDTO(Users users);
 
-  UserBasicDTO toBasicUserDTO(Users users);
+  @Mapping(target = "sessionId", source = "userSession.id.sessionId")
+  @Mapping(target = "id", source = "user.id")
+  @Mapping(target = "createdDate", source = "user.createdDate")
+  @Mapping(target = "updatedDate", source = "user.updatedDate")
+  UserBasicDTO toBasicUserDTO(Users user, UserSession userSession);
 
   @Override
   @Mapping(target = "userRegistrationCode", ignore = true)

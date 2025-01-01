@@ -5,9 +5,10 @@ import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.AuthEndpoint;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
+import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.security.AccessToken;
+import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.dto.user.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -86,7 +87,7 @@ public interface AuthAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  GenericResponse<AccessToken> login(@RequestBody UserLoginDTO userLoginDTO);
+  GenericResponse<TokenResponse> login(@RequestBody UserLoginDTO userLoginDTO);
 
   @PostMapping(AuthEndpoint.REGISTER)
   @Operation(
@@ -186,4 +187,8 @@ public interface AuthAPI {
   @PatchMapping(AuthEndpoint.CHANGE_PASSWORD)
   ResponseEntity<Object> changePassword(
       @RequestBody PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest);
+
+  @PostMapping(AuthEndpoint.REFRESH_TOKEN)
+  GenericResponse<TokenResponse> refreshToken(
+      @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO);
 }

@@ -7,6 +7,7 @@ import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.dto.post.PostDTO;
 import com.vulinh.data.dto.post.SinglePostDTO;
 import com.vulinh.data.entity.*;
+import com.vulinh.data.entity.ids.PostRevisionId;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;

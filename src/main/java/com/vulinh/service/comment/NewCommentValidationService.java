@@ -1,5 +1,6 @@
 package com.vulinh.service.comment;
 
+import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.comment.NewCommentDTO;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.repository.CommentRepository;
@@ -34,7 +35,11 @@ public class NewCommentValidationService {
     var comment =
         commentRepository
             .findById(commentId)
-            .orElseThrow(() -> ExceptionFactory.INSTANCE.commentNotFound(postId, commentId));
+            .orElseThrow(
+                () ->
+                    ExceptionFactory.INSTANCE.entityNotFound(
+                        "Comment ID %s in post %s not found".formatted(commentId, postId),
+                        CommonConstant.COMMENT_ENTITY));
 
     var user = SecurityUtils.getUserDTOOrThrow(request);
 

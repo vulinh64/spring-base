@@ -1,14 +1,12 @@
 package com.vulinh.configuration;
 
 import com.vulinh.constant.UserRole;
-import com.vulinh.data.dto.security.JwtPayload;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SecurityUrlUtils;
 import com.vulinh.utils.security.AccessTokenValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -131,21 +129,22 @@ public class SecurityConfig {
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain) {
       try {
-        Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
-            .map(JwtFilter::parseBearerToken)
-            .map(accessTokenValidator::validateAccessToken)
-            .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
-            .map(PreAuthenticatedAuthenticationToken::getPrincipal)
-            .filter(JwtPayload.class::isInstance)
-            .map(JwtPayload.class::cast)
-            .map(JwtFilter::getPreAuthenticatedAuthenticationToken)
-            .map(customAuthenticationManager::authenticate)
-            .map(
-                authentication ->
-                    authentication.addDetails(
-                        new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
-                            request, authentication.getAuthorities())))
-            .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
+        var header = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (header != null) {
+          var jwtPayload = accessTokenValidator.validateAccessToken(parseBearerToken(header));
+
+          var authentication =
+              customAuthenticationManager.authenticate(
+                  new PreAuthenticatedAuthenticationToken(jwtPayload, null));
+
+          var customAuthentication =
+              authentication.addDetails(
+                  new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
+                      request, authentication.getAuthorities()));
+
+          SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+        }
 
         filterChain.doFilter(request, response);
       } catch (Exception exception) {
@@ -196,11 +195,6 @@ public class SecurityConfig {
 
     private static String parseBearerToken(String token) {
       return token.startsWith("Bearer") ? token.substring(7) : token;
-    }
-
-    private static PreAuthenticatedAuthenticationToken getPreAuthenticatedAuthenticationToken(
-        JwtPayload jwtPayload) {
-      return new PreAuthenticatedAuthenticationToken(jwtPayload, null);
     }
   }
 }

@@ -3,8 +3,8 @@ package com.vulinh.utils.security;
 import com.vulinh.data.dto.security.DecodedJwtPayload;
 import org.springframework.lang.NonNull;
 
-public interface AccessTokenValidator {
+public interface RefreshTokenValidator {
 
   @NonNull
-  DecodedJwtPayload validateAccessToken(String accessToken);
+  DecodedJwtPayload validateRefreshToken(String refreshToken);
 }

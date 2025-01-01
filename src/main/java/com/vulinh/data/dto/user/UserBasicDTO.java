@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public record UserBasicDTO(
     UUID id,
+    UUID sessionId,
     String username,
     String fullName,
     String email,
