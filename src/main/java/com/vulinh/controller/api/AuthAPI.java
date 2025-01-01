@@ -5,6 +5,7 @@ import com.vulinh.constant.EndpointConstant;
 import com.vulinh.constant.EndpointConstant.AuthEndpoint;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
+import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.data.dto.security.TokenResponse;
@@ -186,4 +187,8 @@ public interface AuthAPI {
   @PatchMapping(AuthEndpoint.CHANGE_PASSWORD)
   ResponseEntity<Object> changePassword(
       @RequestBody PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest);
+
+  @PostMapping(AuthEndpoint.REFRESH_TOKEN)
+  GenericResponse<TokenResponse> refreshToken(
+      @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO);
 }

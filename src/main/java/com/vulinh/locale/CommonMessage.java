@@ -44,7 +44,8 @@ public enum CommonMessage implements WithHttpStatusCode {
   MESSAGE_INVALID_BODY_REQUEST("M0407", HttpStatus.BAD_REQUEST),
   MESSAGE_INVALID_OWNER_OR_NO_RIGHT("M0408", HttpStatus.FORBIDDEN),
   MESSAGE_INVALID_TOKEN_TYPE("M0409", HttpStatus.FORBIDDEN),
-  MESSAGE_INVALID_SESSION("M0410", HttpStatus.FORBIDDEN);
+  MESSAGE_INVALID_SESSION("M0410", HttpStatus.FORBIDDEN),
+  MESSAGE_INVALID_TOKEN("M0411", HttpStatus.BAD_REQUEST);
 
   private final String errorCode;
   private final HttpStatusCode httpStatusCode;

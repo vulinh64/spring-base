@@ -3,6 +3,7 @@ package com.vulinh.controller.impl;
 import com.vulinh.controller.api.AuthAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.auth.PasswordChangeDTO;
+import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
 import com.vulinh.locale.CommonMessage;
@@ -50,5 +51,11 @@ public class AuthController implements AuthAPI {
     authService.changePassword(passwordChangeDTO, httpServletRequest);
 
     return ResponseEntity.ok().build();
+  }
+
+  @Override
+  public GenericResponse<TokenResponse> refreshToken(
+      RefreshTokenRequestDTO refreshTokenRequestDTO) {
+    return RESPONSE_FACTORY.success(authService.refreshToken(refreshTokenRequestDTO));
   }
 }

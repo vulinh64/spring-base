@@ -47,6 +47,7 @@ spring:
       - /auth/register/**
       - /auth/confirm-user/**
       - /auth/reset-password/**
+      - /auth/refresh-token/**
       - /password/**
       - /user/search/**
     jwt-duration: ${JWT_DURATION:5m}

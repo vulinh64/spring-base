@@ -4,7 +4,6 @@ import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.security.AccessTokenContainer;
 import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.dto.security.TokenType;
-import com.vulinh.data.entity.Users;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.utils.security.AccessTokenGenerator;
 import com.vulinh.utils.security.Auth0Utils;
@@ -25,9 +24,7 @@ public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
 
   @Override
   @NonNull
-  public AccessTokenContainer generateAccessToken(Users users, UUID sessionId) {
-    var issuedAt = Instant.now();
-    var userId = users.getId();
+  public AccessTokenContainer generateAccessToken(UUID userId, UUID sessionId, Instant issuedAt) {
     var userSessionId = UserSessionId.of(userId, sessionId);
     var refreshTokenContainer = refreshTokenGenerator.generateRefreshToken(userSessionId, issuedAt);
 
