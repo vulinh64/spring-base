@@ -4,19 +4,17 @@ import com.vulinh.utils.springcron.DayOfWeekExpression;
 import java.util.List;
 
 public record DayOfWeekExpressionObject(DayOfWeekExpression expression, List<Integer> arguments)
-    implements ExpressionObject<DayOfWeekExpression> {
+    implements ExpressionObject {
 
-  public static ExpressionObject<DayOfWeekExpression> of(
-      DayOfWeekExpression expression, List<Integer> arguments) {
+  public static ExpressionObject of(DayOfWeekExpression expression, List<Integer> arguments) {
     return new DayOfWeekExpressionObject(expression, arguments);
   }
 
-  public static ExpressionObject<DayOfWeekExpression> of(
-      DayOfWeekExpression expression, int... arguments) {
+  public static ExpressionObject of(DayOfWeekExpression expression, int... arguments) {
     return new DayOfWeekExpressionObject(expression, ExpressionObject.box(arguments));
   }
 
-  public static ExpressionObject<DayOfWeekExpression> defaultObject() {
+  public static ExpressionObject defaultObject() {
     return DayOfWeekExpressionObject.of(null);
   }
 

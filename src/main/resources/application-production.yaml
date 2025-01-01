@@ -3,3 +3,5 @@ decorator.datasource.p6spy.enable-logging: false
 springdoc:
   api-docs.enabled: false
   swagger-ui.enabled: false
+schedule:
+  clean-expired-user-sessions: 0 0/1 1-5 * * * # Runs every minute between 1:00 AM and 3:59 AM daily

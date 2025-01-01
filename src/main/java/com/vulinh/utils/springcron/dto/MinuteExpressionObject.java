@@ -4,19 +4,17 @@ import com.vulinh.utils.springcron.MinuteExpression;
 import java.util.List;
 
 public record MinuteExpressionObject(MinuteExpression expression, List<Integer> arguments)
-    implements ExpressionObject<MinuteExpression> {
+    implements ExpressionObject {
 
-  public static ExpressionObject<MinuteExpression> of(
-      MinuteExpression expression, List<Integer> arguments) {
+  public static ExpressionObject of(MinuteExpression expression, List<Integer> arguments) {
     return new MinuteExpressionObject(expression, arguments);
   }
 
-  public static ExpressionObject<MinuteExpression> of(
-      MinuteExpression expression, int... arguments) {
+  public static ExpressionObject of(MinuteExpression expression, int... arguments) {
     return new MinuteExpressionObject(expression, ExpressionObject.box(arguments));
   }
 
-  public static ExpressionObject<MinuteExpression> defaultObject() {
+  public static ExpressionObject defaultObject() {
     return MinuteExpressionObject.of(null);
   }
 

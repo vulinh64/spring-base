@@ -4,18 +4,17 @@ import com.vulinh.utils.springcron.MonthExpression;
 import java.util.List;
 
 public record MonthExpressionObject(MonthExpression expression, List<Integer> arguments)
-    implements ExpressionObject<MonthExpression> {
+    implements ExpressionObject {
 
-  public static ExpressionObject<MonthExpression> of(
-      MonthExpression expression, List<Integer> arguments) {
+  public static ExpressionObject of(MonthExpression expression, List<Integer> arguments) {
     return new MonthExpressionObject(expression, arguments);
   }
 
-  public static ExpressionObject<MonthExpression> of(MonthExpression expression, int... arguments) {
+  public static ExpressionObject of(MonthExpression expression, int... arguments) {
     return new MonthExpressionObject(expression, ExpressionObject.box(arguments));
   }
 
-  public static ExpressionObject<MonthExpression> defaultObject() {
+  public static ExpressionObject defaultObject() {
     return MonthExpressionObject.of(null);
   }
 

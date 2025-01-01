@@ -4,19 +4,17 @@ import com.vulinh.utils.springcron.SecondExpression;
 import java.util.List;
 
 public record SecondExpressionObject(SecondExpression expression, List<Integer> arguments)
-    implements ExpressionObject<SecondExpression> {
+    implements ExpressionObject {
 
-  public static ExpressionObject<SecondExpression> of(
-      SecondExpression expression, List<Integer> arguments) {
+  public static ExpressionObject of(SecondExpression expression, List<Integer> arguments) {
     return new SecondExpressionObject(expression, arguments);
   }
 
-  public static ExpressionObject<SecondExpression> of(
-      SecondExpression expression, int... arguments) {
+  public static ExpressionObject of(SecondExpression expression, int... arguments) {
     return new SecondExpressionObject(expression, ExpressionObject.box(arguments));
   }
 
-  public static ExpressionObject<SecondExpression> defaultObject() {
+  public static ExpressionObject defaultObject() {
     return SecondExpressionObject.of(null);
   }
 

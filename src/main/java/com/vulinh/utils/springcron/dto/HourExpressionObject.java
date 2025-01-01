@@ -4,18 +4,17 @@ import com.vulinh.utils.springcron.HourExpression;
 import java.util.List;
 
 public record HourExpressionObject(HourExpression expression, List<Integer> arguments)
-    implements ExpressionObject<HourExpression> {
+    implements ExpressionObject {
 
-  public static ExpressionObject<HourExpression> of(
-      HourExpression expression, List<Integer> arguments) {
+  public static ExpressionObject of(HourExpression expression, List<Integer> arguments) {
     return new HourExpressionObject(expression, arguments);
   }
 
-  public static ExpressionObject<HourExpression> of(HourExpression expression, int... arguments) {
+  public static ExpressionObject of(HourExpression expression, int... arguments) {
     return new HourExpressionObject(expression, ExpressionObject.box(arguments));
   }
 
-  public static ExpressionObject<HourExpression> defaultObject() {
+  public static ExpressionObject defaultObject() {
     return HourExpressionObject.of(null);
   }
 
