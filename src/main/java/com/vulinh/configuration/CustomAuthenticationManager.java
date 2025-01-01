@@ -1,7 +1,7 @@
 package com.vulinh.configuration;
 
 import com.vulinh.data.dto.security.CustomAuthentication;
-import com.vulinh.data.dto.security.JwtPayload;
+import com.vulinh.data.dto.security.DecodedJwtPayload;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
@@ -29,12 +29,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
   @Transactional
   @NonNull
   public CustomAuthentication authenticate(Authentication authentication) {
-    if (!(authentication.getPrincipal() instanceof JwtPayload payload)) {
+    if (!(authentication.getPrincipal() instanceof DecodedJwtPayload(var userId, var sessionId))) {
       throw new InternalAuthenticationServiceException(
           "Invalid authentication principal: %s".formatted(authentication));
     }
 
-    var userSessionId = UserSessionId.of(payload.userId(), payload.sessionId());
+    var userSessionId = UserSessionId.of(userId, sessionId);
 
     var session =
         userSessionRepository
@@ -43,7 +43,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     var user =
         userRepository
-            .findByIdAndIsActiveIsTrue(payload.userId())
+            .findByIdAndIsActiveIsTrue(userId)
             .orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
 
     var userDTO = UserMapper.INSTANCE.toBasicUserDTO(user, session);

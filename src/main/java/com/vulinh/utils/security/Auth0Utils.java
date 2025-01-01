@@ -2,11 +2,14 @@ package com.vulinh.utils.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.security.AccessTokenType;
+import com.vulinh.data.dto.security.TokenType;
 import com.vulinh.data.entity.ids.QUserSessionId;
 import com.vulinh.data.entity.ids.UserSessionId;
+import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Duration;
@@ -26,6 +29,7 @@ public class Auth0Utils {
   public static final String TOKEN_TYPE = "tokenType";
 
   private static Algorithm rsaAlgorithm;
+  private static JWTVerifier jwtVerifier;
 
   public static Algorithm getAlgorithm(SecurityConfigProperties securityConfigProperties) {
     if (rsaAlgorithm == null) {
@@ -38,17 +42,38 @@ public class Auth0Utils {
     return rsaAlgorithm;
   }
 
+  public static JWTVerifier getJwtVerifier(SecurityConfigProperties securityConfigProperties) {
+    if (jwtVerifier == null) {
+      jwtVerifier =
+          JWT.require(getAlgorithm(securityConfigProperties))
+              .withIssuer(securityConfigProperties.issuer())
+              .build();
+    }
+
+    return jwtVerifier;
+  }
+
   public static JWTCreator.Builder buildTokenCommonParts(
       UserSessionId userSessionId,
       Instant issuedAt,
       String issuer,
       Duration ttl,
-      AccessTokenType accessTokenType) {
+      TokenType tokenType) {
     return JWT.create()
         .withIssuer(issuer)
         .withExpiresAt(issuedAt.plus(ttl))
         .withClaim(USER_ID_CLAIM, String.valueOf(userSessionId.userId()))
         .withClaim(SESSION_ID_CLAIM, String.valueOf(userSessionId.sessionId()))
-        .withClaim(TOKEN_TYPE, accessTokenType.name());
+        .withClaim(TOKEN_TYPE, tokenType.name());
+  }
+
+  public static String claimAsString(DecodedJWT decodedJWT, String claimName) {
+    var claimNode = decodedJWT.getClaim(claimName);
+
+    if (claimNode.isMissing() || claimNode.isNull()) {
+      throw ExceptionFactory.INSTANCE.missingClaim(claimName);
+    }
+
+    return claimNode.asString();
   }
 }

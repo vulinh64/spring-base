@@ -1,19 +1,17 @@
-package com.vulinh.service.auth0;
+package com.vulinh.service.token;
 
 import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.security.AccessTokenType;
+import com.vulinh.data.dto.security.TokenType;
 import com.vulinh.data.dto.security.RefreshTokenContainer;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.utils.security.Auth0Utils;
 import com.vulinh.utils.security.RefreshTokenGenerator;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Primary
-@Component
+@Service
 @RequiredArgsConstructor
 public class Auth0RefreshTokenGenerator implements RefreshTokenGenerator {
 
@@ -32,7 +30,7 @@ public class Auth0RefreshTokenGenerator implements RefreshTokenGenerator {
                     issuedAt,
                     securityConfigProperties.issuer(),
                     ttl,
-                    AccessTokenType.REFRESH_TOKEN)
+                    TokenType.REFRESH_TOKEN)
                 .sign(Auth0Utils.getAlgorithm(securityConfigProperties)))
         .build();
   }

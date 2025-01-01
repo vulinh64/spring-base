@@ -1,9 +1,9 @@
-package com.vulinh.service.auth0;
+package com.vulinh.service.token;
 
 import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.security.AccessTokenContainer;
-import com.vulinh.data.dto.security.AccessTokenType;
 import com.vulinh.data.dto.security.TokenResponse;
+import com.vulinh.data.dto.security.TokenType;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.utils.security.AccessTokenGenerator;
@@ -12,19 +12,19 @@ import com.vulinh.utils.security.RefreshTokenGenerator;
 import java.time.Instant;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
 
-@Primary
-@Component
+@Service
 @RequiredArgsConstructor
-public class Auth0JWTGenerator implements AccessTokenGenerator {
+public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
 
   private final SecurityConfigProperties securityConfigProperties;
 
   private final RefreshTokenGenerator refreshTokenGenerator;
 
   @Override
+  @NonNull
   public AccessTokenContainer generateAccessToken(Users users, UUID sessionId) {
     var issuedAt = Instant.now();
     var userId = users.getId();
@@ -40,7 +40,7 @@ public class Auth0JWTGenerator implements AccessTokenGenerator {
                             issuedAt,
                             securityConfigProperties.issuer(),
                             securityConfigProperties.jwtDuration(),
-                            AccessTokenType.ACCESS_TOKEN)
+                            TokenType.ACCESS_TOKEN)
                         .withIssuedAt(issuedAt)
                         .sign(Auth0Utils.getAlgorithm(securityConfigProperties)))
                 .refreshToken(refreshTokenContainer.refreshToken())

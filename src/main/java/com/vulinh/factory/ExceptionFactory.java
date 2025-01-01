@@ -2,7 +2,7 @@ package com.vulinh.factory;
 
 import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
-import com.vulinh.data.dto.security.AccessTokenType;
+import com.vulinh.data.dto.security.TokenType;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.exception.CommonException;
 import com.vulinh.locale.CommonMessage;
@@ -57,7 +57,7 @@ public enum ExceptionFactory {
         CommonMessage.MESSAGE_INVALID_SESSION);
   }
 
-  public Exception invalidTokenType(AccessTokenType actual, AccessTokenType expected) {
+  public CommonException invalidTokenType(TokenType actual, TokenType expected) {
     return buildCommonException(
         "Expected token type %s, but actual token was %s".formatted(expected, actual),
         CommonMessage.MESSAGE_INVALID_TOKEN_TYPE);
