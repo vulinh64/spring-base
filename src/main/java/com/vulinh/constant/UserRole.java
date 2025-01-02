@@ -34,11 +34,26 @@ public enum UserRole {
   }
 
   public static String toHierarchyPhrase() {
-    return Arrays.stream(values())
-        .sorted(
-            Comparator.comparing(
-                UserRole::superiority, Comparator.nullsLast(Comparator.reverseOrder())))
-        .map(UserRole::name)
-        .collect(Collectors.joining(" > "));
+    var sortedRoles =
+        Arrays.stream(values())
+            .sorted(Comparator.comparingInt(UserRole::superiority).reversed())
+            .toList();
+
+    var result = new StringBuilder();
+
+    var size = sortedRoles.size();
+
+    for (var index = 0; index < size; index++) {
+      var role = sortedRoles.get(index);
+
+      result.append(role.name());
+
+      if (index < size - 1) {
+        result.append(
+            role.superiority() == sortedRoles.get(index + 1).superiority() ? " = " : " > ");
+      }
+    }
+
+    return result.toString();
   }
 }

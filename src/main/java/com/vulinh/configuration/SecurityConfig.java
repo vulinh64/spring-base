@@ -27,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -54,6 +55,11 @@ public class SecurityConfig {
   @SneakyThrows
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
     return httpSecurity
+        .headers(
+            shc ->
+                shc.xssProtection(
+                        xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
+                    .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .sessionManagement(
