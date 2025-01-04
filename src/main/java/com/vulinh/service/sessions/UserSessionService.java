@@ -5,6 +5,8 @@ import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;
+import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.locale.CommonMessage;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.UUID;
@@ -41,6 +43,19 @@ public class UserSessionService {
   }
 
   public UserSession findUserSession(UUID userId, UUID sessionId) {
-    return userSessionRepository.findUserSession(userId, sessionId);
+    var userSessionId = UserSessionId.of(userId, sessionId);
+
+    return userSessionRepository
+        .findById(userSessionId)
+        .orElseThrow(
+            () ->
+                ExceptionFactory.INSTANCE.buildCommonException(
+                    "Session ID %s for user ID %s did not exist or has been invalidated"
+                        .formatted(userSessionId.sessionId(), userSessionId.userId()),
+                    CommonMessage.MESSAGE_INVALID_SESSION));
+  }
+
+  public void deleteUserSession(UUID userId, UUID sessionId) {
+    userSessionRepository.deleteById(UserSessionId.of(userId, sessionId));
   }
 }

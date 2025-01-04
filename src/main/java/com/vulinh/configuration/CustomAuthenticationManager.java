@@ -4,8 +4,8 @@ import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.security.DecodedJwtPayload;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.factory.CustomAuthenticationFactory;
+import com.vulinh.service.sessions.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomAuthenticationManager implements AuthenticationManager {
 
   private final UserRepository userRepository;
-  private final UserSessionRepository userSessionRepository;
+
+  private final UserSessionService userSessionService;
 
   @Override
   @Transactional
@@ -33,7 +34,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     var userDTO =
         UserMapper.INSTANCE.toBasicUserDTO(
             userRepository.findActiveUser(userId),
-            userSessionRepository.findUserSession(userId, sessionId));
+            userSessionService.findUserSession(userId, sessionId));
 
     return CustomAuthenticationFactory.INSTANCE.fromUserBasicDTO(userDTO);
   }

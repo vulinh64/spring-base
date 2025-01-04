@@ -27,3 +27,5 @@ databaseChangeLog:
       file: changelogs/0012-create-comment-revision-table.sql
   - include:
       file: changelogs/0013-initialize-default-category.sql
+  - include:
+      file: changelogs/0014-create-user-session-table.sql

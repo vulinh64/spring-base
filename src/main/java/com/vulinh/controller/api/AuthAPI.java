@@ -191,4 +191,7 @@ public interface AuthAPI {
   @PostMapping(AuthEndpoint.REFRESH_TOKEN)
   GenericResponse<TokenResponse> refreshToken(
       @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO);
+
+  @DeleteMapping(AuthEndpoint.LOG_OUT)
+  void logout(HttpServletRequest httpServletRequest);
 }

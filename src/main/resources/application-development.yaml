@@ -11,3 +11,4 @@ logging.level.com.vulinh:
   configuration:
     SecurityConfig: DEBUG
     CacheConfiguration: DEBUG
+    cache.FromUserSessionEntityKeyGenerator: DEBUG

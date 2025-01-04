@@ -35,9 +35,9 @@ public class CacheConfiguration {
     return (key, value, cause) ->
         log.debug(
             "Key {} with value {} has been {}. Reason: {}",
-            action,
             key,
             StringUtils.abbreviate(String.valueOf(value), 300),
+            action,
             cause.name());
   }
 }

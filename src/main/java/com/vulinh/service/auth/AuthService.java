@@ -169,4 +169,10 @@ public class AuthService {
         .refreshToken(tokenResult.refreshToken())
         .build();
   }
+
+  public void logout(HttpServletRequest httpServletRequest) {
+    var userDTO = SecurityUtils.getUserDTOOrThrow(httpServletRequest);
+
+    userSessionService.deleteUserSession(userDTO.getId(), userDTO.sessionId());
+  }
 }

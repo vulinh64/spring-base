@@ -8,11 +8,11 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-@Component(UpdateUserSessionKeyGenerator.BEAN_NAME)
+@Component(FromUserSessionEntityKeyGenerator.BEAN_NAME)
 @Slf4j
-public class UpdateUserSessionKeyGenerator implements KeyGenerator {
+public class FromUserSessionEntityKeyGenerator implements KeyGenerator {
 
-  public static final String BEAN_NAME = "updateUserSessionKeyGenerator";
+  public static final String BEAN_NAME = "fromUserSessionEntity";
 
   @Override
   @NonNull
@@ -26,7 +26,8 @@ public class UpdateUserSessionKeyGenerator implements KeyGenerator {
 
     var userSessionId = session.getId();
 
-    return Common.logAndReturn(
-        userSessionId, "User session generating operation, using key {}", userSessionId);
+    log.debug("{}#{} | key = {}", method.getDeclaringClass(), method.getName(), userSessionId);
+
+    return userSessionId;
   }
 }

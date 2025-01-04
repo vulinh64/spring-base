@@ -24,6 +24,7 @@ public class EndpointConstant {
     public static final String CONFIRM_USER = "/confirm-user";
     public static final String CHANGE_PASSWORD = "/change-password";
     public static final String REFRESH_TOKEN = "/refresh-token";
+    public static final String LOG_OUT = "/logout";
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)

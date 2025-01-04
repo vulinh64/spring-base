@@ -6,10 +6,10 @@ import com.vulinh.data.dto.auth.PasswordChangeDTO;
 import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.security.TokenResponse;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.factory.GenericResponseFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
@@ -57,5 +57,10 @@ public class AuthController implements AuthAPI {
   public GenericResponse<TokenResponse> refreshToken(
       RefreshTokenRequestDTO refreshTokenRequestDTO) {
     return RESPONSE_FACTORY.success(authService.refreshToken(refreshTokenRequestDTO));
+  }
+
+  @Override
+  public void logout(HttpServletRequest httpServletRequest) {
+    authService.logout(httpServletRequest);
   }
 }
