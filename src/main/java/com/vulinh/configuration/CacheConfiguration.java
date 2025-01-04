@@ -33,7 +33,7 @@ public class CacheConfiguration {
 
   private static RemovalListener<Object, Object> keyInvalidationListener(String action) {
     return (key, value, cause) ->
-        log.info(
+        log.debug(
             "Key {} with value {} has been {}. Reason: {}",
             action,
             key,
