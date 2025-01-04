@@ -9,7 +9,6 @@ import com.vulinh.utils.springcron.dto.MinuteExpressionObject;
 import com.vulinh.utils.springcron.dto.SpringCronGeneratorDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,4 @@ public class SchedulingTaskSupport {
 
     return expression;
   }
-
-  @ConfigurationProperties(prefix = "schedule")
-  public record SchedulingTaskProperties(String cleanExpiredUserSessions) {}
 }
