@@ -19,6 +19,8 @@ public interface UserRepository extends BaseRepository<Users, UUID> {
 
   boolean existsByEmailIgnoreCase(String email);
 
+  boolean existsByIdAndIsActiveIsTrue(UUID id);
+
   default Users findActiveUser(UUID id) {
     return findByIdAndIsActiveIsTrue(id)
         .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);

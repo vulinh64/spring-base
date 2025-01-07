@@ -14,6 +14,7 @@ import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +61,9 @@ public class AuthController implements AuthAPI {
   }
 
   @Override
-  public void logout(HttpServletRequest httpServletRequest) {
-    authService.logout(httpServletRequest);
+  public ResponseEntity<Void> logout(String authorization) {
+    return ResponseEntity.status(
+            authService.logout(authorization) ? HttpStatus.OK : HttpStatus.NO_CONTENT)
+        .build();
   }
 }

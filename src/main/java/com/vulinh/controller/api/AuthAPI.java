@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -193,5 +194,6 @@ public interface AuthAPI {
       @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO);
 
   @DeleteMapping(AuthEndpoint.LOG_OUT)
-  void logout(HttpServletRequest httpServletRequest);
+  ResponseEntity<Void> logout(
+      @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorization);
 }

@@ -55,7 +55,7 @@ public class UserSessionService {
                     CommonMessage.MESSAGE_INVALID_SESSION));
   }
 
-  public void deleteUserSession(UUID userId, UUID sessionId) {
-    userSessionRepository.deleteById(UserSessionId.of(userId, sessionId));
+  public void deleteUserSession(UserSession userSession) {
+    userSessionRepository.delete(userSession);
   }
 }

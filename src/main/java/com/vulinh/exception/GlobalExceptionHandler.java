@@ -35,17 +35,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<GenericResponse<Object>> handleCommonException(
       CommonException commonException) {
     var statusCode = commonException.getErrorKey().getHttpStatusCode();
-
-    var errorMessage =
-        switch (statusCode) {
-          case HttpStatus.BAD_REQUEST -> "Bad request";
-          case HttpStatus.UNAUTHORIZED -> "Authentication/Authorization error";
-          case HttpStatus.FORBIDDEN -> commonException.getMessage();
-          case HttpStatus.NOT_FOUND -> "Resource not found";
-          case HttpStatus.CONFLICT -> "Resource already existed";
-          case HttpStatus.INTERNAL_SERVER_ERROR -> "Internal server error";
-          default -> "Unknown error";
-        };
+    var errorMessage = commonException.getMessage();
 
     if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR) {
       log.error(errorMessage, commonException);

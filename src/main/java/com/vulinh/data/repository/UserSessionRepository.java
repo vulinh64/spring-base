@@ -28,6 +28,8 @@ public interface UserSessionRepository extends BaseRepository<UserSession, UserS
   Optional<UserSession> findById(@NonNull UserSessionId userSessionId);
 
   @Override
-  @CacheEvict(cacheNames = CacheConstant.USER_SESSION_CACHE)
-  void deleteById(@NonNull UserSessionId userSessionId);
+  @CacheEvict(
+      cacheNames = CacheConstant.USER_SESSION_CACHE,
+      keyGenerator = FromUserSessionEntityKeyGenerator.BEAN_NAME)
+  void delete(@NonNull UserSession userSession);
 }

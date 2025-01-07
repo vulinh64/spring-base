@@ -78,4 +78,8 @@ public class Auth0Utils {
 
     return claimNode.asString();
   }
+
+  public static String parseBearerToken(String token) {
+    return token.startsWith("Bearer") ? token.substring(7) : token;
+  }
 }

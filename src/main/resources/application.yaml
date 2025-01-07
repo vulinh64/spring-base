@@ -33,6 +33,7 @@ spring:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/search/** }
       - { method: GET, url: /comment/** }
+      - { method: DELETE, url: /auth/logout/** }
     no-authenticated-urls:
       - /free/**
       - /health

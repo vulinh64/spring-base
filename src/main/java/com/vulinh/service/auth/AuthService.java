@@ -10,6 +10,7 @@ import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
+import com.vulinh.exception.CommonException;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.UserRegistrationEventFactory;
 import com.vulinh.factory.ValidatorStepFactory;
@@ -19,6 +20,8 @@ import com.vulinh.service.sessions.UserSessionService;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.security.AccessTokenGenerator;
+import com.vulinh.utils.security.AccessTokenValidator;
+import com.vulinh.utils.security.Auth0Utils;
 import com.vulinh.utils.security.RefreshTokenValidator;
 import com.vulinh.utils.validator.ValidatorChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,12 +29,14 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -52,6 +57,7 @@ public class AuthService {
   private final PasswordValidationService passwordValidationService;
   private final UserSessionService userSessionService;
 
+  private final AccessTokenValidator accessTokenValidator;
   private final RefreshTokenValidator refreshTokenValidator;
   private final AccessTokenGenerator accessTokenGenerator;
 
@@ -170,9 +176,40 @@ public class AuthService {
         .build();
   }
 
-  public void logout(HttpServletRequest httpServletRequest) {
-    var userDTO = SecurityUtils.getUserDTOOrThrow(httpServletRequest);
+  // BAD, yes, I am validating the JWT directly, but I am too lazy
+  // to refactor the validation utils, who cares?
+  @Transactional
+  public boolean logout(String authorization) {
+    try {
+      var jwtPayload =
+          accessTokenValidator.validateAccessToken(Auth0Utils.parseBearerToken(authorization));
 
-    userSessionService.deleteUserSession(userDTO.getId(), userDTO.sessionId());
+      var userId = jwtPayload.userId();
+
+      if (!userRepository.existsByIdAndIsActiveIsTrue(userId)) {
+        log.info("User ID {} did not exist", userId);
+        return false;
+      }
+
+      var userSession = userSessionService.findUserSession(userId, jwtPayload.sessionId());
+
+      userSessionService.deleteUserSession(userSession);
+
+      return true;
+    } catch (CommonException commonException) {
+      switch (commonException.getErrorKey()) {
+        case CommonMessage.MESSAGE_INVALID_TOKEN ->
+            // Token format error
+            throw commonException;
+
+        case CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG ->
+            // Invalid public key
+            throw ExceptionFactory.INSTANCE.parsingPublicKeyError(commonException);
+        default -> {
+          log.info(commonException.getMessage());
+          return false;
+        }
+      }
+    }
   }
 }

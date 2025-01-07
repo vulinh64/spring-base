@@ -4,6 +4,7 @@ import com.vulinh.constant.UserRole;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SecurityUrlUtils;
 import com.vulinh.utils.security.AccessTokenValidator;
+import com.vulinh.utils.security.Auth0Utils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -136,7 +137,8 @@ public class SecurityConfig {
         var header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header != null) {
-          var jwtPayload = accessTokenValidator.validateAccessToken(parseBearerToken(header));
+          var jwtPayload =
+              accessTokenValidator.validateAccessToken(Auth0Utils.parseBearerToken(header));
 
           var authentication =
               customAuthenticationManager.authenticate(
@@ -195,10 +197,6 @@ public class SecurityConfig {
 
                     return result;
                   });
-    }
-
-    private static String parseBearerToken(String token) {
-      return token.startsWith("Bearer") ? token.substring(7) : token;
     }
   }
 }
