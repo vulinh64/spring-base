@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Slf4j
 @Configuration
@@ -16,20 +18,26 @@ public class AsyncSpringEventsConfig {
   public ApplicationEventMulticaster applicationEventMulticaster() {
     var eventMulticaster = new SimpleApplicationEventMulticaster();
 
-    var taskExecutor = new SimpleAsyncTaskExecutor();
+    eventMulticaster.setTaskExecutor(getTaskExecutor());
 
-    // Use virtual threads only if Java version is 21
-    // Not that it is necessary, but a safeguard nonetheless
+    return eventMulticaster;
+  }
+
+  // Use virtual threads only if Java version is 21
+  // Not that it is necessary, but a safeguard nonetheless
+  private static TaskExecutor getTaskExecutor() {
     if (JavaVersion.getJavaVersion().isEqualOrNewerThan(JavaVersion.TWENTY_ONE)) {
+      var taskExecutor = new SimpleAsyncTaskExecutor();
+
       taskExecutor.setVirtualThreads(true);
 
       log.info("Virtual Threads possibility: YES");
-    } else {
-      log.info("Virtual Thread not supported, using thread pools...");
+
+      return taskExecutor;
     }
 
-    eventMulticaster.setTaskExecutor(taskExecutor);
+    log.info("Virtual Threads not supported, using ThreadPoolTaskExecutor...");
 
-    return eventMulticaster;
+    return new ThreadPoolTaskExecutor();
   }
 }
