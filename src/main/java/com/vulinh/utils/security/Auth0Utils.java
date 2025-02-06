@@ -2,9 +2,9 @@ package com.vulinh.utils.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.vulinh.configuration.SecurityConfigProperties;
 import com.vulinh.data.dto.security.TokenType;
 import com.vulinh.data.entity.ids.QUserSessionId;
@@ -43,17 +43,6 @@ public class Auth0Utils {
     return rsaAlgorithm;
   }
 
-  public static JWTVerifier getJwtVerifier(SecurityConfigProperties securityConfigProperties) {
-    if (jwtVerifier == null) {
-      jwtVerifier =
-          JWT.require(getAlgorithm(securityConfigProperties))
-              .withIssuer(securityConfigProperties.issuer())
-              .build();
-    }
-
-    return jwtVerifier;
-  }
-
   public static JWTCreator.Builder buildTokenCommonParts(
       UserSessionId userSessionId,
       Instant issuedAt,
@@ -66,6 +55,17 @@ public class Auth0Utils {
         .withClaim(USER_ID_CLAIM, String.valueOf(userSessionId.userId()))
         .withClaim(SESSION_ID_CLAIM, String.valueOf(userSessionId.sessionId()))
         .withClaim(TOKEN_TYPE, tokenType.name());
+  }
+
+  public static JWTVerifier getJwtVerifier(SecurityConfigProperties securityConfigProperties) {
+    if (jwtVerifier == null) {
+      jwtVerifier =
+              JWT.require(getAlgorithm(securityConfigProperties))
+                      .withIssuer(securityConfigProperties.issuer())
+                      .build();
+    }
+
+    return jwtVerifier;
   }
 
   public static String claimAsString(DecodedJWT decodedJWT, String claimName) {
