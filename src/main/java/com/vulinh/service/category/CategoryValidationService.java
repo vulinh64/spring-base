@@ -56,8 +56,8 @@ public class CategoryValidationService {
 
     return !categoryRepository.exists(
         PredicateBuilder.or(
-            PredicateBuilder.eqic(qCategory.displayName, postCreationDTO.displayName()),
-            PredicateBuilder.eqic(qCategory.categorySlug, categorySlug)));
+            qCategory.displayName.equalsIgnoreCase(postCreationDTO.displayName()),
+            qCategory.categorySlug.equalsIgnoreCase(categorySlug)));
   }
 
   @RequiredArgsConstructor

@@ -5,14 +5,14 @@ import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.CommentRevision;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.entity.Users;
-import com.vulinh.factory.CommentFactory;
+import com.vulinh.data.entity.ids.CommentRevisionId;
 import java.util.UUID;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(builder = @Builder(disableBuilder = true), imports = CommentFactory.class)
+@Mapper(builder = @Builder(disableBuilder = true))
 public interface CommentMapper {
 
   CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
@@ -28,7 +28,7 @@ public interface CommentMapper {
   @Mapping(target = "withContent", ignore = true)
   Comment fromNewComment(NewCommentDTO newComment, Users createdBy, UUID postId);
 
-  @Mapping(target = "id", expression = "java(CommentFactory.INSTANCE.createTransientId(comment))")
+  @Mapping(target = "id", expression = "java(createTransientId(comment))")
   @Mapping(target = "revisionCreatedBy", ignore = true)
   @Mapping(target = "revisionCreatedDate", ignore = true)
   @Mapping(target = "withRevisionType", ignore = true)
@@ -38,4 +38,8 @@ public interface CommentMapper {
   @Mapping(target = "withId", ignore = true)
   @Mapping(target = "withContent", ignore = true)
   CommentRevision fromComment(Comment comment, RevisionType revisionType);
+
+  default CommentRevisionId createTransientId(Comment comment) {
+    return CommentRevisionId.builder().commentId(comment.getId()).build();
+  }
 }

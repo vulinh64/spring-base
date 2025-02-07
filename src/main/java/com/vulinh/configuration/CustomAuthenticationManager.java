@@ -4,7 +4,6 @@ import com.vulinh.data.dto.security.CustomAuthentication;
 import com.vulinh.data.dto.security.DecodedJwtPayload;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.factory.CustomAuthenticationFactory;
 import com.vulinh.service.sessions.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -36,6 +35,6 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             userRepository.findActiveUser(userId),
             userSessionService.findUserSession(userId, sessionId));
 
-    return CustomAuthenticationFactory.INSTANCE.fromUserBasicDTO(userDTO);
+    return new CustomAuthentication(userDTO);
   }
 }

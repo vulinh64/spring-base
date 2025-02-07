@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
+import org.springframework.lang.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PredicateBuilder {
@@ -20,12 +21,7 @@ public class PredicateBuilder {
   }
 
   public static Predicate never() {
-    return not(always());
-  }
-
-  // equals ignore case
-  public static Predicate eqic(StringExpression expression, String value) {
-    return expression.lower().equalsIgnoreCase(value);
+    return always().not();
   }
 
   public static <T> Predicate likeIgnoreCase(Expression<T> expression, String keyword) {
@@ -46,29 +42,26 @@ public class PredicateBuilder {
   }
 
   public static Predicate and(Predicate firstPredicate, Predicate... predicates) {
-    return concatenatePredicates(BooleanBuilder::and, firstPredicate, predicates);
+    return combinePredicates(BooleanBuilder::and, firstPredicate, predicates);
   }
 
   public static Predicate or(Predicate firstPredicate, Predicate... predicates) {
-    return concatenatePredicates(BooleanBuilder::or, firstPredicate, predicates);
+    return combinePredicates(BooleanBuilder::or, firstPredicate, predicates);
   }
 
-  public static Predicate not(Predicate predicate) {
-    return predicate == null ? null : predicate.not();
-  }
-
-  public static String getFieldName(Path<?> expression) {
+  @NonNull
+  public static String getFieldName(@NonNull Path<?> expression) {
     return expression.getMetadata().getName();
   }
 
-  private static Predicate concatenatePredicates(
+  private static Predicate combinePredicates(
       BiFunction<BooleanBuilder, Predicate, Predicate> combiner,
       Predicate firstPredicate,
-      Predicate... predicates) {
+      Predicate... otherPredicates) {
     var builder = new BooleanBuilder(firstPredicate);
 
-    if (ArrayUtils.isNotEmpty(predicates)) {
-      for (var predicate : predicates) {
+    if (ArrayUtils.isNotEmpty(otherPredicates)) {
+      for (var predicate : otherPredicates) {
         combiner.apply(builder, predicate);
       }
     }
