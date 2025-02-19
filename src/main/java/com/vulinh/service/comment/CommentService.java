@@ -30,7 +30,7 @@ public class CommentService {
 
   @Transactional
   public UUID addComment(UUID postId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
-    commentValidationService.validateCreateComment(newCommentDTO, postId);
+    commentValidationService.validate(newCommentDTO);
 
     var createdBy =
         SecurityUtils.getUserDTO(request)
@@ -47,10 +47,8 @@ public class CommentService {
     return persistedComment.getId();
   }
 
-  public void editComment(
-      UUID postId, UUID commentId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
-    var comment =
-        commentValidationService.validateEditComment(newCommentDTO, postId, commentId, request);
+  public void editComment(NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
+    var comment = commentValidationService.validateEditComment(newCommentDTO, commentId, request);
 
     var newComment = commentRepository.save(comment.withContent(newCommentDTO.content()));
 

@@ -37,8 +37,7 @@ public class CommentController implements CommentAPI {
   }
 
   @Override
-  public void editComment(
-      UUID postId, UUID commentId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
-    commentService.editComment(postId, commentId, newCommentDTO, request);
+  public void editComment(NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
+    commentService.editComment(newCommentDTO, commentId, request);
   }
 }

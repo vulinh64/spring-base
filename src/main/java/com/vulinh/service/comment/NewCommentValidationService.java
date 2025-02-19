@@ -4,7 +4,6 @@ import com.vulinh.constant.CommonConstant;
 import com.vulinh.data.dto.comment.NewCommentDTO;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.repository.CommentRepository;
-import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.CommonMessage;
@@ -23,14 +22,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NewCommentValidationService {
 
-  private final PostRepository postRepository;
   private final CommentRepository commentRepository;
 
   private static final int COMMENT_MAX_LENGTH = 10000;
 
   public Comment validateEditComment(
-      NewCommentDTO newCommentDTO, UUID postId, UUID commentId, HttpServletRequest request) {
-    validateCreateComment(newCommentDTO, postId);
+      NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
+    validate(newCommentDTO);
 
     var comment =
         commentRepository
@@ -38,7 +36,7 @@ public class NewCommentValidationService {
             .orElseThrow(
                 () ->
                     ExceptionFactory.INSTANCE.entityNotFound(
-                        "Comment ID %s in post %s not found".formatted(commentId, postId),
+                        "Comment ID %s not found".formatted(commentId),
                         CommonConstant.COMMENT_ENTITY));
 
     var user = SecurityUtils.getUserDTOOrThrow(request);
@@ -53,14 +51,6 @@ public class NewCommentValidationService {
     }
 
     return comment;
-  }
-
-  public void validateCreateComment(NewCommentDTO newCommentDTO, UUID postId) {
-    validate(newCommentDTO);
-
-    if (!postRepository.existsById(postId)) {
-      throw ExceptionFactory.INSTANCE.postNotFound(postId);
-    }
   }
 
   protected void validate(NewCommentDTO newCommentDTO) {
