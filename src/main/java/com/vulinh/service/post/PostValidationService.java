@@ -10,8 +10,8 @@ import com.vulinh.exception.CommonException;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.CommonMessage;
+import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
-import com.vulinh.utils.validator.ValidatorStep;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -95,7 +95,7 @@ public class PostValidationService {
 
   @Getter
   @RequiredArgsConstructor
-  public enum PostRule implements ValidatorStep<PostCreationDTO> {
+  public enum PostRule implements NoArgsValidatorStep<PostCreationDTO> {
     POST_NO_BLANK_TITLE(
         ValidatorStepFactory.noBlankField(PostCreationDTO::title),
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
@@ -116,7 +116,6 @@ public class PostValidationService {
     private final Predicate<PostCreationDTO> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
-    private final Object[] arguments = {};
 
     private static boolean isValidTags(PostCreationDTO dto) {
       for (var tag : dto.tags()) {

@@ -3,10 +3,11 @@ package com.vulinh.service.user;
 import com.sanctionco.jmail.JMail;
 import com.vulinh.data.dto.auth.UserLoginDTO;
 import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
+import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
 import java.util.function.Predicate;
@@ -155,7 +156,7 @@ public class UserValidationService {
 
   @Getter
   @RequiredArgsConstructor
-  public enum UserRule implements ValidatorStep<UserRegistrationDTO> {
+  public enum UserRule implements NoArgsValidatorStep<UserRegistrationDTO> {
     USER_NO_BLANK_USERNAME(
         ValidatorStepFactory.noBlankField(UserRegistrationDTO::username),
         CommonMessage.MESSAGE_INVALID_USERNAME,
@@ -204,6 +205,5 @@ public class UserValidationService {
     private final Predicate<UserRegistrationDTO> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
-    private final Object[] arguments = {};
   }
 }

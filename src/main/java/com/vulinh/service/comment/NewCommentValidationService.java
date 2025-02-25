@@ -8,8 +8,8 @@ import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.SecurityUtils;
+import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
-import com.vulinh.utils.validator.ValidatorStep;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.UUID;
@@ -61,7 +61,7 @@ public class NewCommentValidationService {
 
   @Getter
   @RequiredArgsConstructor
-  public enum NewCommentRule implements ValidatorStep<NewCommentDTO> {
+  public enum NewCommentRule implements NoArgsValidatorStep<NewCommentDTO> {
     COMMENT_NOT_BLANK(
         ValidatorStepFactory.noBlankField(NewCommentDTO::content),
         CommonMessage.MESSAGE_COMMENT_INVALID,
@@ -80,6 +80,5 @@ public class NewCommentValidationService {
     private final Predicate<NewCommentDTO> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
-    private final Object[] arguments = {};
   }
 }

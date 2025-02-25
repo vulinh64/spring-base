@@ -1,12 +1,12 @@
 package com.vulinh.service.category;
 
-import com.vulinh.locale.CommonMessage;
 import com.vulinh.data.dto.category.CategoryCreationDTO;
 import com.vulinh.data.dto.message.WithHttpStatusCode;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.ValidatorStepFactory;
+import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
@@ -73,7 +73,8 @@ public class CategoryValidationService {
 
     private final Predicate<CategoryCreationDTO> predicate;
     private final String exceptionMessage;
-    private final Object[] arguments = {CATEGORY_MAX_LENGTH};
     private final WithHttpStatusCode error = CommonMessage.MESSAGE_INVALID_CATEGORY;
+
+    private final Object[] arguments = {CATEGORY_MAX_LENGTH};
   }
 }

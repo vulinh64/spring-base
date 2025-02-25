@@ -5,7 +5,7 @@ import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.user.UserValidationService;
-import com.vulinh.utils.validator.ValidatorStep;
+import com.vulinh.utils.validator.NoArgsValidatorStep;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class PasswordValidationService {
 
   @RequiredArgsConstructor
   @Getter
-  public enum PasswordChangeRule implements ValidatorStep<PasswordChangeDTO> {
+  public enum PasswordChangeRule implements NoArgsValidatorStep<PasswordChangeDTO> {
     RULE_NO_BLANK_PASSWORD(
         ValidatorStepFactory.noBlankField(PasswordChangeDTO::oldPassword),
         CommonMessage.MESSAGE_INVALID_PASSWORD,
@@ -54,6 +54,5 @@ public class PasswordValidationService {
     private final Predicate<PasswordChangeDTO> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
-    private final Object[] arguments = {};
   }
 }
