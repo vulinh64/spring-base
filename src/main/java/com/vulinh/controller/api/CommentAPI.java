@@ -3,7 +3,7 @@ package com.vulinh.controller.api;
 import com.vulinh.constant.EndpointConstant;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.comment.CommentDTO;
-import com.vulinh.data.dto.comment.NewCommentDTO;
+import com.vulinh.data.dto.comment.NewCommentReplyDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -24,12 +24,19 @@ public interface CommentAPI {
   @ResponseStatus(HttpStatus.CREATED)
   GenericResponse<Map<String, UUID>> addComment(
       @PathVariable UUID postId,
-      @RequestBody NewCommentDTO newCommentDTO,
+      @RequestBody NewCommentReplyDTO newCommentReplyDTO,
       HttpServletRequest request);
 
   @PatchMapping("/{commentId}")
   void editComment(
-      @RequestBody NewCommentDTO newCommentDTO,
+      @RequestBody NewCommentReplyDTO newCommentReplyDTO,
       @PathVariable UUID commentId,
       HttpServletRequest request);
+
+  @ResponseStatus(HttpStatus.CREATED)
+  @PostMapping("/{commentId}/reply")
+  void createReply(
+      @RequestBody NewCommentReplyDTO newCommentReplyDTO,
+      @PathVariable UUID commentId,
+      HttpServletRequest httpServletRequest);
 }

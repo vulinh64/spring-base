@@ -3,9 +3,10 @@ package com.vulinh.controller.impl;
 import com.vulinh.controller.api.CommentAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.comment.CommentDTO;
-import com.vulinh.data.dto.comment.NewCommentDTO;
+import com.vulinh.data.dto.comment.NewCommentReplyDTO;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.comment.CommentService;
+import com.vulinh.service.comment.reply.ReplyService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class CommentController implements CommentAPI {
       GenericResponseFactory.INSTANCE;
 
   private final CommentService commentService;
+  private final ReplyService replyService;
 
   @Override
   public GenericResponse<Page<CommentDTO>> fetchComments(UUID postId, Pageable pageable) {
@@ -30,14 +32,23 @@ public class CommentController implements CommentAPI {
 
   @Override
   public GenericResponse<Map<String, UUID>> addComment(
-      UUID postId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
-    var uuid = commentService.addComment(postId, newCommentDTO, request);
+      UUID postId, NewCommentReplyDTO newCommentReplyDTO, HttpServletRequest request) {
+    var uuid = commentService.addComment(postId, newCommentReplyDTO, request);
 
     return GENERIC_RESPONSE_FACTORY.success(Map.of("commentId", uuid));
   }
 
   @Override
-  public void editComment(NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
-    commentService.editComment(newCommentDTO, commentId, request);
+  public void editComment(
+      NewCommentReplyDTO newCommentReplyDTO, UUID commentId, HttpServletRequest request) {
+    commentService.editComment(newCommentReplyDTO, commentId, request);
+  }
+
+  @Override
+  public void createReply(
+      NewCommentReplyDTO newCommentReplyDTO,
+      UUID commentId,
+      HttpServletRequest httpServletRequest) {
+    replyService.createReply(newCommentReplyDTO, commentId, httpServletRequest);
   }
 }
