@@ -12,6 +12,8 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostUtils {
 
+  public static final int COMMENT_MAX_LENGTH = 10000;
+
   public static String normalizeText(@NonNull String text) {
     return StringUtils.normalizeSpace(text).toLowerCase();
   }

@@ -1,7 +1,7 @@
 package com.vulinh.service.comment;
 
 import com.vulinh.data.dto.comment.CommentDTO;
-import com.vulinh.data.dto.comment.NewCommentDTO;
+import com.vulinh.data.dto.comment.NewCommentReplyDTO;
 import com.vulinh.data.dto.user.UserBasicDTO;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.mapper.CommentMapper;
@@ -29,8 +29,8 @@ public class CommentService {
   private final CommentFetchingService commentFetchingService;
 
   @Transactional
-  public UUID addComment(UUID postId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
-    commentValidationService.validate(newCommentDTO);
+  public UUID addComment(UUID postId, NewCommentReplyDTO newCommentReplyDTO, HttpServletRequest request) {
+    commentValidationService.validate(newCommentReplyDTO);
 
     var createdBy =
         SecurityUtils.getUserDTO(request)
@@ -40,17 +40,17 @@ public class CommentService {
 
     var persistedComment =
         commentRepository.save(
-            CommentMapper.INSTANCE.fromNewComment(newCommentDTO, createdBy, postId));
+            CommentMapper.INSTANCE.fromNewCommentReply(newCommentReplyDTO, createdBy, postId));
 
     commentRevisionService.createNewCommentRevision(persistedComment, RevisionType.CREATED);
 
     return persistedComment.getId();
   }
 
-  public void editComment(NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
-    var comment = commentValidationService.validateEditComment(newCommentDTO, commentId, request);
+  public void editComment(NewCommentReplyDTO newCommentReplyDTO, UUID commentId, HttpServletRequest request) {
+    var comment = commentValidationService.validateEditComment(newCommentReplyDTO, commentId, request);
 
-    var newComment = commentRepository.save(comment.withContent(newCommentDTO.content()));
+    var newComment = commentRepository.save(comment.withContent(newCommentReplyDTO.content()));
 
     commentRevisionService.createNewCommentRevision(newComment, RevisionType.UPDATED);
   }

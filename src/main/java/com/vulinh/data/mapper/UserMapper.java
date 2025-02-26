@@ -26,6 +26,7 @@ public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
   @Mapping(target = "id", source = "user.id")
   @Mapping(target = "createdDate", source = "user.createdDate")
   @Mapping(target = "updatedDate", source = "user.updatedDate")
+  @Mapping(target = "user", source = "user")
   UserBasicDTO toBasicUserDTO(Users user, UserSession userSession);
 
   @Override

@@ -1,6 +1,6 @@
 package com.vulinh.data.mapper;
 
-import com.vulinh.data.dto.comment.NewCommentDTO;
+import com.vulinh.data.dto.comment.NewCommentReplyDTO;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.CommentRevision;
 import com.vulinh.data.entity.RevisionType;
@@ -26,7 +26,7 @@ public interface CommentMapper {
   @Mapping(target = "withCreatedDate", ignore = true)
   @Mapping(target = "withCreatedBy", ignore = true)
   @Mapping(target = "withContent", ignore = true)
-  Comment fromNewComment(NewCommentDTO newComment, Users createdBy, UUID postId);
+  Comment fromNewCommentReply(NewCommentReplyDTO newComment, Users createdBy, UUID postId);
 
   @Mapping(target = "id", expression = "java(createTransientId(comment))")
   @Mapping(target = "revisionCreatedBy", ignore = true)
