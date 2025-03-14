@@ -19,7 +19,7 @@ spring:
   # START: change this to fit your computer's configuration
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
-    username: ${DATABASE_USERNAME:myspringdatabase}
+    username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:123456}
   # END: change this to fit your computer's configuration
   liquibase:
