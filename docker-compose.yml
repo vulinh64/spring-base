@@ -28,6 +28,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=myspringdatabase
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -44,6 +46,8 @@ services:
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
+    volumes:
+      - elasticsearch-volume:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -56,3 +60,9 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
+
+volumes:
+  postgres-volume:
+    name: postgres-volume
+  elasticsearch-volume:
+    name: elasticsearch-volume

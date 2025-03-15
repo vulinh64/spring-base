@@ -11,6 +11,8 @@
       * [Spring Security](#spring-security)
     * [Public key](#public-key)
     * [Private key](#private-key)
+  * [Create Docker containers for your project](#create-docker-containers-for-your-project)
+    * [Features](#features)
   * [Docker-based Setup](#docker-based-setup)
   * [Virtual threads](#virtual-threads)
     * [Spring Boot 3.2+](#spring-boot-32)
@@ -35,11 +37,6 @@ This is a demo project using Spring Boot to work as a blog site's backend.
       another RDBMS, then you will have to rewrite the changelog files.
 - Elasticsearch on port `9200` and `9300`
 
-If you use Docker (Windows), you can run one of the following batch files:
-
-- [PostgreSQL CMD](run-postgresql-docker-windows.cmd) or [Postgresql PS1](run-postgresql-docker-windows.ps1)
-- [Elasticsearch CMD](run-elasticsearch-docker-windows.cmd) or [Elasticsearch PS1](run-elasticsearch-docker-windows.ps1)
-
 ### Setting up database
 
 Run the following SQL Script to create a database with:
@@ -61,9 +58,7 @@ CREATE ROLE myspringdatabase WITH
     CONNECTION LIMIT -1
     PASSWORD '123456';
 
-CREATE
-DATABASE myspringdatabase
-    WITH
+CREATE DATABASE myspringdatabase WITH
     OWNER = myspringdatabase
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1
@@ -112,7 +107,7 @@ PRIVATE_KEY=insert your private key here
 #
 ```
 
-You can check the example  on `.env-example` file.
+You can check the example on `.env-example` file.
 
 Currently, an RSA public or private key is written in a single line, for example:
 
@@ -128,13 +123,34 @@ PUBLIC_KEY=-----BEGIN PUBLIC KEY-----<single line here>-----END PUBLIC KEY-----
 PRIVATE_KEY=-----BEGIN PRIVATE KEY-----<single line here>-----END PRIVATE KEY-----
 ```
 
+## Create Docker containers for your project
+
+This [script](initialize-elasticsearch-postgres.cmd) automates the creation and management of Docker containers
+for Elasticsearch and PostgreSQL. No additional parameters are required. The script automatically detects the current
+state of your Docker environment and
+takes appropriate action.
+
+### Features
+
+- Creates Docker containers for Elasticsearch 8.15.2 and PostgreSQL (latest)
+- Utilizes persistent storage with Docker volumes:
+    - `elasticsearch-volume` for Elasticsearch data
+    - `postgres-volume` for PostgreSQL data
+- Automatically handles different container states:
+    - Creates new containers if they don't exist
+    - Restarts containers if they exist but are stopped
+    - Reports when containers are already running
+- Configures services with appropriate settings:
+    - **Elasticsearch**: Runs in single-node mode with security features disabled
+    - **PostgreSQL**: Sets up with default user, password, and database name
+- Maps standard ports to host:
+    - Elasticsearch: 9200, 9300
+    - PostgreSQL: 5432
+- Displays a summary of running containers when complete
+
 ## Docker-based Setup
 
-Run the project using Docker:
-
-```shell
-docker compose up
-```
+Run the project using this [script](run-docker.cmd).
 
 Verify at `http://localhost:8443/health` once containers are running.
 
