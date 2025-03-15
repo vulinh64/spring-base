@@ -5,7 +5,7 @@ logging.level.com.vulinh:
     user.UserValidationService: DEBUG
     post:
       PostValidationService: DEBUG
-      edit.PostEditValidationService: DEBUG
+      PostEditValidationService: DEBUG
     category.CategoryService: DEBUG
     eventlistener.CustomEventListener: DEBUG
   configuration:

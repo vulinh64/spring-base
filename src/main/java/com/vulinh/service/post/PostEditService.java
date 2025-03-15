@@ -1,4 +1,4 @@
-package com.vulinh.service.post.edit;
+package com.vulinh.service.post;
 
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.entity.Post;
@@ -6,7 +6,6 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.category.CategoryService;
-import com.vulinh.service.post.PostValidationService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.post.PostUtils;
 import com.vulinh.utils.SecurityUtils;

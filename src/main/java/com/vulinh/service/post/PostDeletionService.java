@@ -1,8 +1,7 @@
-package com.vulinh.service.post.edit;
+package com.vulinh.service.post;
 
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.service.post.PostValidationService;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;

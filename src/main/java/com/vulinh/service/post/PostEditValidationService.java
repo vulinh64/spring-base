@@ -1,4 +1,4 @@
-package com.vulinh.service.post.edit;
+package com.vulinh.service.post;
 
 import com.vulinh.data.dto.post.PostCreationDTO;
 import com.vulinh.data.entity.Post;
