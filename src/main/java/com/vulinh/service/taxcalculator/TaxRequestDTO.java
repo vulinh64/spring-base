@@ -1,6 +1,6 @@
 package com.vulinh.service.taxcalculator;
 
-import com.vulinh.data.dto.message.WithHttpStatusCode;
+import com.vulinh.data.dto.message.I18NCapable;
 import com.vulinh.exception.CommonException;
 import com.vulinh.service.taxcalculator.TaxUtils.TaxConstant;
 import java.io.Serial;
@@ -63,9 +63,9 @@ public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOf
     public TaxCalculatorException(String message, String singletonMessage) {
       super(
           message,
-          new WithHttpStatusCode() {
+          new I18NCapable() {
 
-            @Serial private static final long serialVersionUID = 5869679594561484928L;
+            @Serial private static final long serialVersionUID = -5502306451911678107L;
 
             @Override
             @NonNull

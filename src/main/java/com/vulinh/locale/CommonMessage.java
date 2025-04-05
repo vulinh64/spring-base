@@ -1,6 +1,6 @@
 package com.vulinh.locale;
 
-import com.vulinh.data.dto.message.WithHttpStatusCode;
+import com.vulinh.data.dto.message.I18NCapable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatusCode;
 
 @RequiredArgsConstructor
 @Getter
-public enum CommonMessage implements WithHttpStatusCode {
+public enum CommonMessage implements I18NCapable {
   MESSAGE_SUCCESS("000", HttpStatus.OK),
   MESSAGE_INTERNAL_ERROR("M9999", HttpStatus.INTERNAL_SERVER_ERROR),
   MESSAGE_INVALID_USERNAME("M0001", HttpStatus.BAD_REQUEST),

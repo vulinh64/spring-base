@@ -1,7 +1,7 @@
 package com.vulinh.factory;
 
 import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.message.WithHttpStatusCode;
+import com.vulinh.data.dto.message.I18NCapable;
 import com.vulinh.exception.CommonException;
 import com.vulinh.locale.CommonMessage;
 import java.util.UUID;
@@ -32,17 +32,17 @@ public enum ExceptionFactory {
         "Parsing public key error", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG, throwable);
   }
 
-  public CommonException buildCommonException(String message, WithHttpStatusCode errorMessage) {
+  public CommonException buildCommonException(String message, I18NCapable errorMessage) {
     return new CommonException(message, errorMessage, null);
   }
 
   public CommonException buildCommonException(
-      String message, WithHttpStatusCode errorMessage, Throwable throwable) {
+      String message, I18NCapable errorMessage, Throwable throwable) {
     return new CommonException(message, errorMessage, throwable);
   }
 
   public CommonException buildCommonException(
-      String message, WithHttpStatusCode errorMessage, Object... arguments) {
+      String message, I18NCapable errorMessage, Object... arguments) {
     return new CommonException(message, errorMessage, null, arguments);
   }
 }

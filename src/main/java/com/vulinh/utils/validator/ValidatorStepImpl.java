@@ -1,7 +1,7 @@
 package com.vulinh.utils.validator;
 
+import com.vulinh.data.dto.message.I18NCapable;
 import com.vulinh.locale.CommonMessage;
-import com.vulinh.data.dto.message.WithHttpStatusCode;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -23,7 +23,7 @@ public record ValidatorStepImpl<T>(
   }
 
   @Override
-  public WithHttpStatusCode getError() {
+  public I18NCapable getError() {
     return errorMessage;
   }
 

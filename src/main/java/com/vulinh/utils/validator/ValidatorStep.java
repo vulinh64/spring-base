@@ -1,14 +1,13 @@
 package com.vulinh.utils.validator;
 
-import com.vulinh.data.dto.message.WithHttpStatusCode;
-
+import com.vulinh.data.dto.message.I18NCapable;
 import java.util.function.Predicate;
 
 public interface ValidatorStep<T> {
 
   Predicate<T> getPredicate();
 
-  WithHttpStatusCode getError();
+  I18NCapable getError();
 
   String getExceptionMessage();
 

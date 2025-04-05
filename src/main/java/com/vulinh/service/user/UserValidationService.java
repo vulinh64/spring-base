@@ -35,9 +35,11 @@ public class UserValidationService {
   public static boolean isActive(Users matcherUser) {
     var result = BooleanUtils.isTrue(matcherUser.getIsActive());
 
-    if (!result) {
-      log.debug("User {} - {} is not active", matcherUser.getId(), matcherUser.getUsername());
-    }
+    log.debug(
+        "User {} - {} is {}",
+        matcherUser.getId(),
+        matcherUser.getUsername(),
+        result ? "active" : "not active");
 
     return result;
   }

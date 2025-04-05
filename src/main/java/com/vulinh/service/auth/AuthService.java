@@ -106,8 +106,8 @@ public class AuthService {
 
     return userRepository
         .findById(userId)
-        .filter(matchedUser -> UserValidationService.isRegistrationCodeMatched(code, matchedUser))
         .filter(Predicate.not(UserValidationService::isActive))
+        .filter(matchedUser -> UserValidationService.isRegistrationCodeMatched(code, matchedUser))
         .map(matchedUser -> matchedUser.setIsActive(true).setUserRegistrationCode(null))
         .map(userRepository::save)
         .isPresent();
