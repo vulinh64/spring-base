@@ -6,8 +6,8 @@ import java.util.Map;
 import lombok.Builder;
 import lombok.With;
 
-@Builder
 @With
+@Builder
 public record TaxDetail(
     @JsonProperty("Tổng thu nhập") BigDecimal totalSalary,
     @JsonProperty("Lương cơ bản") BigDecimal basicSalary,

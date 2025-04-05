@@ -8,8 +8,12 @@ import com.vulinh.data.dto.category.CategoryDTO;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import lombok.Builder;
+import lombok.With;
 
 @JsonInclude(Include.NON_NULL)
+@With
+@Builder
 public record PostDTO(
     UUID id,
     String title,

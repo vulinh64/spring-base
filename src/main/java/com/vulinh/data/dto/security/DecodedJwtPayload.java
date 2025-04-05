@@ -5,6 +5,6 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
 
-@Builder
 @With
+@Builder
 public record DecodedJwtPayload(UUID userId, UUID sessionId) implements Serializable {}

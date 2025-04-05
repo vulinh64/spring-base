@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.*;
 
-@Builder
 @With
+@Builder
 @JsonInclude(Include.NON_NULL)
 public record GenericResponse<T>(String errorCode, String displayMessage, T data) {}

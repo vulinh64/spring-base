@@ -2,7 +2,11 @@ package com.vulinh.utils.springcron.dto;
 
 import com.vulinh.utils.springcron.DayExpression;
 import java.util.List;
+import lombok.Builder;
+import lombok.With;
 
+@With
+@Builder
 public record DayExpressionObject(DayExpression expression, List<Integer> arguments)
     implements ExpressionObject {
 

@@ -7,13 +7,13 @@ import com.vulinh.data.dto.user.UserDTO;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.Users;
 import java.util.stream.Collectors;
-import org.mapstruct.Builder;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(builder = @Builder(disableBuilder = true), imports = Collectors.class)
+@Mapper(
+    builder = @Builder(disableBuilder = true),
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    imports = Collectors.class)
 public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);

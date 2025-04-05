@@ -2,7 +2,11 @@ package com.vulinh.utils.springcron.dto;
 
 import com.vulinh.utils.springcron.MinuteExpression;
 import java.util.List;
+import lombok.Builder;
+import lombok.With;
 
+@With
+@Builder
 public record MinuteExpressionObject(MinuteExpression expression, List<Integer> arguments)
     implements ExpressionObject {
 

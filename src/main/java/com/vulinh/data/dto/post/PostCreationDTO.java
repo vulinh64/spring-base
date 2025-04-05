@@ -1,13 +1,14 @@
 package com.vulinh.data.dto.post;
 
+import com.vulinh.utils.post.TitleCaseUtils;
 import java.util.Set;
 import java.util.UUID;
-
-import com.vulinh.utils.post.TitleCaseUtils;
+import lombok.Builder;
 import lombok.With;
 import org.apache.commons.collections4.SetUtils;
 
 @With
+@Builder
 public record PostCreationDTO(
     String title,
     String excerpt,

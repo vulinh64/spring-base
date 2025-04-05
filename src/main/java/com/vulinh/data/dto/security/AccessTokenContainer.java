@@ -6,8 +6,8 @@ import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
 
-@Builder
 @With
+@Builder
 public record AccessTokenContainer(
     TokenResponse tokenResponse, UUID userId, UUID sessionId, Instant refreshTokenExpirationDate)
     implements Serializable {}

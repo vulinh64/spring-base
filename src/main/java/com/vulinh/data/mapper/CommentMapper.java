@@ -10,9 +10,10 @@ import java.util.UUID;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(builder = @Builder(disableBuilder = true))
+@Mapper(builder = @Builder(disableBuilder = true), unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CommentMapper {
 
   CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
@@ -20,23 +21,11 @@ public interface CommentMapper {
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "withUpdatedDate", ignore = true)
-  @Mapping(target = "withPostId", ignore = true)
-  @Mapping(target = "withId", ignore = true)
-  @Mapping(target = "withCreatedDate", ignore = true)
-  @Mapping(target = "withCreatedBy", ignore = true)
-  @Mapping(target = "withContent", ignore = true)
   Comment fromNewComment(NewCommentDTO newComment, Users createdBy, UUID postId);
 
   @Mapping(target = "id", expression = "java(createTransientId(comment))")
   @Mapping(target = "revisionCreatedBy", ignore = true)
   @Mapping(target = "revisionCreatedDate", ignore = true)
-  @Mapping(target = "withRevisionType", ignore = true)
-  @Mapping(target = "withRevisionCreatedDate", ignore = true)
-  @Mapping(target = "withRevisionCreatedBy", ignore = true)
-  @Mapping(target = "withPostId", ignore = true)
-  @Mapping(target = "withId", ignore = true)
-  @Mapping(target = "withContent", ignore = true)
   CommentRevision fromComment(Comment comment, RevisionType revisionType);
 
   default CommentRevisionId createTransientId(Comment comment) {

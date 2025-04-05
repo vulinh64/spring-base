@@ -16,6 +16,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(
     builder = @Builder(disableBuilder = true),
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
     imports = {Tag.class, Collectors.class, PostRevisionId.class, StringUtils.class})
 public interface PostMapper extends EntityDTOMapper<Post, PostDTO> {
 

@@ -5,7 +5,11 @@ import com.vulinh.data.entity.RevisionType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.Builder;
+import lombok.With;
 
+@With
+@Builder
 public record PostRevisionDTO(
     UUID postId,
     Long revisionNumber,

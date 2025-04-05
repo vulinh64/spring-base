@@ -2,7 +2,11 @@ package com.vulinh.utils.springcron.dto;
 
 import com.vulinh.utils.springcron.MonthExpression;
 import java.util.List;
+import lombok.Builder;
+import lombok.With;
 
+@With
+@Builder
 public record MonthExpressionObject(MonthExpression expression, List<Integer> arguments)
     implements ExpressionObject {
 

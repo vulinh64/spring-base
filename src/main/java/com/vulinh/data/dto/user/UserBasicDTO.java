@@ -5,7 +5,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import lombok.Builder;
+import lombok.With;
 
+@With
+@Builder
 public record UserBasicDTO(
     UUID id,
     UUID sessionId,

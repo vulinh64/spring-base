@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.lang.NonNull;
 
-@Builder
 @With
+@Builder
 public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOfDependants) {
 
   static final String PLACEHOLDER_ERROR_CODE = "OTHER";
@@ -58,6 +58,8 @@ public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOf
       double netIncome) {}
 
   static class TaxCalculatorException extends CommonException {
+    @Serial private static final long serialVersionUID = 3965734369760897819L;
+
     public TaxCalculatorException(String message, String singletonMessage) {
       super(
           message,

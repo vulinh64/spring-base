@@ -2,7 +2,9 @@ package com.vulinh.utils.springcron.dto;
 
 import java.util.stream.Stream;
 import lombok.Builder;
+import lombok.With;
 
+@With
 @Builder
 public record SpringCronGeneratorDTO(
     ExpressionObject second,

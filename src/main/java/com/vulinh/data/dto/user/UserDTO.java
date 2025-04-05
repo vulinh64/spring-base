@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.UUID;
 import lombok.*;
 
+@With
 @Builder
 @JsonInclude(Include.NON_NULL)
 public record UserDTO(
