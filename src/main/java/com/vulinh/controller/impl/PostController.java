@@ -1,12 +1,12 @@
 package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.PostAPI;
-import com.vulinh.data.dto.elasticsearch.ESimplePost;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.post.PostCreationDTO;
-import com.vulinh.data.dto.post.PostDTO;
-import com.vulinh.data.dto.post.PostRevisionDTO;
-import com.vulinh.data.dto.post.SinglePostDTO;
+import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.response.BasicPostResponse;
+import com.vulinh.data.dto.response.ESimplePostResponse;
+import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.PostRevisionResponse;
+import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.post.PostRevisionService;
@@ -36,32 +36,35 @@ public class PostController implements PostAPI {
   }
 
   @Override
-  public GenericResponse<Page<ESimplePost>> quickSearchPosts(String keyword, Pageable pageable) {
+  public GenericResponse<Page<ESimplePostResponse>> quickSearchPosts(
+      String keyword, Pageable pageable) {
     return RESPONSE_FACTORY.success(postService.quickSearch(keyword, pageable));
   }
 
   @Override
-  public GenericResponse<SinglePostDTO> getSinglePost(
+  public GenericResponse<SinglePostResponse> getSinglePost(
       UUID postId, HttpServletRequest httpServletRequest) {
     return RESPONSE_FACTORY.success(postService.getSinglePost(postId));
   }
 
   @Override
-  public GenericResponse<Page<PostRevisionDTO>> getPostRevisions(UUID postId, Pageable pageable) {
+  public GenericResponse<Page<PostRevisionResponse>> getPostRevisions(
+      UUID postId, Pageable pageable) {
     return RESPONSE_FACTORY.success(postRevisionService.getPostRevisions(postId, pageable));
   }
 
   @Override
-  public GenericResponse<PostDTO> createPost(
-      PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    return RESPONSE_FACTORY.success(postService.createPost(postCreationDTO, httpServletRequest));
+  public GenericResponse<BasicPostResponse> createPost(
+      PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+    return RESPONSE_FACTORY.success(
+        postService.createPost(postCreationRequest, httpServletRequest));
   }
 
   @Override
   public ResponseEntity<Void> editPost(
-      UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+      UUID postId, PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
     return ResponseUtils.returnOkOrNoContent(
-        postService.editPost(postId, postCreationDTO, httpServletRequest));
+        postService.editPost(postId, postCreationRequest, httpServletRequest));
   }
 
   @Override

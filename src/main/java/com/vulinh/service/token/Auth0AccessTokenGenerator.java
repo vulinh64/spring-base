@@ -1,9 +1,9 @@
 package com.vulinh.service.token;
 
-import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.security.AccessTokenContainer;
-import com.vulinh.data.dto.security.TokenResponse;
-import com.vulinh.data.dto.security.TokenType;
+import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.data.constant.TokenType;
+import com.vulinh.data.dto.carrier.AccessTokenCarrier;
+import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.utils.security.AccessTokenGenerator;
 import com.vulinh.utils.security.Auth0Utils;
@@ -24,11 +24,11 @@ public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
 
   @Override
   @NonNull
-  public AccessTokenContainer generateAccessToken(UUID userId, UUID sessionId, Instant issuedAt) {
+  public AccessTokenCarrier generateAccessToken(UUID userId, UUID sessionId, Instant issuedAt) {
     var userSessionId = UserSessionId.of(userId, sessionId);
     var refreshTokenContainer = refreshTokenGenerator.generateRefreshToken(userSessionId, issuedAt);
 
-    return AccessTokenContainer.builder()
+    return AccessTokenCarrier.builder()
         .tokenResponse(
             TokenResponse.builder()
                 .accessToken(

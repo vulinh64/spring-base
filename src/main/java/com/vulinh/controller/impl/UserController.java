@@ -1,11 +1,11 @@
 package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.UserAPI;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.user.UserBasicDTO;
-import com.vulinh.data.dto.user.UserDTO;
-import com.vulinh.data.dto.user.UserSearchDTO;
+import com.vulinh.data.dto.request.UserRegistrationRequest;
+import com.vulinh.data.dto.request.UserSearchRequest;
+import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.SingleUserResponse;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.user.UserService;
@@ -28,8 +28,9 @@ public class UserController implements UserAPI {
   private final UserService userService;
 
   @Override
-  public GenericResponse<UserDTO> createUser(UserRegistrationDTO userRegistrationDTO) {
-    return RESPONSE_FACTORY.success(userService.createUser(userRegistrationDTO));
+  public GenericResponse<SingleUserResponse> createUser(
+      UserRegistrationRequest userRegistrationRequest) {
+    return RESPONSE_FACTORY.success(userService.createUser(userRegistrationRequest));
   }
 
   @Override
@@ -38,7 +39,7 @@ public class UserController implements UserAPI {
   }
 
   @Override
-  public ResponseEntity<GenericResponse<UserBasicDTO>> getSelfDetail(
+  public ResponseEntity<GenericResponse<UserBasicResponse>> getSelfDetail(
       HttpServletRequest httpServletRequest) {
     return SecurityUtils.getUserDTO(httpServletRequest)
         .map(RESPONSE_FACTORY::success)
@@ -47,7 +48,8 @@ public class UserController implements UserAPI {
   }
 
   @Override
-  public GenericResponse<Page<UserDTO>> search(UserSearchDTO userSearchDTO, Pageable pageable) {
-    return RESPONSE_FACTORY.success(userService.search(userSearchDTO, pageable));
+  public GenericResponse<Page<SingleUserResponse>> search(
+      UserSearchRequest userSearchRequest, Pageable pageable) {
+    return RESPONSE_FACTORY.success(userService.search(userSearchRequest, pageable));
   }
 }

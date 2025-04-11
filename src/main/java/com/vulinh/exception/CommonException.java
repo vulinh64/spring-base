@@ -1,6 +1,6 @@
 package com.vulinh.exception;
 
-import com.vulinh.data.dto.message.I18NCapable;
+import com.vulinh.data.base.I18NCapable;
 import java.io.Serial;
 import lombok.Getter;
 

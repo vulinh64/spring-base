@@ -1,8 +1,8 @@
 package com.vulinh.service.token;
 
-import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.security.TokenType;
-import com.vulinh.data.dto.security.RefreshTokenContainer;
+import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.data.constant.TokenType;
+import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.utils.security.Auth0Utils;
 import com.vulinh.utils.security.RefreshTokenGenerator;
@@ -19,10 +19,10 @@ public class Auth0RefreshTokenGenerator implements RefreshTokenGenerator {
 
   @Override
   @NonNull
-  public RefreshTokenContainer generateRefreshToken(UserSessionId userSessionId, Instant issuedAt) {
+  public RefreshTokenCarrier generateRefreshToken(UserSessionId userSessionId, Instant issuedAt) {
     var ttl = securityConfigProperties.refreshJwtDuration();
 
-    return RefreshTokenContainer.builder()
+    return RefreshTokenCarrier.builder()
         .expirationDate(issuedAt.plus(ttl))
         .refreshToken(
             Auth0Utils.buildTokenCommonParts(

@@ -1,13 +1,13 @@
 package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.AuthAPI;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.auth.PasswordChangeDTO;
-import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
-import com.vulinh.data.dto.auth.UserLoginDTO;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.security.TokenResponse;
-import com.vulinh.data.dto.user.UserDTO;
+import com.vulinh.data.dto.carrier.TokenResponse;
+import com.vulinh.data.dto.request.PasswordChangeRequest;
+import com.vulinh.data.dto.request.RefreshTokenRequest;
+import com.vulinh.data.dto.request.UserLoginRequest;
+import com.vulinh.data.dto.request.UserRegistrationRequest;
+import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.SingleUserResponse;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.locale.CommonMessage;
 import com.vulinh.service.auth.AuthService;
@@ -27,13 +27,14 @@ public class AuthController implements AuthAPI {
   private final AuthService authService;
 
   @Override
-  public GenericResponse<TokenResponse> login(UserLoginDTO userLoginDTO) {
-    return RESPONSE_FACTORY.success(authService.login(userLoginDTO));
+  public GenericResponse<TokenResponse> login(UserLoginRequest userLoginRequest) {
+    return RESPONSE_FACTORY.success(authService.login(userLoginRequest));
   }
 
   @Override
-  public GenericResponse<UserDTO> register(UserRegistrationDTO userRegistrationDTO) {
-    return RESPONSE_FACTORY.success(authService.registerUser(userRegistrationDTO));
+  public GenericResponse<SingleUserResponse> register(
+      UserRegistrationRequest userRegistrationRequest) {
+    return RESPONSE_FACTORY.success(authService.registerUser(userRegistrationRequest));
   }
 
   @Override
@@ -48,16 +49,15 @@ public class AuthController implements AuthAPI {
 
   @Override
   public ResponseEntity<Object> changePassword(
-      PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest) {
-    authService.changePassword(passwordChangeDTO, httpServletRequest);
+      PasswordChangeRequest passwordChangeRequest, HttpServletRequest httpServletRequest) {
+    authService.changePassword(passwordChangeRequest, httpServletRequest);
 
     return ResponseEntity.ok().build();
   }
 
   @Override
-  public GenericResponse<TokenResponse> refreshToken(
-      RefreshTokenRequestDTO refreshTokenRequestDTO) {
-    return RESPONSE_FACTORY.success(authService.refreshToken(refreshTokenRequestDTO));
+  public GenericResponse<TokenResponse> refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    return RESPONSE_FACTORY.success(authService.refreshToken(refreshTokenRequest));
   }
 
   @Override

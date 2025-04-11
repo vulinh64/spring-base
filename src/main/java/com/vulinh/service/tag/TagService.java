@@ -1,17 +1,16 @@
 package com.vulinh.service.tag;
 
 import com.google.common.collect.ImmutableSet;
-import com.vulinh.data.dto.post.PostCreationDTO;
+import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.data.repository.TagRepository;
+import com.vulinh.factory.PostFactory;
+import com.vulinh.utils.post.PostUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.vulinh.factory.PostFactory;
-import com.vulinh.utils.post.PostUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
@@ -64,7 +63,7 @@ public class TagService {
     return parseTags(Arrays.asList(rawTagsWithDelimiter.split(",")));
   }
 
-  public Set<Tag> parseTags(PostCreationDTO postCreationDTO) {
-    return parseTags(postCreationDTO.tags());
+  public Set<Tag> parseTags(PostCreationRequest postCreationRequest) {
+    return parseTags(postCreationRequest.tags());
   }
 }

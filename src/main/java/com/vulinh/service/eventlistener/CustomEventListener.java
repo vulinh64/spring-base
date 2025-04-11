@@ -1,8 +1,8 @@
 package com.vulinh.service.eventlistener;
 
-import com.vulinh.constant.EndpointConstant;
-import com.vulinh.constant.EndpointConstant.AuthEndpoint;
-import com.vulinh.data.dto.event.UserRegistrationEventDTO;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.constant.EndpointConstant.AuthEndpoint;
+import com.vulinh.data.dto.event.UserRegistrationEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 public class CustomEventListener {
 
   @EventListener
-  public void listenUserRegistrationEvent(UserRegistrationEventDTO userRegistrationEventDTO) {
-    var user = userRegistrationEventDTO.user();
+  public void listenUserRegistrationEvent(UserRegistrationEvent userRegistrationEvent) {
+    var user = userRegistrationEvent.user();
 
     log.debug(
         """

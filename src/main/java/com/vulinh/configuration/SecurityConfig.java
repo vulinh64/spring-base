@@ -1,6 +1,7 @@
 package com.vulinh.configuration;
 
-import com.vulinh.constant.UserRole;
+import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.data.constant.UserRole;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SecurityUrlUtils;
 import com.vulinh.utils.security.AccessTokenValidator;

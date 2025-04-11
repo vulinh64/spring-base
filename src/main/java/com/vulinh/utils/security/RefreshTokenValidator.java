@@ -1,10 +1,10 @@
 package com.vulinh.utils.security;
 
-import com.vulinh.data.dto.security.DecodedJwtPayload;
+import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import org.springframework.lang.NonNull;
 
 public interface RefreshTokenValidator {
 
   @NonNull
-  DecodedJwtPayload validateRefreshToken(String refreshToken);
+  DecodedJwtPayloadCarrier validateRefreshToken(String refreshToken);
 }

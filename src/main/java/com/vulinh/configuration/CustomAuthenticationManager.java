@@ -1,7 +1,7 @@
 package com.vulinh.configuration;
 
-import com.vulinh.data.dto.security.CustomAuthentication;
-import com.vulinh.data.dto.security.DecodedJwtPayload;
+import com.vulinh.configuration.data.CustomAuthentication;
+import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.service.sessions.UserSessionService;
@@ -25,7 +25,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
   @Transactional
   @NonNull
   public CustomAuthentication authenticate(Authentication authentication) {
-    if (!(authentication.getPrincipal() instanceof DecodedJwtPayload(var userId, var sessionId))) {
+    if (!(authentication.getPrincipal()
+        instanceof DecodedJwtPayloadCarrier(var userId, var sessionId))) {
       throw new InternalAuthenticationServiceException(
           "Invalid authentication principal: %s".formatted(authentication));
     }

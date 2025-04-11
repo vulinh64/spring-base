@@ -1,6 +1,6 @@
 package com.vulinh.service.auth;
 
-import com.vulinh.data.dto.auth.PasswordChangeDTO;
+import com.vulinh.data.dto.request.PasswordChangeRequest;
 import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.CommonMessage;
@@ -20,28 +20,28 @@ public class PasswordValidationService {
 
   private final PasswordEncoder passwordEncoder;
 
-  public Predicate<PasswordChangeDTO> isOldPasswordMatched(Users user) {
+  public Predicate<PasswordChangeRequest> isOldPasswordMatched(Users user) {
     return dto -> passwordEncoder.matches(dto.oldPassword(), user.getPassword());
   }
 
-  public Predicate<PasswordChangeDTO> isNewPasswordNotMatched(Users user) {
+  public Predicate<PasswordChangeRequest> isNewPasswordNotMatched(Users user) {
     return Predicate.not(dto -> passwordEncoder.matches(dto.newPassword(), user.getPassword()));
   }
 
   @RequiredArgsConstructor
   @Getter
-  public enum PasswordChangeRule implements NoArgsValidatorStep<PasswordChangeDTO> {
+  public enum PasswordChangeRule implements NoArgsValidatorStep<PasswordChangeRequest> {
     RULE_NO_BLANK_PASSWORD(
-        ValidatorStepFactory.noBlankField(PasswordChangeDTO::oldPassword),
+        ValidatorStepFactory.noBlankField(PasswordChangeRequest::oldPassword),
         CommonMessage.MESSAGE_INVALID_PASSWORD,
         "Blank old password is not allowed"),
     RULE_NO_BLANK_NEW_PASSWORD(
-        ValidatorStepFactory.noBlankField(PasswordChangeDTO::newPassword),
+        ValidatorStepFactory.noBlankField(PasswordChangeRequest::newPassword),
         CommonMessage.MESSAGE_INVALID_NEW_PASSWORD,
         "Blank new password is not allowed"),
     RULE_LONG_ENOUGH_NEW_PASSWORD(
         ValidatorStepFactory.atLeastLength(
-            PasswordChangeDTO::newPassword, UserValidationService.PASSWORD_MINIMUM_LENGTH),
+            PasswordChangeRequest::newPassword, UserValidationService.PASSWORD_MINIMUM_LENGTH),
         CommonMessage.MESSAGE_INVALID_NEW_PASSWORD,
         "New password must have more than %s characters".formatted(PASSWORD_MIN_LENGTH)) {
 
@@ -51,7 +51,7 @@ public class PasswordValidationService {
       }
     };
 
-    private final Predicate<PasswordChangeDTO> predicate;
+    private final Predicate<PasswordChangeRequest> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
   }

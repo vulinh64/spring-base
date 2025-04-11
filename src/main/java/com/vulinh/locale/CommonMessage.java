@@ -1,6 +1,6 @@
 package com.vulinh.locale;
 
-import com.vulinh.data.dto.message.I18NCapable;
+import com.vulinh.data.base.I18NCapable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

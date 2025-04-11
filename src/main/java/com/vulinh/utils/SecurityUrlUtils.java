@@ -1,9 +1,9 @@
 package com.vulinh.utils;
 
 import com.vulinh.configuration.VerbUrl;
-import com.vulinh.constant.EndpointConstant;
-import com.vulinh.constant.EndpointConstant.UserEndpoint;
-import com.vulinh.constant.UserRole;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.constant.EndpointConstant.UserEndpoint;
+import com.vulinh.data.constant.UserRole;
 import com.vulinh.factory.VerbUrlFactory;
 import java.util.Collections;
 import java.util.List;

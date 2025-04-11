@@ -2,7 +2,7 @@ package com.vulinh.service.post;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.vulinh.data.dto.post.PostRevisionDTO;
+import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.entity.*;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
@@ -50,7 +50,7 @@ public class PostRevisionService {
   @PersistenceContext private final EntityManager entityManager;
 
   @Transactional
-  public Page<PostRevisionDTO> getPostRevisions(UUID postId, Pageable pageable) {
+  public Page<PostRevisionResponse> getPostRevisions(UUID postId, Pageable pageable) {
     throwIfPostNotExists(postId);
 
     var actualPageable =
@@ -145,7 +145,7 @@ public class PostRevisionService {
   }
 
   private JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {
-      return postRevisionJoinJPAQuery().where(QPost.post.id.eq(identity));
+    return postRevisionJoinJPAQuery().where(QPost.post.id.eq(identity));
   }
 
   private JPAQuery<Post> postRevisionJoinJPAQuery() {

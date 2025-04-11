@@ -1,6 +1,6 @@
 package com.vulinh.exception;
 
-import com.vulinh.data.dto.GenericResponse;
+import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.locale.CommonMessage;
 import jakarta.persistence.EntityNotFoundException;

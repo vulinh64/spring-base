@@ -1,6 +1,6 @@
 package com.vulinh.service.category;
 
-import com.vulinh.data.dto.category.CategoryCreationDTO;
+import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.factory.ExceptionFactory;
@@ -22,16 +22,17 @@ public class CategoryValidationService {
   public static final int CATEGORY_MAX_LENGTH = 500;
   public static final int CATEGORY_SLUG_MAX_LENGTH = 500;
 
-  public static final ValidatorChain<CategoryCreationDTO> BASIC_CATEGORY_VALIDATION =
-      ValidatorChain.<CategoryCreationDTO>start().addValidator(CategoryRule.values());
+  public static final ValidatorChain<CategoryCreationRequest> BASIC_CATEGORY_VALIDATION =
+      ValidatorChain.<CategoryCreationRequest>start().addValidator(CategoryRule.values());
 
   private final CategoryRepository categoryRepository;
 
-  public void validateCategoryCreation(CategoryCreationDTO categoryCreationDTO) {
-    BASIC_CATEGORY_VALIDATION.executeValidation(categoryCreationDTO);
+  public void validateCategoryCreation(CategoryCreationRequest categoryCreationRequest) {
+    BASIC_CATEGORY_VALIDATION.executeValidation(categoryCreationRequest);
   }
 
-  public void validateCategorySlug(CategoryCreationDTO categoryCreationDTO, String categorySlug) {
+  public void validateCategorySlug(
+      CategoryCreationRequest categoryCreationRequest, String categorySlug) {
     ValidatorChain.<String>start()
         .addValidator(
             ValidatorStepFactory.INSTANCE.build(
@@ -42,15 +43,15 @@ public class CategoryValidationService {
                 CATEGORY_SLUG_MAX_LENGTH))
         .executeValidation(categorySlug);
 
-    if (!availableCategory(categoryCreationDTO, categorySlug)) {
+    if (!availableCategory(categoryCreationRequest, categorySlug)) {
       throw ExceptionFactory.INSTANCE.buildCommonException(
           "Category display name %s or slug %s existed"
-              .formatted(categoryCreationDTO.displayName(), categorySlug),
+              .formatted(categoryCreationRequest.displayName(), categorySlug),
           CommonMessage.MESSAGE_EXISTED_CATEGORY);
     }
   }
 
-  private boolean availableCategory(CategoryCreationDTO postCreationDTO, String categorySlug) {
+  private boolean availableCategory(CategoryCreationRequest postCreationDTO, String categorySlug) {
     var qCategory = QCategory.category;
 
     return !categoryRepository.exists(
@@ -61,16 +62,16 @@ public class CategoryValidationService {
 
   @RequiredArgsConstructor
   @Getter
-  public enum CategoryRule implements ValidatorStep<CategoryCreationDTO> {
+  public enum CategoryRule implements ValidatorStep<CategoryCreationRequest> {
     CATEGORY_NOT_EMPTY(
-        ValidatorStepFactory.noBlankField(CategoryCreationDTO::displayName),
+        ValidatorStepFactory.noBlankField(CategoryCreationRequest::displayName),
         "Blank category is not allowed"),
     CATEGORY_NOT_TOO_LONG(
         ValidatorStepFactory.noExceededLength(
-            CategoryCreationDTO::displayName, CATEGORY_MAX_LENGTH),
+            CategoryCreationRequest::displayName, CATEGORY_MAX_LENGTH),
         "Category exceeded %s characters".formatted(CATEGORY_MAX_LENGTH));
 
-    private final Predicate<CategoryCreationDTO> predicate;
+    private final Predicate<CategoryCreationRequest> predicate;
     private final String exceptionMessage;
     private final CommonMessage error = CommonMessage.MESSAGE_INVALID_CATEGORY;
 

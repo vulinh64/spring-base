@@ -1,9 +1,9 @@
 package com.vulinh.utils;
 
-import com.vulinh.locale.CommonMessage;
-import com.vulinh.data.dto.security.CustomAuthentication;
-import com.vulinh.data.dto.user.UserBasicDTO;
+import com.vulinh.configuration.data.CustomAuthentication;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.locale.CommonMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -85,7 +85,8 @@ public class SecurityUtils {
     return singletonPrivateKey;
   }
 
-  public static Optional<UserBasicDTO> getUserDTO(@Nullable HttpServletRequest httpServletRequest) {
+  public static Optional<UserBasicResponse> getUserDTO(
+      @Nullable HttpServletRequest httpServletRequest) {
     return Optional.ofNullable(httpServletRequest)
         .map(HttpServletRequest::getUserPrincipal)
         .or(
@@ -98,7 +99,7 @@ public class SecurityUtils {
   }
 
   @NonNull
-  public static UserBasicDTO getUserDTOOrThrow(HttpServletRequest httpServletRequest) {
+  public static UserBasicResponse getUserDTOOrThrow(HttpServletRequest httpServletRequest) {
     return getUserDTO(httpServletRequest).orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
   }
 

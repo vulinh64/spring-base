@@ -1,9 +1,9 @@
 package com.vulinh.service.post;
 
-import com.vulinh.data.dto.elasticsearch.ESimplePost;
-import com.vulinh.data.dto.post.PostCreationDTO;
-import com.vulinh.data.dto.post.PostDTO;
-import com.vulinh.data.dto.post.SinglePostDTO;
+import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.response.BasicPostResponse;
+import com.vulinh.data.dto.response.ESimplePostResponse;
+import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.elasticsearch.EPostRepository;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
@@ -43,7 +43,7 @@ public class PostService {
     return postRepository.findPrefetchPosts(pageable);
   }
 
-  public SinglePostDTO getSinglePost(UUID postId) {
+  public SinglePostResponse getSinglePost(UUID postId) {
     return postRepository
         .findById(postId)
         .map(POST_MAPPER::toSinglePostDTO)
@@ -51,10 +51,10 @@ public class PostService {
   }
 
   @Transactional
-  public PostDTO createPost(
-      PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
+  public BasicPostResponse createPost(
+      PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
     // Delegate to PostCreationService
-    var entity = postCreationService.createPost(postCreationDTO, httpServletRequest);
+    var entity = postCreationService.createPost(postCreationRequest, httpServletRequest);
 
     // Delegate to PostRevisionService
     postRevisionService.createPostCreationRevision(entity);
@@ -66,8 +66,8 @@ public class PostService {
 
   @Transactional
   public boolean editPost(
-      UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    var possiblePost = postEditService.editPost(postId, postCreationDTO, httpServletRequest);
+      UUID postId, PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+    var possiblePost = postEditService.editPost(postId, postCreationRequest, httpServletRequest);
 
     if (possiblePost.isPresent()) {
       var post = possiblePost.get();
@@ -100,7 +100,7 @@ public class PostService {
     return false;
   }
 
-  public Page<ESimplePost> quickSearch(String keyword, Pageable pageable) {
+  public Page<ESimplePostResponse> quickSearch(String keyword, Pageable pageable) {
     return ePostRepository
         .findByTitleContainingIgnoreCaseOrPostContentContainingIgnoreCase(
             keyword, keyword, pageable)

@@ -1,9 +1,9 @@
 package com.vulinh.service.category;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.category.CategoryCreationDTO;
-import com.vulinh.data.dto.category.CategoryDTO;
-import com.vulinh.data.dto.category.CategorySearchDTO;
+import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.dto.request.CategoryCreationRequest;
+import com.vulinh.data.dto.request.CategorySearchRequest;
+import com.vulinh.data.dto.response.CategoryResponse;
 import com.vulinh.data.entity.Category;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.mapper.CategoryMapper;
@@ -47,29 +47,29 @@ public class CategoryService {
   }
 
   @Transactional
-  public CategoryDTO createCategory(CategoryCreationDTO categoryCreationDTO) {
-    categoryValidationService.validateCategoryCreation(categoryCreationDTO);
+  public CategoryResponse createCategory(CategoryCreationRequest categoryCreationRequest) {
+    categoryValidationService.validateCategoryCreation(categoryCreationRequest);
 
-    var slug = SlugUtils.createBasicSlug(categoryCreationDTO.displayName());
+    var slug = SlugUtils.createBasicSlug(categoryCreationRequest.displayName());
 
-    categoryValidationService.validateCategorySlug(categoryCreationDTO, slug);
+    categoryValidationService.validateCategorySlug(categoryCreationRequest, slug);
 
     return CATEGORY_MAPPER.toDto(
-        categoryRepository.save(CATEGORY_MAPPER.toCategory(categoryCreationDTO, slug)));
+        categoryRepository.save(CATEGORY_MAPPER.toCategory(categoryCreationRequest, slug)));
   }
 
   @Transactional
-  public Page<CategoryDTO> searchCategories(
-      CategorySearchDTO categorySearchDTO, Pageable pageable) {
+  public Page<CategoryResponse> searchCategories(
+      CategorySearchRequest categorySearchRequest, Pageable pageable) {
     QCategory qCategory = QCategory.category;
 
     return categoryRepository
         .findAll(
             PredicateBuilder.and(
                 PredicateBuilder.likeIgnoreCase(
-                    qCategory.displayName, categorySearchDTO.displayName()),
+                    qCategory.displayName, categorySearchRequest.displayName()),
                 PredicateBuilder.likeIgnoreCase(
-                    qCategory.categorySlug, categorySearchDTO.categorySlug())),
+                    qCategory.categorySlug, categorySearchRequest.categorySlug())),
             pageable)
         .map(CATEGORY_MAPPER::toDto);
   }

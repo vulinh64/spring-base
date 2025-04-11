@@ -1,7 +1,7 @@
 package com.vulinh.schedule;
 
-import com.vulinh.constant.CacheConstant;
-import com.vulinh.constant.EnvironmentConstant;
+import com.vulinh.data.constant.CacheConstant;
+import com.vulinh.data.constant.EnvironmentConstant;
 import com.vulinh.data.entity.QUserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;

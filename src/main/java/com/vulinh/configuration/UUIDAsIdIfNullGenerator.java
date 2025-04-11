@@ -1,6 +1,6 @@
 package com.vulinh.configuration;
 
-import com.vulinh.constant.CommonConstant;
+import com.vulinh.data.constant.CommonConstant;
 import java.io.Serial;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

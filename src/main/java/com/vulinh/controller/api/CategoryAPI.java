@@ -1,10 +1,10 @@
 package com.vulinh.controller.api;
 
-import com.vulinh.constant.EndpointConstant;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.category.CategoryCreationDTO;
-import com.vulinh.data.dto.category.CategoryDTO;
-import com.vulinh.data.dto.category.CategorySearchDTO;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.dto.request.CategoryCreationRequest;
+import com.vulinh.data.dto.request.CategorySearchRequest;
+import com.vulinh.data.dto.response.CategoryResponse;
+import com.vulinh.data.dto.response.GenericResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public interface CategoryAPI {
 
   @PostMapping
-  GenericResponse<CategoryDTO> createCategory(@RequestBody CategoryCreationDTO categoryCreationDTO);
+  GenericResponse<CategoryResponse> createCategory(
+      @RequestBody CategoryCreationRequest categoryCreationRequest);
 
   @GetMapping(EndpointConstant.CategoryEndpoint.SEARCH)
-  GenericResponse<Page<CategoryDTO>> searchCategories(
-      CategorySearchDTO categorySearchDTO, Pageable pageable);
+  GenericResponse<Page<CategoryResponse>> searchCategories(
+      CategorySearchRequest categorySearchRequest, Pageable pageable);
 
   @DeleteMapping("/{categoryId}")
   ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") UUID categoryId);

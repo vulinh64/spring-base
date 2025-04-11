@@ -1,6 +1,6 @@
 package com.vulinh.utils.validator;
 
-import com.vulinh.data.dto.message.I18NCapable;
+import com.vulinh.data.base.I18NCapable;
 import com.vulinh.locale.CommonMessage;
 import java.util.Arrays;
 import java.util.Objects;

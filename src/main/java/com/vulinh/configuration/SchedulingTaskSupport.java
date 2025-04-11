@@ -1,6 +1,7 @@
 package com.vulinh.configuration;
 
-import com.vulinh.constant.EnvironmentConstant;
+import com.vulinh.configuration.data.SchedulingTaskProperties;
+import com.vulinh.data.constant.EnvironmentConstant;
 import com.vulinh.utils.springcron.HourExpression;
 import com.vulinh.utils.springcron.MinuteExpression;
 import com.vulinh.utils.springcron.dto.ExpressionObject;

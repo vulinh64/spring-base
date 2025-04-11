@@ -1,10 +1,10 @@
 package com.vulinh.service.post;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.constant.UserRole;
-import com.vulinh.data.dto.post.PostCreationDTO;
-import com.vulinh.data.dto.user.RoleDTO;
-import com.vulinh.data.dto.user.UserBasicDTO;
+import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.constant.UserRole;
+import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.response.UserBasicResponse;
+import com.vulinh.data.dto.response.data.RoleData;
 import com.vulinh.data.entity.Post;
 import com.vulinh.exception.CommonException;
 import com.vulinh.factory.ExceptionFactory;
@@ -36,10 +36,10 @@ public class PostValidationService {
         CommonConstant.POST_ENTITY);
   }
 
-  public static final ValidatorChain<PostCreationDTO> BASIC_POST_VALIDATOR =
-      ValidatorChain.<PostCreationDTO>start().addValidator(PostRule.values());
+  public static final ValidatorChain<PostCreationRequest> BASIC_POST_VALIDATOR =
+      ValidatorChain.<PostCreationRequest>start().addValidator(PostRule.values());
 
-  public void validateModifyingPermission(UserBasicDTO userDTO, Post post) {
+  public void validateModifyingPermission(UserBasicResponse userDTO, Post post) {
     if (!(PostValidationService.isOwner(userDTO, post)
         || PostValidationService.isPowerUser(userDTO))) {
       throw ExceptionFactory.INSTANCE.buildCommonException(
@@ -48,7 +48,7 @@ public class PostValidationService {
     }
   }
 
-  public static boolean isOwner(UserBasicDTO userDTO, Post post) {
+  public static boolean isOwner(UserBasicResponse userDTO, Post post) {
     var userId = userDTO.id();
     var postAuthor = post.getAuthor();
     var postAuthorId = postAuthor.getId();
@@ -69,10 +69,10 @@ public class PostValidationService {
     return result;
   }
 
-  public static boolean isPowerUser(UserBasicDTO userDTO) {
+  public static boolean isPowerUser(UserBasicResponse userDTO) {
     var maximumRole =
         userDTO.userRoles().stream()
-            .mapToInt(RoleDTO::superiority)
+            .mapToInt(RoleData::superiority)
             .max()
             .orElse(UserRole.USER.superiority());
 
@@ -83,29 +83,29 @@ public class PostValidationService {
           "User {} ({}) with role {} is not a power user!",
           userDTO.id(),
           userDTO.username(),
-          userDTO.userRoles().stream().map(RoleDTO::id).collect(Collectors.toSet()));
+          userDTO.userRoles().stream().map(RoleData::id).collect(Collectors.toSet()));
     }
 
     return result;
   }
 
-  public void validatePost(@NonNull PostCreationDTO postCreationDTO) {
-    BASIC_POST_VALIDATOR.executeValidation(postCreationDTO);
+  public void validatePost(@NonNull PostCreationRequest postCreationRequest) {
+    BASIC_POST_VALIDATOR.executeValidation(postCreationRequest);
   }
 
   @Getter
   @RequiredArgsConstructor
-  public enum PostRule implements NoArgsValidatorStep<PostCreationDTO> {
+  public enum PostRule implements NoArgsValidatorStep<PostCreationRequest> {
     POST_NO_BLANK_TITLE(
-        ValidatorStepFactory.noBlankField(PostCreationDTO::title),
+        ValidatorStepFactory.noBlankField(PostCreationRequest::title),
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
         "Blank title is not allowed"),
     POST_LONG_ENOUGH_TITLE(
-        ValidatorStepFactory.noExceededLength(PostCreationDTO::title, TITLE_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(PostCreationRequest::title, TITLE_MAX_LENGTH),
         CommonMessage.MESSAGE_POST_INVALID_TITLE,
         "Title length is too long"),
     POST_NO_EMPTY_CONTENT(
-        ValidatorStepFactory.noBlankField(PostCreationDTO::postContent),
+        ValidatorStepFactory.noBlankField(PostCreationRequest::postContent),
         CommonMessage.MESSAGE_POST_INVALID_CONTENT,
         "Empty content is not allowed"),
     POST_NO_INVALID_TAG(
@@ -113,11 +113,11 @@ public class PostValidationService {
         CommonMessage.MESSAGE_POST_INVALID_TAG,
         "Empty tag or tag is too long");
 
-    private final Predicate<PostCreationDTO> predicate;
+    private final Predicate<PostCreationRequest> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
 
-    private static boolean isValidTags(PostCreationDTO dto) {
+    private static boolean isValidTags(PostCreationRequest dto) {
       for (var tag : dto.tags()) {
         if (StringUtils.isBlank(tag) || tag.length() > TAG_MAX_LENGTH) {
           log.debug("Tag {} is empty or too long", tag);

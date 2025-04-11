@@ -1,13 +1,13 @@
 package com.vulinh.controller.api;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.constant.EndpointConstant;
-import com.vulinh.constant.EndpointConstant.UserEndpoint;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.user.UserBasicDTO;
-import com.vulinh.data.dto.user.UserDTO;
-import com.vulinh.data.dto.user.UserSearchDTO;
+import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.constant.EndpointConstant.UserEndpoint;
+import com.vulinh.data.dto.request.UserRegistrationRequest;
+import com.vulinh.data.dto.request.UserSearchRequest;
+import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.SingleUserResponse;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -101,7 +101,8 @@ public interface UserAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  GenericResponse<UserDTO> createUser(@RequestBody UserRegistrationDTO userRegistrationDTO);
+  GenericResponse<SingleUserResponse> createUser(
+      @RequestBody UserRegistrationRequest userRegistrationRequest);
 
   @DeleteMapping(UserEndpoint.DELETE_USER + "/{id}")
   @Operation(
@@ -170,7 +171,7 @@ public interface UserAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  ResponseEntity<GenericResponse<UserBasicDTO>> getSelfDetail(
+  ResponseEntity<GenericResponse<UserBasicResponse>> getSelfDetail(
       HttpServletRequest httpServletRequest);
 
   @GetMapping(UserEndpoint.SEARCH)
@@ -267,6 +268,6 @@ public interface UserAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  GenericResponse<Page<UserDTO>> search(
-      @ParameterObject UserSearchDTO userSearchDTO, @ParameterObject Pageable pageable);
+  GenericResponse<Page<SingleUserResponse>> search(
+      @ParameterObject UserSearchRequest userSearchRequest, @ParameterObject Pageable pageable);
 }

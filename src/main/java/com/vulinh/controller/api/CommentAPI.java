@@ -1,9 +1,9 @@
 package com.vulinh.controller.api;
 
-import com.vulinh.constant.EndpointConstant;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.comment.CommentDTO;
-import com.vulinh.data.dto.comment.NewCommentDTO;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.dto.request.NewCommentRequest;
+import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.SingleCommentResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -18,18 +18,19 @@ import org.springframework.web.bind.annotation.*;
 public interface CommentAPI {
 
   @GetMapping("/{postId}")
-  GenericResponse<Page<CommentDTO>> fetchComments(@PathVariable UUID postId, Pageable pageable);
+  GenericResponse<Page<SingleCommentResponse>> fetchComments(
+      @PathVariable UUID postId, Pageable pageable);
 
   @PostMapping("/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
   GenericResponse<Map<String, UUID>> addComment(
       @PathVariable UUID postId,
-      @RequestBody NewCommentDTO newCommentDTO,
+      @RequestBody NewCommentRequest newCommentRequest,
       HttpServletRequest request);
 
   @PatchMapping("/{commentId}")
   void editComment(
-      @RequestBody NewCommentDTO newCommentDTO,
+      @RequestBody NewCommentRequest newCommentRequest,
       @PathVariable UUID commentId,
       HttpServletRequest request);
 }

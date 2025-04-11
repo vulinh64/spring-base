@@ -1,7 +1,7 @@
 package com.vulinh.service.token;
 
-import com.vulinh.data.dto.security.DecodedJwtPayload;
-import com.vulinh.data.dto.security.TokenType;
+import com.vulinh.data.constant.TokenType;
+import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import com.vulinh.utils.security.AccessTokenValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class Auth0AccessTokenValidator implements AccessTokenValidator {
 
   @Override
   @NonNull
-  public DecodedJwtPayload validateAccessToken(String accessToken) {
+  public DecodedJwtPayloadCarrier validateAccessToken(String accessToken) {
     return auth0TokenValidator.validateToken(accessToken, TokenType.ACCESS_TOKEN);
   }
 }

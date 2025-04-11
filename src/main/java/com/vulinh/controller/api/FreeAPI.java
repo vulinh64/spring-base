@@ -1,6 +1,6 @@
 package com.vulinh.controller.api;
 
-import com.vulinh.constant.EndpointConstant;
+import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.utils.springcron.dto.SpringCronGeneratorDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

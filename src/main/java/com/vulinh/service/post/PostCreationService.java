@@ -1,7 +1,7 @@
 package com.vulinh.service.post;
 
-import com.vulinh.data.dto.post.PostCreationDTO;
-import com.vulinh.data.dto.user.UserBasicDTO;
+import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
@@ -9,8 +9,8 @@ import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
-import com.vulinh.utils.post.PostUtils;
 import com.vulinh.utils.SecurityUtils;
+import com.vulinh.utils.post.PostUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,22 +30,23 @@ public class PostCreationService {
   private final CategoryService categoryService;
 
   @Transactional
-  public Post createPost(PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    postValidationService.validatePost(postCreationDTO);
+  public Post createPost(
+      PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+    postValidationService.validatePost(postCreationRequest);
 
-    var actualCreationDTO = PostUtils.getActualDTO(postCreationDTO);
+    var actualCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
     var author =
         SecurityUtils.getUserDTO(httpServletRequest)
-            .map(UserBasicDTO::id)
+            .map(UserBasicResponse::id)
             .flatMap(userRepository::findById)
             .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
 
-    var categoryId = postCreationDTO.categoryId();
+    var categoryId = postCreationRequest.categoryId();
 
     var category = categoryService.getCategory(categoryId);
 
-    var tags = tagService.parseTags(postCreationDTO);
+    var tags = tagService.parseTags(postCreationRequest);
 
     return postRepository.save(POST_MAPPER.toEntity(actualCreationDTO, author, category, tags));
   }

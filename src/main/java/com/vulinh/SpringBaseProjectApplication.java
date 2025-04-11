@@ -1,8 +1,8 @@
 package com.vulinh;
 
 import com.vulinh.configuration.AuditorConfiguration;
-import com.vulinh.configuration.SchedulingTaskProperties;
-import com.vulinh.configuration.SecurityConfigProperties;
+import com.vulinh.configuration.data.SchedulingTaskProperties;
+import com.vulinh.configuration.data.SecurityConfigProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

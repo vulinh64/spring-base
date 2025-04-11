@@ -1,11 +1,11 @@
 package com.vulinh.service.user;
 
 import com.querydsl.core.types.Predicate;
-import com.vulinh.constant.UserRole;
 import com.vulinh.data.base.EntityDTOMapper;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.user.UserDTO;
-import com.vulinh.data.dto.user.UserSearchDTO;
+import com.vulinh.data.constant.UserRole;
+import com.vulinh.data.dto.request.UserRegistrationRequest;
+import com.vulinh.data.dto.request.UserSearchRequest;
+import com.vulinh.data.dto.response.SingleUserResponse;
 import com.vulinh.data.entity.*;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.RoleRepository;
@@ -30,7 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Getter
 @RequiredArgsConstructor
-public class UserService implements BaseEntityService<UUID, Users, UserDTO, UserRepository> {
+public class UserService
+    implements BaseEntityService<UUID, Users, SingleUserResponse, UserRepository> {
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
@@ -49,20 +50,20 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
   private final UserValidationService userValidationService;
 
   @Override
-  public EntityDTOMapper<Users, UserDTO> getMapper() {
+  public EntityDTOMapper<Users, SingleUserResponse> getMapper() {
     return USER_MAPPER;
   }
 
   @Transactional
-  public UserDTO createUser(UserRegistrationDTO userRegistrationDTO) {
-    userValidationService.validateUserCreation(userRegistrationDTO);
+  public SingleUserResponse createUser(UserRegistrationRequest userRegistrationRequest) {
+    userValidationService.validateUserCreation(userRegistrationRequest);
 
     var transientUser =
         USER_MAPPER.toUser(
-            userRegistrationDTO.withPassword(
-                passwordEncoder.encode(userRegistrationDTO.password())));
+            userRegistrationRequest.withPassword(
+                passwordEncoder.encode(userRegistrationRequest.password())));
 
-    var rawRoleNames = UserRole.fromRawRole(userRegistrationDTO.userRoles());
+    var rawRoleNames = UserRole.fromRawRole(userRegistrationRequest.userRoles());
 
     transientUser
         .setIsActive(true)
@@ -87,12 +88,12 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
     return BaseEntityService.super.delete(id);
   }
 
-  public Page<UserDTO> search(UserSearchDTO userSearchDTO, Pageable pageable) {
-    return findAll(buildSpecification(userSearchDTO), pageable);
+  public Page<SingleUserResponse> search(UserSearchRequest userSearchRequest, Pageable pageable) {
+    return findAll(buildSpecification(userSearchRequest), pageable);
   }
 
-  private Predicate buildSpecification(UserSearchDTO userSearchDTO) {
-    var identity = userSearchDTO.identity();
+  private Predicate buildSpecification(UserSearchRequest userSearchRequest) {
+    var identity = userSearchRequest.identity();
     var qUser = QUsers.users;
 
     var specification =
@@ -102,7 +103,7 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
             PredicateBuilder.likeIgnoreCase(qUser.email, identity),
             PredicateBuilder.likeIgnoreCase(qUser.fullName, identity));
 
-    var searchRoles = UserRole.fromRawRole(userSearchDTO.roles());
+    var searchRoles = UserRole.fromRawRole(userSearchRequest.roles());
 
     if (!searchRoles.isEmpty()) {
       var roles =
@@ -113,9 +114,7 @@ public class UserService implements BaseEntityService<UUID, Users, UserDTO, User
       specification =
           PredicateBuilder.and(
               specification,
-              roles.isEmpty()
-                  ? PredicateBuilder.never()
-                  : qUser.userRoles.any().id.in(roles));
+              roles.isEmpty() ? PredicateBuilder.never() : qUser.userRoles.any().id.in(roles));
     }
 
     return specification;

@@ -1,7 +1,7 @@
 package com.vulinh.factory;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.message.I18NCapable;
+import com.vulinh.data.base.I18NCapable;
+import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.exception.CommonException;
 import com.vulinh.locale.CommonMessage;
 import java.util.UUID;

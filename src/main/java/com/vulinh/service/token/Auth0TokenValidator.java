@@ -2,9 +2,9 @@ package com.vulinh.service.token;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.security.DecodedJwtPayload;
-import com.vulinh.data.dto.security.TokenType;
+import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.data.constant.TokenType;
+import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.locale.CommonMessage;
 import com.vulinh.utils.security.Auth0Utils;
@@ -20,7 +20,7 @@ class Auth0TokenValidator {
 
   private final SecurityConfigProperties securityConfigProperties;
 
-  DecodedJwtPayload validateToken(String refreshToken, TokenType expectedTokenType) {
+  DecodedJwtPayloadCarrier validateToken(String refreshToken, TokenType expectedTokenType) {
     try {
       var decodedJWT = Auth0Utils.getJwtVerifier(securityConfigProperties).verify(refreshToken);
 
@@ -34,7 +34,7 @@ class Auth0TokenValidator {
             CommonMessage.MESSAGE_INVALID_TOKEN_TYPE);
       }
 
-      return DecodedJwtPayload.builder()
+      return DecodedJwtPayloadCarrier.builder()
           .userId(UUID.fromString(Auth0Utils.claimAsString(decodedJWT, Auth0Utils.USER_ID_CLAIM)))
           .sessionId(
               UUID.fromString(Auth0Utils.claimAsString(decodedJWT, Auth0Utils.SESSION_ID_CLAIM)))

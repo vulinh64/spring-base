@@ -1,10 +1,10 @@
 package com.vulinh.controller.api;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.constant.EndpointConstant;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.auth.PasswordRequestDTO;
-import com.vulinh.data.dto.auth.PasswordResponseDTO;
+import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.dto.request.BCryptPasswordGenerationRequest;
+import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.PasswordResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -77,6 +77,6 @@ public interface BcryptPublicAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  GenericResponse<PasswordResponseDTO> generateEncodedPassword(
-      @RequestBody PasswordRequestDTO passwordRequestDTO);
+  GenericResponse<PasswordResponse> generateEncodedPassword(
+      @RequestBody BCryptPasswordGenerationRequest bcryptPasswordGenerationRequest);
 }

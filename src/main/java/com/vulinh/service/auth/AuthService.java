@@ -1,13 +1,13 @@
 package com.vulinh.service.auth;
 
-import com.vulinh.configuration.SecurityConfigProperties;
-import com.vulinh.data.dto.auth.PasswordChangeDTO;
-import com.vulinh.data.dto.auth.RefreshTokenRequestDTO;
-import com.vulinh.data.dto.auth.UserLoginDTO;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.security.TokenResponse;
-import com.vulinh.data.dto.user.UserBasicDTO;
-import com.vulinh.data.dto.user.UserDTO;
+import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.data.dto.carrier.TokenResponse;
+import com.vulinh.data.dto.request.PasswordChangeRequest;
+import com.vulinh.data.dto.request.RefreshTokenRequest;
+import com.vulinh.data.dto.request.UserLoginRequest;
+import com.vulinh.data.dto.request.UserRegistrationRequest;
+import com.vulinh.data.dto.response.SingleUserResponse;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.CommonException;
@@ -63,14 +63,15 @@ public class AuthService {
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public TokenResponse login(UserLoginDTO userLoginDTO) {
+  public TokenResponse login(UserLoginRequest userLoginRequest) {
     var now = Instant.now();
 
     return userRepository
-        .findByUsernameAndIsActiveIsTrue(userLoginDTO.username())
+        .findByUsernameAndIsActiveIsTrue(userLoginRequest.username())
         .filter(
             matchedUser ->
-                UserValidationService.isPasswordMatched(userLoginDTO, matchedUser, passwordEncoder))
+                UserValidationService.isPasswordMatched(
+                    userLoginRequest, matchedUser, passwordEncoder))
         .map(user -> accessTokenGenerator.generateAccessToken(user.getId(), UUID.randomUUID(), now))
         .map(userSessionService::createUserSession)
         .orElseThrow(
@@ -81,11 +82,12 @@ public class AuthService {
 
   // Normal user that requires confirmation
   @Transactional
-  public UserDTO registerUser(UserRegistrationDTO userRegistrationDTO) {
-    userValidationService.validateUserCreation(userRegistrationDTO);
+  public SingleUserResponse registerUser(UserRegistrationRequest userRegistrationRequest) {
+    userValidationService.validateUserCreation(userRegistrationRequest);
 
     var registrationWithEncodedPassword =
-        userRegistrationDTO.withPassword(passwordEncoder.encode(userRegistrationDTO.password()));
+        userRegistrationRequest.withPassword(
+            passwordEncoder.encode(userRegistrationRequest.password()));
 
     var newUser =
         userRepository.save(
@@ -115,18 +117,18 @@ public class AuthService {
 
   @Transactional
   public void changePassword(
-      PasswordChangeDTO passwordChangeDTO, HttpServletRequest httpServletRequest) {
-    ValidatorChain.<PasswordChangeDTO>start()
+      PasswordChangeRequest passwordChangeRequest, HttpServletRequest httpServletRequest) {
+    ValidatorChain.<PasswordChangeRequest>start()
         .addValidator(PasswordChangeRule.values())
-        .executeValidation(passwordChangeDTO);
+        .executeValidation(passwordChangeRequest);
 
     var userEntity =
         SecurityUtils.getUserDTO(httpServletRequest)
-            .map(UserBasicDTO::id)
+            .map(UserBasicResponse::id)
             .flatMap(userRepository::findByIdAndIsActiveIsTrue)
             .orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
 
-    ValidatorChain.<PasswordChangeDTO>start()
+    ValidatorChain.<PasswordChangeRequest>start()
         .addValidator(
             VALIDATOR_STEP_FACTORY.build(
                 passwordValidationService.isOldPasswordMatched(userEntity),
@@ -136,16 +138,16 @@ public class AuthService {
                 passwordValidationService.isNewPasswordNotMatched(userEntity),
                 CommonMessage.MESSAGE_SAME_OLD_PASSWORD,
                 "New password cannot be the same as old password"))
-        .executeValidation(passwordChangeDTO);
+        .executeValidation(passwordChangeRequest);
 
     userRepository.save(
-        userEntity.setPassword(passwordEncoder.encode(passwordChangeDTO.newPassword())));
+        userEntity.setPassword(passwordEncoder.encode(passwordChangeRequest.newPassword())));
   }
 
   // TODO: Use ID to check the existence of entities
   @Transactional
-  public TokenResponse refreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO) {
-    var refreshToken = refreshTokenRequestDTO.refreshToken();
+  public TokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    var refreshToken = refreshTokenRequest.refreshToken();
 
     if (StringUtils.isBlank(refreshToken)) {
       throw EXCEPTION_FACTORY.buildCommonException(

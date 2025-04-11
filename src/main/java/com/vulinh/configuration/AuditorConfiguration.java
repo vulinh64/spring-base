@@ -1,12 +1,11 @@
 package com.vulinh.configuration;
 
-import com.vulinh.data.dto.user.UserBasicDTO;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.utils.SecurityUtils;
+import java.util.UUID;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
-
-import java.util.UUID;
 
 @Configuration
 public class AuditorConfiguration {
@@ -15,6 +14,6 @@ public class AuditorConfiguration {
 
   @Bean
   public AuditorAware<UUID> auditorProvider() {
-    return () -> SecurityUtils.getUserDTO(null).map(UserBasicDTO::id);
+    return () -> SecurityUtils.getUserDTO(null).map(UserBasicResponse::id);
   }
 }

@@ -1,7 +1,7 @@
 package com.vulinh.utils.post;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.post.PostCreationDTO;
+import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -16,24 +16,24 @@ public class PostUtils {
     return StringUtils.normalizeSpace(text).toLowerCase();
   }
 
-  public static PostCreationDTO getActualDTO(PostCreationDTO postCreationDTO) {
+  public static PostCreationRequest getActualDTO(PostCreationRequest postCreationRequest) {
     var result =
-        postCreationDTO.withTags(
-            postCreationDTO.tags().stream()
+        postCreationRequest.withTags(
+            postCreationRequest.tags().stream()
                 .filter(StringUtils::isNotBlank)
                 // Convert all tags to lower case
                 // Remove extra space
                 .map(PostUtils::normalizeText)
                 .collect(Collectors.toSet()));
 
-    return StringUtils.isBlank(postCreationDTO.slug())
-        ? result.withSlug(SlugUtils.createPostSlug(postCreationDTO.title()))
+    return StringUtils.isBlank(postCreationRequest.slug())
+        ? result.withSlug(SlugUtils.createPostSlug(postCreationRequest.title()))
         : result;
   }
 
-  public static boolean isUncategorizedPost(PostCreationDTO postCreationDTO, Post post) {
-    return (postCreationDTO.categoryId() == null
-            || CommonConstant.UNCATEGORIZED_ID.equals(postCreationDTO.categoryId()))
+  public static boolean isUncategorizedPost(PostCreationRequest postCreationRequest, Post post) {
+    return (postCreationRequest.categoryId() == null
+            || CommonConstant.UNCATEGORIZED_ID.equals(postCreationRequest.categoryId()))
         && CommonConstant.UNCATEGORIZED_ID.equals(post.getCategory().getId());
   }
 }

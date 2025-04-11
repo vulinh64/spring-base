@@ -1,7 +1,7 @@
 package com.vulinh.service.comment;
 
-import com.vulinh.constant.CommonConstant;
-import com.vulinh.data.dto.comment.NewCommentDTO;
+import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.repository.CommentRepository;
 import com.vulinh.factory.ExceptionFactory;
@@ -27,8 +27,8 @@ public class NewCommentValidationService {
   private static final int COMMENT_MAX_LENGTH = 10000;
 
   public Comment validateEditComment(
-      NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
-    validate(newCommentDTO);
+      NewCommentRequest newCommentRequest, UUID commentId, HttpServletRequest request) {
+    validate(newCommentRequest);
 
     var comment =
         commentRepository
@@ -53,21 +53,21 @@ public class NewCommentValidationService {
     return comment;
   }
 
-  protected void validate(NewCommentDTO newCommentDTO) {
-    ValidatorChain.<NewCommentDTO>start()
+  protected void validate(NewCommentRequest newCommentRequest) {
+    ValidatorChain.<NewCommentRequest>start()
         .addValidator(NewCommentRule.values())
-        .executeValidation(newCommentDTO);
+        .executeValidation(newCommentRequest);
   }
 
   @Getter
   @RequiredArgsConstructor
-  public enum NewCommentRule implements NoArgsValidatorStep<NewCommentDTO> {
+  public enum NewCommentRule implements NoArgsValidatorStep<NewCommentRequest> {
     COMMENT_NOT_BLANK(
-        ValidatorStepFactory.noBlankField(NewCommentDTO::content),
+        ValidatorStepFactory.noBlankField(NewCommentRequest::content),
         CommonMessage.MESSAGE_COMMENT_INVALID,
         "Blank comment is not allowed"),
     COMMENT_NOT_TOO_LONG(
-        ValidatorStepFactory.noExceededLength(NewCommentDTO::content, COMMENT_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(NewCommentRequest::content, COMMENT_MAX_LENGTH),
         CommonMessage.MESSAGE_COMMENT_TOO_LONG,
         "Comment exceeded %s characters".formatted(COMMENT_MAX_LENGTH)) {
 
@@ -77,7 +77,7 @@ public class NewCommentValidationService {
       }
     };
 
-    private final Predicate<NewCommentDTO> predicate;
+    private final Predicate<NewCommentRequest> predicate;
     private final CommonMessage error;
     private final String exceptionMessage;
   }

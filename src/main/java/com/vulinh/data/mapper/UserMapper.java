@@ -1,9 +1,9 @@
 package com.vulinh.data.mapper;
 
 import com.vulinh.data.base.EntityDTOMapper;
-import com.vulinh.data.dto.auth.UserRegistrationDTO;
-import com.vulinh.data.dto.user.UserBasicDTO;
-import com.vulinh.data.dto.user.UserDTO;
+import com.vulinh.data.dto.request.UserRegistrationRequest;
+import com.vulinh.data.dto.response.SingleUserResponse;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.Users;
 import java.util.stream.Collectors;
@@ -14,19 +14,19 @@ import org.mapstruct.factory.Mappers;
     builder = @Builder(disableBuilder = true),
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     imports = Collectors.class)
-public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
+public interface UserMapper extends EntityDTOMapper<Users, SingleUserResponse> {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
   @Mapping(target = "isActive", ignore = true)
   @Mapping(target = "userRoles", ignore = true)
-  UserDTO toUserDTO(Users users);
+  SingleUserResponse toUserDTO(Users users);
 
   @Mapping(target = "sessionId", source = "userSession.id.sessionId")
   @Mapping(target = "id", source = "user.id")
   @Mapping(target = "createdDate", source = "user.createdDate")
   @Mapping(target = "updatedDate", source = "user.updatedDate")
-  UserBasicDTO toBasicUserDTO(Users user, UserSession userSession);
+  UserBasicResponse toBasicUserDTO(Users user, UserSession userSession);
 
   @Override
   @Mapping(target = "userRegistrationCode", ignore = true)
@@ -39,7 +39,7 @@ public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
   @Mapping(target = "username", expression = "java(dto.username().toLowerCase())")
   @Mapping(target = "email", expression = "java(dto.email().toLowerCase())")
   @Mapping(target = "passwordResetCodeExpiration", ignore = true)
-  void merge(UserDTO dto, @MappingTarget Users entity);
+  void merge(SingleUserResponse dto, @MappingTarget Users entity);
 
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "passwordResetCode", ignore = true)
@@ -48,15 +48,19 @@ public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "userRegistrationCode", source = "userRegistrationCode")
   @Mapping(target = "userRoles", ignore = true)
-  @Mapping(target = "username", expression = "java(userRegistrationDTO.username().toLowerCase())")
-  @Mapping(target = "email", expression = "java(userRegistrationDTO.email().toLowerCase())")
+  @Mapping(
+      target = "username",
+      expression = "java(userRegistrationRequest.username().toLowerCase())")
+  @Mapping(target = "email", expression = "java(userRegistrationRequest.email().toLowerCase())")
   @Mapping(target = "passwordResetCodeExpiration", ignore = true)
   Users toUserWithRegistrationCode(
-      UserRegistrationDTO userRegistrationDTO, String userRegistrationCode);
+      UserRegistrationRequest userRegistrationRequest, String userRegistrationCode);
 
   @Mapping(target = "userRoles", ignore = true)
-  @Mapping(target = "username", expression = "java(userRegistrationDTO.username().toLowerCase())")
-  @Mapping(target = "email", expression = "java(userRegistrationDTO.email().toLowerCase())")
+  @Mapping(
+      target = "username",
+      expression = "java(userRegistrationRequest.username().toLowerCase())")
+  @Mapping(target = "email", expression = "java(userRegistrationRequest.email().toLowerCase())")
   @Mapping(target = "userRegistrationCode", ignore = true)
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "passwordResetCodeExpiration", ignore = true)
@@ -64,5 +68,5 @@ public interface UserMapper extends EntityDTOMapper<Users, UserDTO> {
   @Mapping(target = "isActive", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
-  Users toUser(UserRegistrationDTO userRegistrationDTO);
+  Users toUser(UserRegistrationRequest userRegistrationRequest);
 }

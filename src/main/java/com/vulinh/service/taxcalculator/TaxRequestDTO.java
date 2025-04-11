@@ -1,6 +1,6 @@
 package com.vulinh.service.taxcalculator;
 
-import com.vulinh.data.dto.message.I18NCapable;
+import com.vulinh.data.base.I18NCapable;
 import com.vulinh.exception.CommonException;
 import com.vulinh.service.taxcalculator.TaxUtils.TaxConstant;
 import java.io.Serial;

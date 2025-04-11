@@ -1,7 +1,7 @@
 package com.vulinh.data.entity;
 
-import com.vulinh.constant.UserRole;
 import com.vulinh.data.base.AbstractIdentifiable;
+import com.vulinh.data.constant.UserRole;
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.util.Comparator;

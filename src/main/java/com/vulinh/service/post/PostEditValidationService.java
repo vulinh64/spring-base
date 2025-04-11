@@ -1,6 +1,6 @@
 package com.vulinh.service.post;
 
-import com.vulinh.data.dto.post.PostCreationDTO;
+import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.utils.post.PostUtils;
@@ -17,24 +17,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class PostEditValidationService {
 
-  public boolean isPostUnchanged(PostCreationDTO postCreationDTO, Post post) {
+  public boolean isPostUnchanged(PostCreationRequest postCreationRequest, Post post) {
     var result =
         Objects.equals(
-                PostUtils.normalizeText(postCreationDTO.title()),
+                PostUtils.normalizeText(postCreationRequest.title()),
                 PostUtils.normalizeText(post.getTitle()))
             && Objects.equals(
-                PostUtils.normalizeText(postCreationDTO.excerpt()),
+                PostUtils.normalizeText(postCreationRequest.excerpt()),
                 PostUtils.normalizeText(post.getExcerpt()))
-            && (PostUtils.isUncategorizedPost(postCreationDTO, post)
-                || Objects.equals(postCreationDTO.categoryId(), post.getCategory().getId()))
+            && (PostUtils.isUncategorizedPost(postCreationRequest, post)
+                || Objects.equals(postCreationRequest.categoryId(), post.getCategory().getId()))
             && CollectionUtils.isEqualCollection(
-                postCreationDTO.tags(),
+                postCreationRequest.tags(),
                 post.getTags().stream()
                     .map(Tag::getDisplayName)
                     .map(PostUtils::normalizeText)
                     .collect(Collectors.toSet()))
             && Objects.equals(
-                StringUtils.normalizeSpace(postCreationDTO.postContent()),
+                StringUtils.normalizeSpace(postCreationRequest.postContent()),
                 StringUtils.normalizeSpace(post.getPostContent()));
 
     if (!result) {

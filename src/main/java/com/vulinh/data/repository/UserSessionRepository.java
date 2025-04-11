@@ -1,8 +1,8 @@
 package com.vulinh.data.repository;
 
 import com.vulinh.configuration.cache.FromUserSessionEntityKeyGenerator;
-import com.vulinh.constant.CacheConstant;
 import com.vulinh.data.base.BaseRepository;
+import com.vulinh.data.constant.CacheConstant;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
 import java.util.Optional;

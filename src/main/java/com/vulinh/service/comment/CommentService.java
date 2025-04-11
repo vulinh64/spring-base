@@ -1,8 +1,8 @@
 package com.vulinh.service.comment;
 
-import com.vulinh.data.dto.comment.CommentDTO;
-import com.vulinh.data.dto.comment.NewCommentDTO;
-import com.vulinh.data.dto.user.UserBasicDTO;
+import com.vulinh.data.dto.request.NewCommentRequest;
+import com.vulinh.data.dto.response.SingleCommentResponse;
+import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.mapper.CommentMapper;
 import com.vulinh.data.repository.CommentRepository;
@@ -29,33 +29,36 @@ public class CommentService {
   private final CommentFetchingService commentFetchingService;
 
   @Transactional
-  public UUID addComment(UUID postId, NewCommentDTO newCommentDTO, HttpServletRequest request) {
-    commentValidationService.validate(newCommentDTO);
+  public UUID addComment(
+      UUID postId, NewCommentRequest newCommentRequest, HttpServletRequest request) {
+    commentValidationService.validate(newCommentRequest);
 
     var createdBy =
         SecurityUtils.getUserDTO(request)
-            .map(UserBasicDTO::id)
+            .map(UserBasicResponse::id)
             .flatMap(userRepository::findByIdAndIsActiveIsTrue)
             .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
 
     var persistedComment =
         commentRepository.save(
-            CommentMapper.INSTANCE.fromNewComment(newCommentDTO, createdBy, postId));
+            CommentMapper.INSTANCE.fromNewComment(newCommentRequest, createdBy, postId));
 
     commentRevisionService.createNewCommentRevision(persistedComment, RevisionType.CREATED);
 
     return persistedComment.getId();
   }
 
-  public void editComment(NewCommentDTO newCommentDTO, UUID commentId, HttpServletRequest request) {
-    var comment = commentValidationService.validateEditComment(newCommentDTO, commentId, request);
+  public void editComment(
+      NewCommentRequest newCommentRequest, UUID commentId, HttpServletRequest request) {
+    var comment =
+        commentValidationService.validateEditComment(newCommentRequest, commentId, request);
 
-    var newComment = commentRepository.save(comment.withContent(newCommentDTO.content()));
+    var newComment = commentRepository.save(comment.withContent(newCommentRequest.content()));
 
     commentRevisionService.createNewCommentRevision(newComment, RevisionType.UPDATED);
   }
 
-  public Page<CommentDTO> fetchComments(UUID postId, Pageable pageable) {
+  public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
     return commentFetchingService.fetchComments(postId, pageable);
   }
 }

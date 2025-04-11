@@ -1,7 +1,7 @@
 package com.vulinh.service.sessions;
 
-import com.vulinh.data.dto.security.AccessTokenContainer;
-import com.vulinh.data.dto.security.TokenResponse;
+import com.vulinh.data.dto.carrier.AccessTokenCarrier;
+import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;
@@ -21,7 +21,7 @@ public class UserSessionService {
   private final UserSessionRepository userSessionRepository;
 
   @Transactional
-  public TokenResponse createUserSession(AccessTokenContainer container) {
+  public TokenResponse createUserSession(AccessTokenCarrier container) {
     userSessionRepository.save(
         UserSession.builder()
             .id(UserSessionId.of(container.userId(), container.sessionId()))

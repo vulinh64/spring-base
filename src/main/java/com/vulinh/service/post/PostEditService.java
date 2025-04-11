@@ -1,14 +1,14 @@
 package com.vulinh.service.post;
 
-import com.vulinh.data.dto.post.PostCreationDTO;
+import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
-import com.vulinh.utils.post.PostUtils;
 import com.vulinh.utils.SecurityUtils;
+import com.vulinh.utils.post.PostUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,12 +29,12 @@ public class PostEditService {
 
   @Transactional
   public Optional<Post> editPost(
-      UUID postId, PostCreationDTO postCreationDTO, HttpServletRequest httpServletRequest) {
-    postValidationService.validatePost(postCreationDTO);
+      UUID postId, PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+    postValidationService.validatePost(postCreationRequest);
 
     var userDTO = SecurityUtils.getUserDTOOrThrow(httpServletRequest);
 
-    var actualPostCreationDTO = PostUtils.getActualDTO(postCreationDTO);
+    var actualPostCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
     var post =
         postRepository
@@ -48,7 +48,7 @@ public class PostEditService {
       return Optional.empty();
     }
 
-    var category = categoryService.getCategory(postCreationDTO.categoryId());
+    var category = categoryService.getCategory(postCreationRequest.categoryId());
 
     var tags = tagService.parseTags(actualPostCreationDTO);
 

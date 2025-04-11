@@ -1,10 +1,10 @@
 package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.CategoryAPI;
-import com.vulinh.data.dto.GenericResponse;
-import com.vulinh.data.dto.category.CategoryCreationDTO;
-import com.vulinh.data.dto.category.CategoryDTO;
-import com.vulinh.data.dto.category.CategorySearchDTO;
+import com.vulinh.data.dto.request.CategoryCreationRequest;
+import com.vulinh.data.dto.request.CategorySearchRequest;
+import com.vulinh.data.dto.response.CategoryResponse;
+import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.utils.ResponseUtils;
@@ -24,14 +24,16 @@ public class CategoryController implements CategoryAPI {
   private final CategoryService categoryService;
 
   @Override
-  public GenericResponse<CategoryDTO> createCategory(CategoryCreationDTO categoryCreationDTO) {
-    return RESPONSE_FACTORY.success(categoryService.createCategory(categoryCreationDTO));
+  public GenericResponse<CategoryResponse> createCategory(
+      CategoryCreationRequest categoryCreationRequest) {
+    return RESPONSE_FACTORY.success(categoryService.createCategory(categoryCreationRequest));
   }
 
   @Override
-  public GenericResponse<Page<CategoryDTO>> searchCategories(
-      CategorySearchDTO categorySearchDTO, Pageable pageable) {
-    return RESPONSE_FACTORY.success(categoryService.searchCategories(categorySearchDTO, pageable));
+  public GenericResponse<Page<CategoryResponse>> searchCategories(
+      CategorySearchRequest categorySearchRequest, Pageable pageable) {
+    return RESPONSE_FACTORY.success(
+        categoryService.searchCategories(categorySearchRequest, pageable));
   }
 
   @Override
