@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.vulinh.data.base.RecordDateTimeAuditable;
 import com.vulinh.data.base.RecordUuidIdentifiable;
 import com.vulinh.data.dto.response.data.RoleData;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
 import lombok.*;
@@ -19,7 +19,7 @@ public record SingleUserResponse(
     String fullName,
     String email,
     Boolean isActive,
-    LocalDateTime createdDate,
-    LocalDateTime updatedDate,
+    Instant createdDate,
+    Instant updatedDate,
     Collection<RoleData> userRoles)
     implements RecordUuidIdentifiable, RecordDateTimeAuditable {}

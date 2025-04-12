@@ -1,10 +1,10 @@
 package com.vulinh.data.base;
 
-import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 
 public interface DateTimeAuditable {
 
-  LocalDateTime getCreatedDate();
+  TemporalAccessor getCreatedDate();
 
-  LocalDateTime getUpdatedDate();
+  TemporalAccessor getUpdatedDate();
 }

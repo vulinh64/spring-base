@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
     builder = @Builder(disableBuilder = true),
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     imports = Collectors.class)
-public interface UserMapper extends EntityDTOMapper<Users, SingleUserResponse> {
+public interface UserMapper extends EntityDTOMapper<Users, SingleUserResponse>, DateTimeMappable {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
@@ -27,19 +27,6 @@ public interface UserMapper extends EntityDTOMapper<Users, SingleUserResponse> {
   @Mapping(target = "createdDate", source = "user.createdDate")
   @Mapping(target = "updatedDate", source = "user.updatedDate")
   UserBasicResponse toBasicUserDTO(Users user, UserSession userSession);
-
-  @Override
-  @Mapping(target = "userRegistrationCode", ignore = true)
-  @Mapping(target = "passwordResetCode", ignore = true)
-  @Mapping(target = "password", ignore = true)
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "userRoles", ignore = true)
-  @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "updatedDate", ignore = true)
-  @Mapping(target = "username", expression = "java(dto.username().toLowerCase())")
-  @Mapping(target = "email", expression = "java(dto.email().toLowerCase())")
-  @Mapping(target = "passwordResetCodeExpiration", ignore = true)
-  void merge(SingleUserResponse dto, @MappingTarget Users entity);
 
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "passwordResetCode", ignore = true)

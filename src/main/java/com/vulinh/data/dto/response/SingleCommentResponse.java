@@ -2,7 +2,7 @@ package com.vulinh.data.dto.response;
 
 import com.vulinh.data.base.RecordDateTimeAuditable;
 import com.vulinh.data.base.RecordUuidIdentifiable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
@@ -12,8 +12,8 @@ import lombok.With;
 public record SingleCommentResponse(
     UUID id,
     String content,
-    LocalDateTime createdDate,
-    LocalDateTime updatedDate,
+    Instant createdDate,
+    Instant updatedDate,
     String username,
     String fullName,
     Boolean isEdited)

@@ -6,7 +6,7 @@ import com.vulinh.data.base.RecordDateTimeAuditable;
 import com.vulinh.data.base.RecordUuidIdentifiable;
 import com.vulinh.data.dto.response.data.AuthorData;
 import com.vulinh.data.dto.response.data.TagData;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
 import lombok.Builder;
@@ -20,8 +20,8 @@ public record BasicPostResponse(
     String title,
     String excerpt,
     String slug,
-    LocalDateTime createdDate,
-    LocalDateTime updatedDate,
+    Instant createdDate,
+    Instant updatedDate,
     AuthorData author,
     CategoryResponse category,
     Collection<TagData> tags)
