@@ -4,7 +4,7 @@ import com.vulinh.data.base.RecordUuidIdentifiable;
 import com.vulinh.data.dto.response.data.AuthorData;
 import com.vulinh.data.dto.response.data.TagData;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.Builder;
@@ -18,8 +18,8 @@ public record SinglePostResponse(
     String excerpt,
     String slug,
     String postContent,
-    LocalDateTime createdDate,
-    LocalDateTime updatedDate,
+    Instant createdDate,
+    Instant updatedDate,
     AuthorData author,
     CategoryResponse category,
     List<TagData> tags)

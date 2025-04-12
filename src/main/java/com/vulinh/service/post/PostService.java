@@ -1,5 +1,6 @@
 package com.vulinh.service.post;
 
+import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.dto.response.ESimplePostResponse;
@@ -7,7 +8,6 @@ import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.elasticsearch.EPostRepository;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
-import com.vulinh.data.projection.PrefetchPostProjection;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.factory.ElasticsearchEventFactory;
 import com.vulinh.factory.ExceptionFactory;

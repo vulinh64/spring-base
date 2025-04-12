@@ -1,16 +1,16 @@
-package com.vulinh.data.dto.response;
+package com.vulinh.data.dto.projection;
 
 import com.vulinh.data.base.UUIDRevisionId;
 import com.vulinh.data.entity.RevisionType;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
 
 @With
 @Builder
-public record PostRevisionResponse(
+public record PostRevisionProjection(
     UUID postId,
     Long revisionNumber,
     RevisionType revisionType,
@@ -21,7 +21,7 @@ public record PostRevisionResponse(
     UUID authorId,
     UUID categoryId,
     String tags,
-    Instant revisionCreatedDate,
+    LocalDateTime revisionCreatedDate,
     UUID revisionCreatedBy)
     implements UUIDRevisionId, Serializable {
 

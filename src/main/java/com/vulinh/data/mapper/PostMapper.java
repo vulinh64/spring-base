@@ -2,9 +2,11 @@ package com.vulinh.data.mapper;
 
 import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.document.EPost;
+import com.vulinh.data.dto.projection.PostRevisionProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.dto.response.ESimplePostResponse;
+import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.entity.*;
 import com.vulinh.data.entity.ids.PostRevisionId;
@@ -92,4 +94,6 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse>, Da
           )
           """)
   ESimplePostResponse toESimplePost(EPost post, String keyword);
+
+  PostRevisionResponse toPostRevisionResponse(PostRevisionProjection postRevisionProjection);
 }

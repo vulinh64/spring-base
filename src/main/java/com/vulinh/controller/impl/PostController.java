@@ -1,13 +1,9 @@
 package com.vulinh.controller.impl;
 
 import com.vulinh.controller.api.PostAPI;
+import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
-import com.vulinh.data.dto.response.BasicPostResponse;
-import com.vulinh.data.dto.response.ESimplePostResponse;
-import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.dto.response.PostRevisionResponse;
-import com.vulinh.data.dto.response.SinglePostResponse;
-import com.vulinh.data.projection.PrefetchPostProjection;
+import com.vulinh.data.dto.response.*;
 import com.vulinh.factory.GenericResponseFactory;
 import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;

@@ -61,7 +61,9 @@ public class PostRevisionService {
                 Order.desc(
                     QPostRevision.postRevision.revisionCreatedDate.getMetadata().getName())));
 
-    return postRevisionRepository.findByPostIdOrPostSlug(postId, actualPageable);
+    return postRevisionRepository
+        .findByPostIdOrPostSlug(postId, actualPageable)
+        .map(POST_MAPPER::toPostRevisionResponse);
   }
 
   @Transactional

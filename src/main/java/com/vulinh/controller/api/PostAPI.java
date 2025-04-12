@@ -2,13 +2,9 @@ package com.vulinh.controller.api;
 
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.PostEndpoint;
+import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
-import com.vulinh.data.dto.response.BasicPostResponse;
-import com.vulinh.data.dto.response.ESimplePostResponse;
-import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.dto.response.PostRevisionResponse;
-import com.vulinh.data.dto.response.SinglePostResponse;
-import com.vulinh.data.projection.PrefetchPostProjection;
+import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;

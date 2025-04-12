@@ -1,4 +1,4 @@
-package com.vulinh.data.projection;
+package com.vulinh.data.dto.projection;
 
 import com.vulinh.data.base.UUIDIdentifiable;
 
