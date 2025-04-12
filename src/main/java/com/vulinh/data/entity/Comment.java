@@ -1,5 +1,6 @@
 package com.vulinh.data.entity;
 
+import com.vulinh.data.base.DateTimeAuditable;
 import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
@@ -21,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @With
-public class Comment extends UuidJpaEntity {
+public class Comment extends UuidJpaEntity implements DateTimeAuditable {
 
   @Serial private static final long serialVersionUID = 8024056047258352378L;
 
