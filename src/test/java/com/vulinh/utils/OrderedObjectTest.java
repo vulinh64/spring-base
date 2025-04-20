@@ -2,8 +2,9 @@ package com.vulinh.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.vulinh.utils.WithOrderWrapper.NullsOrder;
-import com.vulinh.utils.WithOrderWrapper.Order;
+import com.vulinh.utils.OrderedObject.NullsOrder;
+import com.vulinh.utils.OrderedObject.Order;
+import com.vulinh.utils.OrderedObject.Wrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class WithOrderWrapperTest {
+class OrderedObjectTest {
 
   private record TestUser(int id, String name, int age) {}
 
@@ -68,34 +69,34 @@ class WithOrderWrapperTest {
   void testNormalAsAscendingNullLast() {
     var result =
         IntStream.range(0, TEST_LIST.size())
-            .mapToObj(i -> WithOrderWrapper.wrap(TEST_LIST.get(i), i))
-            .sorted(WithOrderWrapper.firstCompareByNaturalOrder(TestUser::name))
-            .map(WithOrderWrapper::unwrap)
+            .mapToObj(i -> Wrapper.wrap(TEST_LIST.get(i), i))
+            .sorted(Wrapper.firstCompareByNaturalOrder(TestUser::name))
+            .map(OrderedObject::unwrap)
             .toList();
 
     assertCorrectOrder(result, 3, 5, 2, 4, 1);
   }
 
   @Test
-  @DisplayName("Constructor should throw exception when object is null")
+  @DisplayName("Constructor should throw exception when value is null")
   void assertThrowObjectNull() {
-    assertThrows(Exception.class, () -> new WithOrderWrapper<>(null, 0));
+    assertThrows(Exception.class, () -> new OrderedObject<>(null, 0));
   }
 
   @Test
   @DisplayName("Constructor should throw exception when order is negative")
   void assertThrowOrderNegative() {
-    assertThrows(Exception.class, () -> new WithOrderWrapper<>(new Object(), -1));
+    assertThrows(Exception.class, () -> new OrderedObject<>(new Object(), -1));
   }
 
   @Test
   @DisplayName(
       """
-      Throw IllegalArgumentException if the object contains null field, perhaps indicating a failed validation\
+      Throw IllegalArgumentException if the value contains null field, perhaps indicating a failed validation\
       """)
   void throwWhenNullElementDetected() {
     assertThrows(
-        IllegalArgumentException.class, WithOrderWrapperTest::nullDetectedLaunchNuclearMissile);
+        IllegalArgumentException.class, OrderedObjectTest::nullDetectedLaunchNuclearMissile);
   }
 
   @Test
@@ -108,26 +109,25 @@ class WithOrderWrapperTest {
           testList.removeFirst();
 
           IntStream.range(0, testList.size())
-              .mapToObj(indices -> WithOrderWrapper.wrap(testList.get(indices), indices))
+              .mapToObj(indices -> Wrapper.wrap(testList.get(indices), indices))
               .sorted(
-                  WithOrderWrapper.firstCompareBy(
-                      TestUser::name, Order.ASCENDING, NullsOrder.NULLS_HOSTILE))
-              .map(WithOrderWrapper::unwrap)
+                  Wrapper.firstCompareBy(TestUser::name, Order.ASCENDING, NullsOrder.NULLS_HOSTILE))
+              .map(OrderedObject::unwrap)
               .toList();
         });
 
     assertDoesNotThrow(
         () -> {
-          WithOrderWrapper.toSortedList(
+          Wrapper.toSortedList(
               Collections.emptyList(), TestUser::name, Order.DESCENDING, NullsOrder.NULLS_HOSTILE);
         });
   }
 
   private static List<TestUser> buildResult(Order order, NullsOrder nullsOrder) {
     return IntStream.range(0, TEST_LIST.size())
-        .mapToObj(indices -> WithOrderWrapper.wrap(TEST_LIST.get(indices), indices))
-        .sorted(WithOrderWrapper.firstCompareBy(TestUser::name, order, nullsOrder))
-        .map(WithOrderWrapper::unwrap)
+        .mapToObj(indices -> Wrapper.wrap(TEST_LIST.get(indices), indices))
+        .sorted(Wrapper.firstCompareBy(TestUser::name, order, nullsOrder))
+        .map(OrderedObject::unwrap)
         .toList();
   }
 
@@ -145,7 +145,6 @@ class WithOrderWrapperTest {
     testList.addFirst(new TestUser(8, "X", 29));
 
     assertNotNull(
-        WithOrderWrapper.toSortedList(
-            testList, TestUser::name, Order.ASCENDING, NullsOrder.NULLS_HOSTILE));
+        Wrapper.toSortedList(testList, TestUser::name, Order.ASCENDING, NullsOrder.NULLS_HOSTILE));
   }
 }
