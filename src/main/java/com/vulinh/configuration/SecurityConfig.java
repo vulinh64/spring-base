@@ -1,6 +1,5 @@
 package com.vulinh.configuration;
 
-import com.vulinh.configuration.data.SecurityConfigProperties;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.utils.SecurityUrlUtils;
@@ -47,7 +46,7 @@ public class SecurityConfig {
 
   private static final UserRole ROLE_ADMIN = UserRole.ADMIN;
 
-  private final SecurityConfigProperties securityConfigProperties;
+  private final ApplicationProperties applicationProperties;
 
   private final HandlerExceptionResolver handlerExceptionResolver;
   private final AccessTokenValidator accessTokenValidator;
@@ -101,7 +100,9 @@ public class SecurityConfig {
   private void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer) {
-    for (var verbUrl : securityConfigProperties.allowedVerbUrls()) {
+    var securityProperties = applicationProperties.security();
+
+    for (var verbUrl : securityProperties.allowedVerbUrls()) {
       authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
     }
 
@@ -112,7 +113,7 @@ public class SecurityConfig {
     }
 
     authorizeHttpRequestsCustomizer
-        .requestMatchers(securityConfigProperties.noAuthenticatedUrls().toArray(String[]::new))
+        .requestMatchers(securityProperties.noAuthenticatedUrls().toArray(String[]::new))
         .permitAll()
         .requestMatchers(SecurityUrlUtils.getUrlsWithPrivilege(ROLE_ADMIN))
         .hasAuthority(ROLE_ADMIN.name())
@@ -163,7 +164,9 @@ public class SecurityConfig {
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
       var requestURI = request.getRequestURI();
 
-      return securityConfigProperties.noAuthenticatedUrls().stream()
+      var securityProperties = applicationProperties.security();
+
+      return securityProperties.noAuthenticatedUrls().stream()
               .anyMatch(
                   antUrl -> {
                     var result = ANT_PATH_MATCHER.match(antUrl, requestURI);
@@ -175,7 +178,7 @@ public class SecurityConfig {
 
                     return result;
                   })
-          || securityConfigProperties.allowedVerbUrls().stream()
+          || securityProperties.allowedVerbUrls().stream()
               .anyMatch(
                   verbAntUrl -> {
                     var requestMethod = request.getMethod();

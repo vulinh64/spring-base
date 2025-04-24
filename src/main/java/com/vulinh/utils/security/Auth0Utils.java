@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.configuration.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.entity.ids.QUserSessionId;
 import com.vulinh.data.entity.ids.UserSessionId;
@@ -32,12 +32,12 @@ public class Auth0Utils {
   private static Algorithm rsaAlgorithm;
   private static JWTVerifier jwtVerifier;
 
-  public static Algorithm getAlgorithm(SecurityConfigProperties securityConfigProperties) {
+  public static Algorithm getAlgorithm(SecurityProperties securityProperties) {
     if (rsaAlgorithm == null) {
       rsaAlgorithm =
           Algorithm.RSA512(
-              SecurityUtils.generatePublicKey(securityConfigProperties.publicKey()),
-              SecurityUtils.generatePrivateKey(securityConfigProperties.privateKey()));
+              SecurityUtils.generatePublicKey(securityProperties.publicKey()),
+              SecurityUtils.generatePrivateKey(securityProperties.privateKey()));
     }
 
     return rsaAlgorithm;
@@ -57,11 +57,11 @@ public class Auth0Utils {
         .withClaim(TOKEN_TYPE, tokenType.name());
   }
 
-  public static JWTVerifier getJwtVerifier(SecurityConfigProperties securityConfigProperties) {
+  public static JWTVerifier getJwtVerifier(SecurityProperties securityProperties) {
     if (jwtVerifier == null) {
       jwtVerifier =
-          JWT.require(getAlgorithm(securityConfigProperties))
-              .withIssuer(securityConfigProperties.issuer())
+          JWT.require(getAlgorithm(securityProperties))
+              .withIssuer(securityProperties.issuer())
               .build();
     }
 

@@ -45,6 +45,8 @@ public class CommonConstant {
   public static final UUID UNCATEGORIZED_ID =
       UUID.fromString("00000000-0000-0000-0000-000000000000");
 
+  public static final UUID NIL_UUID = UNCATEGORIZED_ID;
+
   public static final String POST_ENTITY = "Post";
   public static final String COMMENT_ENTITY = "Comment";
 }

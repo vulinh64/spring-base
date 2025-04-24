@@ -1,6 +1,6 @@
 package com.vulinh.service.token;
 
-import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.dto.carrier.AccessTokenCarrier;
 import com.vulinh.data.dto.carrier.TokenResponse;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
 
-  private final SecurityConfigProperties securityConfigProperties;
+  private final ApplicationProperties securityConfigProperties;
 
   private final RefreshTokenGenerator refreshTokenGenerator;
 
@@ -26,7 +26,10 @@ public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
   @NonNull
   public AccessTokenCarrier generateAccessToken(UUID userId, UUID sessionId, Instant issuedAt) {
     var userSessionId = UserSessionId.of(userId, sessionId);
+
     var refreshTokenContainer = refreshTokenGenerator.generateRefreshToken(userSessionId, issuedAt);
+
+    var securityProperties = securityConfigProperties.security();
 
     return AccessTokenCarrier.builder()
         .tokenResponse(
@@ -35,11 +38,11 @@ public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
                     Auth0Utils.buildTokenCommonParts(
                             userSessionId,
                             issuedAt,
-                            securityConfigProperties.issuer(),
-                            securityConfigProperties.jwtDuration(),
+                            securityProperties.issuer(),
+                            securityProperties.jwtDuration(),
                             TokenType.ACCESS_TOKEN)
                         .withIssuedAt(issuedAt)
-                        .sign(Auth0Utils.getAlgorithm(securityConfigProperties)))
+                        .sign(Auth0Utils.getAlgorithm(securityProperties)))
                 .refreshToken(refreshTokenContainer.refreshToken())
                 .build())
         .userId(userId)

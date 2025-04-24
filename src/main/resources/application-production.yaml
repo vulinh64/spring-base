@@ -1,9 +1,10 @@
-# Disable p6spy logging on production (hypothetical)
+application-properties:
+  schedule:
+    clean-expired-user-sessions: 0 0/1 1-5 * * * # Runs every minute between 1:00 AM and 3:59 AM daily
+# Disable P6SPY logging on production (hypothetical)
 decorator.datasource.p6spy.enable-logging: false
 springdoc:
   api-docs.enabled: false
   swagger-ui.enabled: false
-schedule:
-  clean-expired-user-sessions: 0 0/1 1-5 * * * # Runs every minute between 1:00 AM and 3:59 AM daily
 # Not running on production (hypothetical)
 spring.liquibase.enabled: false

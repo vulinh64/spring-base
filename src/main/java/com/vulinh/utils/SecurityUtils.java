@@ -1,6 +1,6 @@
 package com.vulinh.utils;
 
-import com.vulinh.configuration.data.CustomAuthentication;
+import com.vulinh.configuration.CustomAuthentication;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.locale.CommonMessage;

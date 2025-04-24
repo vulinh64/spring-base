@@ -1,6 +1,6 @@
 package com.vulinh.service.token;
 
-import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
 import com.vulinh.data.entity.ids.UserSessionId;
@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Auth0RefreshTokenGenerator implements RefreshTokenGenerator {
 
-  private final SecurityConfigProperties securityConfigProperties;
+  private final ApplicationProperties applicationProperties;
 
   @Override
   @NonNull
   public RefreshTokenCarrier generateRefreshToken(UserSessionId userSessionId, Instant issuedAt) {
-    var ttl = securityConfigProperties.refreshJwtDuration();
+    var securityProperties = applicationProperties.security();
+
+    var ttl = securityProperties.refreshJwtDuration();
 
     return RefreshTokenCarrier.builder()
         .expirationDate(issuedAt.plus(ttl))
@@ -28,10 +30,10 @@ public class Auth0RefreshTokenGenerator implements RefreshTokenGenerator {
             Auth0Utils.buildTokenCommonParts(
                     userSessionId,
                     issuedAt,
-                    securityConfigProperties.issuer(),
+                    securityProperties.issuer(),
                     ttl,
                     TokenType.REFRESH_TOKEN)
-                .sign(Auth0Utils.getAlgorithm(securityConfigProperties)))
+                .sign(Auth0Utils.getAlgorithm(securityProperties)))
         .build();
   }
 }

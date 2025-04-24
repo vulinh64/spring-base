@@ -1,6 +1,5 @@
 package com.vulinh.configuration;
 
-import com.vulinh.configuration.data.SchedulingTaskProperties;
 import com.vulinh.data.constant.EnvironmentConstant;
 import com.vulinh.utils.springcron.HourExpression;
 import com.vulinh.utils.springcron.MinuteExpression;
@@ -18,10 +17,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SchedulingTaskSupport {
 
-  private final SchedulingTaskProperties schedulingTaskProperties;
+  private final ApplicationProperties applicationProperties;
 
   public String cleanExpiredUserSessionsExpression() {
-    var expression = schedulingTaskProperties.cleanExpiredUserSessions();
+    var expression = applicationProperties.schedule().cleanExpiredUserSessions();
 
     if (StringUtils.isBlank(expression)) {
       return SpringCronGeneratorDTO.builder()

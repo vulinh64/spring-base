@@ -1,8 +1,7 @@
 package com.vulinh;
 
+import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.configuration.AuditorConfiguration;
-import com.vulinh.configuration.data.SchedulingTaskProperties;
-import com.vulinh.configuration.data.SecurityConfigProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
 @EnableAsync
 @EnableScheduling
-@EnableConfigurationProperties({SecurityConfigProperties.class, SchedulingTaskProperties.class})
+@EnableConfigurationProperties(ApplicationProperties.class)
 @EnableCaching
 public class SpringBaseProjectApplication {
 

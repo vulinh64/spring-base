@@ -1,6 +1,6 @@
 package com.vulinh.service.auth;
 
-import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.dto.request.PasswordChangeRequest;
 import com.vulinh.data.dto.request.RefreshTokenRequest;
@@ -47,7 +47,7 @@ public class AuthService {
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
-  private final SecurityConfigProperties securityConfigProperties;
+  private final ApplicationProperties applicationProperties;
 
   private final UserRepository userRepository;
 
@@ -164,7 +164,7 @@ public class AuthService {
     var issuedAt = Instant.now();
 
     userSessionService.updateUserSession(
-        userSession, issuedAt.plus(securityConfigProperties.refreshJwtDuration()));
+        userSession, issuedAt.plus(applicationProperties.security().refreshJwtDuration()));
 
     var tokenResult =
         accessTokenGenerator

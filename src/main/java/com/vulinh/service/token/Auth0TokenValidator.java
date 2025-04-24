@@ -2,7 +2,7 @@ package com.vulinh.service.token;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.vulinh.configuration.data.SecurityConfigProperties;
+import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import com.vulinh.factory.ExceptionFactory;
@@ -18,11 +18,12 @@ class Auth0TokenValidator {
 
   private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
 
-  private final SecurityConfigProperties securityConfigProperties;
+  private final ApplicationProperties securityConfigProperties;
 
   DecodedJwtPayloadCarrier validateToken(String refreshToken, TokenType expectedTokenType) {
     try {
-      var decodedJWT = Auth0Utils.getJwtVerifier(securityConfigProperties).verify(refreshToken);
+      var decodedJWT =
+          Auth0Utils.getJwtVerifier(securityConfigProperties.security()).verify(refreshToken);
 
       var actualTokenType =
           TokenType.valueOf(Auth0Utils.claimAsString(decodedJWT, Auth0Utils.TOKEN_TYPE));

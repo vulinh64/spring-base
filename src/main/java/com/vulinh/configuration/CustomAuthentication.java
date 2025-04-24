@@ -1,4 +1,4 @@
-package com.vulinh.configuration.data;
+package com.vulinh.configuration;
 
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.dto.response.data.RoleData;
