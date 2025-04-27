@@ -20,28 +20,4 @@ class JsonAuth0UtilsTest {
 
     assertEquals(expected, actual);
   }
-
-  // I am not supposed to test this method
-  @Test
-  void toPrettyJSON() {
-    // Fuck line separator
-    System.setProperty("line.separator", "\n");
-
-    var queue = new LinkedList<>();
-
-    queue.add(1);
-    queue.add(2);
-    queue.add(3);
-
-    var expected =
-        """
-        [
-          1,
-          2,
-          3
-        ]""";
-    var actual = JsonUtils.toPrettyJSON(queue);
-
-    assertEquals(expected, actual);
-  }
 }
