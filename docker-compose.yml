@@ -17,9 +17,9 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-      db:
+      postgresql:
         condition: service_healthy
-  db:
+  postgresql:
     image: 'postgres:latest'
     container_name: postgresql
     ports:

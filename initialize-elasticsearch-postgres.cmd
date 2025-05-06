@@ -1,6 +1,15 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
 
+REM Check if Docker daemon is running
+docker info >nul 2>&1
+if errorlevel 1 (
+    echo Error: Docker daemon is not running.
+    echo Please start Docker Desktop or Docker service and run this script again.
+    pause
+    exit /b 1
+)
+
 REM Define container names and commands
 SET ES_CONTAINER_NAME=standalone-elasticsearch
 SET ES_VOLUME_NAME=elasticsearch-volume

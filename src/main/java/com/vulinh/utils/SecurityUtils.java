@@ -51,10 +51,10 @@ public class SecurityUtils {
   public static RSAPublicKey generatePublicKey(String rawPublicKey) {
     // Remove header and footer if they are present
     // Also remove any whitespace character (\n, \r, space)
-    var refinedPrivateKey =
+    var refinedPublicKey =
         StringUtils.deleteWhitespace(stripRawKey(rawPublicKey, PUBLIC_KEY_TO_BE_TRIMMED));
 
-    var result = generateRSAPublicKey(refinedPrivateKey);
+    var result = generateRSAPublicKey(refinedPublicKey);
 
     if (!(result instanceof RSAPublicKey rsaPublicKey)) {
       throw EXCEPTION_FACTORY.buildCommonException(
