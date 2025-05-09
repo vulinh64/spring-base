@@ -35,7 +35,7 @@ RUN jdeps  \
 # Create a custom JRE with only the required modules
 # jdk.crypto.ec and jdk.crypto.cryptoki are needed for HTTPS
 RUN jlink \
-    --add-modules $(cat deps.info),jdk.crypto.ec,jdk.crypto.cryptoki \
+    --add-modules $(cat deps.info),jdk.crypto.ec \
     --strip-debug  \
     --compress 2  \
     --no-header-files  \
