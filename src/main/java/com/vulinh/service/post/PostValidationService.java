@@ -1,19 +1,16 @@
 package com.vulinh.service.post;
 
-import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.dto.response.data.RoleData;
 import com.vulinh.data.entity.Post;
-import com.vulinh.exception.CommonException;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -30,21 +27,15 @@ public class PostValidationService {
   private static final int TITLE_MAX_LENGTH = 5000;
   private static final int TAG_MAX_LENGTH = 1000;
 
-  public static CommonException postOrSlugNotFound(UUID postId) {
-    return ExceptionFactory.INSTANCE.entityNotFound(
-        "Post with ID %s or slug %s not found".formatted(postId, postId),
-        CommonConstant.POST_ENTITY);
-  }
-
   public static final ValidatorChain<PostCreationRequest> BASIC_POST_VALIDATOR =
       ValidatorChain.<PostCreationRequest>start().addValidator(PostRule.values());
 
   public void validateModifyingPermission(UserBasicResponse userDTO, Post post) {
     if (!(PostValidationService.isOwner(userDTO, post)
         || PostValidationService.isPowerUser(userDTO))) {
-      throw ExceptionFactory.INSTANCE.buildCommonException(
+      throw NoSuchPermissionException.noSuchPermissionException(
           "Invalid author or no permission to edit",
-          CommonMessage.MESSAGE_INVALID_OWNER_OR_NO_RIGHT);
+          ServiceErrorCode.MESSAGE_INVALID_OWNER_OR_NO_RIGHT);
     }
   }
 
@@ -98,23 +89,23 @@ public class PostValidationService {
   public enum PostRule implements NoArgsValidatorStep<PostCreationRequest> {
     POST_NO_BLANK_TITLE(
         ValidatorStepFactory.noBlankField(PostCreationRequest::title),
-        CommonMessage.MESSAGE_POST_INVALID_TITLE,
+        ServiceErrorCode.MESSAGE_POST_INVALID_TITLE,
         "Blank title is not allowed"),
     POST_LONG_ENOUGH_TITLE(
         ValidatorStepFactory.noExceededLength(PostCreationRequest::title, TITLE_MAX_LENGTH),
-        CommonMessage.MESSAGE_POST_INVALID_TITLE,
+        ServiceErrorCode.MESSAGE_POST_INVALID_TITLE,
         "Title length is too long"),
     POST_NO_EMPTY_CONTENT(
         ValidatorStepFactory.noBlankField(PostCreationRequest::postContent),
-        CommonMessage.MESSAGE_POST_INVALID_CONTENT,
+        ServiceErrorCode.MESSAGE_POST_INVALID_CONTENT,
         "Empty content is not allowed"),
     POST_NO_INVALID_TAG(
         PostRule::isValidTags,
-        CommonMessage.MESSAGE_POST_INVALID_TAG,
+        ServiceErrorCode.MESSAGE_POST_INVALID_TAG,
         "Empty tag or tag is too long");
 
     private final Predicate<PostCreationRequest> predicate;
-    private final CommonMessage error;
+    private final ServiceErrorCode applicationError;
     private final String exceptionMessage;
 
     private static boolean isValidTags(PostCreationRequest dto) {

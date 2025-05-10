@@ -1,5 +1,6 @@
 package com.vulinh.locale;
 
+import com.vulinh.data.base.ApplicationError;
 import java.util.*;
 import java.util.ResourceBundle.Control;
 import lombok.AccessLevel;
@@ -18,6 +19,11 @@ public class LocalizationSupport {
 
   private static final Control BUNDLE_CONTROL =
       new MultiResourceBundleControl(List.of("i18n/messages"));
+
+  @NonNull
+  public static String getParsedMessage(ApplicationError applicationError, Object... args) {
+    return getParsedMessage(applicationError.getErrorCode(), args);
+  }
 
   @NonNull
   public static String getParsedMessage(@NonNull String code, Object... args) {

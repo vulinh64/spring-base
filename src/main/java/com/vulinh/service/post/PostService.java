@@ -1,5 +1,6 @@
 package com.vulinh.service.post;
 
+import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
@@ -9,9 +10,9 @@ import com.vulinh.data.elasticsearch.EPostRepository;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
+import com.vulinh.exception.NotFoundException;
 import com.vulinh.factory.ElasticsearchEventFactory;
-import com.vulinh.factory.ExceptionFactory;
-import jakarta.servlet.http.HttpServletRequest;
+import com.vulinh.locale.ServiceErrorCode;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,14 +48,16 @@ public class PostService {
     return postRepository
         .findById(postId)
         .map(POST_MAPPER::toSinglePostDTO)
-        .orElseThrow(() -> ExceptionFactory.INSTANCE.postNotFound(postId));
+        .orElseThrow(
+            () ->
+                NotFoundException.entityNotFound(
+                    CommonConstant.POST_ENTITY, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
   @Transactional
-  public BasicPostResponse createPost(
-      PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+  public BasicPostResponse createPost(PostCreationRequest postCreationRequest) {
     // Delegate to PostCreationService
-    var entity = postCreationService.createPost(postCreationRequest, httpServletRequest);
+    var entity = postCreationService.createPost(postCreationRequest);
 
     // Delegate to PostRevisionService
     postRevisionService.createPostCreationRevision(entity);
@@ -65,9 +68,8 @@ public class PostService {
   }
 
   @Transactional
-  public boolean editPost(
-      UUID postId, PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
-    var possiblePost = postEditService.editPost(postId, postCreationRequest, httpServletRequest);
+  public boolean editPost(UUID postId, PostCreationRequest postCreationRequest) {
+    var possiblePost = postEditService.editPost(postId, postCreationRequest);
 
     if (possiblePost.isPresent()) {
       var post = possiblePost.get();
@@ -83,8 +85,8 @@ public class PostService {
   }
 
   @Transactional
-  public boolean deletePost(UUID postId, HttpServletRequest httpServletRequest) {
-    var possiblePost = postDeletionService.deletePost(postId, httpServletRequest);
+  public boolean deletePost(UUID postId) {
+    var possiblePost = postDeletionService.deletePost(postId);
 
     if (possiblePost.isPresent()) {
       var post = possiblePost.get();

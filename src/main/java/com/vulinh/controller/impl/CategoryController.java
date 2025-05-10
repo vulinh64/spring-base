@@ -5,7 +5,7 @@ import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
 import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.factory.GenericResponseFactory;
+import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.utils.ResponseUtils;
 import java.util.UUID;
@@ -19,20 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CategoryController implements CategoryAPI {
 
-  private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
-
   private final CategoryService categoryService;
 
   @Override
   public GenericResponse<CategoryResponse> createCategory(
       CategoryCreationRequest categoryCreationRequest) {
-    return RESPONSE_FACTORY.success(categoryService.createCategory(categoryCreationRequest));
+    return ResponseCreator.success(categoryService.createCategory(categoryCreationRequest));
   }
 
   @Override
   public GenericResponse<Page<CategoryResponse>> searchCategories(
       CategorySearchRequest categorySearchRequest, Pageable pageable) {
-    return RESPONSE_FACTORY.success(
+    return ResponseCreator.success(
         categoryService.searchCategories(categorySearchRequest, pageable));
   }
 

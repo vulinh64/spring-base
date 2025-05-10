@@ -9,8 +9,8 @@ import com.vulinh.configuration.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.entity.ids.QUserSessionId;
 import com.vulinh.data.entity.ids.UserSessionId;
-import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.exception.AuthorizationException;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import java.time.Duration;
@@ -72,8 +72,8 @@ public class Auth0Utils {
     var claimNode = decodedJWT.getClaim(claimName);
 
     if (claimNode.isMissing() || claimNode.isNull()) {
-      throw ExceptionFactory.INSTANCE.buildCommonException(
-          "Claim %s is missing".formatted(claimName), CommonMessage.MESSAGE_INVALID_AUTHORIZATION);
+      throw AuthorizationException.invalidAuthorization(
+          "Claim %s is missing".formatted(claimName), ServiceErrorCode.MESSAGE_INVALID_AUTHORIZATION);
     }
 
     return claimNode.asString();

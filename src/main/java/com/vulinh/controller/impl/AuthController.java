@@ -7,9 +7,9 @@ import com.vulinh.data.dto.request.RefreshTokenRequest;
 import com.vulinh.data.dto.request.UserLoginRequest;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.SingleUserResponse;
-import com.vulinh.factory.GenericResponseFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
@@ -22,19 +22,17 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController implements AuthAPI {
 
-  private static final GenericResponseFactory RESPONSE_FACTORY = GenericResponseFactory.INSTANCE;
-
   private final AuthService authService;
 
   @Override
   public GenericResponse<TokenResponse> login(UserLoginRequest userLoginRequest) {
-    return RESPONSE_FACTORY.success(authService.login(userLoginRequest));
+    return ResponseCreator.success(authService.login(userLoginRequest));
   }
 
   @Override
   public GenericResponse<SingleUserResponse> register(
       UserRegistrationRequest userRegistrationRequest) {
-    return RESPONSE_FACTORY.success(authService.registerUser(userRegistrationRequest));
+    return ResponseCreator.success(authService.registerUser(userRegistrationRequest));
   }
 
   @Override
@@ -42,22 +40,22 @@ public class AuthController implements AuthAPI {
     boolean isUserConfirmed = authService.confirmUser(userId, code);
 
     return isUserConfirmed
-        ? ResponseEntity.ok(GenericResponseFactory.INSTANCE.success())
-        : ResponseEntity.status(CommonMessage.MESSAGE_INVALID_CONFIRMATION.getHttpStatusCode())
-            .body(RESPONSE_FACTORY.toGenericResponse(CommonMessage.MESSAGE_INVALID_CONFIRMATION));
+        ? ResponseEntity.ok(ResponseCreator.success())
+        : ResponseEntity.badRequest()
+            .body(ResponseCreator.toError(ServiceErrorCode.MESSAGE_INVALID_CONFIRMATION));
   }
 
   @Override
   public ResponseEntity<Object> changePassword(
       PasswordChangeRequest passwordChangeRequest, HttpServletRequest httpServletRequest) {
-    authService.changePassword(passwordChangeRequest, httpServletRequest);
+    authService.changePassword(passwordChangeRequest);
 
     return ResponseEntity.ok().build();
   }
 
   @Override
   public GenericResponse<TokenResponse> refreshToken(RefreshTokenRequest refreshTokenRequest) {
-    return RESPONSE_FACTORY.success(authService.refreshToken(refreshTokenRequest));
+    return ResponseCreator.success(authService.refreshToken(refreshTokenRequest));
   }
 
   @Override

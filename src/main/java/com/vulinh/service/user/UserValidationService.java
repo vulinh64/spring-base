@@ -4,12 +4,10 @@ import com.sanctionco.jmail.JMail;
 import com.vulinh.data.dto.request.UserLoginRequest;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.entity.Users;
-import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
-import com.vulinh.utils.validator.ValidatorStep;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +21,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserValidationService {
 
-  private static final ValidatorStepFactory VALIDATOR_STEP_FACTORY = ValidatorStepFactory.INSTANCE;
-
   public static final int PASSWORD_MINIMUM_LENGTH = 8;
   public static final int USERNAME_MAX_LENGTH = 200;
 
   private static final char UNDERSCORE = '_';
-
-  private final UserRepository userRepository;
 
   public static boolean isActive(Users matcherUser) {
     var result = BooleanUtils.isTrue(matcherUser.getIsActive());
@@ -114,46 +108,9 @@ public class UserValidationService {
     return true;
   }
 
-  public static ValidatorStep<UserRegistrationRequest> availableUsername(
-      UserRepository userRepository) {
-    return VALIDATOR_STEP_FACTORY.build(
-        dto -> {
-          var username = dto.username();
-
-          var result = !userRepository.existsByUsernameIgnoreCase(username);
-
-          if (!result) {
-            log.debug("User {} already existed", username);
-          }
-
-          return result;
-        },
-        CommonMessage.MESSAGE_USER_EXISTED,
-        "User already existed");
-  }
-
-  public static ValidatorStep<UserRegistrationRequest> availableEmail(
-      UserRepository userRepository) {
-    return VALIDATOR_STEP_FACTORY.build(
-        dto -> {
-          var email = dto.email();
-
-          var result = !userRepository.existsByEmailIgnoreCase(email);
-
-          if (!result) {
-            log.debug("Email {} already existed", email);
-          }
-
-          return result;
-        },
-        CommonMessage.MESSAGE_EMAIL_EXISTED,
-        "Email already existed");
-  }
-
   public void validateUserCreation(UserRegistrationRequest userRegistrationRequest) {
     ValidatorChain.<UserRegistrationRequest>start()
         .addValidator(UserRule.values())
-        .addValidator(availableUsername(userRepository), availableEmail(userRepository))
         .executeValidation(userRegistrationRequest);
   }
 
@@ -162,22 +119,22 @@ public class UserValidationService {
   public enum UserRule implements NoArgsValidatorStep<UserRegistrationRequest> {
     USER_NO_BLANK_USERNAME(
         ValidatorStepFactory.noBlankField(UserRegistrationRequest::username),
-        CommonMessage.MESSAGE_INVALID_USERNAME,
+        ServiceErrorCode.MESSAGE_INVALID_USERNAME,
         "Blank username is not allowed"),
     USER_LONG_ENOUGH_USERNAME(
         ValidatorStepFactory.noExceededLength(
             UserRegistrationRequest::username, USERNAME_MAX_LENGTH),
-        CommonMessage.MESSAGE_INVALID_USERNAME,
+        ServiceErrorCode.MESSAGE_INVALID_USERNAME,
         "Username exceeded %s characters".formatted(USERNAME_MAX_LENGTH)) {
 
       @Override
-      public Object[] getArguments() {
+      public Object[] getArgs() {
         return new Integer[] {USERNAME_MAX_LENGTH};
       }
     },
     USER_VALID_USERNAME(
         UserValidationService::isUsernameValid,
-        CommonMessage.MESSAGE_INVALID_USERNAME,
+        ServiceErrorCode.MESSAGE_INVALID_USERNAME,
         """
         Invalid username (contains only alphanumeric characters and underscores, \
         first character cannot be a number or an underscore, and last character \
@@ -185,30 +142,30 @@ public class UserValidationService {
         """),
     USER_NO_BLANK_PASSWORD(
         ValidatorStepFactory.noBlankField(UserRegistrationRequest::password),
-        CommonMessage.MESSAGE_INVALID_PASSWORD,
+        ServiceErrorCode.MESSAGE_INVALID_PASSWORD,
         "Blank password is not allowed"),
     USER_PASSWORD_LONG(
         ValidatorStepFactory.atLeastLength(
             UserRegistrationRequest::password, PASSWORD_MINIMUM_LENGTH),
-        CommonMessage.MESSAGE_INVALID_PASSWORD,
+        ServiceErrorCode.MESSAGE_INVALID_PASSWORD,
         "Password has to be %s characters or more".formatted(PASSWORD_MINIMUM_LENGTH)) {
 
       @Override
-      public Object[] getArguments() {
+      public Object[] getArgs() {
         return new Integer[] {PASSWORD_MINIMUM_LENGTH};
       }
     },
     USER_NO_BLANK_EMAIL(
         ValidatorStepFactory.noBlankField(UserRegistrationRequest::email),
-        CommonMessage.MESSAGE_INVALID_EMAIL,
+        ServiceErrorCode.MESSAGE_INVALID_EMAIL,
         "Blank email is not allowed"),
     USER_NO_INVALID_EMAIL(
         UserValidationService::isEmailAvailable,
-        CommonMessage.MESSAGE_INVALID_EMAIL,
+        ServiceErrorCode.MESSAGE_INVALID_EMAIL,
         "Wrong email format");
 
     private final Predicate<UserRegistrationRequest> predicate;
-    private final CommonMessage error;
+    private final ServiceErrorCode applicationError;
     private final String exceptionMessage;
   }
 }

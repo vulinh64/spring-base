@@ -22,6 +22,10 @@ public class PostRevisionId implements UUIDRevisionId {
 
   @Serial private static final long serialVersionUID = 944099295600818675L;
 
+  public static Object of(UUID postId, long revisionNumber) {
+    return new PostRevisionId(postId, revisionNumber);
+  }
+
   public static final String TABLE_NAME = "post";
   public static final String REVISION_SEQ = TABLE_NAME + "_revision_seq";
   public static final String REVISION_SEQ_NAME = REVISION_SEQ + "_generator";

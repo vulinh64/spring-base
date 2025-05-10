@@ -2,20 +2,22 @@ package com.vulinh.service.post;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.entity.*;
+import com.vulinh.data.entity.ids.PostRevisionId;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
+import com.vulinh.exception.NotFoundException;
 import com.vulinh.factory.ElasticsearchEventFactory;
-import com.vulinh.factory.ExceptionFactory;
 import com.vulinh.factory.PostFactory;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,8 +38,6 @@ public class PostRevisionService {
 
   private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
-  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
-
   private final PostRepository postRepository;
   private final PostRevisionRepository postRevisionRepository;
 
@@ -51,7 +51,11 @@ public class PostRevisionService {
 
   @Transactional
   public Page<PostRevisionResponse> getPostRevisions(UUID postId, Pageable pageable) {
-    throwIfPostNotExists(postId);
+
+    if (postRevisionRepository.exists(checkPostRevisionJPAQuery(postId).notExists())) {
+      throw NotFoundException.entityNotFound(
+          CommonConstant.POST_ENTITY, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
+    }
 
     var actualPageable =
         PageRequest.of(
@@ -67,16 +71,19 @@ public class PostRevisionService {
   }
 
   @Transactional
-  public boolean applyRevision(
-      UUID postId, long revisionNumber, HttpServletRequest httpServletRequest) {
+  public boolean applyRevision(UUID postId, long revisionNumber) {
     var post =
         postRepository
             .findBy(
                 checkPostRevisionJPAQuery(postId).exists(), FluentQuery.FetchableFluentQuery::first)
-            .orElseThrow(() -> PostValidationService.postOrSlugNotFound(postId));
+            .orElseThrow(
+                () ->
+                    NotFoundException.entityNotFound(
+                        CommonConstant.POST_ENTITY,
+                        postId,
+                        ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
 
-    postValidationService.validateModifyingPermission(
-        SecurityUtils.getUserDTOOrThrow(httpServletRequest), post);
+    postValidationService.validateModifyingPermission(SecurityUtils.getUserDTOOrThrow(), post);
 
     var currentRevisionNumber =
         postRevisionJoinJPAQuery()
@@ -93,10 +100,10 @@ public class PostRevisionService {
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->
-                EXCEPTION_FACTORY.entityNotFound(
-                    "Post revision number %s for post ID %s not existed"
-                        .formatted(revisionNumber, postId),
-                    "Post Revision"));
+                NotFoundException.entityNotFound(
+                    CommonConstant.POST_REVISION_ENTITY,
+                    PostRevisionId.of(postId, revisionNumber),
+                    ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
   @Transactional
@@ -136,14 +143,6 @@ public class PostRevisionService {
         ElasticsearchEventFactory.INSTANCE.ofPersistence(POST_MAPPER.toDocumentedPost(post)));
 
     return true;
-  }
-
-  private void throwIfPostNotExists(UUID postId) {
-    var predicate = checkPostRevisionJPAQuery(postId).notExists();
-
-    if (postRevisionRepository.exists(predicate)) {
-      throw PostValidationService.postOrSlugNotFound(postId);
-    }
   }
 
   private JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {

@@ -1,15 +1,16 @@
 package com.vulinh.service.post;
 
+import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.NotFoundException;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.post.PostUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -28,18 +29,22 @@ public class PostEditService {
   private final CategoryService categoryService;
 
   @Transactional
-  public Optional<Post> editPost(
-      UUID postId, PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+  public Optional<Post> editPost(UUID postId, PostCreationRequest postCreationRequest) {
     postValidationService.validatePost(postCreationRequest);
 
-    var userDTO = SecurityUtils.getUserDTOOrThrow(httpServletRequest);
+    var userDTO = SecurityUtils.getUserDTOOrThrow();
 
     var actualPostCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
     var post =
         postRepository
             .findById(postId)
-            .orElseThrow(() -> ExceptionFactory.INSTANCE.postNotFound(postId));
+            .orElseThrow(
+                () ->
+                    NotFoundException.entityNotFound(
+                        CommonConstant.POST_ENTITY,
+                        postId,
+                        ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
 
     postValidationService.validateModifyingPermission(userDTO, post);
 
