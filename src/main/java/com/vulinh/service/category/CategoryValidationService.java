@@ -3,16 +3,17 @@ package com.vulinh.service.category;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.ResourceConflictException;
+import com.vulinh.exception.ValidationException;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,21 +34,18 @@ public class CategoryValidationService {
 
   public void validateCategorySlug(
       CategoryCreationRequest categoryCreationRequest, String categorySlug) {
-    ValidatorChain.<String>start()
-        .addValidator(
-            ValidatorStepFactory.INSTANCE.build(
-                ValidatorStepFactory.noExceededLength(
-                    Function.identity(), CategoryValidationService.CATEGORY_SLUG_MAX_LENGTH),
-                CommonMessage.MESSAGE_INVALID_CATEGORY_SLUG,
-                "Category slug exceeded %s characters".formatted(CATEGORY_SLUG_MAX_LENGTH),
-                CATEGORY_SLUG_MAX_LENGTH))
-        .executeValidation(categorySlug);
+    if (StringUtils.length(categorySlug) > CATEGORY_SLUG_MAX_LENGTH) {
+      throw ValidationException.validationException(
+          "Category slug exceeded %s characters".formatted(CATEGORY_SLUG_MAX_LENGTH),
+          ServiceErrorCode.MESSAGE_INVALID_CATEGORY_SLUG,
+          CATEGORY_SLUG_MAX_LENGTH);
+    }
 
     if (!availableCategory(categoryCreationRequest, categorySlug)) {
-      throw ExceptionFactory.INSTANCE.buildCommonException(
+      throw ResourceConflictException.resourceConflictException(
           "Category display name %s or slug %s existed"
               .formatted(categoryCreationRequest.displayName(), categorySlug),
-          CommonMessage.MESSAGE_EXISTED_CATEGORY);
+          ServiceErrorCode.MESSAGE_EXISTED_CATEGORY);
     }
   }
 
@@ -73,8 +71,8 @@ public class CategoryValidationService {
 
     private final Predicate<CategoryCreationRequest> predicate;
     private final String exceptionMessage;
-    private final CommonMessage error = CommonMessage.MESSAGE_INVALID_CATEGORY;
+    private final ServiceErrorCode applicationError = ServiceErrorCode.MESSAGE_INVALID_CATEGORY;
 
-    private final Object[] arguments = {CATEGORY_MAX_LENGTH};
+    private final Object[] args = {CATEGORY_MAX_LENGTH};
   }
 }

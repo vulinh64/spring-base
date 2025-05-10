@@ -2,9 +2,9 @@ package com.vulinh.utils;
 
 import com.vulinh.configuration.CustomAuthentication;
 import com.vulinh.data.dto.response.UserBasicResponse;
-import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.locale.CommonMessage;
-import jakarta.servlet.http.HttpServletRequest;
+import com.vulinh.exception.AuthorizationException;
+import com.vulinh.exception.SecurityConfigurationException;
+import com.vulinh.locale.ServiceErrorCode;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -22,14 +22,10 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtils {
-
-  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
 
   private static RSAPrivateKey singletonPrivateKey;
 
@@ -57,8 +53,8 @@ public class SecurityUtils {
     var result = generateRSAPublicKey(refinedPublicKey);
 
     if (!(result instanceof RSAPublicKey rsaPublicKey)) {
-      throw EXCEPTION_FACTORY.buildCommonException(
-          "Not an instance of RSAPublicKey", CommonMessage.MESSAGE_INVALID_PUBLIC_KEY_CONFIG);
+      throw SecurityConfigurationException.configurationException(
+          "Not an instance of RSAPublicKey", ServiceErrorCode.MESSAGE_INVALID_PUBLIC_KEY_CONFIG);
     }
 
     return rsaPublicKey;
@@ -75,8 +71,8 @@ public class SecurityUtils {
       var result = generateRSAPrivateKey(refinedPrivateKey);
 
       if (!(result instanceof RSAPrivateKey rsaPrivateKey)) {
-        throw EXCEPTION_FACTORY.buildCommonException(
-            "Not an instance of RSAPrivateKey", CommonMessage.MESSAGE_INVALID_PRIVATE_KEY_CONFIG);
+        throw SecurityConfigurationException.configurationException(
+            "Not an instance of RSAPrivateKey", ServiceErrorCode.MESSAGE_INVALID_PRIVATE_KEY_CONFIG);
       }
 
       singletonPrivateKey = rsaPrivateKey;
@@ -85,22 +81,16 @@ public class SecurityUtils {
     return singletonPrivateKey;
   }
 
-  public static Optional<UserBasicResponse> getUserDTO(
-      @Nullable HttpServletRequest httpServletRequest) {
-    return Optional.ofNullable(httpServletRequest)
-        .map(HttpServletRequest::getUserPrincipal)
-        .or(
-            () ->
-                Optional.ofNullable(SecurityContextHolder.getContext())
-                    .map(SecurityContext::getAuthentication))
+  public static Optional<UserBasicResponse> getUserDTO() {
+    return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
         .filter(CustomAuthentication.class::isInstance)
         .map(CustomAuthentication.class::cast)
         .map(CustomAuthentication::getPrincipal);
   }
 
   @NonNull
-  public static UserBasicResponse getUserDTOOrThrow(HttpServletRequest httpServletRequest) {
-    return getUserDTO(httpServletRequest).orElseThrow(EXCEPTION_FACTORY::invalidAuthorization);
+  public static UserBasicResponse getUserDTOOrThrow() {
+    return getUserDTO().orElseThrow(AuthorizationException::invalidAuthorization);
   }
 
   private static String stripRawKey(String rawKey, Collection<String> toBeRemoved) {
@@ -122,7 +112,10 @@ public class SecurityUtils {
       return getRSAKeyFactoryInstance()
           .generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
     } catch (Exception exception) {
-      throw EXCEPTION_FACTORY.parsingPublicKeyError(exception);
+      throw SecurityConfigurationException.configurationException(
+          "Invalid public key configuration",
+          ServiceErrorCode.MESSAGE_INVALID_PUBLIC_KEY_CONFIG,
+          exception);
     }
   }
 
@@ -131,8 +124,10 @@ public class SecurityUtils {
       return getRSAKeyFactoryInstance()
           .generatePrivate(new PKCS8EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));
     } catch (Exception exception) {
-      throw EXCEPTION_FACTORY.buildCommonException(
-          "Parsing private key error", CommonMessage.MESSAGE_INVALID_PRIVATE_KEY_CONFIG, exception);
+      throw SecurityConfigurationException.configurationException(
+          "Invalid private key configuration",
+          ServiceErrorCode.MESSAGE_INVALID_PRIVATE_KEY_CONFIG,
+          exception);
     }
   }
 }

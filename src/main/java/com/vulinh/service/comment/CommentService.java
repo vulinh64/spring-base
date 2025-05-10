@@ -7,9 +7,8 @@ import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.mapper.CommentMapper;
 import com.vulinh.data.repository.CommentRepository;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.AuthorizationException;
 import com.vulinh.utils.SecurityUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,15 +28,14 @@ public class CommentService {
   private final CommentFetchingService commentFetchingService;
 
   @Transactional
-  public UUID addComment(
-      UUID postId, NewCommentRequest newCommentRequest, HttpServletRequest request) {
+  public UUID addComment(UUID postId, NewCommentRequest newCommentRequest) {
     commentValidationService.validate(newCommentRequest);
 
     var createdBy =
-        SecurityUtils.getUserDTO(request)
+        SecurityUtils.getUserDTO()
             .map(UserBasicResponse::id)
             .flatMap(userRepository::findByIdAndIsActiveIsTrue)
-            .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
+            .orElseThrow(AuthorizationException::invalidAuthorization);
 
     var persistedComment =
         commentRepository.save(
@@ -48,10 +46,8 @@ public class CommentService {
     return persistedComment.getId();
   }
 
-  public void editComment(
-      NewCommentRequest newCommentRequest, UUID commentId, HttpServletRequest request) {
-    var comment =
-        commentValidationService.validateEditComment(newCommentRequest, commentId, request);
+  public void editComment(NewCommentRequest newCommentRequest, UUID commentId) {
+    var comment = commentValidationService.validateEditComment(newCommentRequest, commentId);
 
     var newComment = commentRepository.save(comment.withContent(newCommentRequest.content()));
 

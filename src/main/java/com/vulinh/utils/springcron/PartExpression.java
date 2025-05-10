@@ -31,7 +31,7 @@ public interface PartExpression {
     }
 
     if (!getValidator().test(nonNullArgument)) {
-      var initialMessage = "Invalid arguments";
+      var initialMessage = "Invalid args";
       var rules = getRules();
 
       var errorMessage =

@@ -14,6 +14,6 @@ public class AuditorConfiguration {
 
   @Bean
   public AuditorAware<UUID> auditorProvider() {
-    return () -> SecurityUtils.getUserDTO(null).map(UserBasicResponse::id);
+    return () -> SecurityUtils.getUserDTO().map(UserBasicResponse::id);
   }
 }

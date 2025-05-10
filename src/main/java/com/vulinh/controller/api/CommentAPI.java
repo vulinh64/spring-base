@@ -5,7 +5,6 @@ import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -24,13 +23,8 @@ public interface CommentAPI {
   @PostMapping("/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
   GenericResponse<Map<String, UUID>> addComment(
-      @PathVariable UUID postId,
-      @RequestBody NewCommentRequest newCommentRequest,
-      HttpServletRequest request);
+      @PathVariable UUID postId, @RequestBody NewCommentRequest newCommentRequest);
 
   @PatchMapping("/{commentId}")
-  void editComment(
-      @RequestBody NewCommentRequest newCommentRequest,
-      @PathVariable UUID commentId,
-      HttpServletRequest request);
+  void editComment(@RequestBody NewCommentRequest newCommentRequest, @PathVariable UUID commentId);
 }

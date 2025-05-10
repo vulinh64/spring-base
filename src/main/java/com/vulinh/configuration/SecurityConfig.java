@@ -1,7 +1,8 @@
 package com.vulinh.configuration;
 
 import com.vulinh.data.constant.UserRole;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.AuthorizationException;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.SecurityUrlUtils;
 import com.vulinh.utils.security.AccessTokenValidator;
 import com.vulinh.utils.security.Auth0Utils;
@@ -124,7 +125,13 @@ public class SecurityConfig {
   private void handleSecurityException(
       HttpServletRequest request, HttpServletResponse response, Throwable authException) {
     handlerExceptionResolver.resolveException(
-        request, response, null, ExceptionFactory.INSTANCE.invalidAuthorization(authException));
+        request,
+        response,
+        null,
+        AuthorizationException.invalidAuthorization(
+            "Invalid user authorization",
+            ServiceErrorCode.MESSAGE_INVALID_AUTHORIZATION,
+            authException));
   }
 
   // Temporary solution to avoid filter being called twice for every request

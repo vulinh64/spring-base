@@ -49,4 +49,6 @@ public class CommonConstant {
 
   public static final String POST_ENTITY = "Post";
   public static final String COMMENT_ENTITY = "Comment";
+  public static final String CATEGORY_ENTITY = "Category";
+  public static final String POST_REVISION_ENTITY = "Post Revision";
 }

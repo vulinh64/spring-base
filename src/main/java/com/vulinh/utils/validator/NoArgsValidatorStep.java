@@ -5,7 +5,7 @@ public interface NoArgsValidatorStep<T> extends ValidatorStep<T> {
   Object[] NO_ARGS = new Object[] {};
 
   @Override
-  default Object[] getArguments() {
+  default Object[] getArgs() {
     return NO_ARGS;
   }
 }

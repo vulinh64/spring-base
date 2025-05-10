@@ -8,8 +8,9 @@ import com.vulinh.data.entity.Category;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
-import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.exception.NoSuchPermissionException;
+import com.vulinh.exception.NotFoundException;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
 import java.util.Optional;
@@ -28,8 +29,6 @@ public class CategoryService {
 
   private static final CategoryMapper CATEGORY_MAPPER = CategoryMapper.INSTANCE;
 
-  private static final ExceptionFactory EXCEPTION_FACTORY = ExceptionFactory.INSTANCE;
-
   private final CategoryRepository categoryRepository;
 
   private final CategoryValidationService categoryValidationService;
@@ -40,10 +39,10 @@ public class CategoryService {
         .flatMap(categoryRepository::findById)
         .orElseThrow(
             () ->
-                EXCEPTION_FACTORY.buildCommonException(
-                    "Invalid provided category ID: %s, or default category [%s] did not exist"
-                        .formatted(categoryId, CommonConstant.UNCATEGORIZED_ID),
-                    CommonMessage.MESSAGE_INVALID_CATEGORY));
+                NotFoundException.entityNotFound(
+                    CommonConstant.CATEGORY_ENTITY,
+                    categoryId,
+                    ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
   @Transactional
@@ -77,8 +76,8 @@ public class CategoryService {
   @Transactional
   public boolean deleteCategory(UUID categoryId) {
     if (CommonConstant.UNCATEGORIZED_ID.equals(categoryId)) {
-      throw EXCEPTION_FACTORY.buildCommonException(
-          "Cannot delete default category", CommonMessage.MESSAGE_DEFAULT_CATEGORY_IMMORTAL);
+      throw NoSuchPermissionException.noSuchPermissionException(
+          "Cannot delete default category", ServiceErrorCode.MESSAGE_DEFAULT_CATEGORY_IMMORTAL);
     }
 
     return categoryRepository

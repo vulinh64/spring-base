@@ -6,7 +6,6 @@ import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,16 +17,14 @@ import org.springframework.web.bind.annotation.*;
 public interface PostAPI {
 
   @GetMapping
-  GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(
-      Pageable pageable, HttpServletRequest httpServletRequest);
+  GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(Pageable pageable);
 
   @GetMapping("/quick-search")
   GenericResponse<Page<ESimplePostResponse>> quickSearchPosts(String keyword, Pageable pageable);
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT)
   GenericResponse<SinglePostResponse> getSinglePost(
-      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId,
-      HttpServletRequest httpServletRequest);
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId);
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   GenericResponse<Page<PostRevisionResponse>> getPostRevisions(
@@ -35,22 +32,17 @@ public interface PostAPI {
 
   @PostMapping
   GenericResponse<BasicPostResponse> createPost(
-      @RequestBody PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest);
+      @RequestBody PostCreationRequest postCreationRequest);
 
   @PatchMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   ResponseEntity<Void> editPost(
       @PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId,
-      @RequestBody PostCreationRequest postCreationRequest,
-      HttpServletRequest httpServletRequest);
+      @RequestBody PostCreationRequest postCreationRequest);
 
   @DeleteMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
-  ResponseEntity<Void> deletePost(
-      @PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId,
-      HttpServletRequest httpServletRequest);
+  ResponseEntity<Void> deletePost(@PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId);
 
   @PatchMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   ResponseEntity<Void> applyRevision(
-      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId,
-      @RequestParam long revisionNumber,
-      HttpServletRequest httpServletRequest);
+      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId, @RequestParam long revisionNumber);
 }

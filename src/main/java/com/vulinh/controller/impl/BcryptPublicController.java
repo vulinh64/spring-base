@@ -3,10 +3,10 @@ package com.vulinh.controller.impl;
 import com.vulinh.controller.api.BcryptPublicAPI;
 import com.vulinh.data.dto.request.BCryptPasswordGenerationRequest;
 import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.PasswordResponse;
-import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.factory.GenericResponseFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.exception.ValidationException;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.user.UserValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +28,9 @@ public class BcryptPublicController implements BcryptPublicAPI {
 
     if (StringUtils.isBlank(rawPassword)
         || rawPassword.length() < UserValidationService.PASSWORD_MINIMUM_LENGTH) {
-      throw ExceptionFactory.INSTANCE.buildCommonException(
+      throw ValidationException.validationException(
           "Invalid password",
-          CommonMessage.MESSAGE_INVALID_PASSWORD,
+          ServiceErrorCode.MESSAGE_INVALID_PASSWORD,
           UserValidationService.PASSWORD_MINIMUM_LENGTH);
     }
 
@@ -38,7 +38,7 @@ public class BcryptPublicController implements BcryptPublicAPI {
 
     log.info("\nRaw password: {}\nEncoded password: {}", rawPassword, encodedPassword);
 
-    return GenericResponseFactory.INSTANCE.success(
+    return ResponseCreator.success(
         PasswordResponse.builder()
             .rawPassword(rawPassword)
             .encodedPassword(encodedPassword)

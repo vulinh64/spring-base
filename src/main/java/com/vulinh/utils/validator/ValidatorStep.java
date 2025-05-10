@@ -1,15 +1,15 @@
 package com.vulinh.utils.validator;
 
-import com.vulinh.data.base.I18NCapable;
+import com.vulinh.data.base.ApplicationError;
 import java.util.function.Predicate;
 
 public interface ValidatorStep<T> {
 
   Predicate<T> getPredicate();
 
-  I18NCapable getError();
+  ApplicationError getApplicationError();
 
   String getExceptionMessage();
 
-  Object[] getArguments();
+  Object[] getArgs();
 }

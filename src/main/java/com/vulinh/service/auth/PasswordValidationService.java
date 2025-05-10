@@ -3,7 +3,7 @@ package com.vulinh.service.auth;
 import com.vulinh.data.dto.request.PasswordChangeRequest;
 import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ValidatorStepFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
 import java.util.function.Predicate;
@@ -33,26 +33,26 @@ public class PasswordValidationService {
   public enum PasswordChangeRule implements NoArgsValidatorStep<PasswordChangeRequest> {
     RULE_NO_BLANK_PASSWORD(
         ValidatorStepFactory.noBlankField(PasswordChangeRequest::oldPassword),
-        CommonMessage.MESSAGE_INVALID_PASSWORD,
+        ServiceErrorCode.MESSAGE_INVALID_PASSWORD,
         "Blank old password is not allowed"),
     RULE_NO_BLANK_NEW_PASSWORD(
         ValidatorStepFactory.noBlankField(PasswordChangeRequest::newPassword),
-        CommonMessage.MESSAGE_INVALID_NEW_PASSWORD,
+        ServiceErrorCode.MESSAGE_INVALID_NEW_PASSWORD,
         "Blank new password is not allowed"),
     RULE_LONG_ENOUGH_NEW_PASSWORD(
         ValidatorStepFactory.atLeastLength(
             PasswordChangeRequest::newPassword, UserValidationService.PASSWORD_MINIMUM_LENGTH),
-        CommonMessage.MESSAGE_INVALID_NEW_PASSWORD,
+        ServiceErrorCode.MESSAGE_INVALID_NEW_PASSWORD,
         "New password must have more than %s characters".formatted(PASSWORD_MIN_LENGTH)) {
 
       @Override
-      public Integer[] getArguments() {
+      public Integer[] getArgs() {
         return new Integer[] {PASSWORD_MIN_LENGTH};
       }
     };
 
     private final Predicate<PasswordChangeRequest> predicate;
-    private final CommonMessage error;
+    private final ServiceErrorCode applicationError;
     private final String exceptionMessage;
   }
 }

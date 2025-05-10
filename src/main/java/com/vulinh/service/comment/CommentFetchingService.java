@@ -5,12 +5,14 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import com.vulinh.data.entity.QComment;
 import com.vulinh.data.entity.QCommentRevision;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.NotFoundException;
+import com.vulinh.locale.ServiceErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.UUID;
@@ -32,7 +34,8 @@ public class CommentFetchingService {
 
   public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
-      throw ExceptionFactory.INSTANCE.postNotFound(postId);
+      throw NotFoundException.entityNotFound(
+          CommonConstant.POST_ENTITY, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
     }
 
     return PageableExecutionUtils.getPage(

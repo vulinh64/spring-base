@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -131,7 +130,7 @@ public interface UserAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  ResponseEntity<Void> deleteUser(@PathVariable UUID id, HttpServletRequest httpServletRequest);
+  ResponseEntity<Void> deleteUser(@PathVariable UUID id);
 
   @GetMapping(UserEndpoint.DETAILS)
   @Operation(
@@ -171,8 +170,7 @@ public interface UserAPI {
                     examples =
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
-  ResponseEntity<GenericResponse<UserBasicResponse>> getSelfDetail(
-      HttpServletRequest httpServletRequest);
+  ResponseEntity<GenericResponse<UserBasicResponse>> getSelfDetail();
 
   @GetMapping(UserEndpoint.SEARCH)
   @Operation(

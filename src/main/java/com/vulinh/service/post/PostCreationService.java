@@ -6,12 +6,11 @@ import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.UserRepository;
-import com.vulinh.factory.ExceptionFactory;
+import com.vulinh.exception.AuthorizationException;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.post.PostUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,17 +29,16 @@ public class PostCreationService {
   private final CategoryService categoryService;
 
   @Transactional
-  public Post createPost(
-      PostCreationRequest postCreationRequest, HttpServletRequest httpServletRequest) {
+  public Post createPost(PostCreationRequest postCreationRequest) {
     postValidationService.validatePost(postCreationRequest);
 
     var actualCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
     var author =
-        SecurityUtils.getUserDTO(httpServletRequest)
+        SecurityUtils.getUserDTO()
             .map(UserBasicResponse::id)
             .flatMap(userRepository::findById)
-            .orElseThrow(ExceptionFactory.INSTANCE::invalidAuthorization);
+            .orElseThrow(AuthorizationException::invalidAuthorization);
 
     var categoryId = postCreationRequest.categoryId();
 

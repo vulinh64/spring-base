@@ -5,8 +5,8 @@ import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;
-import com.vulinh.factory.ExceptionFactory;
-import com.vulinh.locale.CommonMessage;
+import com.vulinh.exception.AuthorizationException;
+import com.vulinh.locale.ServiceErrorCode;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.UUID;
@@ -49,10 +49,10 @@ public class UserSessionService {
         .findById(userSessionId)
         .orElseThrow(
             () ->
-                ExceptionFactory.INSTANCE.buildCommonException(
+                AuthorizationException.invalidAuthorization(
                     "Session ID %s for user ID %s did not exist or has been invalidated"
                         .formatted(userSessionId.sessionId(), userSessionId.userId()),
-                    CommonMessage.MESSAGE_INVALID_SESSION));
+                    ServiceErrorCode.MESSAGE_INVALID_SESSION));
   }
 
   public void deleteUserSession(UserSession userSession) {
