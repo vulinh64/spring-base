@@ -67,20 +67,25 @@ public record Equivalence<T>(T value, Object id, int hash) {
   /**
    * Indicates whether some other object is "equal to" this {@code Equivalence} instance.
    *
-   * <p>Two {@code Equivalence} instances are considered equal if:
+   * <p>Two {@code Equivalence} instances are considered equal if all the following conditions are
+   * met:
    *
    * <ul>
-   *   <li>{@code other} is also an {@code Equivalence} instance.
-   *   <li>The class of the wrapped {@code value} in this instance is assignable from the class of
-   *       the wrapped {@code value} in the {@code other} instance, or vice versa. This allows for
-   *       comparison across a class hierarchy.
-   *   <li>The {@code id} field of this instance is equal to the {@code id} field of the {@code
-   *       other} instance, as determined by {@link Objects#equals(Object, Object)}.
+   *   <li>The {@code other} object is also an instance of {@code Equivalence}.
+   *   <li>The wrapped {@code value} objects are type-compatible across a class hierarchy.
+   *       Specifically, the {@code value} from one instance (e.g., {@code this.value()}) must be an
+   *       instance of the {@code Class} object representing the type of the {@code value} from the
+   *       other instance (e.g., {@code that.value().getClass()}), or vice versa. This allows for
+   *       comparisons such as between an {@code Equivalence<Dog>} and an {@code
+   *       Equivalence<Animal>} (assuming their IDs match), as a {@code Dog} object is an instance
+   *       of the {@code Animal} class.
+   *   <li>The extracted {@code id} of this instance is equal to the extracted {@code id} of the
+   *       {@code other} instance, as determined by {@link Objects#equals(Object, Object)}.
    * </ul>
    *
    * @param other The reference object with which to compare.
-   * @return {@code true} if this object is the same as the {@code other} argument; {@code false}
-   *     otherwise.
+   * @return {@code true} if this {@code Equivalence} instance is considered equal to the {@code
+   *     other} argument based on the criteria above; {@code false} otherwise.
    */
   @Override
   public boolean equals(Object other) {
@@ -88,10 +93,9 @@ public record Equivalence<T>(T value, Object id, int hash) {
       return false;
     }
 
-    var thisClass = value.getClass();
-    var thatClass = that.value().getClass();
+    var thatValue = that.value();
 
-    return (thisClass.isAssignableFrom(thatClass) || thatClass.isAssignableFrom(thisClass))
+    return (thatValue.getClass().isInstance(value) || value.getClass().isInstance(thatValue))
         && Objects.equals(id, that.id());
   }
 
