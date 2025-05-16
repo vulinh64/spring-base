@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
  *
  * <ul>
  *   <li>Whether they are both instances of {@code Equivalence}.
- *   <li>Whether the class of the wrapped {@code value} in one instance is assignable from the class
- *       of the wrapped {@code value} in the other, or vice versa. This allows for comparison across
- *       related types in a hierarchy.
+ *   <li>Whether the wrapped {@code value} from one instance is an instance of the {@code Class}
+ *       object representing the type of the wrapped {@code value} from the other instance, or vice
+ *       versa. This allows for comparison across related types in a hierarchy.
  *   <li>Whether the extracted {@code id} objects are equal according to their own {@code equals}
  *       method.
  * </ul>
