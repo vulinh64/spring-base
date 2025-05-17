@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.vulinh.data.dto.response.data.AuthorData;
 import com.vulinh.utils.Equivalence.Creator;
+import com.vulinh.utils.Equivalence.EqualityDeepness;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -120,6 +121,36 @@ class EquivalenceTest {
     assertEquals(eq1, eq2);
     assertEquals("johndoe-J", eq1.id());
   }
+
+  @Test
+  @SuppressWarnings("AssertBetweenInconvertibleTypes")
+  void testWithDeepEquality() {
+    var obj1 = new DeepEquality<>(new Integer[] {1, 2, 3}, "Test1");
+    var obj2 = new DeepEquality<>(new Integer[] {2, 3, 4}, "Test 2");
+    var obj3 = new DeepEquality<>(new Integer[] {2, 3, 4}, "Test 3");
+    var obj4 = new DeepEquality<>(new String[] {"a", "b", "c"}, "Test 4");
+    var obj5 = new DeepEquality<>(new Object[] {}, "Test 5");
+
+    var wrapper1 = Creator.of(obj1, DeepEquality::id, EqualityDeepness.DEEP_EQUAL);
+    var wrapper2 = Creator.of(obj2, DeepEquality::id, EqualityDeepness.DEEP_EQUAL);
+    var wrapper3 = Creator.of(obj3, DeepEquality::id, EqualityDeepness.DEEP_EQUAL);
+    var wrapper4 = Creator.of(obj4, DeepEquality::id, EqualityDeepness.DEEP_EQUAL);
+    var wrapper5 = Creator.of(obj5, DeepEquality::other, EqualityDeepness.DEEP_EQUAL);
+
+    assertNotEquals(wrapper1, wrapper2);
+    assertNotEquals(wrapper2, wrapper1);
+
+    assertEquals(wrapper2, wrapper3);
+    assertEquals(wrapper2, wrapper3);
+
+    assertNotEquals(wrapper1, wrapper4);
+    assertNotEquals(wrapper4, wrapper1);
+
+    assertNotEquals(wrapper1, wrapper5);
+    assertNotEquals(wrapper5, wrapper1);
+  }
+
+  public record DeepEquality<T>(T[] id, String other) {}
 
   @RequiredArgsConstructor
   @Getter
