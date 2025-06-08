@@ -4,6 +4,9 @@
 application-properties:
   security:
     issuer: ${SECURITY_ISSUER:spring-base-service}
+    #
+    # Go to https://www.devglan.com/online-tools/rsa-encryption-decryption to generate your own key
+    #
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
     allowed-verb-urls:
@@ -41,12 +44,12 @@ server:
     key-store-password: ''
     key-alias: localhost
     key-password: ''
-    enabled: true
+    enabled: ${SERVER_SSL_ENABLED:true}
   port: ${SERVER_PORT:8443}
   shutdown: GRACEFUL
   # Require configuration on the server to enable HTTP/2
   # You can try https://brytecode.be/articles/using-http-2-in-your-spring-boot-application/
-  http2.enabled: true
+  http2.enabled: ${SERVER_SSL_ENABLED:true}
   servlet.application-display-name: ${application.name}
 spring:
   # Make your default spring boot logging colorful (if you are using Community version lmao)
@@ -62,14 +65,12 @@ spring:
     enabled: ${LIQUIBASE_ENABLED:true}
     change-log: ${LIQUIBASE_CHANGELOG:classpath:changelog.yaml}
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
-  elasticsearch.uris:
-    - ${ELASTICSEARCH_HOST:localhost:9200}
+decorator.datasource.p6spy:
+  custom-appender-class: com.vulinh.configuration.MyP6SpyLogging
+  logging: CUSTOM
 management.endpoints.web:
   base-path: ''
   exposure.include: health
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
-decorator.datasource.p6spy:
-  custom-appender-class: com.vulinh.configuration.MyP6SpyLogging
-  logging: CUSTOM

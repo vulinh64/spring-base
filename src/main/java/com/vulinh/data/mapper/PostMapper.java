@@ -1,11 +1,9 @@
 package com.vulinh.data.mapper;
 
 import com.vulinh.data.base.EntityDTOMapper;
-import com.vulinh.data.document.EPost;
 import com.vulinh.data.dto.projection.PostRevisionProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
-import com.vulinh.data.dto.response.ESimplePostResponse;
 import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.entity.*;
@@ -77,23 +75,6 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse>, Da
       nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   Post applyRevision(
       PostRevision postRevision, Category category, Collection<Tag> tags, @MappingTarget Post post);
-
-  EPost toDocumentedPost(Post post);
-
-  @Mapping(
-      target = "shortContent",
-      expression =
-          """
-          java(
-            StringUtils.abbreviate(
-              post.postContent(),
-              StringUtils.normalizeSpace(post.postContent())
-                .toLowerCase()
-                .indexOf(keyword.toLowerCase()),
-              50)
-          )
-          """)
-  ESimplePostResponse toESimplePost(EPost post, String keyword);
 
   PostRevisionResponse toPostRevisionResponse(PostRevisionProjection postRevisionProjection);
 }

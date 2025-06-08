@@ -19,9 +19,6 @@ public interface PostAPI {
   @GetMapping
   GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(Pageable pageable);
 
-  @GetMapping("/quick-search")
-  GenericResponse<Page<ESimplePostResponse>> quickSearchPosts(String keyword, Pageable pageable);
-
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT)
   GenericResponse<SinglePostResponse> getSinglePost(
       @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId);

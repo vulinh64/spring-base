@@ -12,7 +12,6 @@
     * [Public key](#public-key)
     * [Private key](#private-key)
   * [Create Docker containers for your project](#create-docker-containers-for-your-project)
-    * [Features](#features)
   * [Docker-based Setup](#docker-based-setup)
   * [Virtual threads](#virtual-threads)
     * [Spring Boot 3.2+](#spring-boot-32)
@@ -35,7 +34,6 @@ This is a demo project using Spring Boot to work as a blog site's backend.
 - PostgreSQL (https://www.postgresql.org/download/) installed on your local machine.
     - Because database changelogs use native PostgreSQL dialect, you will need to use PostgreSQL. If you planned to use
       another RDBMS, then you will have to rewrite the changelog files.
-- Elasticsearch on port `9200` and `9300`
 
 ### Setting up database
 
@@ -125,28 +123,9 @@ PRIVATE_KEY=-----BEGIN PRIVATE KEY-----<single line here>-----END PRIVATE KEY---
 
 ## Create Docker containers for your project
 
-This [script](initialize-elasticsearch-postgres.cmd) automates the creation and management of Docker containers
-for Elasticsearch and PostgreSQL. No additional parameters are required. The script automatically detects the current
-state of your Docker environment and
+This [script](initialize-postgres.cmd) automates the creation and management of Docker container for PostgreSQL. No
+additional parameters are required. The script automatically detects the current state of your Docker environment and
 takes appropriate action.
-
-### Features
-
-- Creates Docker containers for Elasticsearch 8.15.2 and PostgreSQL (latest)
-- Utilizes persistent storage with Docker volumes:
-    - `elasticsearch-volume` for Elasticsearch data
-    - `postgres-volume` for PostgreSQL data
-- Automatically handles different container states:
-    - Creates new containers if they don't exist
-    - Restarts containers if they exist but are stopped
-    - Reports when containers are already running
-- Configures services with appropriate settings:
-    - **Elasticsearch**: Runs in single-node mode with security features disabled
-    - **PostgreSQL**: Sets up with default user, password, and database name
-- Maps standard ports to host:
-    - Elasticsearch: 9200, 9300
-    - PostgreSQL: 5432
-- Displays a summary of running containers when complete
 
 ## Docker-based Setup
 
@@ -161,10 +140,10 @@ This approach bypasses manual prerequisite installation.
 With the arrival of Java 21 and Spring Boot 3.2 onwards, you can use virtual threads to overcome the limited number of
 platform threads managed by some sort of reactor library.
 
-> WORDS OF WARNING:
+> **WORDS OF WARNING:**
 >
-> Test your application thoroughly, as the usage of virtual threads might break critical
-> functions in your app. Use virtual threads with caution for older projects.
+> Test your application thoroughly, as the usage of virtual threads might (theoretically) break critical functions in
+> your app. Use virtual threads with caution for older projects.
 
 ### Spring Boot 3.2+
 

@@ -13,10 +13,7 @@ services:
       # Those keys are randomly generated, please replace them if you can
       - PUBLIC_KEY=-----BEGIN PUBLIC KEY-----MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEArEl0hMdt0ozeuilVp+5qfjWUdLieuB8F1LTgeYSfLg6W2EYLQ0mLl498h3fCOCnChWc+Rxb0PbUfPyO61pZvQp5822RD53t1Qvued9lmFti7HITlPjPYXMk2MPCMQAE7AR77VMdNZfiFUXqy9T+GKVmkrZe1c8Zu17Qtm4rjto1nbbHJDHB6FSfdWGHDdJeK696b8IaZ+Zu4nySTs5foTvfHZxNzemkOMsqStsWABTtkuK3vvfDJlFZUvZQSDSM+APqSfBmcdSa5dPSK8Pm5mRfpH//SYVk0XK6xKT4iuP1cXATmYtc1A05IHw+dAzzarbRK9uIRkV5wYa8D6WPRGP7jdOXDkFgqg9tUAOJ6gnp3OP2KotTAyzkfhtydTqEiOWsUITZ5eb2Q5FnLqV1pGqJXpOak/fw5U/kXorzPy4dM2Iwr1XQRjOTfWk9xzqBLXzSapwHCx1TSnXYtDbMDMprlGcNLtCm0MjzMnykqljRe0l3EGh44A14dx2PJVzaRVyj2+liLZTLgb89YFvwaR8gGaz01YXWUb3u3MAwr8tgmONjTcF+F9epfwB6OOad2mx2Y5svu7yc01vMP+5E5D/lkYIlUcKUk9CUlp1jZB3AqUOXFPVjgYRxGHc92/55fyMc4f23wqWj5FHsBvVljPKlhT/dUEH91IPh6YBKClMcCAwEAAQ==-----END PUBLIC KEY-----
       - PRIVATE_KEY=-----BEGIN PRIVATE KEY-----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-----END PRIVATE KEY-----
-      - ELASTICSEARCH_HOST=elasticsearch
     depends_on:
-      elasticsearch:
-        condition: service_healthy
       postgresql:
         condition: service_healthy
   postgresql:
@@ -39,30 +36,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  elasticsearch:
-    image: 'elasticsearch:8.15.2'
-    container_name: elasticsearch
-    # Running in development environment
-    environment:
-      - xpack.security.enabled=false
-      - discovery.type=single-node
-    volumes:
-      - elasticsearch-volume:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -s http://localhost:9200/_cluster/health | grep -q 'status.*green\\|status.*yellow'"
-        ]
-      interval: 30s
-      timeout: 30s
-      retries: 3
-
 volumes:
   postgres-volume:
     name: postgres-volume
-  elasticsearch-volume:
-    name: elasticsearch-volume

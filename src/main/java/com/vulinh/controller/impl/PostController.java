@@ -28,12 +28,6 @@ public class PostController implements PostAPI {
   }
 
   @Override
-  public GenericResponse<Page<ESimplePostResponse>> quickSearchPosts(
-      String keyword, Pageable pageable) {
-    return ResponseCreator.success(postService.quickSearch(keyword, pageable));
-  }
-
-  @Override
   public GenericResponse<SinglePostResponse> getSinglePost(UUID postId) {
     return ResponseCreator.success(postService.getSinglePost(postId));
   }
