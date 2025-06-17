@@ -1,7 +1,5 @@
 # Lombok Introduction
 
----
-
 ## Table of Contents
 
 <!-- TOC -->

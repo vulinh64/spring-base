@@ -1,7 +1,5 @@
 # JPA Entities
 
----
-
 ## Table of Contents
 
 <!-- TOC -->
@@ -61,14 +59,15 @@ public class EmployeeEntity {
 
 * The `@AllArgsConstructor` annotation is required when using `@Builder`, as the builder pattern relies on the
   availability of a constructor that accepts all fields. `@Builder` is a powerful Lombok annotation for implementing the
-  builder creational pattern, particularly useful for constructing complex JPA entities. This annotation did not work 
-  very well with subclasses (required the usage of experimental `@SuperBuilder`), however.
+  builder creational pattern, particularly useful for constructing complex JPA entities. This annotation did not work
+  very well with subclasses (required the usage of experimental `@SuperBuilder`), however, so pay attention (and limit 
+  the usage of inheritance in this case).
 
 ---
 
-* When using `@ToString`, always exclude fields involved in JPA relationships—such as those annotated with `@OneToMany`,
-  `@OneToOne`, `@ManyToOne`, or `@ManyToMany`, to avoid potential `StackOverflowError` caused by bidirectional or cyclic
-  entity relationships.
+* When using `@ToString`, always exclude fields involved in JPA relationships, such as those annotated with
+  `@OneToMany`, `@OneToOne`, `@ManyToOne`, or `@ManyToMany`, to avoid potential `StackOverflowError` caused by
+  bidirectional or cyclic entity relationships. Use `@ToString.Exclude` for this specified purpose.
 
     * This exclusion principle also applies to any object with mutual or cyclic dependencies.
 
@@ -101,39 +100,40 @@ import java.util.UUID;
 @Getter
 public class EmployeeEntity {
 
-  @Id private UUID id;
+    @Id
+    private UUID id;
 
-  // other fields omitted for brevity
+    // other fields omitted for brevity
 
-  @Override
-  public final boolean equals(Object other) {
-    if (this == other) {
-      return true;
+    @Override
+    public final boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (id == null) {
+            return false;
+        }
+
+        // Requires JDK 16+
+        return other instanceof EmployeeEntity that
+               && getEffectiveClass(this) == getEffectiveClass(that)
+               && Objects.equals(id, that.getId());
     }
 
-    if (id == null) {
-      return false;
+    @Override
+    public final int hashCode() {
+        var id = getId();
+
+        return id == null ? getEffectiveClass(this).hashCode() : id.hashCode();
     }
 
-    // Requires JDK 16+
-    return other instanceof EmployeeEntity that
-        && getEffectiveClass(this) == getEffectiveClass(that)
-        && Objects.equals(id, that.getId());
-  }
-
-  @Override
-  public final int hashCode() {
-    var id = getId();
-
-    return id == null ? getEffectiveClass(this).hashCode() : id.hashCode();
-  }
-
-  // Requires Hibernate 6+
-  private static Class<?> getEffectiveClass(Object object) {
-    return object instanceof HibernateProxy hibernateProxy
-        ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
-        : object.getClass();
-  }
+    // Requires Hibernate 6+
+    private static Class<?> getEffectiveClass(Object object) {
+        return object instanceof HibernateProxy hibernateProxy
+                ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
+                : object.getClass();
+    }
 }
 
 ```
@@ -162,8 +162,8 @@ public abstract class AbstractIdentifiable<I> {
         }
 
         return o instanceof AbstractIdentifiable<?> other
-                && getEffectiveClass(this) == getEffectiveClass(o)
-                && Objects.equals(id, other.getId());
+               && getEffectiveClass(this) == getEffectiveClass(o)
+               && Objects.equals(id, other.getId());
     }
 
     @Override

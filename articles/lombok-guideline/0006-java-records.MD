@@ -1,7 +1,5 @@
 # Java Records
 
----
-
 ## Table of Contents
 
 <!-- TOC -->
@@ -20,7 +18,7 @@ If your project uses JDK 14 or later, consider using **Java Records** to create 
 automatically generate accessors (in fluent style rather than the traditional JavaBeans `getX()` format), along with
 implementations for `toString()`, `equals(Object)`, and `hashCode()`.
 
-Most Lombok annotations are not compatible with Java Records—but in most cases, they aren't needed.
+Most Lombok annotations are not compatible with Java Records, but in most cases, they aren't needed.
 
 One limitation of using Java Records is that Lombok's `@EqualsAndHashCode` annotation does not work with them. As a
 result, if you need custom equality or hashing logic, you'll have to manually override the `equals(Object)` and

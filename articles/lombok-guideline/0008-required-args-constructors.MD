@@ -1,7 +1,5 @@
 # `@RequiredArgsConstructor` Annotation
 
----
-
 ## Table of Contents
 
 <!-- TOC -->

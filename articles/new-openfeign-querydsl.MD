@@ -51,8 +51,8 @@ The current version of `openfeign.querydsl.version` is `6.11`, as the time of th
 
 Since [QueryDSL](https://github.com/querydsl)'s most recent release (5.1.0) on January 29, 2024, the QueryDSL team
 seems to have ceased efforts to maintain and update the library. While QueryDSL was always a robust and mature
-dependency, the growing prevalence of critical security vulnerabilities (CVEs) makes relying on this outdated—and
-possibly defunct—library increasingly risky.
+dependency, the growing prevalence of critical security vulnerabilities (CVEs) makes relying on this outdated, and
+possibly defunct, library increasingly risky.
 
 Thankfully, the OpenFeign team provides an actively maintained fork of QueryDSL, presenting a safer and more reliable
 alternative.

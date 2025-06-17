@@ -1,7 +1,5 @@
 # Normal DTOs
 
----
-
 ## Table of Contents
 
 <!-- TOC -->
@@ -86,6 +84,7 @@ public class YourDTO {
 And annotate a field you chose to be the object's "representative" when comparing equality with:
 
 ```java
+
 @EqualsAndHashCode.Include
 private String equalityField;
 ```

@@ -1,7 +1,5 @@
 # `@Locked` Annotations
 
----
-
 ## Table of Contents
 
 <!-- TOC -->
@@ -26,7 +24,9 @@ ability to be mounted and unmounted from carrier threads to maximize concurrency
 
 To avoid this pinning issue, Java Locks provide a more compatible alternative to `synchronized` keyword. Although this
 problem is resolved in JDK 24 (see [JEP 491](https://openjdk.org/jeps/491)), many organizations are unlikely to adopt
-JDK 25 immediately upon its release in September 2025—primarily due to compatibility concerns.
+JDK 25 immediately upon its release in September 2025, primarily due to compatibility concerns.
+
+In most cases, this annotation is preferable over Lombok's own `@Synchronized`.
 
 ### 💡 Tips
 

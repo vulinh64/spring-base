@@ -1,7 +1,5 @@
 # Lombok IntelliJ Plugin
 
----
-
 ## Table of Contents
 
 <!-- TOC -->

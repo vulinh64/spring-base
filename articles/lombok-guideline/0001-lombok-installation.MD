@@ -1,7 +1,5 @@
 # Lombok Installation
 
----
-
 ## Table of Contents
 
 <!-- TOC -->
