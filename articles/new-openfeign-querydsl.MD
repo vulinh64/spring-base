@@ -2,6 +2,8 @@
 
 <!-- TOC -->
   * [Table of Contents](#table-of-contents)
+  * [!!!Update!!!](#update)
+    * [2025-06-16](#2025-06-16)
   * [Current state of `QueryDSL`](#current-state-of-querydsl)
   * [Old Implementation](#old-implementation)
     * [Dependency Declaration](#dependency-declaration)
@@ -10,6 +12,40 @@
     * [Dependency Declaration](#dependency-declaration-1)
     * [Maven Plugin `maven-compiler-plugin` Configuration](#maven-plugin-maven-compiler-plugin-configuration-1)
 <!-- TOC -->
+
+## !!!Update!!!
+
+### 2025-06-16
+
+The current configuration of just this:
+
+```xml
+<!-- Other annotation processors above -->
+<path>
+    <groupId>com.querydsl</groupId>
+    <artifactId>querydsl-apt</artifactId>
+    <version>${openfeign.querydsl.version}</version>
+    <classifier>jakarta</classifier>
+</path>
+```
+
+and the transitive dependency declaration like this:
+
+```xml
+
+<dependency>
+    <groupId>com.querydsl</groupId>
+    <artifactId>querydsl-jpa</artifactId>
+    <classifier>jakarta</classifier> <!-- Pay attention to this classifier -->
+    <version>${openfeign.querydsl.version}</version>
+</dependency>
+```
+
+works fine for the time being (tested on both `mvn clean install` and IntelliJ's Build -> Rebuild Project), for whatever
+reason (IntelliJ's Rebuild Project has failed before, but works now, maybe the latest version of OpenFeign QueryDSL
+works).
+
+The current version of `openfeign.querydsl.version` is `6.11`, as the time of this writing (2025-06-16 @ 15:00 UTC +7).
 
 ## Current state of `QueryDSL`
 
@@ -34,6 +70,7 @@ You can visit the fork here: https://github.com/OpenFeign/querydsl
 ### Dependency Declaration
 
 ```xml
+
 <dependency>
     <groupId>com.querydsl</groupId>
     <artifactId>querydsl-jpa</artifactId>
@@ -45,6 +82,7 @@ You can visit the fork here: https://github.com/OpenFeign/querydsl
 ### Maven Plugin `maven-compiler-plugin` Configuration
 
 ```xml
+
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -94,6 +132,7 @@ It looks like we do not need to include classifier `jakarta` here.
 ### Maven Plugin `maven-compiler-plugin` Configuration
 
 ```xml
+
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
