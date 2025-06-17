@@ -23,21 +23,58 @@ efficient use of Lombok across projects.
 Some of them that we recommend to use are:
 
 * `@Getter`
-* `@Setter`
-* `@Data`
-* `@Value` (not to be confused with Spring's own `@org.springframework.beans.factory.annotation.Value`)
-* `@NoArgsConstructor`
-* `@AllArgsConstructor`
-* `@RequiredArgsConstructor` (this annotation will have its own dedicated article for its usages)
-* `@Builder`
-* `@With`
-* `@ToString` and `@EqualsAndHashCode`
-* `@SneakyThrows`
-* `@Locked`
-* `@Slf4j`
-* and so on...
 
-The usage of those annotations will be specified in dedicated articles.
+---
+
+* `@Setter`
+
+---
+
+* `@Data` (see [this article](0005-normal-dto.MD) for more information)
+
+---
+
+* `@Value` (not to be confused with Spring's own `@org.springframework.beans.factory.annotation.Value`)
+
+---
+
+* `@NoArgsConstructor`
+
+---
+
+* `@AllArgsConstructor`
+
+---
+
+* `@RequiredArgsConstructor` (see [this article](0008-required-args-constructors.MD) for more information)
+
+---
+
+* `@Builder`
+
+---
+
+* `@With`
+
+---
+
+* `@ToString` and `@EqualsAndHashCode`
+
+---
+
+* `@SneakyThrows` (see [this article](0007-sneaky-throws.MD) for more information)
+
+---
+
+* `@Locked` (see [this article](0009-locked.MD) for more information), instead of `@Synchronized`
+
+---
+
+* `@Slf4j`
+
+---
+
+* and so on...
 
 ## 2. You Should ***STAY AWAY*** From Using Lombok Annotations Inside Package `lombok.experimental`
 
@@ -52,9 +89,12 @@ Quote from Lombok homepage:
 > Due to limitations in `javac`, currently non-star static imports cannot be used to import stuff from
 > `@UtilityClasses`; don't static import, or use star imports.
 
-You can see the status of this Lombok's annotation here:
-
+> If you are curious, you can see the status of this Lombok's annotation here:
+>
 > https://projectlombok.org/features/experimental/UtilityClass
+>
+> TL;DR: `@UtilityClass` is unlikely to go out from experimental status anytime soon, unless a drastic change is made
+> to `javac`.
 
 In short, the reckless usage of `@UtilityClass` will break your entire code base, literally, if you are not careful.
 

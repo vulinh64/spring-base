@@ -61,7 +61,8 @@ public class EmployeeEntity {
 
 * The `@AllArgsConstructor` annotation is required when using `@Builder`, as the builder pattern relies on the
   availability of a constructor that accepts all fields. `@Builder` is a powerful Lombok annotation for implementing the
-  builder creational pattern, particularly useful for constructing complex JPA entities.
+  builder creational pattern, particularly useful for constructing complex JPA entities. This annotation did not work 
+  very well with subclasses (required the usage of experimental `@SuperBuilder`), however.
 
 ---
 
@@ -90,49 +91,51 @@ Therefore, we should not be using `@EqualsAndHashCod` most of the time for JPA e
 Below is the recommended implementation of both methods:
 
 ```java
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 
 import java.util.UUID;
 
+@Entity
 @Getter
 public class EmployeeEntity {
 
-    private UUID id;
+  @Id private UUID id;
 
-    // other fields omitted for brevity
+  // other fields omitted for brevity
 
-    @Override
-    public final boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-
-        if (id == null) {
-            return false;
-        }
-
-        // Requires JDK 16+
-        return other instanceof EmployeeEntity that
-                && getEffectiveClass(this) == getEffectiveClass(that)
-                && Objects.equals(id, that.getId());
+  @Override
+  public final boolean equals(Object other) {
+    if (this == other) {
+      return true;
     }
 
-    @Override
-    public final int hashCode() {
-        var id = getId();
-
-        return id == null
-                ? getEffectiveClass(this).hashCode()
-                : id.hashCode();
+    if (id == null) {
+      return false;
     }
 
-    // Requires Hibernate 6+
-    private static Class<?> getEffectiveClass(Object object) {
-        return object instanceof HibernateProxy hibernateProxy
-                ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
-                : object.getClass();
-    }
+    // Requires JDK 16+
+    return other instanceof EmployeeEntity that
+        && getEffectiveClass(this) == getEffectiveClass(that)
+        && Objects.equals(id, that.getId());
+  }
+
+  @Override
+  public final int hashCode() {
+    var id = getId();
+
+    return id == null ? getEffectiveClass(this).hashCode() : id.hashCode();
+  }
+
+  // Requires Hibernate 6+
+  private static Class<?> getEffectiveClass(Object object) {
+    return object instanceof HibernateProxy hibernateProxy
+        ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
+        : object.getClass();
+  }
 }
+
 ```
 
 You can also extract both methods into an abstract base class, which other concrete JPA entities can extend, like this:
