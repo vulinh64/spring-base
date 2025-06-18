@@ -8,7 +8,7 @@
   * [Basic JPA Entity](#basic-jpa-entity)
   * [Explanation](#explanation)
   * [Why No `@EqualsAndHashCode`?](#why-no-equalsandhashcode)
-  * [Recommended `boolean equals(Object)` and `int hashCode()` Approach](#recommended-boolean-equalsobject-and-int-hashcode-approach)
+  * [Recommended `boolean equals(Object)` and `int hashCode()` Implementations](#recommended-boolean-equalsobject-and-int-hashcode-implementations)
 <!-- TOC -->
 
 ## Basic JPA Entity
@@ -20,7 +20,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -78,14 +77,14 @@ public class EmployeeEntity {
 
 ## Why No `@EqualsAndHashCode`?
 
-For optimal performance, JPA entities requires custom implementation of `boolean equals(Object)` and `int hashCode()`.
+For optimal performance, JPA entities require custom implementation of `boolean equals(Object)` and `int hashCode()`.
 Therefore, we should not be using `@EqualsAndHashCod` most of the time for JPA entities.
 
 > You can check the following article for the optimal implementation of those two methods:
 >
 > https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
 
-## Recommended `boolean equals(Object)` and `int hashCode()` Approach
+## Recommended `boolean equals(Object)` and `int hashCode()` Implementations
 
 Below is the recommended implementation of both methods:
 
@@ -129,6 +128,7 @@ public class EmployeeEntity {
     }
 
     // Requires Hibernate 6+
+    // Hibernate version below 6 requires different approaches
     private static Class<?> getEffectiveClass(Object object) {
         return object instanceof HibernateProxy hibernateProxy
                 ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
@@ -175,6 +175,7 @@ public abstract class AbstractIdentifiable<I> {
                 : id.hashCode();
     }
 
+    // This can be used to check the actual underlying class of entities
     private static Class<?> getEffectiveClass(Object object) {
         return object instanceof HibernateProxy proxy
                 ? proxy.getHibernateLazyInitializer().getPersistentClass()

@@ -108,9 +108,9 @@ public final class YourUtils {
 } 
 ```
 
-Nevertheless, the recommended approach when creating utility classes is as following, if you want to ensure that even
-Reflection API cannot circumvent the private constructor (something that Lombok `@NoArgsConstructor` cannot provide for
-the time being):
+However, if you want to ensure that even the Reflection API cannot circumvent the private constructor, something that
+Lombok's `@NoArgsConstructor` currently doesn't provide, the recommended approach for creating utility classes is as
+follows:
 
 ```java
 public final class YourUtils {
@@ -124,7 +124,7 @@ public final class YourUtils {
 
 ## 4. Edge Case: Use `@Accessors` with Great Care
 
-`@lombok.experimental.Accessors` is a promising experimental annotation that can be useful for building fluent APIs
+`@lombok.experimental.Accessors` is a potential experimental annotation that can be useful for building fluent APIs
 within your code. For the time being, this is the only recommended usage of `@Accessors`:
 
 ```java
@@ -162,3 +162,31 @@ public void updateUser(UUID uuid) {
 
 It is recommended to use `@Accessors(chain = true)` in your entity or DTO classes if possible to extend the usage of
 object accessors.
+
+You can also use `@Accessors(fluent = true)`, which converts standard JavaBean-style getters like `getX()` into a more
+fluent style like `x()`, similar to how you access fields in Java Records. However, be aware that enabling fluent
+accessors may break existing functionality in your project, so use this option only if you're confident about how your
+code will be working afterward.
+
+```java
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import java.util.UUID;
+
+@Getter
+@Setter
+@Accessors(fluent = true)
+public class Employee {
+
+    private UUID id;
+    private String name;
+    private int age;
+}
+
+Employee employee = new Employee(UUID.randomUUID(), "Houfnice", 10);
+
+// employee.age() returns 10
+// employee.name() returns "Houfnice"
+```
