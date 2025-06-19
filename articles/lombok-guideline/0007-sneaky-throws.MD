@@ -36,15 +36,15 @@ Instead of manually wrapping your checked exceptions in unchecked exception `thr
 import java.io.IOException;
 
 public void doSomething() throws IOException {
-    // Do something here
+  // Do something here
 }
 
 public void execute() {
-    try {
-        doSomething();
-    } catch (Exception e) {
-        throw new RuntimeException(e);
-    }
+  try {
+    doSomething();
+  } catch (Exception e) {
+    throw new RuntimeException(e);
+  }
 }
 ```
 
@@ -56,12 +56,12 @@ import lombok.SneakyThrows;
 import java.io.IOException;
 
 public void doSomething() throws IOException {
-    // Do something here
+  // Do something here
 }
 
 @SneakyThrows
 public void execute() {
-    doSomething();
+  doSomething();
 }
 ```
 

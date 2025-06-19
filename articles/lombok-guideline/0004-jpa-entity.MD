@@ -31,15 +31,15 @@ import java.util.Set;
 @Accessors(chain = true)
 public class EmployeeEntity {
 
-    // basic fields
+  // basic fields
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "employee")
-    private Set<Task> tasks;
+  @ToString.Exclude
+  @OneToMany(mappedBy = "employee")
+  private Set<Task> tasks;
 
-    @ToString.Exclude
-    @ManyToOne
-    private Department department;
+  @ToString.Exclude
+  @ManyToOne
+  private Department department;
 }
 ```
 
@@ -99,41 +99,41 @@ import java.util.UUID;
 @Getter
 public class EmployeeEntity {
 
-    @Id
-    private UUID id;
+  @Id
+  private UUID id;
 
-    // other fields omitted for brevity
+  // other fields omitted for brevity
 
-    @Override
-    public final boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-
-        if (id == null) {
-            return false;
-        }
-
-        // Requires JDK 16+
-        return other instanceof EmployeeEntity that
-               && getEffectiveClass(this) == getEffectiveClass(that)
-               && Objects.equals(id, that.getId());
+  @Override
+  public final boolean equals(Object other) {
+    if (this == other) {
+      return true;
     }
 
-    @Override
-    public final int hashCode() {
-        var id = getId();
-
-        return id == null ? getEffectiveClass(this).hashCode() : id.hashCode();
+    if (id == null) {
+      return false;
     }
 
-    // Requires Hibernate 6+
-    // Hibernate version below 6 requires different approaches
-    private static Class<?> getEffectiveClass(Object object) {
-        return object instanceof HibernateProxy hibernateProxy
-                ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
-                : object.getClass();
-    }
+    // Requires JDK 16+
+    return other instanceof EmployeeEntity that
+            && getEffectiveClass(this) == getEffectiveClass(that)
+            && Objects.equals(id, that.getId());
+  }
+
+  @Override
+  public final int hashCode() {
+    var id = getId();
+
+    return id == null ? getEffectiveClass(this).hashCode() : id.hashCode();
+  }
+
+  // Requires Hibernate 6+
+  // Hibernate version below 6 requires different approaches
+  private static Class<?> getEffectiveClass(Object object) {
+    return object instanceof HibernateProxy hibernateProxy
+            ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
+            : object.getClass();
+  }
 }
 
 ```
@@ -147,39 +147,39 @@ import org.hibernate.proxy.HibernateProxy;
 
 public abstract class AbstractIdentifiable<I> {
 
-    public abstract I getId();
+  public abstract I getId();
 
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        var id = getId();
-
-        if (id == null) {
-            return false;
-        }
-
-        return o instanceof AbstractIdentifiable<?> other
-               && getEffectiveClass(this) == getEffectiveClass(o)
-               && Objects.equals(id, other.getId());
+  @Override
+  public final boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
 
-    @Override
-    public final int hashCode() {
-        var id = getId();
+    var id = getId();
 
-        return id == null
-                ? getEffectiveClass(this).hashCode()
-                : id.hashCode();
+    if (id == null) {
+      return false;
     }
 
-    // This can be used to check the actual underlying class of entities
-    private static Class<?> getEffectiveClass(Object object) {
-        return object instanceof HibernateProxy proxy
-                ? proxy.getHibernateLazyInitializer().getPersistentClass()
-                : object.getClass();
-    }
+    return o instanceof AbstractIdentifiable<?> other
+            && getEffectiveClass(this) == getEffectiveClass(o)
+            && Objects.equals(id, other.getId());
+  }
+
+  @Override
+  public final int hashCode() {
+    var id = getId();
+
+    return id == null
+            ? getEffectiveClass(this).hashCode()
+            : id.hashCode();
+  }
+
+  // This can be used to check the actual underlying class of entities
+  private static Class<?> getEffectiveClass(Object object) {
+    return object instanceof HibernateProxy proxy
+            ? proxy.getHibernateLazyInitializer().getPersistentClass()
+            : object.getClass();
+  }
 }
 ```

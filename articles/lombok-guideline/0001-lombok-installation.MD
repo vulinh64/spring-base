@@ -50,13 +50,13 @@ Add the following configuration to `maven-compile-plugin` plugin:
 ```xml
 <!-- You mostly don't need to explicitly provide a value for ${lombok.version} -->
 <annotationProcessorPaths>
-    <path>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-    </path>
+  <path>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>${lombok.version}</version>
+  </path>
 
-    <!-- Other annotation processors -->
+  <!-- Other annotation processors -->
 </annotationProcessorPaths>
 ```
 
@@ -65,27 +65,27 @@ So, the full `maven-compile-plugin` declaration will look like this:
 ```xml
 
 <build>
-    <plugins>
-        <!-- Other plugins -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${maven-compiler-plugin.version}</version>
-            <configuration>
-                <source>${java.version}</source>
-                <target>${java.version}</target>
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${lombok.version}</version>
-                    </path>
+  <plugins>
+    <!-- Other plugins -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>${maven-compiler-plugin.version}</version>
+      <configuration>
+        <source>${java.version}</source>
+        <target>${java.version}</target>
+        <annotationProcessorPaths>
+          <path>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+          </path>
 
-                    <!-- Other annotation processors -->
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
-    </plugins>
+          <!-- Other annotation processors -->
+        </annotationProcessorPaths>
+      </configuration>
+    </plugin>
+  </plugins>
 </build>
 ```
 

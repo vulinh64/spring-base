@@ -92,8 +92,8 @@ import lombok.With;
 @Builder
 @With
 public class EmployeeData {
-    UUID id;
-    String name;
+  UUID id;
+  String name;
 }
 ```
 

@@ -48,20 +48,20 @@ import lombok.Locked;
 
 public class YourBusinessService {
 
-    @Locked.Read
-    public void doRead() {
-        // your business code
-    }
+  @Locked.Read
+  public void doRead() {
+    // your business code
+  }
 
-    @Locked.Write
-    public void doWrite() {
-        // your business code
-    }
+  @Locked.Write
+  public void doWrite() {
+    // your business code
+  }
 
-    @Locked
-    public void execute() {
-        // your business code
-    }
+  @Locked
+  public void execute() {
+    // your business code
+  }
 }
 ```
 
@@ -84,16 +84,16 @@ public class YourBusinessService {
     // Attempt to acquire the lock only if it's currently available. 
     // This is particularly useful in scenarios where scheduled tasks (e.g., cron jobs) might overlap:
     // such as one job starting at 08:01 AM while the previous execution is still running.
-    if (!lock.tryLock(5000L, TimeUnit.MILLISECONDS)){
-        log.warn("Current task is still running...");
-        
-        return;
+    if (!lock.tryLock(5000L, TimeUnit.MILLISECONDS)) {
+      log.warn("Current task is still running...");
+
+      return;
     }
 
     try {
-        // your business code
+      // your business code
     } finally {
-        lock.unlock();
+      lock.unlock();
     }
   }
 }

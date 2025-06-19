@@ -57,12 +57,12 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class UserDTO {
 
-    private UUID id;
+  private UUID id;
 
-    private String username;
-    private LocalDateTime createdDateTime;
+  private String username;
+  private LocalDateTime createdDateTime;
 
-    // other fields and methods omitted for brevity
+  // other fields and methods omitted for brevity
 }
 ```
 
@@ -101,11 +101,11 @@ import java.util.UUID;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Department {
 
-    @EqualsAndHashCode.Include
-    private UUID id;
+  @EqualsAndHashCode.Include
+  private UUID id;
 
-    private String name;
+  private String name;
 
-    // other fields and methods omitted for brevity
+  // other fields and methods omitted for brevity
 }
 ```

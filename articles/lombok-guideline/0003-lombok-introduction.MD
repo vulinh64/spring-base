@@ -139,9 +139,9 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class Employee {
 
-    private UUID id;
-    private String name;
-    private int age;
+  private UUID id;
+  private String name;
+  private int age;
 }
 ```
 
@@ -152,11 +152,11 @@ use the setters with fluent style like this:
 
 @Transactional
 public void updateUser(UUID uuid) {
-    Employee employee = getAdminUser(userId)
-            .setName("Jan Žižka")
-            .setAge(63);
+  Employee employee = getAdminUser(userId)
+          .setName("Jan Žižka")
+          .setAge(63);
 
-    employeeRepository.save(employee);
+  employeeRepository.save(employee);
 }
 ```
 
@@ -180,9 +180,9 @@ import java.util.UUID;
 @Accessors(fluent = true)
 public class Employee {
 
-    private UUID id;
-    private String name;
-    private int age;
+  private UUID id;
+  private String name;
+  private int age;
 }
 
 Employee employee = new Employee(UUID.randomUUID(), "Houfnice", 10);

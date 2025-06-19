@@ -48,26 +48,25 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
 
-    // If the number of dependencies exceeds a threshold (usually 7 per Sonar),
-    // it's a sign to refactor the class to better follow the 
-    // Single Responsibility Principle.    
-    private final UserRepository userRepository;
-    private final UserRoleService userRoleService;
-    private final PasswordEncoder passwordEncoder;
+  // If the number of dependencies exceeds a threshold (usually 7 per Sonar),
+  // it's a sign to refactor the class to better follow the 
+  // Single Responsibility Principle.    
+  private final UserRepository userRepository;
+  private final UserRoleService userRoleService;
+  private final PasswordEncoder passwordEncoder;
 
-    // Methods inside
+  // Methods inside
 }
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
-    // Methods inside
+  // Methods inside
 }
 
 @Service
 public class UserRoleService {
-    // Methods inside
+  // Methods inside
 }
-
 ```
 
 ## ⚠️ Warning
