@@ -1,6 +1,6 @@
 # The Java String Immutability Plot Twist That'll Make You Question Your Own Sanity
 
-Alright, all hands on deck,fellow engineers, because I'm about to drop some Java knowledge that's gonna make you question everything you thought you knew about String immutability. 
+Alright, all hands on deck, fellow engineers, because I'm about to drop some Java knowledge that's gonna make you question everything you thought you knew about String immutability. 
 
 Picture this: You're sitting in an interview, feeling all confident and stuff. The interviewer leans back and hits you with the classic "So, tell me about Java String immutability." You're thinking "Pfft, easy money!" and you start rattling off how String is totally immutable, just like you learned in your bootcamp or that dusty computer science textbook.
 
@@ -46,7 +46,7 @@ Here's where Java gets all smart and stuff. Instead of being that eager beaver w
 
 Java isn't here to hold your hand and explain why your crush left you on read. Java's got bigger fish to fry - like keeping your applications from having performance tantrums that could cost you your job. Because let's be real, hash codes aren't used that often anyway (mainly just when you're dealing with HashMap and its gang).
 
-So Java takes the "work smarter, not harder" approach: calculate once, cache forever, and keep your career prospects intact. ~~Your heart might be broken, but your career would not, thank you Java~~
+So Java takes the "work smarter, not harder" approach: calculate once, cache forever, and keep your career prospects intact. ~~Your heart might be broken, but your career would not, thank you Java.~~
 
 ## The Magic Trick That Fools Everyone
 
@@ -65,6 +65,7 @@ From your code's perspective, a String is about as changeable as your friend who
 This whole situation is actually a masterclass in pragmatic programming. Java's designers looked at the situation and said "You know what? We could be purists and make String 100% technically immutable, but then everyone's applications would run slower than a Windows 95 machine trying to run Crysis."
 
 Instead, they chose the path that gives you all the benefits of immutability that you actually care about:
+
 - Thread safety without the headache of synchronization
 - You can pass Strings around like they're going out of style without worrying about side effects
 - HashMaps won't have nervous breakdowns
@@ -86,7 +87,7 @@ But wait, there's more! Just when you thought this story was over, Java 25 shows
 
 The OpenJDK folks have been cooking up some spicy enhancements, and they're about to make our "technically mutable" String situation even more interesting. In Java 25, they've introduced some JVM magic that treats the hash field as "stable" - basically telling the JVM "Hey, trust us, this field is never gonna change after it's set, so go ahead and optimize the heck out of it."
 
-It's like finally getting your parents to trust you with the car keys, except the car is String performance and the keys are advanced JVM optimizations. You can check out the juicy details [here](https://inside.java/2025/05/01/strings-just-got-faster/) if you're into that sort of technical gossip.
+It's like finally getting your parents to trust you with the car keys, except the car is String performance and the keys are advanced JVM optimizations. You can check out the juicy details [here](https://inside.java/2025/05/01/strings-just-got-faster) if you're into that sort of technical gossip.
 
 But here's where it gets really spicy - there are already JEP drafts floating around (JEP 502 and its squad) proposing something called "stable values." Think of these as fields that act like true final fields once they're initialized. It's like commitment-phobic fields finally deciding to settle down after their wild initialization phase.
 
@@ -94,7 +95,9 @@ This is actually a bigger deal than it sounds, because right now, String can't b
 
 But who knows what the good folks at OpenJDK are secretly plotting for String? Maybe in a few years, we'll have truly immutable Strings that are also value classes, running faster than your excuses when you're late for a meeting.
 
-And here's the dream scenario we're all secretly hoping for: if these "stable values" can finally make String truly immutable again, we might one day be able to walk into interviews with our heads held high and declare with absolute confidence: **"String is technically AND effectively immutable!"** 
+And here's the dream scenario we're all secretly hoping for: if these "stable values" can finally make String truly immutable again, we might one day be able to walk into interviews with our heads held high and declare with absolute confidence: **"String is technically AND effectively immutable!"**
+
+~~Hopefully, we will be seeing true immutable String before Ragnarok 💀💀💀💀~~
 
 No more "well, actually..." No more "it's complicated." No more explaining the difference between technical and practical immutability to confused interviewers. Just pure, unadulterated, textbook-definition immutability. Again, no ifs and buts!
 
