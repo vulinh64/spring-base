@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -23,12 +23,12 @@
         <mapstruct.version>1.6.3</mapstruct.version>
 
         <!-- The property "querydsl.version" is reserved by Spring, do not use that! -->
-        <openfeign.querydsl.version>6.11</openfeign.querydsl.version>
+        <openfeign.querydsl.version>7.0</openfeign.querydsl.version>
 
         <guava.version>33.4.8-jre</guava.version>
-        <springdoc.openapi.version>2.8.8</springdoc.openapi.version>
+        <springdoc.openapi.version>2.8.9</springdoc.openapi.version>
         <java-jwt.version>4.5.0</java-jwt.version>
-        <jmail.version>2.0.0</jmail.version>
+        <jmail.version>2.0.1</jmail.version>
         <p6spy-springboot.version>1.11.0</p6spy-springboot.version>
     </properties>
 

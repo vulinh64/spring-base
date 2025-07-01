@@ -1,5 +1,7 @@
 services:
   spring-base:
+    networks:
+      - spring-base-network
     image: spring-base
     container_name: spring-base
     build:
@@ -17,7 +19,9 @@ services:
       postgresql:
         condition: service_healthy
   postgresql:
-    image: 'postgres:latest'
+    networks:
+      - spring-base-network
+    image: 'postgres:17.5-alpine'
     container_name: postgresql
     ports:
       - "5432:5432"
@@ -39,3 +43,6 @@ services:
 volumes:
   postgres-volume:
     name: postgres-volume
+networks:
+  spring-base-network:
+    driver: bridge

@@ -33,7 +33,8 @@ RUN jdeps  \
     target/app.jar > deps.info
 
 # Create a custom JRE with only the required modules
-# jdk.crypto.ec and jdk.crypto.cryptoki are needed for HTTPS
+# jdk.crypto.ec is needed for HTTPS
+# JDEPS currently does not detect this module
 RUN jlink \
     --add-modules $(cat deps.info),jdk.crypto.ec \
     --strip-debug  \
