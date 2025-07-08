@@ -1,7 +1,6 @@
 package com.vulinh.service.user;
 
 import com.querydsl.core.types.Predicate;
-import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.request.UserSearchRequest;
@@ -13,53 +12,39 @@ import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.exception.ResourceConflictException;
 import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.service.BaseEntityService;
+import com.vulinh.utils.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Getter
 @RequiredArgsConstructor
 public class UserService
-    implements BaseEntityService<UUID, Users, SingleUserResponse, UserRepository> {
+    implements PageableQueryService<Users, SingleUserResponse, UserSearchRequest> {
 
   private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
-  /*
-   * For Lombok to generate the getRepository() method, the field name must be repository.
-   * This method fulfills the getRepository() requirement of the BaseEntityService interface.
-   * If you use a different name, like userRepository, ensure you return that instance in
-   * your custom getRepository() implementation.
-   */
-  private final UserRepository repository;
-
+  private final UserRepository userRepository;
   private final RoleRepository roleRepository;
 
   private final PasswordEncoder passwordEncoder;
 
   private final UserValidationService userValidationService;
 
-  @Override
-  public EntityDTOMapper<Users, SingleUserResponse> getMapper() {
-    return USER_MAPPER;
-  }
-
   @Transactional
   public SingleUserResponse createUser(UserRegistrationRequest userRegistrationRequest) {
     userValidationService.validateUserCreation(userRegistrationRequest);
 
     var possibleUsername =
-        repository.findByUsernameIgnoreCaseOrEmailIgnoreCase(
+        userRepository.findByUsernameIgnoreCaseOrEmailIgnoreCase(
             userRegistrationRequest.username(), userRegistrationRequest.email());
 
     if (possibleUsername.isPresent()) {
@@ -89,10 +74,9 @@ public class UserService
                 roleRepository.findAllById(
                     rawRoleNames.isEmpty() ? Set.of(UserRole.USER) : rawRoleNames)));
 
-    return USER_MAPPER.toDto(repository.save(transientUser));
+    return USER_MAPPER.toDto(userRepository.save(transientUser));
   }
 
-  @Override
   @Transactional
   public boolean delete(UUID id) {
     SecurityUtils.getUserDTO()
@@ -103,15 +87,30 @@ public class UserService
                   "Cannot delete self", ServiceErrorCode.MESSAGE_NO_SELF_DESTRUCTION);
             });
 
-    return BaseEntityService.super.delete(id);
+    return userRepository
+        .findById(id)
+        .map(
+            found -> {
+              userRepository.delete(found);
+
+              return true;
+            })
+        .isPresent();
   }
 
-  public Page<SingleUserResponse> search(UserSearchRequest userSearchRequest, Pageable pageable) {
-    return findAll(buildSpecification(userSearchRequest), pageable);
+  /*
+   * Pageable user query implementation
+   */
+
+  @Override
+  @NonNull
+  public SingleUserResponse toDto(@NonNull Users entity) {
+    return USER_MAPPER.toDto(entity);
   }
 
-  private Predicate buildSpecification(UserSearchRequest userSearchRequest) {
-    var identity = userSearchRequest.identity();
+  @Override
+  public Predicate toPredicate(@NonNull UserSearchRequest searchCriteria) {
+    var identity = searchCriteria.identity();
     var qUser = QUsers.users;
 
     var specification =
@@ -121,7 +120,7 @@ public class UserService
             PredicateBuilder.likeIgnoreCase(qUser.email, identity),
             PredicateBuilder.likeIgnoreCase(qUser.fullName, identity));
 
-    var searchRoles = UserRole.fromRawRole(userSearchRequest.roles());
+    var searchRoles = UserRole.fromRawRole(searchCriteria.roles());
 
     if (!searchRoles.isEmpty()) {
       var roles =
@@ -136,5 +135,11 @@ public class UserService
     }
 
     return specification;
+  }
+
+  @Override
+  @NonNull
+  public QuerydslPredicateExecutor<Users> getDslRepository() {
+    return userRepository;
   }
 }
