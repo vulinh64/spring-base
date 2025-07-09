@@ -3,7 +3,6 @@ package com.vulinh.configuration;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.utils.SecurityUrlUtils;
 import com.vulinh.utils.security.AccessTokenValidator;
 import com.vulinh.utils.security.Auth0Utils;
 import jakarta.servlet.FilterChain;
@@ -103,11 +102,11 @@ public class SecurityConfig {
           authorizeHttpRequestsCustomizer) {
     var securityProperties = applicationProperties.security();
 
-    for (var verbUrl : securityProperties.allowedVerbUrls()) {
+    for (var verbUrl : securityProperties.noAuthenticatedVerbUrls()) {
       authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
     }
 
-    for (var privilegeVerbUrl : SecurityUrlUtils.getVerbUrlsWithPrivilege(ROLE_ADMIN)) {
+    for (var privilegeVerbUrl : securityProperties.highPrivilegeVerbUrls()) {
       authorizeHttpRequestsCustomizer
           .requestMatchers(privilegeVerbUrl.method(), privilegeVerbUrl.url())
           .hasAuthority(ROLE_ADMIN.name());
@@ -116,7 +115,8 @@ public class SecurityConfig {
     authorizeHttpRequestsCustomizer
         .requestMatchers(securityProperties.noAuthenticatedUrls().toArray(String[]::new))
         .permitAll()
-        .requestMatchers(SecurityUrlUtils.getUrlsWithPrivilege(ROLE_ADMIN))
+        .requestMatchers(
+            securityProperties.highPrivilegeUrls().toArray(String[]::new))
         .hasAuthority(ROLE_ADMIN.name())
         .anyRequest()
         .authenticated();
@@ -185,7 +185,7 @@ public class SecurityConfig {
 
                     return result;
                   })
-          || securityProperties.allowedVerbUrls().stream()
+          || securityProperties.noAuthenticatedVerbUrls().stream()
               .anyMatch(
                   verbAntUrl -> {
                     var requestMethod = request.getMethod();

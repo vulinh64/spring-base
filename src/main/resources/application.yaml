@@ -9,7 +9,7 @@ application-properties:
     #
     public-key: ${PUBLIC_KEY}
     private-key: ${PRIVATE_KEY}
-    allowed-verb-urls:
+    no-authenticated-verb-urls:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/search/** }
       - { method: GET, url: /comment/** }
@@ -31,6 +31,12 @@ application-properties:
       - /auth/refresh-token/**
       - /password/**
       - /user/search/**
+    high-privilege-urls:
+      - /user/create-user/**
+      - /user/delete-user/**
+      - /user/search/**
+    high-privilege-verb-urls:
+      - { method: DELETE, url: /category/** }
     jwt-duration: ${JWT_DURATION:5m}
     refresh-jwt-duration: ${REFRESH_JWT_DURATION:1d}
     password-reset-code-duration: ${PASSWORD_RESET_CODE_DURATION:1h}
