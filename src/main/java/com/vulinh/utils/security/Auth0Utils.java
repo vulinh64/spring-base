@@ -12,7 +12,7 @@ import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
-import com.vulinh.utils.SecurityUtils;
+import com.vulinh.utils.RSAUtils;
 import java.time.Duration;
 import java.time.Instant;
 import lombok.AccessLevel;
@@ -36,8 +36,8 @@ public class Auth0Utils {
     if (rsaAlgorithm == null) {
       rsaAlgorithm =
           Algorithm.RSA512(
-              SecurityUtils.generatePublicKey(securityProperties.publicKey()),
-              SecurityUtils.generatePrivateKey(securityProperties.privateKey()));
+              RSAUtils.generatePublicKey(securityProperties.publicKey()),
+              RSAUtils.generatePrivateKey(securityProperties.privateKey()));
     }
 
     return rsaAlgorithm;
