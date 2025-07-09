@@ -19,6 +19,6 @@ CREATE TABLE post
     CONSTRAINT post_users_updated_by_fk FOREIGN KEY (updated_by) REFERENCES users (id) ON DELETE SET NULL ON UPDATE RESTRICT
 );
 
-CREATE INDEX post_slug_idx ON public.post USING btree (slug);
+CREATE INDEX post_slug_idx ON post USING btree (slug);
 
-CREATE INDEX post_title_idx ON public.post USING btree (title);
+CREATE INDEX post_title_idx ON post USING btree (title);

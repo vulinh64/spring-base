@@ -17,17 +17,17 @@ CREATE TABLE post_revision
     CONSTRAINT post_revision_pk PRIMARY KEY (post_id, revision_number)
 );
 
-CREATE INDEX post_revision_author_id_idx ON public.post_revision USING btree (author_id);
+CREATE INDEX post_revision_author_id_idx ON post_revision USING btree (author_id);
 
-CREATE INDEX post_revision_category_id_idx ON public.post_revision USING btree (category_id);
+CREATE INDEX post_revision_category_id_idx ON post_revision USING btree (category_id);
 
-CREATE INDEX post_revision_revision_created_by_idx ON public.post_revision USING btree (revision_created_by);
+CREATE INDEX post_revision_revision_created_by_idx ON post_revision USING btree (revision_created_by);
 
-CREATE INDEX post_revision_revision_created_date_idx ON public.post_revision USING btree (revision_created_date);
+CREATE INDEX post_revision_revision_created_date_idx ON post_revision USING btree (revision_created_date);
 
-CREATE INDEX post_revision_slug_idx ON public.post_revision USING btree (slug);
+CREATE INDEX post_revision_slug_idx ON post_revision USING btree (slug);
 
-CREATE INDEX post_revision_title_idx ON public.post_revision USING btree (title);
+CREATE INDEX post_revision_title_idx ON post_revision USING btree (title);
 
 CREATE SEQUENCE IF NOT EXISTS post_revision_seq
     INCREMENT BY 1
