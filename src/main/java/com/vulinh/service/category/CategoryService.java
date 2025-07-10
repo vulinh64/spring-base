@@ -1,5 +1,6 @@
 package com.vulinh.service.category;
 
+import com.querydsl.core.types.Predicate;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
@@ -11,21 +12,23 @@ import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.exception.NotFoundException;
 import com.vulinh.locale.ServiceErrorCode;
+import com.vulinh.utils.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CategoryService {
+public class CategoryService
+    implements PageableQueryService<Category, CategoryResponse, CategorySearchRequest> {
 
   private static final CategoryMapper CATEGORY_MAPPER = CategoryMapper.INSTANCE;
 
@@ -58,22 +61,6 @@ public class CategoryService {
   }
 
   @Transactional
-  public Page<CategoryResponse> searchCategories(
-      CategorySearchRequest categorySearchRequest, Pageable pageable) {
-    QCategory qCategory = QCategory.category;
-
-    return categoryRepository
-        .findAll(
-            PredicateBuilder.and(
-                PredicateBuilder.likeIgnoreCase(
-                    qCategory.displayName, categorySearchRequest.displayName()),
-                PredicateBuilder.likeIgnoreCase(
-                    qCategory.categorySlug, categorySearchRequest.categorySlug())),
-            pageable)
-        .map(CATEGORY_MAPPER::toDto);
-  }
-
-  @Transactional
   public boolean deleteCategory(UUID categoryId) {
     if (CommonConstant.UNCATEGORIZED_ID.equals(categoryId)) {
       throw NoSuchPermissionException.noSuchPermissionException(
@@ -89,5 +76,30 @@ public class CategoryService {
               return true;
             })
         .isPresent();
+  }
+
+  /*
+   * Pageable category query implementation
+   */
+
+  @Override
+  @NonNull
+  public CategoryResponse toDto(@NonNull Category category) {
+    return CATEGORY_MAPPER.toDto(category);
+  }
+
+  @Override
+  public Predicate toPredicate(@NonNull CategorySearchRequest categorySearchRequest) {
+    QCategory qCategory = QCategory.category;
+
+    return PredicateBuilder.and(
+        PredicateBuilder.likeIgnoreCase(qCategory.displayName, categorySearchRequest.displayName()),
+        PredicateBuilder.likeIgnoreCase(qCategory.categorySlug, categorySearchRequest.slug()));
+  }
+
+  @Override
+  @NonNull
+  public QuerydslPredicateExecutor<Category> getDslRepository() {
+    return categoryRepository;
   }
 }

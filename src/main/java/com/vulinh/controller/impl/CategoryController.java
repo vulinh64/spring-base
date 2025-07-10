@@ -30,8 +30,7 @@ public class CategoryController implements CategoryAPI {
   @Override
   public GenericResponse<Page<CategoryResponse>> searchCategories(
       CategorySearchRequest categorySearchRequest, Pageable pageable) {
-    return ResponseCreator.success(
-        categoryService.searchCategories(categorySearchRequest, pageable));
+    return ResponseCreator.success(categoryService.search(categorySearchRequest, pageable));
   }
 
   @Override
