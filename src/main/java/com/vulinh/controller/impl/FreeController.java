@@ -17,13 +17,20 @@ public class FreeController implements FreeAPI {
   private final TaxService taxService;
 
   @Override
-  public Object calculateTax(Double totalSalary, Double basicSalary, Integer numberOfDependants) {
+  public Object calculateTax(
+      Double totalSalary,
+      Double basicSalary,
+      Integer numberOfDependants,
+      Boolean isProbation,
+      Double probationPercentage) {
     return ResponseCreator.success(
         taxService.calculate(
             TaxRequestDTO.builder()
                 .totalSalary(totalSalary)
                 .basicSalary(basicSalary)
                 .numberOfDependants(numberOfDependants)
+                .isProbation(isProbation)
+                .probationPercentage(probationPercentage)
                 .build()));
   }
 

@@ -17,6 +17,26 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class TaxUtils {
 
+  public static PersonalTaxDTO calculatePersonalTaxProbation(TaxRequestDTO taxRequestDTO) {
+    var probationPercentage = taxRequestDTO.probationPercentage();
+
+    if (Double.compare(probationPercentage, ProbationRate.MIN_PERCENTAGE.percentage()) < 0
+        || Double.compare(probationPercentage, ProbationRate.MAX_PERCENTAGE.percentage()) > 0) {
+      throw new TaxRequestDTO.TaxCalculatorException("Invalid probation percentage");
+    }
+
+    var totalSalary = taxRequestDTO.totalSalary();
+    var taxableAMount = totalSalary * taxRequestDTO.probationPercentage();
+    var taxAmount = taxableAMount * ProbationRate.DEDUCTION_PERCENTAGE.percentage();
+
+    return PersonalTaxDTO.builder()
+        .pretaxSalary(totalSalary)
+        .taxAmount(taxAmount)
+        .taxableIncome(taxableAMount)
+        .netIncome(taxableAMount - taxAmount)
+        .build();
+  }
+
   public static InsuranceDTO calculateInsurance(TaxRequestDTO taxRequestDTO) {
     var basicSalary = taxRequestDTO.basicSalary();
 
@@ -109,6 +129,17 @@ class TaxUtils {
   @RequiredArgsConstructor
   @Getter
   @Accessors(fluent = true)
+  enum ProbationRate {
+    MIN_PERCENTAGE(0.85),
+    MAX_PERCENTAGE(1.0),
+    DEDUCTION_PERCENTAGE(0.1);
+
+    private final double percentage;
+  }
+
+  @RequiredArgsConstructor
+  @Getter
+  @Accessors(fluent = true)
   enum InsuranceRate {
     SOCIAL_INSURANCE(0.08),
     HEALTH_INSURANCE(0.015),
@@ -123,7 +154,7 @@ class TaxUtils {
   enum TaxConstant {
     NON_TAXABLE_INCOME(11_000_000),
     DEDUCTION_PER_DEPENDANTS(4_400_000),
-    MAX_BASIC_SALARY(36_000_000),
+    MAX_BASIC_SALARY(46_800_000),
     MIN_BASIC_SALARY(5_100_000);
 
     private final double value;

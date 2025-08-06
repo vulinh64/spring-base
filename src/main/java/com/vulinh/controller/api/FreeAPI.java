@@ -16,7 +16,9 @@ public interface FreeAPI {
   Object calculateTax(
       @RequestParam Double totalSalary,
       @RequestParam Double basicSalary,
-      @RequestParam(defaultValue = "0") Integer numberOfDependants);
+      @RequestParam(defaultValue = "0") Integer numberOfDependants,
+      @RequestParam(defaultValue = "false") Boolean isProbation,
+      @RequestParam(defaultValue = "0.85") Double probationPercentage);
 
   @PostMapping("/spring-cron-generator")
   @Operation(

@@ -37,7 +37,7 @@ public class LocalizationSupport {
           .map(rawMessage -> ArrayUtils.isEmpty(args) ? rawMessage : rawMessage.formatted(args))
           .orElse(code);
     } catch (Exception exception) {
-      log.warn("Locale error", exception);
+      log.warn("Locale error: {}", exception.getMessage());
       return code;
     }
   }

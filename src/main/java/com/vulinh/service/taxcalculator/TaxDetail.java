@@ -13,7 +13,9 @@ public record TaxDetail(
     @JsonProperty("Lương cơ bản") BigDecimal basicSalary,
     @JsonProperty("Số người phụ thuộc") int numberOfDependants,
     @JsonProperty("Bảo hiểm") Insurance insurance,
-    @JsonProperty("Thuế TNCN") PersonalTax personalTax) {
+    @JsonProperty("Thuế TNCN") PersonalTax personalTax,
+    @JsonProperty("Thử việc") boolean isProbation,
+    @JsonProperty("Mức thử việc") BigDecimal probationPercentage) {
 
   @Builder
   @With

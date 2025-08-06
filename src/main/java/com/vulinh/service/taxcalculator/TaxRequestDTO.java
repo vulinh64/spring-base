@@ -3,13 +3,19 @@ package com.vulinh.service.taxcalculator;
 import com.vulinh.exception.ApplicationException;
 import com.vulinh.service.taxcalculator.TaxUtils.TaxConstant;
 import java.io.Serial;
+import java.util.Collections;
 import java.util.Map;
 import lombok.Builder;
 import lombok.With;
 
 @With
 @Builder
-public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOfDependants) {
+public record TaxRequestDTO(
+    double totalSalary,
+    double basicSalary,
+    int numberOfDependants,
+    boolean isProbation,
+    double probationPercentage) {
 
   static final String PLACEHOLDER_ERROR_CODE = "OTHER";
 
@@ -49,7 +55,13 @@ public record TaxRequestDTO(double totalSalary, double basicSalary, int numberOf
       double deductedAmount,
       double taxAmount,
       Map<String, Double> progressiveTaxLevels,
-      double netIncome) {}
+      double netIncome) {
+
+    PersonalTaxDTO {
+      progressiveTaxLevels =
+          progressiveTaxLevels == null ? Collections.emptyMap() : progressiveTaxLevels;
+    }
+  }
 
   static class TaxCalculatorException extends ApplicationException {
 
