@@ -57,24 +57,24 @@ class TaxServiceTest {
 
     var socialCoverage = result.insurance();
 
-    assertEquals(TaxMapper.toBigDecimal(2_880_000), socialCoverage.socialInsurance());
-    assertEquals(TaxMapper.toBigDecimal(540_000), socialCoverage.healthInsurance());
-    assertEquals(TaxMapper.toBigDecimal(360_000), socialCoverage.unemploymentInsurance());
-    assertEquals(TaxMapper.toBigDecimal(3_780_000), socialCoverage.totalInsurance());
+    assertEquals(TaxMapper.toBigDecimal(3_200_000.00), socialCoverage.socialInsurance());
+    assertEquals(TaxMapper.toBigDecimal(600_000), socialCoverage.healthInsurance());
+    assertEquals(TaxMapper.toBigDecimal(400_000), socialCoverage.unemploymentInsurance());
+    assertEquals(TaxMapper.toBigDecimal(4_200_000), socialCoverage.totalInsurance());
 
     var personalTax = result.personalTax();
 
-    assertEquals(TaxMapper.toBigDecimal(36_220_000), personalTax.pretaxSalary());
-    assertEquals(TaxMapper.toBigDecimal(25_220_000), personalTax.taxableIncome());
+    assertEquals(TaxMapper.toBigDecimal(35_800_000), personalTax.pretaxSalary());
+    assertEquals(TaxMapper.toBigDecimal(24_800_000), personalTax.taxableIncome());
 
-    assertEquals(TaxMapper.toBigDecimal(3_394_000), personalTax.taxAmount());
+    assertEquals(TaxMapper.toBigDecimal(3_310_000), personalTax.taxAmount());
     assertEquals(TaxMapper.toBigDecimal(0), personalTax.deductedAmount());
-    assertEquals(TaxMapper.toBigDecimal(32_826_000), personalTax.netIncome());
+    assertEquals(TaxMapper.toBigDecimal(32_490_000), personalTax.netIncome());
 
     var highestLevel = personalTax.progressiveTaxLevels().get("LEVEL_3");
 
     assertNotNull(highestLevel);
-    assertEquals(TaxMapper.toBigDecimal(1_444_000), highestLevel);
+    assertEquals(TaxMapper.toBigDecimal(1_360_000), highestLevel);
   }
 
   @Test

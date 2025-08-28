@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Auth0Utils {
@@ -73,13 +74,20 @@ public class Auth0Utils {
 
     if (claimNode.isMissing() || claimNode.isNull()) {
       throw AuthorizationException.invalidAuthorization(
-          "Claim %s is missing".formatted(claimName), ServiceErrorCode.MESSAGE_INVALID_AUTHORIZATION);
+          "Claim %s is missing".formatted(claimName),
+          ServiceErrorCode.MESSAGE_INVALID_AUTHORIZATION);
     }
 
     return claimNode.asString();
   }
 
   public static String parseBearerToken(String token) {
+    if (StringUtils.isBlank(token)) {
+      throw AuthorizationException.invalidAuthorization(
+          "Session ID %s for user ID %s did not exist or has been invalidated",
+          ServiceErrorCode.MESSAGE_INVALID_SESSION);
+    }
+
     return token.startsWith("Bearer") ? token.substring(7) : token;
   }
 }
