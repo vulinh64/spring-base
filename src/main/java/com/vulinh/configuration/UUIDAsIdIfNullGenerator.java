@@ -48,7 +48,7 @@ public @interface UUIDAsIdIfNullGenerator {
       while (true) {
         var result = UUID.randomUUID();
 
-        if (!CommonConstant.UNCATEGORIZED_ID.equals(result)) {
+        if (!CommonConstant.NIL_UUID.equals(result)) {
           return result;
         }
       }

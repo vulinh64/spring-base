@@ -38,7 +38,7 @@ public class CategoryService
 
   public Category getCategory(UUID categoryId) {
     return Optional.ofNullable(categoryId)
-        .or(() -> Optional.of(CommonConstant.UNCATEGORIZED_ID))
+        .or(() -> Optional.of(CommonConstant.NIL_UUID))
         .flatMap(categoryRepository::findById)
         .orElseThrow(
             () ->
@@ -62,7 +62,7 @@ public class CategoryService
 
   @Transactional
   public boolean deleteCategory(UUID categoryId) {
-    if (CommonConstant.UNCATEGORIZED_ID.equals(categoryId)) {
+    if (CommonConstant.NIL_UUID.equals(categoryId)) {
       throw NoSuchPermissionException.noSuchPermissionException(
           "Cannot delete default category", ServiceErrorCode.MESSAGE_DEFAULT_CATEGORY_IMMORTAL);
     }

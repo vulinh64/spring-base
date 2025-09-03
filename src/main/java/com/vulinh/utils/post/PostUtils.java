@@ -33,7 +33,7 @@ public class PostUtils {
 
   public static boolean isUncategorizedPost(PostCreationRequest postCreationRequest, Post post) {
     return (postCreationRequest.categoryId() == null
-            || CommonConstant.UNCATEGORIZED_ID.equals(postCreationRequest.categoryId()))
-        && CommonConstant.UNCATEGORIZED_ID.equals(post.getCategory().getId());
+            || CommonConstant.NIL_UUID.equals(postCreationRequest.categoryId()))
+        && CommonConstant.NIL_UUID.equals(post.getCategory().getId());
   }
 }
