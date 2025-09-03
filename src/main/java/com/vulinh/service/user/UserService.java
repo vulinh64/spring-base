@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -139,7 +138,7 @@ public class UserService
 
   @Override
   @NonNull
-  public QuerydslPredicateExecutor<Users> getDslRepository() {
+  public UserRepository getDslRepository() {
     return userRepository;
   }
 }
