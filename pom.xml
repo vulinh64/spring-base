@@ -41,6 +41,9 @@
 
         <!-- https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter -->
         <p6spy-springboot.version>1.12.0</p6spy-springboot.version>
+
+        <!-- https://mvnrepository.com/artifact/com.github.auties00/optional -->
+        <optional.version>1.0</optional.version>
     </properties>
 
     <dependencies>
@@ -144,6 +147,14 @@
             <version>${jmail.version}</version>
         </dependency>
         <!-- END: JMail validation library -->
+
+        <!-- BEGIN: Optional -->
+        <dependency>
+            <groupId>com.github.auties00</groupId>
+            <artifactId>optional</artifactId>
+            <version>${optional.version}</version>
+        </dependency>
+        <!-- END: Optional -->
 
         <!-- BEGIN: JWT Validation libraries -->
         <dependency>
