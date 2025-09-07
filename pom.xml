@@ -31,7 +31,7 @@
         <guava.version>33.4.8-jre</guava.version>
 
         <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-        <springdoc.openapi.version>2.8.11</springdoc.openapi.version>
+        <springdoc.openapi.version>2.8.12</springdoc.openapi.version>
 
         <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
         <java-jwt.version>4.5.0</java-jwt.version>
