@@ -1,9 +1,11 @@
 package com.vulinh.service.user;
 
 import com.sanctionco.jmail.JMail;
+import com.vulinh.data.base.ApplicationError;
 import com.vulinh.data.dto.request.UserLoginRequest;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.entity.Users;
+import com.vulinh.data.repository.UserRepository;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
@@ -25,6 +27,8 @@ public class UserValidationService {
   public static final int USERNAME_MAX_LENGTH = 200;
 
   private static final char UNDERSCORE = '_';
+
+  private final UserRepository userRepository;
 
   public static boolean isActive(Users matcherUser) {
     var result = BooleanUtils.isTrue(matcherUser.getIsActive());
@@ -111,7 +115,33 @@ public class UserValidationService {
   public void validateUserCreation(UserRegistrationRequest userRegistrationRequest) {
     ValidatorChain.<UserRegistrationRequest>start()
         .addValidator(UserRule.values())
+        .addValidator(userAvailabilityValidation(userRegistrationRequest))
         .executeValidation(userRegistrationRequest);
+  }
+
+  private NoArgsValidatorStep<UserRegistrationRequest> userAvailabilityValidation(
+      UserRegistrationRequest userRegistrationRequest) {
+    return new NoArgsValidatorStep<>() {
+
+      @Override
+      public Predicate<UserRegistrationRequest> getPredicate() {
+        return Predicate.not(
+            dto ->
+                userRepository.existsByUsernameIgnoreCaseOrEmailIgnoreCase(
+                    userRegistrationRequest.username(), userRegistrationRequest.email()));
+      }
+
+      @Override
+      public ApplicationError getApplicationError() {
+        return ServiceErrorCode.MESSAGE_USER_OR_EMAIL_EXISTED;
+      }
+
+      @Override
+      public String getExceptionMessage() {
+        return "Username [%s] or email [%s] already existed!"
+            .formatted(userRegistrationRequest.username(), userRegistrationRequest.email());
+      }
+    };
   }
 
   @Getter

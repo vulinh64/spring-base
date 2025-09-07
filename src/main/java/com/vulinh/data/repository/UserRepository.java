@@ -15,7 +15,7 @@ public interface UserRepository extends BaseRepository<Users, UUID> {
 
   Optional<Users> findByIdAndIsActiveIsTrue(UUID id);
 
-  Optional<Users> findByUsernameIgnoreCaseOrEmailIgnoreCase(String username, String email);
+  boolean existsByUsernameIgnoreCaseOrEmailIgnoreCase(String username, String email);
 
   boolean existsByIdAndIsActiveIsTrue(UUID id);
 

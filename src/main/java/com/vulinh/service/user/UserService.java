@@ -10,7 +10,6 @@ import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.RoleRepository;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.NoSuchPermissionException;
-import com.vulinh.exception.ResourceConflictException;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
@@ -41,23 +40,6 @@ public class UserService
   @Transactional
   public SingleUserResponse createUser(UserRegistrationRequest userRegistrationRequest) {
     userValidationService.validateUserCreation(userRegistrationRequest);
-
-    var possibleUsername =
-        userRepository.findByUsernameIgnoreCaseOrEmailIgnoreCase(
-            userRegistrationRequest.username(), userRegistrationRequest.email());
-
-    if (possibleUsername.isPresent()) {
-      var existedUser = possibleUsername.get();
-
-      throw ResourceConflictException.resourceConflictException(
-          "User [%s] (input username: [%s]) with email [%s] (input email: [%s]) already existed"
-              .formatted(
-                  existedUser.getUsername(),
-                  userRegistrationRequest.username(),
-                  existedUser.getEmail(),
-                  userRegistrationRequest.email()),
-          ServiceErrorCode.MESSAGE_USER_OR_EMAIL_EXISTED);
-    }
 
     var transientUser =
         USER_MAPPER.toUser(
