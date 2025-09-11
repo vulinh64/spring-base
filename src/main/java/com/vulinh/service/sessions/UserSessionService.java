@@ -8,7 +8,6 @@ import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,11 +24,7 @@ public class UserSessionService {
     userSessionRepository.save(
         UserSession.builder()
             .id(UserSessionId.of(container.userId(), container.sessionId()))
-            .expirationDate(
-                container
-                    .refreshTokenExpirationDate()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime())
+            .expirationDate(container.refreshTokenExpirationDate())
             .build());
 
     return container.tokenResponse();
@@ -37,9 +32,7 @@ public class UserSessionService {
 
   @Transactional
   public void updateUserSession(UserSession userSession, Instant expirationDate) {
-    userSessionRepository.save(
-        userSession.setExpirationDate(
-            expirationDate.atZone(ZoneId.systemDefault()).toLocalDateTime()));
+    userSessionRepository.save(userSession.setExpirationDate(expirationDate));
   }
 
   public UserSession findUserSession(UUID userId, UUID sessionId) {

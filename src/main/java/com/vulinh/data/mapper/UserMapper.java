@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
     builder = @Builder(disableBuilder = true),
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     imports = Collectors.class)
-public interface UserMapper extends EntityDTOMapper<Users, SingleUserResponse>, DateTimeMappable {
+public interface UserMapper extends EntityDTOMapper<Users, SingleUserResponse> {
 
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 

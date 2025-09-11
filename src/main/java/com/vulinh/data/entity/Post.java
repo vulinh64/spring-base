@@ -4,7 +4,7 @@ import com.vulinh.data.base.DateTimeAuditable;
 import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -37,9 +37,9 @@ public class Post extends UuidJpaEntity implements DateTimeAuditable {
   private String excerpt;
   private String postContent;
 
-  @CreatedDate private LocalDateTime createdDate;
+  @CreatedDate private Instant createdDate;
 
-  @LastModifiedDate private LocalDateTime updatedDate;
+  @LastModifiedDate private Instant updatedDate;
 
   @LastModifiedBy private UUID updatedBy;
 

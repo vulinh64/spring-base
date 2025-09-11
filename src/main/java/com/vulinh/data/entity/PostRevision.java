@@ -4,7 +4,7 @@ import com.vulinh.data.base.AbstractIdentifiable;
 import com.vulinh.data.entity.ids.PostRevisionId;
 import jakarta.persistence.*;
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -36,7 +36,7 @@ public class PostRevision extends AbstractIdentifiable<PostRevisionId> {
   private UUID categoryId;
   private String tags;
 
-  @CreatedDate private LocalDateTime revisionCreatedDate;
+  @CreatedDate private Instant revisionCreatedDate;
 
   @CreatedBy UUID revisionCreatedBy;
 }

@@ -2,11 +2,11 @@
 --changeset vulinh:20250105-0001
 CREATE TABLE user_session
 (
-    user_id         uuid      NOT NULL,
-    session_id      uuid      NOT NULL,
-    created_date    timestamp NULL,
-    updated_date    timestamp NULL,
-    expiration_date timestamp NOT NULL,
+    user_id         uuid        NOT NULL,
+    session_id      uuid        NOT NULL,
+    created_date    timestamptz NULL,
+    updated_date    timestamptz NULL,
+    expiration_date timestamptz NOT NULL,
     CONSTRAINT user_session_pk PRIMARY KEY (user_id, session_id)
 );
 

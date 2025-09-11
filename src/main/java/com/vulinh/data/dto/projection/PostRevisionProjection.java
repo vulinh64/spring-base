@@ -3,7 +3,7 @@ package com.vulinh.data.dto.projection;
 import com.vulinh.data.base.UUIDRevisionId;
 import com.vulinh.data.entity.RevisionType;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
@@ -21,7 +21,7 @@ public record PostRevisionProjection(
     UUID authorId,
     UUID categoryId,
     String tags,
-    LocalDateTime revisionCreatedDate,
+    Instant revisionCreatedDate,
     UUID revisionCreatedBy)
     implements UUIDRevisionId, Serializable {
 

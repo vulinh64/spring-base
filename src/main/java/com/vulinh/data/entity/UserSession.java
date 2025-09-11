@@ -7,7 +7,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,9 +29,9 @@ public class UserSession extends AbstractIdentifiable<UserSessionId> implements 
 
   @EmbeddedId private UserSessionId id;
 
-  @CreatedDate private LocalDateTime createdDate;
+  @CreatedDate private Instant createdDate;
 
-  @LastModifiedDate private LocalDateTime updatedDate;
+  @LastModifiedDate private Instant updatedDate;
 
-  private LocalDateTime expirationDate;
+  private Instant expirationDate;
 }

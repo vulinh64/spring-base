@@ -6,7 +6,7 @@ CREATE TABLE comment_revision
     revision_number       int8 NOT NULL,
     revision_type         int4 NOT NULL,
     "content"             text NOT NULL,
-    revision_created_date timestamp NULL,
+    revision_created_date timestamptz NULL,
     revision_created_by   uuid NULL,
     post_id               uuid NULL,
     CONSTRAINT comment_revision_pk PRIMARY KEY (comment_id, revision_number)

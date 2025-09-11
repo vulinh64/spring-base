@@ -7,7 +7,7 @@ import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.utils.PredicateBuilder;
 import jakarta.annotation.PostConstruct;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class CleanExpiredUserSession {
 
     var userSessions =
         userSessionRepository.findAll(
-            qUserSession.expirationDate.lt(LocalDateTime.now()),
+            qUserSession.expirationDate.lt(Instant.now()),
             PageRequest.of(
                 0,
                 ITEMS_PER_BATCH,

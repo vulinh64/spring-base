@@ -4,7 +4,7 @@ import com.vulinh.data.base.AbstractIdentifiable;
 import com.vulinh.data.entity.ids.CommentRevisionId;
 import jakarta.persistence.*;
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -31,7 +31,7 @@ public class CommentRevision extends AbstractIdentifiable<CommentRevisionId> {
 
   private String content;
 
-  @CreatedDate private LocalDateTime revisionCreatedDate;
+  @CreatedDate private Instant revisionCreatedDate;
 
   @CreatedBy private UUID revisionCreatedBy;
 

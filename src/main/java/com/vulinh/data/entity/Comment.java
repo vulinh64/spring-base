@@ -4,7 +4,7 @@ import com.vulinh.data.base.DateTimeAuditable;
 import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -32,9 +32,9 @@ public class Comment extends UuidJpaEntity implements DateTimeAuditable {
 
   private String content;
 
-  @CreatedDate private LocalDateTime createdDate;
+  @CreatedDate private Instant createdDate;
 
-  @LastModifiedDate private LocalDateTime updatedDate;
+  @LastModifiedDate private Instant updatedDate;
 
   // So that mapping on Post works
   @Column(name = "post_id")

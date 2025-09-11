@@ -4,7 +4,7 @@ import com.vulinh.data.base.DateTimeAuditable;
 import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.*;
 import java.io.Serial;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 import lombok.*;
@@ -42,13 +42,13 @@ public class Users extends UuidJpaEntity implements DateTimeAuditable {
 
   @ToString.Exclude private String passwordResetCode;
 
-  @ToString.Exclude private LocalDateTime passwordResetCodeExpiration;
+  @ToString.Exclude private Instant passwordResetCodeExpiration;
 
   @ToString.Exclude private String userRegistrationCode;
 
-  @CreatedDate private LocalDateTime createdDate;
+  @CreatedDate private Instant createdDate;
 
-  @LastModifiedDate private LocalDateTime updatedDate;
+  @LastModifiedDate private Instant updatedDate;
 
   @ManyToMany
   @JoinTable(
