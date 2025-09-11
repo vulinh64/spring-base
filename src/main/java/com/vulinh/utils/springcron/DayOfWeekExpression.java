@@ -20,7 +20,7 @@ public enum DayOfWeekExpression implements PartExpression {
           Utils.isBinaryList(list)
               && Utils.isBetweenInclusive(
                   list.getFirst(), Constant.MIN_DAY_MONTH_DAY_OF_WEEK, Constant.MAX_DAY_OF_WEEK),
-      list -> ExpressionUtils.everyBetween(list, ExpressionUtils.MONTHS_MAPPING::get)),
+      list -> ExpressionUtils.everyBetween(list, ExpressionUtils.WEEK_DAYS_MAPPING::get)),
   SPECIFIC_WEEK_DAYS(
       list ->
           Utils.isValidListWithinBounds(

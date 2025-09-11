@@ -2,7 +2,6 @@ package com.vulinh.utils.springcron;
 
 import java.util.List;
 import java.util.Objects;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
