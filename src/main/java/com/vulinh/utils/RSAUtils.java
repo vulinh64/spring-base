@@ -1,28 +1,18 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import com.vulinh.exception.SecurityConfigurationException;
 import com.vulinh.locale.ServiceErrorCode;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-import java.util.concurrent.atomic.AtomicInteger;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Utility class for handling RSA key operations.
- *
- * <p>This class provides methods to generate {@link RSAPublicKey} and {@link RSAPrivateKey}
- * instances from their string representations. It can handle raw Base64 encoded keys as well as
- * keys in PEM format (with headers, footers, and line breaks).
- */
+/// Utility class for handling RSA key operations.
+///
+/// This class provides methods to generate [RSAPublicKey] and [RSAPrivateKey] instances from their string
+/// representations. It can handle raw Base64 encoded keys as well as keys in PEM format (with headers, footers, and
+/// line breaks).
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RSAUtils {
 
@@ -51,18 +41,15 @@ public class RSAUtils {
     "-----END RSA PRIVATE KEY-----"
   };
 
-  /**
-   * Generates an {@link RSAPublicKey} from its string representation.
-   *
-   * <p>This method takes a raw public key string, which can be in PEM format (e.g., containing
-   * "-----BEGIN PUBLIC KEY-----" headers/footers) or a simple Base64 encoded string. It strips any
-   * PEM headers/footers and whitespace before decoding and generating the key.
-   *
-   * @param rawPublicKey The string representation of the public key.
-   * @return The generated {@link RSAPublicKey}.
-   * @throws SecurityConfigurationException if the provided key string is invalid, malformed, or not
-   *     an RSA public key.
-   */
+  /// Generates an [RSAPublicKey] from its string representation.
+  ///
+  /// This method takes a raw public key string, which can be in PEM format (e.g., containing
+  /// `-----BEGIN PUBLIC KEY-----` headers/footers) or a simple Base64 encoded string. It strips any PEM
+  /// headers/footers and whitespace before decoding and generating the key.
+  ///
+  /// @param rawPublicKey The string representation of the public key.
+  /// @return The generated [RSAPublicKey].
+  /// @throws SecurityConfigurationException if the provided key string is invalid, malformed, or not an RSA public key.
   public static RSAPublicKey generatePublicKey(String rawPublicKey) {
     // Remove header and footer if they are present
     // Also remove any whitespace character (\n, \r, space)
@@ -77,18 +64,16 @@ public class RSAUtils {
     return rsaPublicKey;
   }
 
-  /**
-   * Generates an {@link RSAPrivateKey} from its string representation.
-   *
-   * <p>This method takes a raw private key string, which can be in PEM format (e.g., containing
-   * "-----BEGIN PRIVATE KEY-----" headers/footers) or a simple Base64 encoded string. It strips any
-   * PEM headers/footers and whitespace before decoding and generating the key.
-   *
-   * @param rawPrivateKey The string representation of the private key.
-   * @return The generated {@link RSAPrivateKey}.
-   * @throws SecurityConfigurationException if the provided key string is invalid, malformed, or not
-   *     an RSA private key.
-   */
+  /// Generates an [RSAPrivateKey] from its string representation.
+  ///
+  /// This method takes a raw private key string, which can be in PEM format (e.g., containing
+  /// `-----BEGIN PRIVATE KEY-----` headers/footers) or a simple Base64 encoded string. It strips any PEM
+  /// headers/footers and whitespace before decoding and generating the key.
+  ///
+  /// @param rawPrivateKey The string representation of the private key.
+  /// @return The generated [RSAPrivateKey].
+  /// @throws SecurityConfigurationException if the provided key string is invalid, malformed, or not an RSA private
+  /// key.
   public static RSAPrivateKey generatePrivateKey(String rawPrivateKey) {
     // Remove header and footer if they are present
     // Also remove any whitespace character (\n, \r, space)

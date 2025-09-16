@@ -1,12 +1,13 @@
 package com.vulinh.data.mapper;
 
+import module java.base;
+
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.CommentRevision;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.entity.Users;
 import com.vulinh.data.entity.ids.CommentRevisionId;
-import java.util.UUID;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

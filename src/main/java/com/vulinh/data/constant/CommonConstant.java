@@ -1,6 +1,7 @@
 package com.vulinh.data.constant;
 
-import java.util.UUID;
+import module java.base;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

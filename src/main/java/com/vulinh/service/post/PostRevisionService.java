@@ -1,5 +1,7 @@
 package com.vulinh.service.post;
 
+import module java.base;
+
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.vulinh.data.constant.CommonConstant;
@@ -17,9 +19,6 @@ import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

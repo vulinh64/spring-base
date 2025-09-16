@@ -1,9 +1,10 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import com.vulinh.configuration.CustomAuthentication;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.exception.AuthorizationException;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;

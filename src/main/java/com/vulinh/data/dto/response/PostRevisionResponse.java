@@ -1,10 +1,9 @@
 package com.vulinh.data.dto.response;
 
+import module java.base;
+
 import com.vulinh.data.base.UUIDRevisionId;
 import com.vulinh.data.entity.RevisionType;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
 

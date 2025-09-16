@@ -1,5 +1,7 @@
 package com.vulinh.controller.api;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.UserEndpoint;
@@ -15,7 +17,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

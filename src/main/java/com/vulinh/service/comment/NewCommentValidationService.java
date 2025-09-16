@@ -1,5 +1,7 @@
 package com.vulinh.service.comment;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
@@ -11,9 +13,6 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

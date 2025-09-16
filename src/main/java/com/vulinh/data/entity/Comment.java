@@ -1,11 +1,10 @@
 package com.vulinh.data.entity;
 
+import module java.base;
+
 import com.vulinh.data.base.DateTimeAuditable;
 import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.*;
-import java.io.Serial;
-import java.time.Instant;
-import java.util.UUID;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;

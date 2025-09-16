@@ -1,12 +1,12 @@
 package com.vulinh.data.entity.ids;
 
+import module java.base;
+
 import com.vulinh.data.base.UUIDRevisionId;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
-import java.io.Serial;
-import java.util.UUID;
 import lombok.*;
 
 @Embeddable

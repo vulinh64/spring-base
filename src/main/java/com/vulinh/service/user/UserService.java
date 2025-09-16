@@ -1,5 +1,7 @@
 package com.vulinh.service.user;
 
+import module java.base;
+
 import com.querydsl.core.types.Predicate;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
@@ -14,9 +16,6 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.SecurityUtils;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;

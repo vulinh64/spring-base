@@ -1,7 +1,8 @@
 package com.vulinh.locale;
 
+import module java.base;
+
 import com.vulinh.data.base.ApplicationError;
-import java.util.*;
 import java.util.ResourceBundle.Control;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

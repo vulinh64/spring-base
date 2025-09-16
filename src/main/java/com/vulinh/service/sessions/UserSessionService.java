@@ -1,5 +1,7 @@
 package com.vulinh.service.sessions;
 
+import module java.base;
+
 import com.vulinh.data.dto.carrier.AccessTokenCarrier;
 import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.entity.UserSession;
@@ -7,8 +9,6 @@ import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
-import java.time.Instant;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

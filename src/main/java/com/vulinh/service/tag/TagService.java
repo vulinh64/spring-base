@@ -1,16 +1,13 @@
 package com.vulinh.service.tag;
 
+import module java.base;
+
 import com.google.common.collect.ImmutableSet;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.data.repository.TagRepository;
 import com.vulinh.factory.PostFactory;
 import com.vulinh.utils.post.PostUtils;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;

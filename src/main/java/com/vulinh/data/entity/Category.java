@@ -1,11 +1,11 @@
 package com.vulinh.data.entity;
 
+import module java.base;
+
 import com.vulinh.configuration.UUIDAsIdIfNullGenerator;
 import com.vulinh.data.base.UuidJpaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.io.Serial;
-import java.util.UUID;
 import lombok.*;
 
 @Entity

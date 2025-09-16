@@ -1,10 +1,7 @@
 package com.vulinh.utils.springcron;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import module java.base;
+
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;

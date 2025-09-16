@@ -1,5 +1,7 @@
 package com.vulinh.utils.security;
 
+import module java.base;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,8 +15,6 @@ import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.RSAUtils;
-import java.time.Duration;
-import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

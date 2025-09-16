@@ -1,11 +1,11 @@
 package com.vulinh.service.post;
 
+import module java.base;
+
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.utils.post.PostUtils;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;

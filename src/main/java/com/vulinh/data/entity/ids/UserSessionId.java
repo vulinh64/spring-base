@@ -1,8 +1,8 @@
 package com.vulinh.data.entity.ids;
 
+import module java.base;
+
 import jakarta.persistence.Embeddable;
-import java.io.Serializable;
-import java.util.UUID;
 
 @Embeddable
 public record UserSessionId(UUID userId, UUID sessionId) implements Serializable {

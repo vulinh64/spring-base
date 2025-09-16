@@ -1,6 +1,7 @@
 package com.vulinh.data.base;
 
-import java.io.Serializable;
+import module java.base;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.ListQuerydslPredicateExecutor;

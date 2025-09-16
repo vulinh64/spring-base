@@ -1,6 +1,6 @@
 package com.vulinh.data.base;
 
-import java.io.Serializable;
+import module java.base;
 
 public interface RevisionId<I> extends Serializable {
 

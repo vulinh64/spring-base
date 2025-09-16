@@ -1,5 +1,7 @@
 package com.vulinh.service.token;
 
+import module java.base;
+
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.vulinh.configuration.ApplicationProperties;
@@ -9,7 +11,6 @@ import com.vulinh.exception.AuthorizationException;
 import com.vulinh.exception.SecurityConfigurationException;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.security.Auth0Utils;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

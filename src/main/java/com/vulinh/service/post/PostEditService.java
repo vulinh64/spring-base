@@ -1,5 +1,7 @@
 package com.vulinh.service.post;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
@@ -11,8 +13,6 @@ import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.post.PostUtils;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

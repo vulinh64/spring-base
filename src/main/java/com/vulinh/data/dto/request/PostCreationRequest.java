@@ -1,8 +1,8 @@
 package com.vulinh.data.dto.request;
 
+import module java.base;
+
 import com.vulinh.utils.post.TitleCaseUtils;
-import java.util.Set;
-import java.util.UUID;
 import lombok.Builder;
 import lombok.With;
 import org.apache.commons.collections4.SetUtils;

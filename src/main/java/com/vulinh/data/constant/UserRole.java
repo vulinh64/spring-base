@@ -1,7 +1,7 @@
 package com.vulinh.data.constant;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import module java.base;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;

@@ -1,13 +1,13 @@
 package com.vulinh.data.entity;
 
+import module java.base;
+
 import com.vulinh.data.base.AbstractIdentifiable;
 import com.vulinh.data.base.DateTimeAuditable;
 import com.vulinh.data.entity.ids.UserSessionId;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import java.io.Serial;
-import java.time.Instant;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;

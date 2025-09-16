@@ -1,5 +1,7 @@
 package com.vulinh.service.category;
 
+import module java.base;
+
 import com.querydsl.core.types.Predicate;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
@@ -15,8 +17,6 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;

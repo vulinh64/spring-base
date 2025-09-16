@@ -1,12 +1,8 @@
 package com.vulinh.utils.springcron.dto;
 
+import module java.base;
+
 import com.vulinh.utils.springcron.PartExpression;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public interface ExpressionObject {
 
@@ -40,7 +36,7 @@ public interface ExpressionObject {
 
             @Override
             public Function<List<Integer>, String> getGenerator() {
-              return list -> "0";
+              return _ -> "0";
             }
           };
         }

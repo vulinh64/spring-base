@@ -1,5 +1,7 @@
 package com.vulinh.service.post;
 
+import module java.base;
+
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.UserBasicResponse;
@@ -10,9 +12,6 @@ import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

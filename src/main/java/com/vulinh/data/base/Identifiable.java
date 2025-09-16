@@ -1,6 +1,6 @@
 package com.vulinh.data.base;
 
-import java.io.Serializable;
+import module java.base;
 
 /**
  * A universal interface for class that supports identification (by providing an ID value to be read

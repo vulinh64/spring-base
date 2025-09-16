@@ -1,5 +1,7 @@
 package com.vulinh.service.category;
 
+import module java.base;
+
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
@@ -10,7 +12,6 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
 import com.vulinh.utils.validator.ValidatorStep;
-import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

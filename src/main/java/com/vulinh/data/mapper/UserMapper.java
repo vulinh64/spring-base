@@ -1,12 +1,13 @@
 package com.vulinh.data.mapper;
 
+import module java.base;
+
 import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.response.SingleUserResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.Users;
-import java.util.stream.Collectors;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

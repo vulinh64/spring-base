@@ -1,7 +1,7 @@
 package com.vulinh.configuration;
 
-import java.time.Duration;
-import java.util.List;
+import module java.base;
+
 import lombok.Builder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpMethod;
