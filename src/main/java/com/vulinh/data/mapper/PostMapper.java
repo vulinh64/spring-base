@@ -1,5 +1,7 @@
 package com.vulinh.data.mapper;
 
+import module java.base;
+
 import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.projection.PostRevisionProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
@@ -8,8 +10,6 @@ import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.entity.*;
 import com.vulinh.data.entity.ids.PostRevisionId;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;

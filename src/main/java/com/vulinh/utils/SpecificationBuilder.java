@@ -1,8 +1,8 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import jakarta.persistence.metamodel.SingularAttribute;
-import java.util.Collection;
-import java.util.function.BinaryOperator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +14,7 @@ import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/**
- * @deprecated Gradually replaced by {@link PredicateBuilder}
- */
+/// @deprecated Gradually replaced by [PredicateBuilder]
 @Deprecated(forRemoval = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SpecificationBuilder {
@@ -24,13 +22,13 @@ public class SpecificationBuilder {
   // 1 = 1
   @NonNull
   public static <E> Specification<E> always() {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.conjunction();
+    return (_, _, criteriaBuilder) -> criteriaBuilder.conjunction();
   }
 
   // 1 != 1
   @NonNull
   public static <E> Specification<E> never() {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.disjunction();
+    return (_, _, criteriaBuilder) -> criteriaBuilder.disjunction();
   }
 
   // field = value
@@ -39,7 +37,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, @Nullable F value) {
     return value == null
         ? null
-        : (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(attribute), value);
+        : (root, _, criteriaBuilder) -> criteriaBuilder.equal(root.get(attribute), value);
   }
 
   // field != value
@@ -48,7 +46,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, @Nullable F value) {
     return value == null
         ? null
-        : (root, query, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(attribute), value);
+        : (root, _, criteriaBuilder) -> criteriaBuilder.notEqual(root.get(attribute), value);
   }
 
   // field > value
@@ -57,7 +55,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, @Nullable F value) {
     return value == null
         ? null
-        : (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(attribute), value);
+        : (root, _, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get(attribute), value);
   }
 
   // field >= value
@@ -66,7 +64,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, @Nullable F value) {
     return value == null
         ? null
-        : (root, query, criteriaBuilder) ->
+        : (root, _, criteriaBuilder) ->
             criteriaBuilder.greaterThanOrEqualTo(root.get(attribute), value);
   }
 
@@ -76,7 +74,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, @Nullable F value) {
     return value == null
         ? null
-        : (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get(attribute), value);
+        : (root, _, criteriaBuilder) -> criteriaBuilder.lessThan(root.get(attribute), value);
   }
 
   // field <= value
@@ -85,7 +83,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, @Nullable F value) {
     return value == null
         ? null
-        : (root, query, criteriaBuilder) ->
+        : (root, _, criteriaBuilder) ->
             criteriaBuilder.lessThanOrEqualTo(root.get(attribute), value);
   }
 
@@ -93,7 +91,7 @@ public class SpecificationBuilder {
   @NonNull
   public static <E, F extends Comparable<? super F>> Specification<E> between(
       SingularAttribute<? super E, F> attribute, @NonNull F lowerBound, @NonNull F upperBound) {
-    return (root, query, criteriaBuilder) ->
+    return (root, _, criteriaBuilder) ->
         criteriaBuilder.between(root.get(attribute), lowerBound, upperBound);
   }
 
@@ -124,7 +122,7 @@ public class SpecificationBuilder {
       SingularAttribute<? super E, F> attribute, Collection<? extends F> collection) {
     return CollectionUtils.isEmpty(collection)
         ? null
-        : (root, query, criteriaBuilder) -> root.get(attribute).in(collection);
+        : (root, _, _) -> root.get(attribute).in(collection);
   }
 
   // field not in (collection)
@@ -138,22 +136,22 @@ public class SpecificationBuilder {
 
   // field is null
   public static <E> Specification<E> isNull(SingularAttribute<? super E, ?> attribute) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.isNull(root.get(attribute));
+    return (root, _, criteriaBuilder) -> criteriaBuilder.isNull(root.get(attribute));
   }
 
   // field is not null
   public static <E> Specification<E> notNull(SingularAttribute<? super E, ?> attribute) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get(attribute));
+    return (root, _, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get(attribute));
   }
 
   // field = true
   public static <E> Specification<E> isTrue(SingularAttribute<? super E, Boolean> attribute) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(attribute));
+    return (root, _, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(attribute));
   }
 
   // field = false
   public static <E> Specification<E> isFalse(SingularAttribute<? super E, Boolean> attribute) {
-    return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(attribute));
+    return (root, _, criteriaBuilder) -> criteriaBuilder.isFalse(root.get(attribute));
   }
 
   // field like '%pattern%' escape '\\'
@@ -172,7 +170,7 @@ public class SpecificationBuilder {
       return null;
     }
 
-    return (root, query, criteriaBuilder) ->
+    return (root, _, criteriaBuilder) ->
         criteriaBuilder.like(
             criteriaBuilder.lower(
                 String.class.isAssignableFrom(attribute.getJavaType())

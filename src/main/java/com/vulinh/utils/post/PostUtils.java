@@ -1,9 +1,10 @@
 package com.vulinh.utils.post;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

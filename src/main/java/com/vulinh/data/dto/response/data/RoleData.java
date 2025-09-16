@@ -1,8 +1,9 @@
 package com.vulinh.data.dto.response.data;
 
+import module java.base;
+
 import com.vulinh.data.base.RecordIdentifiable;
 import com.vulinh.data.constant.UserRole;
-import java.io.Serializable;
 import lombok.*;
 
 @With

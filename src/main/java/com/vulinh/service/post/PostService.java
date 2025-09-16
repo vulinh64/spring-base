@@ -1,5 +1,7 @@
 package com.vulinh.service.post;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
@@ -9,7 +11,6 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.NotFoundException;
 import com.vulinh.locale.ServiceErrorCode;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

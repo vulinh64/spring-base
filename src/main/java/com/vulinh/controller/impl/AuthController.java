@@ -1,5 +1,7 @@
 package com.vulinh.controller.impl;
 
+import module java.base;
+
 import com.vulinh.controller.api.AuthAPI;
 import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.dto.request.PasswordChangeRequest;
@@ -12,7 +14,6 @@ import com.vulinh.data.dto.response.SingleUserResponse;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

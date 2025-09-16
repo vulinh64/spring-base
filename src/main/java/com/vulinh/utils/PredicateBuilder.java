@@ -1,9 +1,10 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
-import java.util.function.BiFunction;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;

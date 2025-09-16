@@ -1,5 +1,7 @@
 package com.vulinh.service.user;
 
+import module java.base;
+
 import com.sanctionco.jmail.JMail;
 import com.vulinh.data.base.ApplicationError;
 import com.vulinh.data.dto.request.UserLoginRequest;
@@ -10,7 +12,6 @@ import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
-import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -126,7 +127,7 @@ public class UserValidationService {
       @Override
       public Predicate<UserRegistrationRequest> getPredicate() {
         return Predicate.not(
-            dto ->
+                _ ->
                 userRepository.existsByUsernameIgnoreCaseOrEmailIgnoreCase(
                     userRegistrationRequest.username(), userRegistrationRequest.email()));
       }

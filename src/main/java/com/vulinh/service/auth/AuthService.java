@@ -1,5 +1,7 @@
 package com.vulinh.service.auth;
 
+import module java.base;
+
 import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.dto.request.PasswordChangeRequest;
@@ -25,9 +27,6 @@ import com.vulinh.utils.security.AccessTokenValidator;
 import com.vulinh.utils.security.Auth0Utils;
 import com.vulinh.utils.security.RefreshTokenValidator;
 import com.vulinh.utils.validator.ValidatorChain;
-import java.time.Instant;
-import java.util.UUID;
-import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

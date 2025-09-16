@@ -1,8 +1,7 @@
 package com.vulinh.utils;
 
-import java.time.*;
-import java.time.temporal.TemporalAccessor;
-import java.util.function.BiFunction;
+import module java.base;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -10,32 +9,25 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateTimeUtils {
 
-  /**
-   * Javadoc kindly provided by ChatGPT!
-   *
-   * <p>Converts a given {@link TemporalAccessor} to an {@link Instant}, using an optional time zone
-   * and a custom conversion strategy.
-   *
-   * <p>This method supports popular temporal types such as {@link LocalDateTime}, {@link
-   * OffsetDateTime}, {@link ZonedDateTime}, and {@link Instant}. If {@code temporalValue} is {@code
-   * null}, the method returns {@code null} immediately.
-   *
-   * <p>If a custom {@code converter} is provided, it is used to perform the conversion. Otherwise,
-   * a default conversion strategy is applied based on the runtime type of {@code temporalValue}.
-   *
-   * <p>If {@code inputZone} is {@code null}, the system default time zone is used via {@link
-   * ZoneId#systemDefault()}. Be aware that this may not reflect changes to the system's time zone
-   * after the application has started.
-   *
-   * @param temporalValue the temporal value to convert; may be {@code null}
-   * @param inputZone the time zone to apply during conversion; if {@code null}, the system default
-   *     is used
-   * @param converter an optional custom converter function for the conversion logic
-   * @param <T> the type of the temporal value, extending {@link TemporalAccessor}
-   * @return the resulting {@code Instant}, or {@code null} if {@code temporalValue} is {@code null}
-   * @throws IllegalArgumentException if the temporal value type is unsupported and no custom
-   *     converter is provided
-   */
+  /// Javadoc kindly provided by ChatGPT!
+  ///
+  /// Converts a given [TemporalAccessor] to an [Instant], using an optional time zone and a custom conversion strategy.
+  ///
+  /// This method supports popular temporal types such as [LocalDateTime], [OffsetDateTime], [ZonedDateTime], and
+  /// [Instant]. If `temporalValue` is `null`, the method returns `null` immediately.
+  ///
+  /// If a custom `converter` is provided, it is used to perform the conversion. Otherwise, a default conversion
+  /// strategy is applied based on the runtime type of `temporalValue`.
+  ///
+  /// If `inputZone` is `null`, the system default time zone is used via `systemDefault()`. Be aware that this may not
+  /// reflect changes to the system's time zone after the application has started.
+  ///
+  /// @param temporalValue the temporal value to convert; may be `null`
+  /// @param inputZone the time zone to apply during conversion; if `null`, the system default is used
+  /// @param converter an optional custom converter function for the conversion logic
+  /// @param <T> the type of the temporal value, extending [TemporalAccessor]
+  /// @return the resulting `Instant`, or `null` if `temporalValue` is `null`
+  /// @throws IllegalArgumentException if the temporal value type is unsupported and no custom converter is provided
   @Nullable
   public static <T extends TemporalAccessor> Instant toInstant(
       @Nullable T temporalValue,
@@ -65,33 +57,26 @@ public class DateTimeUtils {
     };
   }
 
-  /**
-   * Javadoc kindly provided by ChatGPT!
-   *
-   * <p>Converts a given {@link TemporalAccessor} to a {@link LocalDateTime}, using an optional time
-   * zone and a custom conversion strategy.
-   *
-   * <p>This method supports popular temporal types such as {@link LocalDateTime}, {@link
-   * OffsetDateTime}, {@link ZonedDateTime}, and {@link Instant}. If {@code temporalValue} is {@code
-   * null}, the method returns {@code null} immediately.
-   *
-   * <p>If a custom {@code converter} is provided, it is used to perform the conversion. Otherwise,
-   * a default conversion is attempted based on the runtime type of {@code temporalValue}.
-   *
-   * <p>If {@code inputZone} is {@code null}, the system default time zone (via {@link
-   * ZoneId#systemDefault()}) is used. Note that this may not reflect changes to the system time
-   * zone made during runtime.
-   *
-   * @param temporalValue the temporal value to convert; may be {@code null}
-   * @param inputZone the time zone to apply during conversion; if {@code null}, the system default
-   *     is used
-   * @param converter an optional custom converter function to perform the conversion
-   * @param <T> the type of the temporal value, extending {@link TemporalAccessor}
-   * @return the resulting {@code LocalDateTime}, or {@code null} if {@code temporalValue} is {@code
-   *     null}
-   * @throws IllegalArgumentException if the temporal value type is unsupported and no custom
-   *     converter is provided
-   */
+  /// Javadoc kindly provided by ChatGPT!
+  ///
+  /// Converts a given [TemporalAccessor] to a [LocalDateTime], using an optional time zone and a custom conversion
+  /// strategy.
+  ///
+  /// This method supports popular temporal types such as [LocalDateTime], [OffsetDateTime], [ZonedDateTime], and
+  /// [Instant]. If `temporalValue` is `null`, the method returns `null` immediately.
+  ///
+  /// If a custom `converter` is provided, it is used to perform the conversion. Otherwise, a default conversion is
+  /// attempted based on the runtime type of `temporalValue`.
+  ///
+  /// If `inputZone` is `null`, the system default time zone (via `systemDefault()` is used. Note that this may not
+  /// reflect changes to the system time zone made during runtime.
+  ///
+  /// @param temporalValue the temporal value to convert; may be `null`
+  /// @param inputZone the time zone to apply during conversion; if `null`, the system default is used
+  /// @param converter an optional custom converter function to perform the conversion
+  /// @param <T> the type of the temporal value, extending [TemporalAccessor]
+  /// @return the resulting `LocalDateTime`, or `null` if `temporalValue` is `null`
+  /// @throws IllegalArgumentException if the temporal value type is unsupported and no custom converter is provided
   @Nullable
   public static <T extends TemporalAccessor> LocalDateTime toLocalDateTime(
       @Nullable T temporalValue,

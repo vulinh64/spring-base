@@ -1,10 +1,10 @@
 package com.vulinh.data.entity;
 
+import module java.base;
+
 import com.vulinh.data.base.AbstractIdentifiable;
 import com.vulinh.data.constant.UserRole;
 import jakarta.persistence.*;
-import java.io.Serial;
-import java.util.Comparator;
 import lombok.*;
 
 @Entity

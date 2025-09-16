@@ -1,12 +1,13 @@
 package com.vulinh.controller.api;
 
+import module java.base;
+
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.PostEndpoint;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

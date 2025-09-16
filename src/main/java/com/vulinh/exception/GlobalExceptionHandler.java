@@ -1,9 +1,10 @@
 package com.vulinh.exception;
 
+import module java.base;
+
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.locale.ServiceErrorCode;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;

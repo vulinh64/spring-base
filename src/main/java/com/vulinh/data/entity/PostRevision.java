@@ -1,11 +1,10 @@
 package com.vulinh.data.entity;
 
+import module java.base;
+
 import com.vulinh.data.base.AbstractIdentifiable;
 import com.vulinh.data.entity.ids.PostRevisionId;
 import jakarta.persistence.*;
-import java.io.Serial;
-import java.time.Instant;
-import java.util.UUID;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

@@ -1,10 +1,10 @@
 package com.vulinh.service.post;
 
+import module java.base;
+
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.utils.SecurityUtils;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

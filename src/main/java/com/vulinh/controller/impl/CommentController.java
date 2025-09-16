@@ -1,14 +1,13 @@
 package com.vulinh.controller.impl;
 
+import module java.base;
+
 import com.vulinh.controller.api.CommentAPI;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import com.vulinh.service.comment.CommentService;
-
-import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,5 +1,7 @@
 package com.vulinh.service.comment;
 
+import module java.base;
+
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -15,7 +17,6 @@ import com.vulinh.exception.NotFoundException;
 import com.vulinh.locale.ServiceErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

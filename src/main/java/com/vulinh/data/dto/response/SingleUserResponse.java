@@ -1,13 +1,12 @@
 package com.vulinh.data.dto.response;
 
+import module java.base;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.vulinh.data.base.RecordDateTimeAuditable;
 import com.vulinh.data.base.RecordUuidIdentifiable;
 import com.vulinh.data.dto.response.data.RoleData;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.UUID;
 import lombok.*;
 
 @With

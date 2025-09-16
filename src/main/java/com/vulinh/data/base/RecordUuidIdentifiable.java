@@ -1,5 +1,5 @@
 package com.vulinh.data.base;
 
-import java.util.UUID;
+import module java.base;
 
 public interface RecordUuidIdentifiable extends RecordIdentifiable<UUID> {}

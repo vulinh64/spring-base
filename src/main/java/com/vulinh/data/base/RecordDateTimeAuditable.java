@@ -1,6 +1,6 @@
 package com.vulinh.data.base;
 
-import java.time.temporal.TemporalAccessor;
+import module java.base;
 
 public interface RecordDateTimeAuditable extends DateTimeAuditable {
 

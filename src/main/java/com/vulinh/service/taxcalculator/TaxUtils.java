@@ -1,13 +1,10 @@
 package com.vulinh.service.taxcalculator;
 
+import module java.base;
+
 import com.google.common.collect.ImmutableMap;
 import com.vulinh.service.taxcalculator.TaxRequestDTO.InsuranceDTO;
 import com.vulinh.service.taxcalculator.TaxRequestDTO.PersonalTaxDTO;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

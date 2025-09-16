@@ -1,12 +1,13 @@
 package com.vulinh.service.auth;
 
+import module java.base;
+
 import com.vulinh.data.dto.request.PasswordChangeRequest;
 import com.vulinh.data.entity.Users;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.user.UserValidationService;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
-import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

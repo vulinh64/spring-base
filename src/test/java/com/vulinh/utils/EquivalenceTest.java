@@ -1,13 +1,12 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.vulinh.data.dto.response.data.AuthorData;
 import com.vulinh.utils.Equivalence.Creator;
 import com.vulinh.utils.Equivalence.EqualityDeepness;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;

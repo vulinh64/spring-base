@@ -1,5 +1,7 @@
 package com.vulinh.schedule;
 
+import module java.base;
+
 import com.vulinh.data.constant.CacheConstant;
 import com.vulinh.data.constant.EnvironmentConstant;
 import com.vulinh.data.entity.QUserSession;
@@ -7,8 +9,6 @@ import com.vulinh.data.entity.ids.UserSessionId;
 import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.utils.PredicateBuilder;
 import jakarta.annotation.PostConstruct;
-import java.time.Instant;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
@@ -20,11 +20,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-/*
- * This class is just a simple example to demonstrate Spring Boot's scheduling capabilities; in a microservices
- * architecture, scheduling tasks should be handled by a dedicated service separate from the main business logic
- * service.
- */
+/// This class is just a simple example to demonstrate Spring Boot's scheduling capabilities; in a microservices
+/// architecture, scheduling tasks should be handled by a dedicated service separate from the main business logic
+/// service.
 @Profile(EnvironmentConstant.ENV_PRODUCTION)
 @Component
 @RequiredArgsConstructor

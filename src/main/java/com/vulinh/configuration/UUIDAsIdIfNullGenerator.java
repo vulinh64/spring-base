@@ -1,13 +1,8 @@
 package com.vulinh.configuration;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
-import java.io.Serial;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Optional;
-import java.util.UUID;
 import org.hibernate.annotations.IdGeneratorType;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;

@@ -250,3 +250,11 @@ Other useful plugins I can recommend:
 > https://plugins.jetbrains.com/plugin/7973-sonarlint).
 
 You may hold it dear as if it God's gospel, or anything else I really can't care more.
+
+# JDK 25 Compact Object Headers
+
+You can use the following JVM option to enable compact object headers in JDK 25 and later (expected to be enabled by default starting from JDK 26):
+
+```
+-XX:+UseCompactObjectHeaders
+```

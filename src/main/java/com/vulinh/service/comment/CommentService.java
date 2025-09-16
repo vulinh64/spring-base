@@ -1,5 +1,7 @@
 package com.vulinh.service.comment;
 
+import module java.base;
+
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
@@ -9,7 +11,6 @@ import com.vulinh.data.repository.CommentRepository;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.utils.SecurityUtils;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

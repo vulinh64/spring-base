@@ -1,8 +1,9 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.LinkedList;
 import org.junit.jupiter.api.Test;
 
 class JsonAuth0UtilsTest {

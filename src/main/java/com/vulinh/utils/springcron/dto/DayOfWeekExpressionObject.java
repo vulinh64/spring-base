@@ -1,7 +1,8 @@
 package com.vulinh.utils.springcron.dto;
 
+import module java.base;
+
 import com.vulinh.utils.springcron.DayOfWeekExpression;
-import java.util.List;
 import lombok.Builder;
 import lombok.With;
 

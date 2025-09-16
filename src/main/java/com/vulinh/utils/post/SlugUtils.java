@@ -1,8 +1,9 @@
 package com.vulinh.utils.post;
 
+import module java.base;
+
 import com.vulinh.exception.ValidationException;
 import com.vulinh.locale.ServiceErrorCode;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

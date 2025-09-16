@@ -1,5 +1,7 @@
 package com.vulinh.controller.api;
 
+import module java.base;
+
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.AuthEndpoint;
@@ -16,7 +18,6 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.UUID;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

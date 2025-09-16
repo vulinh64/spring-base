@@ -1,9 +1,8 @@
 package com.vulinh.utils.validator;
 
+import module java.base;
+
 import com.vulinh.exception.ValidationException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.lang.NonNull;
 

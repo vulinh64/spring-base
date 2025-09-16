@@ -1,10 +1,9 @@
 package com.vulinh.utils.validator;
 
+import module java.base;
+
 import com.vulinh.data.base.ApplicationError;
 import com.vulinh.locale.ServiceErrorCode;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.Predicate;
 import org.springframework.lang.NonNull;
 
 public record ValidatorStepImpl<T>(

@@ -1,7 +1,8 @@
 package com.vulinh.utils.validator;
 
+import module java.base;
+
 import com.vulinh.data.base.ApplicationError;
-import java.util.function.Predicate;
 
 public interface ValidatorStep<T> {
 

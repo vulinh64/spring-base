@@ -1,12 +1,12 @@
 package com.vulinh.controller.api;
 
+import module java.base;
+
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Map;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

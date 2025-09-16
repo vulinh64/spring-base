@@ -17,9 +17,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties(ApplicationProperties.class)
 @EnableCaching
-public class SpringBaseProjectApplication {
+class SpringBaseProjectApplication {
 
-  public static void main(String[] args) {
+  static void main(String[] args) {
     SpringApplication.run(SpringBaseProjectApplication.class, args);
   }
 }

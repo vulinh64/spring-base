@@ -1,11 +1,12 @@
 package com.vulinh.data.repository;
 
+import module java.base;
+
 import com.vulinh.configuration.cache.FromUserSessionEntityKeyGenerator;
 import com.vulinh.data.base.BaseRepository;
 import com.vulinh.data.constant.CacheConstant;
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
-import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;

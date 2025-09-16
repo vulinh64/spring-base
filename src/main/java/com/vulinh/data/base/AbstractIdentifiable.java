@@ -1,7 +1,7 @@
 package com.vulinh.data.base;
 
-import java.io.Serial;
-import java.util.Objects;
+import module java.base;
+
 import org.hibernate.proxy.HibernateProxy;
 
 // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/

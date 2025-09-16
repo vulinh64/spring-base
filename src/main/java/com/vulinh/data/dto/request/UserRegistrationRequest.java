@@ -1,8 +1,8 @@
 package com.vulinh.data.dto.request;
 
+import module java.base;
+
 import com.vulinh.data.constant.UserRole;
-import java.util.Collection;
-import java.util.Set;
 import lombok.Builder;
 import lombok.With;
 

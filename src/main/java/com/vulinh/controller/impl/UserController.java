@@ -1,5 +1,7 @@
 package com.vulinh.controller.impl;
 
+import module java.base;
+
 import com.vulinh.controller.api.UserAPI;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.request.UserSearchRequest;
@@ -11,7 +13,6 @@ import com.vulinh.exception.AuthorizationException;
 import com.vulinh.service.user.UserService;
 import com.vulinh.utils.ResponseUtils;
 import com.vulinh.utils.SecurityUtils;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

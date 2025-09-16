@@ -1,8 +1,9 @@
 package com.vulinh.factory;
 
+import module java.base;
+
 import com.vulinh.data.entity.Tag;
 import com.vulinh.data.entity.ids.PostRevisionId;
-import java.util.UUID;
 
 @SuppressWarnings("java:S6548")
 public enum PostFactory {

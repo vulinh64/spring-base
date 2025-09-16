@@ -3,8 +3,10 @@
 #
 
 # Stage 1: Build stage - Compile the application and create a minimal JRE
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM amazoncorretto:25-alpine-full AS build
 WORKDIR /usr/src/project
+
+ENV JAVA_VERSION=25
 
 # Copy Maven configuration files first to leverage Docker cache
 COPY pom.xml mvnw ./
@@ -27,7 +29,7 @@ RUN jar xf target/app.jar
 RUN jdeps  \
     --ignore-missing-deps  \
     -q --recursive  \
-    --multi-release 21 \
+    --multi-release ${JAVA_VERSION} \
     --print-module-deps  \
     --class-path 'BOOT-INF/lib/*' \
     target/app.jar > deps.info
@@ -37,21 +39,21 @@ RUN jdeps  \
 # JDEPS currently does not detect this module
 RUN jlink \
     --add-modules $(cat deps.info),jdk.crypto.ec \
-    --strip-debug  \
+    --strip-java-debug-attributes  \
     --compress 2  \
     --no-header-files  \
     --no-man-pages \
-    --output /jre-21-minimalist
+    --output /jre-minimalist
 
 # Stage 2: Production stage - Minimal Alpine image with custom JRE
-FROM alpine:3.21.3 AS final
+FROM alpine:3.22 AS final
 
 # Set up Java environment
-ENV JAVA_HOME=/opt/java/jre-21-minimalist
+ENV JAVA_HOME=/opt/java/jre-minimalist
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Copy the custom JRE from the build stage
-COPY --from=build /jre-21-minimalist $JAVA_HOME
+COPY --from=build /jre-minimalist $JAVA_HOME
 
 # Create a non-root user for security
 RUN addgroup -S springgroup \
@@ -70,8 +72,9 @@ USER springuser
 # Run the application with optimized JVM settings
 #
 
+# - UseCompactObjectHeaders: See JEP 519 (https://openjdk.org/jeps/519)
 # - MaxRAMPercentage: Limit max heap to 75% of container memory
 # - InitialRAMPercentage: Start with 50% of container memory
 # - MaxMetaspaceSize: Limit metaspace to 512MB
 # - UseG1GC: Use the G1 garbage collector for better performance
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-XX:InitialRAMPercentage=50.0", "-XX:MaxMetaspaceSize=512m", "-XX:+UseG1GC", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseCompactObjectHeaders", "-XX:MaxRAMPercentage=75.0", "-XX:InitialRAMPercentage=50.0", "-XX:MaxMetaspaceSize=512m", "-XX:+UseG1GC", "-jar", "app.jar"]

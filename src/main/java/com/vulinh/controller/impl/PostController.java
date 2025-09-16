@@ -1,5 +1,7 @@
 package com.vulinh.controller.impl;
 
+import module java.base;
+
 import com.vulinh.controller.api.PostAPI;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
@@ -8,7 +10,6 @@ import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;
 import com.vulinh.utils.ResponseUtils;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
