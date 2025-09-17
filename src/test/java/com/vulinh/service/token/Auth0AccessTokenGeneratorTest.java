@@ -1,5 +1,7 @@
 package com.vulinh.service.token;
 
+import module java.base;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -9,8 +11,6 @@ import com.vulinh.configuration.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
 import com.vulinh.utils.security.RefreshTokenGenerator;
-import java.time.Duration;
-import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

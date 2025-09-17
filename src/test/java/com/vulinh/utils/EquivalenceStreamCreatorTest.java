@@ -1,14 +1,11 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.vulinh.utils.Equivalence.Creator;
 import com.vulinh.utils.Equivalence.EqualityDeepness;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
