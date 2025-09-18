@@ -19,7 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 class SpringBaseProjectApplication {
 
-  void main(String[] args) {
-    SpringApplication.run(getClass(), args);
+  static void main(String[] args) {
+    SpringApplication.run(SpringBaseProjectApplication.class, args);
   }
 }
