@@ -17,4 +17,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Run unit tests
-      run: mvn clean test
+      run: mvn clean verify
