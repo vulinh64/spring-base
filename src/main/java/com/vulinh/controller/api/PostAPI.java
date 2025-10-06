@@ -10,6 +10,7 @@ import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public interface PostAPI {
   GenericResponse<Page<PostRevisionResponse>> getPostRevisions(
       @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId, Pageable pageable);
 
+  @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   GenericResponse<BasicPostResponse> createPost(
       @RequestBody PostCreationRequest postCreationRequest);
