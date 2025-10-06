@@ -17,6 +17,7 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,6 +37,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test")
 @RequiredArgsConstructor
+@Slf4j
 class PostControllerIT {
 
   static final Set<String> TAGS = Set.of("integration test");
@@ -47,8 +49,16 @@ class PostControllerIT {
   @Test
   @Transactional
   void testCreatePost() throws Exception {
+    log.info("Test creating post...");
+
     var postCreationRequest =
-        new PostCreationRequest("Test Title", "Test Content", "test-slug", "Test Author", TAGS);
+        PostCreationRequest.builder()
+            .title("Test Title")
+            .excerpt("Test Excerpt")
+            .postContent("Test Content")
+            .slug("test-slug")
+            .tags(TAGS)
+            .build();
 
     var authorization =
         mockMvc
@@ -100,6 +110,7 @@ class PostControllerIT {
         .ifPresentOrElse(
             post -> {
               assertEquals(post.getTitle(), postCreationRequest.title());
+              assertEquals(post.getExcerpt(), postCreationRequest.excerpt());
               assertEquals(post.getPostContent(), postCreationRequest.postContent());
               assertEquals(post.getSlug(), postCreationRequest.slug());
               assertEquals(author.username(), post.getAuthor().getUsername());
