@@ -2,6 +2,7 @@ package com.vulinh.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.*;
@@ -30,6 +31,11 @@ public class JsonUtils {
 
   public static <T> T toObject(String message, Class<T> clazz) throws JsonProcessingException {
     return MAPPER.readValue(message, clazz);
+  }
+
+  public static <T> T toObject(String message, TypeReference<T> type)
+      throws JsonProcessingException {
+    return MAPPER.readValue(message, type);
   }
 
   private static <T> String toJSONString(T t, boolean isPretty) throws JsonProcessingException {
