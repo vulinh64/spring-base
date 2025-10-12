@@ -33,15 +33,13 @@ public class SecurityConfigurationException extends ApplicationException {
     return new SecurityConfigurationException(message, applicationError, throwable, args);
   }
 
-  /**
-   * Constructs a new {@code SecurityConfigurationException} with the specified message, error
-   * details, cause, and interpolation arguments.
-   *
-   * @param message The detailed message describing the security configuration issue
-   * @param applicationError The specific application error encapsulating the error code and details
-   * @param throwable The underlying cause of this exception (can be null)
-   * @param args Variable arguments that will be used for message interpolation
-   */
+  /// Constructs a new [SecurityConfigurationException] with the specified message, error details, cause, and
+  /// interpolation arguments.
+  ///
+  /// @param message The detailed message describing the security configuration issue
+  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param throwable The underlying cause of this exception (can be null)
+  /// @param args Variable arguments that will be used for message interpolation
   public SecurityConfigurationException(
       String message, ApplicationError applicationError, Throwable throwable, Object... args) {
     super(message, applicationError, throwable, args);

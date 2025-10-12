@@ -12,17 +12,16 @@ import org.hibernate.id.IdentifierGenerator;
 @IdGeneratorType(UUIDAsIdIfNullGenerator.UUIDIfNullGeneratorImpl.class)
 public @interface UUIDAsIdIfNullGenerator {
 
-  /**
-   * Use this strategy only if you want to automatically generate a UUID as the ID for an entity.
-   * This applies when the user leaves the <code>@Id</code> field empty.
-   *
-   * <p>Snippet to use (copy/paste it to the entity's ID field):
-   *
-   * <pre>{@code
-   * @GenericGenerator(name = UUIDIfNullStrategy.GENERATOR_NAME, type = UUIDIfNullStrategy.class)
-   * @GeneratedValue(generator = UUIDIfNullStrategy.GENERATOR_NAME)
-   * }</pre>
-   */
+  /// Use this strategy only if you want to automatically generate a UUID as the ID for an entity.
+  /// This applies when the user leaves the <code>@Id</code> field empty.
+  ///
+  /// Snippet to use (copy/paste it to the entity's ID field):
+  ///
+  /// ```java
+  /// @GenericGenerator(name = UUIDIfNullStrategy.GENERATOR_NAME, type = UUIDIfNullStrategy.class)
+  ///
+  /// @GeneratedValue(generator = UUIDIfNullStrategy.GENERATOR_NAME)
+  /// ```
   class UUIDIfNullGeneratorImpl implements IdentifierGenerator {
 
     @Serial private static final long serialVersionUID = -8834326837580306821L;
