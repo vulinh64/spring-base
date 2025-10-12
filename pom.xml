@@ -45,6 +45,10 @@
         <!-- https://mvnrepository.com/artifact/com.github.auties00/optional -->
         <optional.version>1.0</optional.version>
 
+
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <jsoup.version>1.21.2</jsoup.version>
+
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
         <testcontainers.version>1.21.3</testcontainers.version>
     </properties>
@@ -222,6 +226,14 @@
             <scope>test</scope>
         </dependency>
         <!-- END: JUnit Test -->
+
+        <!-- BEGIN: JSoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+        <!-- END: JSoup -->
 
         <!-- BEGIN: Testcontainers -->
         <dependency>
