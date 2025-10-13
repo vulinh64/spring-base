@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.vulinh.data.base.ApplicationError;
 import com.vulinh.exception.ApplicationException;
+import com.vulinh.locale.LocalizationSupport;
 import com.vulinh.locale.ServiceErrorCode;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public record GenericResponse<T>(String errorCode, String displayMessage, T data
     public static <T> GenericResponse<T> success(T data) {
       return GenericResponse.<T>builder()
           .errorCode(ServiceErrorCode.MESSAGE_SUCCESS.getErrorCode())
-          .displayMessage(ServiceErrorCode.MESSAGE_SUCCESS.getDisplayMessage())
+          .displayMessage(LocalizationSupport.getParsedMessage(ServiceErrorCode.MESSAGE_SUCCESS))
           .data(data)
           .build();
     }
@@ -31,7 +32,7 @@ public record GenericResponse<T>(String errorCode, String displayMessage, T data
         ApplicationError applicationError, Object... args) {
       return GenericResponse.<T>builder()
           .errorCode(applicationError.getErrorCode())
-          .displayMessage(applicationError.getDisplayMessage(args))
+          .displayMessage(LocalizationSupport.getParsedMessage(applicationError, args))
           .build();
     }
 

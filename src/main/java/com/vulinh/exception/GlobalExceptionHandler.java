@@ -4,8 +4,10 @@ import module java.base;
 
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
+import com.vulinh.locale.LocalizationSupport;
 import com.vulinh.locale.ServiceErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -24,7 +26,8 @@ public class GlobalExceptionHandler {
 
     return GenericResponse.builder()
         .errorCode(ServiceErrorCode.MESSAGE_INTERNAL_ERROR.getErrorCode())
-        .displayMessage(ServiceErrorCode.MESSAGE_INTERNAL_ERROR.getDisplayMessage())
+        .displayMessage(
+            LocalizationSupport.getParsedMessage(ServiceErrorCode.MESSAGE_INTERNAL_ERROR))
         .build();
   }
 
@@ -93,7 +96,7 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GenericResponse<Object> handleHttpMessageConversionException(
       HttpMessageConversionException httpMessageConversionException) {
-    log.info("Bad request body format", httpMessageConversionException);
+    log.info("Bad request body format: {}", httpMessageConversionException.getMessage());
 
     return badRequestBody(httpMessageConversionException.getMessage());
   }
@@ -102,7 +105,12 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public GenericResponse<Object> handleTypeMismatchException(
       TypeMismatchException typeMismatchException) {
-    log.info("Bad request format", typeMismatchException);
+    log.info(
+        "Bad request format: {} (Property name: {}, required type: {}, value: {})",
+        typeMismatchException.getMessage(),
+        typeMismatchException.getPropertyName(),
+        typeMismatchException.getRequiredType(),
+        StringUtils.abbreviate(String.valueOf(typeMismatchException.getValue()), 100));
 
     return badRequestBody(
         "field [%s] - type [%s]"
@@ -117,7 +125,8 @@ public class GlobalExceptionHandler {
     return GenericResponse.builder()
         .errorCode(ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST.getErrorCode())
         .displayMessage(
-            ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST.getDisplayMessage(additionalMessage))
+            LocalizationSupport.getParsedMessage(
+                ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST, additionalMessage))
         .build();
   }
 
