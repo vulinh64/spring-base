@@ -16,7 +16,7 @@ public enum UserRole {
   INVALID(Integer.MIN_VALUE);
 
   // The higher the value, the more "superior" a role is
-  private final int superiority;
+  final int superiority;
 
   static final Set<String> ROLE_LITERAL_SET =
       Arrays.stream(values()).map(UserRole::name).collect(Collectors.toSet());
@@ -32,5 +32,4 @@ public enum UserRole {
   static boolean isValidRole(String role) {
     return ROLE_LITERAL_SET.stream().anyMatch(userRole -> userRole.equalsIgnoreCase(role));
   }
-
 }

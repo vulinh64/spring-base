@@ -27,11 +27,11 @@ public class UserSession extends AbstractIdentifiable<UserSessionId> implements 
 
   @Serial private static final long serialVersionUID = -7459401877851544734L;
 
-  @EmbeddedId private UserSessionId id;
+  @EmbeddedId UserSessionId id;
 
-  @CreatedDate private Instant createdDate;
+  @CreatedDate Instant createdDate;
 
-  @LastModifiedDate private Instant updatedDate;
+  @LastModifiedDate Instant updatedDate;
 
-  private Instant expirationDate;
+  Instant expirationDate;
 }

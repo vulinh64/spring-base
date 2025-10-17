@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class TaxServiceTest {
 
-  private final TaxService taxService = new TaxService();
+  final TaxService taxService = new TaxService();
 
   // Lương thực nhận: 34M
   // Lương đóng BH: 6.5M

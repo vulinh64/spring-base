@@ -35,14 +35,14 @@ public class PostRevisionService {
 
   static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
-  private final PostRepository postRepository;
-  private final PostRevisionRepository postRevisionRepository;
+  final PostRepository postRepository;
+  final PostRevisionRepository postRevisionRepository;
 
-  private final PostValidationService postValidationService;
-  private final CategoryService categoryService;
-  private final TagService tagService;
+  final PostValidationService postValidationService;
+  final CategoryService categoryService;
+  final TagService tagService;
 
-  @PersistenceContext private final EntityManager entityManager;
+  @PersistenceContext final EntityManager entityManager;
 
   @Transactional
   public Page<PostRevisionResponse> getPostRevisions(UUID postId, Pageable pageable) {
@@ -116,11 +116,11 @@ public class PostRevisionService {
     createRevisionInternal(post, RevisionType.DELETED);
   }
 
-  private void createRevisionInternal(Post post, RevisionType revisionType) {
+  void createRevisionInternal(Post post, RevisionType revisionType) {
     postRevisionRepository.save(POST_MAPPER.toPostRevision(post, revisionType));
   }
 
-  private boolean applyRevisionInternal(PostRevision postRevision, Post post) {
+  boolean applyRevisionInternal(PostRevision postRevision, Post post) {
     var category =
         Objects.equals(postRevision.getCategoryId(), post.getCategory().getId())
             ? null
@@ -137,11 +137,11 @@ public class PostRevisionService {
     return true;
   }
 
-  private JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {
+  JPAQuery<Post> checkPostRevisionJPAQuery(UUID identity) {
     return postRevisionJoinJPAQuery().where(QPost.post.id.eq(identity));
   }
 
-  private JPAQuery<Post> postRevisionJoinJPAQuery() {
+  JPAQuery<Post> postRevisionJoinJPAQuery() {
     var postEntry = QPost.post;
     var postRevisionEntry = QPostRevision.postRevision;
 

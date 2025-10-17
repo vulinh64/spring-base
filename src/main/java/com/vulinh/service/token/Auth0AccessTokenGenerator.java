@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Auth0AccessTokenGenerator implements AccessTokenGenerator {
 
-  private final ApplicationProperties securityConfigProperties;
+  final ApplicationProperties securityConfigProperties;
 
-  private final RefreshTokenGenerator refreshTokenGenerator;
+  final RefreshTokenGenerator refreshTokenGenerator;
 
   @Override
   @NonNull

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PostController implements PostAPI {
 
-  private final PostService postService;
-  private final PostRevisionService postRevisionService;
+  final PostService postService;
+  final PostRevisionService postRevisionService;
 
   @Override
   public GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(Pageable pageable) {

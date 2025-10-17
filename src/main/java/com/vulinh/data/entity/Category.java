@@ -19,8 +19,8 @@ public class Category extends UuidJpaEntity {
 
   @Serial private static final long serialVersionUID = 106688923162808538L;
 
-  @Id @UUIDAsIdIfNullGenerator private UUID id;
+  @Id @UUIDAsIdIfNullGenerator UUID id;
 
-  private String categorySlug;
-  private String displayName;
+  String categorySlug;
+  String displayName;
 }

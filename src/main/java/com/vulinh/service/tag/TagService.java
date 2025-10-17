@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TagService {
 
-  private final TagRepository tagRepository;
+  final TagRepository tagRepository;
 
   @NonNull
   public Set<Tag> parseTags(Collection<String> rawTags) {

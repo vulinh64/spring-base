@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CommentController implements CommentAPI {
 
-  private final CommentService commentService;
+  final CommentService commentService;
 
   @Override
   public GenericResponse<Page<SingleCommentResponse>> fetchComments(

@@ -44,5 +44,5 @@ public enum ServiceErrorCode implements ApplicationError {
   MESSAGE_INVALID_SESSION("M9109"),
   MESSAGE_INVALID_TOKEN("M9110");
 
-  private final String errorCode;
+  final String errorCode;
 }

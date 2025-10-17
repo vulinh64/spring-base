@@ -14,7 +14,7 @@ public class CustomAuthentication extends AbstractAuthenticationToken {
 
   @Serial private static final long serialVersionUID = 8271426933575028085L;
 
-  private final UserBasicResponse principal;
+  final UserBasicResponse principal;
 
   public CustomAuthentication(UserBasicResponse userBasicResponse) {
     super(

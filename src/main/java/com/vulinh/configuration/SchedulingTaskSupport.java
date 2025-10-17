@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SchedulingTaskSupport {
 
-  private final ApplicationProperties applicationProperties;
+  final ApplicationProperties applicationProperties;
 
   public String cleanExpiredUserSessionsExpression() {
     var expression = applicationProperties.schedule().cleanExpiredUserSessions();

@@ -23,7 +23,7 @@ public class Roles extends AbstractIdentifiable<UserRole> {
 
   @Id
   @Enumerated(EnumType.STRING)
-  private UserRole id;
+  UserRole id;
 
-  private int superiority;
+  int superiority;
 }

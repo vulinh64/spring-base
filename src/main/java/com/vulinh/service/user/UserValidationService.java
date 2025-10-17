@@ -29,7 +29,7 @@ public class UserValidationService {
 
   static final char UNDERSCORE = '_';
 
-  private final UserRepository userRepository;
+  final UserRepository userRepository;
 
   public static boolean isActive(Users matcherUser) {
     var result = BooleanUtils.isTrue(matcherUser.getIsActive());
@@ -120,14 +120,14 @@ public class UserValidationService {
         .executeValidation(userRegistrationRequest);
   }
 
-  private NoArgsValidatorStep<UserRegistrationRequest> userAvailabilityValidation(
+  NoArgsValidatorStep<UserRegistrationRequest> userAvailabilityValidation(
       UserRegistrationRequest userRegistrationRequest) {
     return new NoArgsValidatorStep<>() {
 
       @Override
       public Predicate<UserRegistrationRequest> getPredicate() {
         return Predicate.not(
-                _ ->
+            _ ->
                 userRepository.existsByUsernameIgnoreCaseOrEmailIgnoreCase(
                     userRegistrationRequest.username(), userRegistrationRequest.email()));
       }
@@ -195,8 +195,8 @@ public class UserValidationService {
         ServiceErrorCode.MESSAGE_INVALID_EMAIL,
         "Wrong email format");
 
-    private final Predicate<UserRegistrationRequest> predicate;
-    private final ServiceErrorCode applicationError;
-    private final String exceptionMessage;
+    final Predicate<UserRegistrationRequest> predicate;
+    final ServiceErrorCode applicationError;
+    final String exceptionMessage;
   }
 }

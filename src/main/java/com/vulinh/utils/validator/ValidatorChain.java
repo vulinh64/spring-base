@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 public final class ValidatorChain<T> {
 
-  @NonNull private final Collection<ValidatorStep<T>> validatorSteps;
+  @NonNull final Collection<ValidatorStep<T>> validatorSteps;
 
   private ValidatorChain() {
     validatorSteps = new ArrayList<>();

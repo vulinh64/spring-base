@@ -23,12 +23,12 @@ public class PostService {
 
   static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
-  private final PostRepository postRepository;
+  final PostRepository postRepository;
 
-  private final PostCreationService postCreationService;
-  private final PostEditService postEditService;
-  private final PostDeletionService postDeletionService;
-  private final PostRevisionService postRevisionService;
+  final PostCreationService postCreationService;
+  final PostEditService postEditService;
+  final PostDeletionService postDeletionService;
+  final PostRevisionService postRevisionService;
 
   public Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable) {
     return postRepository.findPrefetchPosts(pageable);

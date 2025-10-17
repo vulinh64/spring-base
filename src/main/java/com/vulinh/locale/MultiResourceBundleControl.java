@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 @RequiredArgsConstructor
 class MultiResourceBundleControl extends ResourceBundle.Control {
 
-  @NonNull private final Collection<String> bundleNames;
+  @NonNull final Collection<String> bundleNames;
 
   @Override
   public ResourceBundle newBundle(
@@ -24,7 +24,7 @@ class MultiResourceBundleControl extends ResourceBundle.Control {
   @RequiredArgsConstructor
   static class MultiResourceBundle extends ResourceBundle {
 
-    @NonNull private final Collection<ResourceBundle> resourceBundles;
+    @NonNull final Collection<ResourceBundle> resourceBundles;
 
     @Override
     public Object handleGetObject(@NonNull String key) {

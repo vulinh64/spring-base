@@ -131,7 +131,7 @@ class TaxUtils {
     MAX_PERCENTAGE(1.0),
     DEDUCTION_PERCENTAGE(0.1);
 
-    private final double percentage;
+    final double percentage;
   }
 
   @RequiredArgsConstructor
@@ -142,7 +142,7 @@ class TaxUtils {
     HEALTH_INSURANCE(0.015),
     UNEMPLOYMENT_INSURANCE(0.01);
 
-    private final double rate;
+    final double rate;
   }
 
   @RequiredArgsConstructor
@@ -154,7 +154,7 @@ class TaxUtils {
     MAX_BASIC_SALARY(46_800_000),
     MIN_BASIC_SALARY(5_100_000);
 
-    private final double value;
+    final double value;
   }
 
   @RequiredArgsConstructor
@@ -170,8 +170,8 @@ class TaxUtils {
     LEVEL_6(80_000_000.0, 0.3),
     LEVEL_7(Double.MAX_VALUE, 0.35); // Your income cannot be more than total assets of the world!!!
 
-    private final double threshold;
-    private final double rate;
+    final double threshold;
+    final double rate;
 
     static final Map<Integer, TaxLevel> MAPS =
         Arrays.stream(values()).collect(Collectors.toMap(TaxLevel::ordinal, Function.identity()));

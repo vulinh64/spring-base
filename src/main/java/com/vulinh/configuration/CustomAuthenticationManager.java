@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
 
-  private final UserRepository userRepository;
+  final UserRepository userRepository;
 
-  private final UserSessionService userSessionService;
+  final UserSessionService userSessionService;
 
   @Override
   @Transactional

@@ -21,12 +21,12 @@ public class PostCreationService {
 
   static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
-  private final PostValidationService postValidationService;
-  private final TagService tagService;
+  final PostValidationService postValidationService;
+  final TagService tagService;
 
-  private final PostRepository postRepository;
-  private final UserRepository userRepository;
-  private final CategoryService categoryService;
+  final PostRepository postRepository;
+  final UserRepository userRepository;
+  final CategoryService categoryService;
 
   @Transactional
   public Post createPost(PostCreationRequest postCreationRequest) {

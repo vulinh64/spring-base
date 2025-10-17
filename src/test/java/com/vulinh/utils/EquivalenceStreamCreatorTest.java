@@ -69,8 +69,9 @@ class EquivalenceStreamCreatorTest {
   }
 
   static class Dog extends Animal {
-    private final Integer id;
-    private final String name;
+
+    final Integer id;
+    final String name;
 
     public Dog(Integer id, String name) {
       this.id = id;
@@ -94,8 +95,8 @@ class EquivalenceStreamCreatorTest {
   }
 
   static class Cat extends Animal {
-    private final Integer id;
-    private final String name;
+    final Integer id;
+    final String name;
 
     public Cat(Integer id, String name) {
       this.id = id;

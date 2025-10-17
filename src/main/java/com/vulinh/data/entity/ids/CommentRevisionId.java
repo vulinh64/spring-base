@@ -26,11 +26,11 @@ public class CommentRevisionId implements UUIDRevisionId {
   public static final String REVISION_SEQ = TABLE_NAME + "_revision_seq";
   public static final String REVISION_SEQ_NAME = REVISION_SEQ + "_generator";
 
-  private UUID commentId;
+  UUID commentId;
 
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = REVISION_SEQ_NAME)
   @SequenceGenerator(name = REVISION_SEQ_NAME, sequenceName = REVISION_SEQ, allocationSize = 1)
-  private Long revisionNumber;
+  Long revisionNumber;
 
   @Override
   public UUID getId() {

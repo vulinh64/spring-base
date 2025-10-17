@@ -28,8 +28,8 @@ public enum MinuteExpression implements PartExpression {
                   Utils.thirdElement(list), Constant.MIN_INTERVAL, Constant.MAX_SECOND_MINUTE),
       list -> "%s/%s".formatted(ExpressionUtils.everyBetween(list), Utils.thirdElement(list)));
 
-  private final Predicate<List<Integer>> validator;
-  private final Function<List<Integer>, String> generator;
+  final Predicate<List<Integer>> validator;
+  final Function<List<Integer>, String> generator;
 
   public static MinuteExpression defaultExpression() {
     return EVERY_MINUTE;

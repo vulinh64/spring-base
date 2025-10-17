@@ -27,26 +27,26 @@ public class Post extends UuidJpaEntity implements DateTimeAuditable {
 
   @Id
   @UuidGenerator(style = Style.TIME)
-  private UUID id;
+  UUID id;
 
-  private String title;
-  private String slug;
-  private String excerpt;
-  private String postContent;
+  String title;
+  String slug;
+  String excerpt;
+  String postContent;
 
-  @CreatedDate private Instant createdDate;
+  @CreatedDate Instant createdDate;
 
-  @LastModifiedDate private Instant updatedDate;
+  @LastModifiedDate Instant updatedDate;
 
-  @LastModifiedBy private UUID updatedBy;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @ToString.Exclude
-  private Users author;
+  @LastModifiedBy UUID updatedBy;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude
-  private Category category;
+  Users author;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @ToString.Exclude
+  Category category;
 
   @OneToMany
   @JoinTable(
@@ -55,12 +55,12 @@ public class Post extends UuidJpaEntity implements DateTimeAuditable {
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   @ToString.Exclude
   @OrderBy("displayName asc")
-  private Set<Tag> tags;
+  Set<Tag> tags;
 
   // This generates many delete statement, fixing...
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "post_id", updatable = false, insertable = false)
   @OrderBy("createdDate desc")
   @ToString.Exclude
-  private List<Comment> comments;
+  List<Comment> comments;
 }

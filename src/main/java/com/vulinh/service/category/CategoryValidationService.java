@@ -21,13 +21,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CategoryValidationService {
 
-  public static final int CATEGORY_MAX_LENGTH = 500;
-  public static final int CATEGORY_SLUG_MAX_LENGTH = 500;
+  static final int CATEGORY_MAX_LENGTH = 500;
+  static final int CATEGORY_SLUG_MAX_LENGTH = 500;
 
   public static final ValidatorChain<CategoryCreationRequest> BASIC_CATEGORY_VALIDATION =
       ValidatorChain.<CategoryCreationRequest>start().addValidator(CategoryRule.values());
 
-  private final CategoryRepository categoryRepository;
+  final CategoryRepository categoryRepository;
 
   public void validateCategoryCreation(CategoryCreationRequest categoryCreationRequest) {
     BASIC_CATEGORY_VALIDATION.executeValidation(categoryCreationRequest);
@@ -50,7 +50,7 @@ public class CategoryValidationService {
     }
   }
 
-  private boolean availableCategory(CategoryCreationRequest postCreationDTO, String categorySlug) {
+  boolean availableCategory(CategoryCreationRequest postCreationDTO, String categorySlug) {
     var qCategory = QCategory.category;
 
     return !categoryRepository.exists(
@@ -70,10 +70,10 @@ public class CategoryValidationService {
             CategoryCreationRequest::displayName, CATEGORY_MAX_LENGTH),
         "Category exceeded %s characters".formatted(CATEGORY_MAX_LENGTH));
 
-    private final Predicate<CategoryCreationRequest> predicate;
-    private final String exceptionMessage;
-    private final ServiceErrorCode applicationError = ServiceErrorCode.MESSAGE_INVALID_CATEGORY;
+    final Predicate<CategoryCreationRequest> predicate;
+    final String exceptionMessage;
+    final ServiceErrorCode applicationError = ServiceErrorCode.MESSAGE_INVALID_CATEGORY;
 
-    private final Object[] args = {CATEGORY_MAX_LENGTH};
+    final Object[] args = {CATEGORY_MAX_LENGTH};
   }
 }

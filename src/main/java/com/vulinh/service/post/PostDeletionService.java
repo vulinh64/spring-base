@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostDeletionService {
 
-  private final PostRepository postRepository;
+  final PostRepository postRepository;
 
-  private final PostValidationService postValidationService;
+  final PostValidationService postValidationService;
 
   @Transactional
   public Optional<Post> deletePost(UUID postId) {

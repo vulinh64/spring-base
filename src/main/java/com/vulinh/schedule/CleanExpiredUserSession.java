@@ -31,9 +31,9 @@ public class CleanExpiredUserSession {
 
   static final int ITEMS_PER_BATCH = 10;
 
-  private final UserSessionRepository userSessionRepository;
+  final UserSessionRepository userSessionRepository;
 
-  private final CacheManager cacheManager;
+  final CacheManager cacheManager;
 
   @PostConstruct
   public void info() {

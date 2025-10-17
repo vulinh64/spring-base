@@ -44,21 +44,21 @@ public class AuthService {
 
   static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
-  private final ApplicationProperties applicationProperties;
+  final ApplicationProperties applicationProperties;
 
-  private final UserRepository userRepository;
+  final UserRepository userRepository;
 
-  private final PasswordEncoder passwordEncoder;
+  final PasswordEncoder passwordEncoder;
 
-  private final UserValidationService userValidationService;
-  private final PasswordValidationService passwordValidationService;
-  private final UserSessionService userSessionService;
+  final UserValidationService userValidationService;
+  final PasswordValidationService passwordValidationService;
+  final UserSessionService userSessionService;
 
-  private final AccessTokenValidator accessTokenValidator;
-  private final RefreshTokenValidator refreshTokenValidator;
-  private final AccessTokenGenerator accessTokenGenerator;
+  final AccessTokenValidator accessTokenValidator;
+  final RefreshTokenValidator refreshTokenValidator;
+  final AccessTokenGenerator accessTokenGenerator;
 
-  private final ApplicationEventPublisher applicationEventPublisher;
+  final ApplicationEventPublisher applicationEventPublisher;
 
   public TokenResponse login(UserLoginRequest userLoginRequest) {
     var now = Instant.now();

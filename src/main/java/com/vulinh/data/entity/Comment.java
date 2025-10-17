@@ -27,20 +27,20 @@ public class Comment extends UuidJpaEntity implements DateTimeAuditable {
 
   @Id
   @UuidGenerator(style = Style.TIME)
-  private UUID id;
+  UUID id;
 
-  private String content;
+  String content;
 
-  @CreatedDate private Instant createdDate;
+  @CreatedDate Instant createdDate;
 
-  @LastModifiedDate private Instant updatedDate;
+  @LastModifiedDate Instant updatedDate;
 
   // So that mapping on Post works
   @Column(name = "post_id")
-  private UUID postId;
+  UUID postId;
 
   @ToString.Exclude
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "created_by")
-  private Users createdBy;
+  Users createdBy;
 }

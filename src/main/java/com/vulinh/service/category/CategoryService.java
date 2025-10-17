@@ -31,9 +31,9 @@ public class CategoryService
 
   static final CategoryMapper CATEGORY_MAPPER = CategoryMapper.INSTANCE;
 
-  private final CategoryRepository categoryRepository;
+  final CategoryRepository categoryRepository;
 
-  private final CategoryValidationService categoryValidationService;
+  final CategoryValidationService categoryValidationService;
 
   public Category getCategory(UUID categoryId) {
     return Optional.ofNullable(categoryId)

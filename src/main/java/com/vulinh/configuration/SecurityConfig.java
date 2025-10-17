@@ -1,5 +1,7 @@
 package com.vulinh.configuration;
 
+import module java.base;
+
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
@@ -8,8 +10,6 @@ import com.vulinh.utils.security.Auth0Utils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -48,11 +48,11 @@ public class SecurityConfig {
 
   static final UserRole ROLE_ADMIN = UserRole.ADMIN;
 
-  private final ApplicationProperties applicationProperties;
+  final ApplicationProperties applicationProperties;
 
-  private final HandlerExceptionResolver handlerExceptionResolver;
-  private final AccessTokenValidator accessTokenValidator;
-  private final CustomAuthenticationManager customAuthenticationManager;
+  final HandlerExceptionResolver handlerExceptionResolver;
+  final AccessTokenValidator accessTokenValidator;
+  final CustomAuthenticationManager customAuthenticationManager;
 
   @Bean
   @SneakyThrows
@@ -84,7 +84,7 @@ public class SecurityConfig {
     return RoleHierarchyImpl.fromHierarchy(toHierarchyPhrase());
   }
 
-  private CorsFilter createCorsFilter() {
+  CorsFilter createCorsFilter() {
     var config = new CorsConfiguration();
 
     config.setAllowCredentials(true);
@@ -99,7 +99,7 @@ public class SecurityConfig {
     return new CorsFilter(source);
   }
 
-  private void configureAuthorizeHttpRequestCustomizer(
+  void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer) {
     var securityProperties = applicationProperties.security();
@@ -123,7 +123,7 @@ public class SecurityConfig {
         .authenticated();
   }
 
-  private void handleSecurityException(
+  void handleSecurityException(
       HttpServletRequest request, HttpServletResponse response, Throwable authException) {
     handlerExceptionResolver.resolveException(
         request,

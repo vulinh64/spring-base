@@ -28,25 +28,25 @@ public class Users extends UuidJpaEntity implements DateTimeAuditable {
 
   @Id
   @UuidGenerator(style = Style.TIME)
-  private UUID id;
+  UUID id;
 
-  private String username;
-  private String fullName;
-  private String email;
+  String username;
+  String fullName;
+  String email;
 
-  @ToString.Exclude private String password;
+  @ToString.Exclude String password;
 
-  @Builder.Default private Boolean isActive = false;
+  @Builder.Default Boolean isActive = false;
 
-  @ToString.Exclude private String passwordResetCode;
+  @ToString.Exclude String passwordResetCode;
 
-  @ToString.Exclude private Instant passwordResetCodeExpiration;
+  @ToString.Exclude Instant passwordResetCodeExpiration;
 
-  @ToString.Exclude private String userRegistrationCode;
+  @ToString.Exclude String userRegistrationCode;
 
-  @CreatedDate private Instant createdDate;
+  @CreatedDate Instant createdDate;
 
-  @LastModifiedDate private Instant updatedDate;
+  @LastModifiedDate Instant updatedDate;
 
   @ManyToMany
   @JoinTable(
@@ -54,5 +54,5 @@ public class Users extends UuidJpaEntity implements DateTimeAuditable {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   @ToString.Exclude
-  private Set<Roles> userRoles;
+  Set<Roles> userRoles;
 }

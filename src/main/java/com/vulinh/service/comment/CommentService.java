@@ -21,12 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentService {
 
-  private final UserRepository userRepository;
-  private final CommentRepository commentRepository;
+  final UserRepository userRepository;
+  final CommentRepository commentRepository;
 
-  private final NewCommentValidationService commentValidationService;
-  private final CommentRevisionService commentRevisionService;
-  private final CommentFetchingService commentFetchingService;
+  final NewCommentValidationService commentValidationService;
+  final CommentRevisionService commentRevisionService;
+  final CommentFetchingService commentFetchingService;
 
   @Transactional
   public UUID addComment(UUID postId, NewCommentRequest newCommentRequest) {

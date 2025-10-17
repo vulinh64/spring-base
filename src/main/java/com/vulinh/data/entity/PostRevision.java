@@ -22,20 +22,20 @@ public class PostRevision extends AbstractIdentifiable<PostRevisionId> {
 
   @Serial private static final long serialVersionUID = -4374526557871349803L;
 
-  @EmbeddedId private PostRevisionId id;
+  @EmbeddedId PostRevisionId id;
 
   @Enumerated(EnumType.ORDINAL)
-  private RevisionType revisionType;
+  RevisionType revisionType;
 
-  private String title;
-  private String slug;
-  private String excerpt;
-  private String postContent;
-  private UUID authorId;
-  private UUID categoryId;
-  private String tags;
+  String title;
+  String slug;
+  String excerpt;
+  String postContent;
+  UUID authorId;
+  UUID categoryId;
+  String tags;
 
-  @CreatedDate private Instant revisionCreatedDate;
+  @CreatedDate Instant revisionCreatedDate;
 
   @CreatedBy UUID revisionCreatedBy;
 }

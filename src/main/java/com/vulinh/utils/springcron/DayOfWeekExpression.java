@@ -38,8 +38,8 @@ public enum DayOfWeekExpression implements PartExpression {
                   ExpressionUtils.WEEK_DAYS_MAPPING.get(list.getFirst()),
                   Utils.secondElement(list)));
 
-  private final Predicate<List<Integer>> validator;
-  private final Function<List<Integer>, String> generator;
+  final Predicate<List<Integer>> validator;
+  final Function<List<Integer>, String> generator;
 
   public static DayOfWeekExpression defaultExpression() {
     return EVERY_WEEK_DAY;

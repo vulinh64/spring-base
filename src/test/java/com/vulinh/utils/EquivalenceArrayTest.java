@@ -14,7 +14,7 @@ class EquivalenceArrayTest {
   static final String TEST_VALUE = "testValue";
 
   // Helper method to create Equivalence for brevity
-  private <T> Equivalence<String> createEquivalence(T id, EqualityDeepness deepness) {
+  <T> Equivalence<String> createEquivalence(T id, EqualityDeepness deepness) {
     return Creator.of(TEST_VALUE, _ -> id, deepness);
   }
 

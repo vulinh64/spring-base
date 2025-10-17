@@ -27,11 +27,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CommentFetchingService {
 
-  @PersistenceContext private final EntityManager entityManager;
+  @PersistenceContext final EntityManager entityManager;
 
-  private final PostRepository postRepository;
+  final PostRepository postRepository;
 
-  private JPAQueryFactory queryFactory;
+  JPAQueryFactory queryFactory;
 
   public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
@@ -43,11 +43,11 @@ public class CommentFetchingService {
         buildFetchQuery(postId, pageable).fetch(), pageable, buildCountQuery(postId)::fetchOne);
   }
 
-  private JPAQuery<Long> buildCountQuery(UUID postId) {
+  JPAQuery<Long> buildCountQuery(UUID postId) {
     return buildBasicQuery(postId, QComment.comment.count());
   }
 
-  private JPAQuery<SingleCommentResponse> buildFetchQuery(UUID postId, Pageable pageable) {
+  JPAQuery<SingleCommentResponse> buildFetchQuery(UUID postId, Pageable pageable) {
     var qComment = QComment.comment;
     var qCommentCreatedDate = qComment.createdDate;
     var qCommentRevision = QCommentRevision.commentRevision;
@@ -80,13 +80,13 @@ public class CommentFetchingService {
         .limit(pageable.getPageSize());
   }
 
-  private <T> JPAQuery<T> buildBasicQuery(UUID postId, Expression<T> select) {
+  <T> JPAQuery<T> buildBasicQuery(UUID postId, Expression<T> select) {
     var eComment = QComment.comment;
 
     return getQueryFactory().selectFrom(eComment).select(select).where(eComment.postId.eq(postId));
   }
 
-  private JPAQueryFactory getQueryFactory() {
+  JPAQueryFactory getQueryFactory() {
     if (queryFactory == null) {
       queryFactory = new JPAQueryFactory(entityManager);
     }

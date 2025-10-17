@@ -23,7 +23,7 @@ public class Tag extends UuidJpaEntity {
 
   @Id
   @UuidGenerator(style = Style.TIME)
-  private UUID id;
+  UUID id;
 
-  private String displayName;
+  String displayName;
 }

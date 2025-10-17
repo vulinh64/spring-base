@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController implements UserAPI {
 
-  private final UserService userService;
+  final UserService userService;
 
   @Override
   public GenericResponse<SingleUserResponse> createUser(

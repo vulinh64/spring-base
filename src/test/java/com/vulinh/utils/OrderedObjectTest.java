@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 class OrderedObjectTest {
 
-  private record TestUser(int id, String name, int age) {}
+  record TestUser(int id, String name, int age) {}
 
   static final List<TestUser> TEST_LIST =
       List.of(

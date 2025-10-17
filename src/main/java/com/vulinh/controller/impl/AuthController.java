@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController implements AuthAPI {
 
-  private final AuthService authService;
+  final AuthService authService;
 
   @Override
   public GenericResponse<TokenResponse> login(UserLoginRequest userLoginRequest) {

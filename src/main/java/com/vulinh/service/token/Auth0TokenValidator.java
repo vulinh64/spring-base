@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class Auth0TokenValidator {
 
-  private final ApplicationProperties securityConfigProperties;
+  final ApplicationProperties securityConfigProperties;
 
-  DecodedJwtPayloadCarrier validateToken(String refreshToken, TokenType expectedTokenType) {
+  public DecodedJwtPayloadCarrier validateToken(String refreshToken, TokenType expectedTokenType) {
     try {
       var decodedJWT =
           Auth0Utils.getJwtVerifier(securityConfigProperties.security()).verify(refreshToken);

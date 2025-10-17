@@ -33,8 +33,8 @@ public enum DayExpression implements PartExpression {
               .mapToObj(index -> "%d-%d".formatted(list.getFirst(), list.get(index + 1)))
               .collect(Collectors.joining(",")));
 
-  private final Predicate<List<Integer>> validator;
-  private final Function<List<Integer>, String> generator;
+  final Predicate<List<Integer>> validator;
+  final Function<List<Integer>, String> generator;
 
   public static DayExpression defaultExpression() {
     return EVERY_DAY;

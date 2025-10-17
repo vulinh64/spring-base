@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class BcryptPublicController implements BcryptPublicAPI {
 
-  private final PasswordEncoder passwordEncoder;
+  final PasswordEncoder passwordEncoder;
 
   @Override
   public GenericResponse<PasswordResponse> generateEncodedPassword(

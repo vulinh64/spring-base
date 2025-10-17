@@ -19,7 +19,7 @@ public class PasswordValidationService {
 
   static final int PASSWORD_MIN_LENGTH = 8;
 
-  private final PasswordEncoder passwordEncoder;
+  final PasswordEncoder passwordEncoder;
 
   public Predicate<PasswordChangeRequest> isOldPasswordMatched(Users user) {
     return dto -> passwordEncoder.matches(dto.oldPassword(), user.getPassword());
@@ -52,8 +52,8 @@ public class PasswordValidationService {
       }
     };
 
-    private final Predicate<PasswordChangeRequest> predicate;
-    private final ServiceErrorCode applicationError;
-    private final String exceptionMessage;
+    final Predicate<PasswordChangeRequest> predicate;
+    final ServiceErrorCode applicationError;
+    final String exceptionMessage;
   }
 }

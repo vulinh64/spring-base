@@ -26,15 +26,15 @@ public class PostRevisionId implements UUIDRevisionId {
     return new PostRevisionId(postId, revisionNumber);
   }
 
-  public static final String TABLE_NAME = "post";
-  public static final String REVISION_SEQ = TABLE_NAME + "_revision_seq";
-  public static final String REVISION_SEQ_NAME = REVISION_SEQ + "_generator";
+  static final String TABLE_NAME = "post";
+  static final String REVISION_SEQ = TABLE_NAME + "_revision_seq";
+  static final String REVISION_SEQ_NAME = REVISION_SEQ + "_generator";
 
-  private UUID postId;
+  UUID postId;
 
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = REVISION_SEQ_NAME)
   @SequenceGenerator(name = REVISION_SEQ_NAME, sequenceName = REVISION_SEQ, allocationSize = 1)
-  private Long revisionNumber;
+  Long revisionNumber;
 
   @Override
   public UUID getId() {

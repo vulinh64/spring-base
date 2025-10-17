@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Auth0RefreshTokenValidator implements RefreshTokenValidator {
 
-  private final Auth0TokenValidator auth0TokenValidator;
+  final Auth0TokenValidator auth0TokenValidator;
 
   @Override
   @NonNull

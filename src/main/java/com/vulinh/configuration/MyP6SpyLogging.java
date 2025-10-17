@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class MyP6SpyLogging extends Slf4JLogger {
 
-  private enum LogCategory {
+  enum LogCategory {
     ERROR,
     WARN,
     INFO,

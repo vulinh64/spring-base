@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FreeController implements FreeAPI {
 
-  private final TaxService taxService;
+  final TaxService taxService;
 
   @Override
   public Object calculateTax(

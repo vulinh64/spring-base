@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserSessionService {
 
-  private final UserSessionRepository userSessionRepository;
+  final UserSessionRepository userSessionRepository;
 
   @Transactional
   public TokenResponse createUserSession(AccessTokenCarrier container) {

@@ -23,16 +23,16 @@ public class CommentRevision extends AbstractIdentifiable<CommentRevisionId> {
 
   @Serial private static final long serialVersionUID = -159022567357111389L;
 
-  @EmbeddedId private CommentRevisionId id;
+  @EmbeddedId CommentRevisionId id;
 
   @Enumerated(EnumType.ORDINAL)
-  private RevisionType revisionType;
+  RevisionType revisionType;
 
-  private String content;
+  String content;
 
-  @CreatedDate private Instant revisionCreatedDate;
+  @CreatedDate Instant revisionCreatedDate;
 
-  @CreatedBy private UUID revisionCreatedBy;
+  @CreatedBy UUID revisionCreatedBy;
 
-  private UUID postId;
+  UUID postId;
 }

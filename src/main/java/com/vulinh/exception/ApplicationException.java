@@ -21,10 +21,10 @@ public abstract class ApplicationException extends RuntimeException {
 
   /// The application error associated with this exception. This object provides error code and localized display
   /// message capabilities.
-  private final transient ApplicationError applicationError;
+  final transient ApplicationError applicationError;
 
   /// Arguments to be used for message interpolation when generating display messages.
-  private final transient Object[] args;
+  final transient Object[] args;
 
   /// Constructs a new application exception with the specified details.
   ///

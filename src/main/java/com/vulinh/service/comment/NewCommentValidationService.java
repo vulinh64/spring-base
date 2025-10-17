@@ -23,7 +23,7 @@ public class NewCommentValidationService {
 
   static final int COMMENT_MAX_LENGTH = 10000;
 
-  private final CommentRepository commentRepository;
+  final CommentRepository commentRepository;
 
   public Comment validateEditComment(NewCommentRequest newCommentRequest, UUID commentId) {
     validate(newCommentRequest);
@@ -76,8 +76,8 @@ public class NewCommentValidationService {
       }
     };
 
-    private final Predicate<NewCommentRequest> predicate;
-    private final ServiceErrorCode applicationError;
-    private final String exceptionMessage;
+    final Predicate<NewCommentRequest> predicate;
+    final ServiceErrorCode applicationError;
+    final String exceptionMessage;
   }
 }

@@ -26,8 +26,8 @@ public enum MonthExpression implements PartExpression {
                   .allMatch(ExpressionUtils.MONTHS_MAPPING::containsKey),
       list -> ExpressionUtils.separateByComma(list, ExpressionUtils.MONTHS_MAPPING::get));
 
-  private final Predicate<List<Integer>> validator;
-  private final Function<List<Integer>, String> generator;
+  final Predicate<List<Integer>> validator;
+  final Function<List<Integer>, String> generator;
 
   public static MonthExpression defaultExpression() {
     return EVERY_MONTH;

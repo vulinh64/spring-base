@@ -21,12 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostEditService {
 
-  private final PostRepository postRepository;
+  final PostRepository postRepository;
 
-  private final PostValidationService postValidationService;
-  private final PostEditValidationService postEditValidationService;
-  private final TagService tagService;
-  private final CategoryService categoryService;
+  final PostValidationService postValidationService;
+  final PostEditValidationService postEditValidationService;
+  final TagService tagService;
+  final CategoryService categoryService;
 
   @Transactional
   public Optional<Post> editPost(UUID postId, PostCreationRequest postCreationRequest) {

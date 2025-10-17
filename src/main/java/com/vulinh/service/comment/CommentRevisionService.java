@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentRevisionService {
 
-  private final CommentRevisionRepository commentRevisionRepository;
+  final CommentRevisionRepository commentRevisionRepository;
 
   @Transactional
   public void createNewCommentRevision(Comment persistedComment, RevisionType revisionType) {

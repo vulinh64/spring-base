@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CategoryController implements CategoryAPI {
 
-  private final CategoryService categoryService;
+  final CategoryService categoryService;
 
   @Override
   public GenericResponse<CategoryResponse> createCategory(

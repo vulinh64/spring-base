@@ -227,10 +227,10 @@ public class SpecificationBuilder {
     AND(SpecificationBuilder.always()),
     OR(SpecificationBuilder.never());
 
-    private final Specification<?> firstChainSpecification;
+    final Specification<?> firstChainSpecification;
 
     @SuppressWarnings("unchecked")
-    private <T> Specification<T> getFirstChainSpecification() {
+    <T> Specification<T> getFirstChainSpecification() {
       return (Specification<T>) firstChainSpecification;
     }
   }

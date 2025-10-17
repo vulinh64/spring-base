@@ -103,9 +103,9 @@ public class PostValidationService {
         ServiceErrorCode.MESSAGE_POST_INVALID_TAG,
         "Empty tag or tag is too long");
 
-    private final Predicate<PostCreationRequest> predicate;
-    private final ServiceErrorCode applicationError;
-    private final String exceptionMessage;
+    final Predicate<PostCreationRequest> predicate;
+    final ServiceErrorCode applicationError;
+    final String exceptionMessage;
 
     static boolean isValidTags(PostCreationRequest dto) {
       for (var tag : dto.tags()) {

@@ -96,17 +96,17 @@ public record Equivalence<T>(T value, Object id, EqualityDeepness equalityDeepne
     }
 
     /// The predicate used to compare two ID objects for equality.
-    private final BiPredicate<Object, Object> idComparator;
+    final BiPredicate<Object, Object> idComparator;
 
     /// The function used to calculate the hash code of an ID object.
-    private final ToIntFunction<Object> hashCalculator;
+    final ToIntFunction<Object> hashCalculator;
 
     /// Compares two ID objects for equality using the configured strategy.
     ///
     /// @param id1 The first ID object.
     /// @param id2 The second ID object.
     /// @return `true` if the IDs are considered equal, `false` otherwise.
-    private boolean compareId(Object id1, Object id2) {
+    boolean compareId(Object id1, Object id2) {
       return idComparator.test(id1, id2);
     }
 
@@ -114,7 +114,7 @@ public record Equivalence<T>(T value, Object id, EqualityDeepness equalityDeepne
     ///
     /// @param object The ID object.
     /// @return The hash code.
-    private int calculateHashCode(Object object) {
+    int calculateHashCode(Object object) {
       return hashCalculator.applyAsInt(object);
     }
   }
