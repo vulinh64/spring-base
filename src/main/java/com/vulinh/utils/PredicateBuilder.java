@@ -15,7 +15,7 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PredicateBuilder {
 
-  private static final char ESCAPE = '\\';
+  static final char ESCAPE = '\\';
 
   public static Predicate always() {
     return Expressions.asBoolean(true).isTrue();
@@ -55,7 +55,7 @@ public class PredicateBuilder {
     return expression.getMetadata().getName();
   }
 
-  private static Predicate combinePredicates(
+  static Predicate combinePredicates(
       BiFunction<BooleanBuilder, Predicate, Predicate> combiner,
       Predicate firstPredicate,
       Predicate... otherPredicates) {

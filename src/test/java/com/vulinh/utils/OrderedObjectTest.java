@@ -121,7 +121,7 @@ class OrderedObjectTest {
         });
   }
 
-  private static List<TestUser> buildResult(Order order, NullsOrder nullsOrder) {
+  static List<TestUser> buildResult(Order order, NullsOrder nullsOrder) {
     return IntStream.range(0, TEST_LIST.size())
         .mapToObj(indices -> Wrapper.wrap(TEST_LIST.get(indices), indices))
         .sorted(Wrapper.firstCompareBy(TestUser::name, order, nullsOrder))
@@ -129,12 +129,12 @@ class OrderedObjectTest {
         .toList();
   }
 
-  private static void assertCorrectOrder(List<TestUser> result, int... expectedOrders) {
+  static void assertCorrectOrder(List<TestUser> result, int... expectedOrders) {
     IntStream.range(0, expectedOrders.length)
         .forEach(i -> assertEquals(expectedOrders[i], result.get(i).id()));
   }
 
-  private static void nullDetectedLaunchNuclearMissile() {
+  static void nullDetectedLaunchNuclearMissile() {
     var testList = new ArrayList<TestUser>();
 
     testList.add(new TestUser(6, null, 25));

@@ -8,6 +8,8 @@ import com.vulinh.utils.security.Auth0Utils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +44,9 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 public class SecurityConfig {
 
-  private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+  static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
-  private static final UserRole ROLE_ADMIN = UserRole.ADMIN;
+  static final UserRole ROLE_ADMIN = UserRole.ADMIN;
 
   private final ApplicationProperties applicationProperties;
 
@@ -79,7 +81,7 @@ public class SecurityConfig {
 
   @Bean
   public RoleHierarchy roleHierarchy() {
-    return RoleHierarchyImpl.fromHierarchy(UserRole.toHierarchyPhrase());
+    return RoleHierarchyImpl.fromHierarchy(toHierarchyPhrase());
   }
 
   private CorsFilter createCorsFilter() {
@@ -115,8 +117,7 @@ public class SecurityConfig {
     authorizeHttpRequestsCustomizer
         .requestMatchers(securityProperties.noAuthenticatedUrls().toArray(String[]::new))
         .permitAll()
-        .requestMatchers(
-            securityProperties.highPrivilegeUrls().toArray(String[]::new))
+        .requestMatchers(securityProperties.highPrivilegeUrls().toArray(String[]::new))
         .hasAuthority(ROLE_ADMIN.name())
         .anyRequest()
         .authenticated();
@@ -134,8 +135,32 @@ public class SecurityConfig {
             authException));
   }
 
+  static String toHierarchyPhrase() {
+    var sortedRoles =
+        Arrays.stream(UserRole.values())
+            .sorted(Comparator.comparingInt(UserRole::superiority).reversed())
+            .toList();
+
+    var result = new StringBuilder();
+
+    var size = sortedRoles.size();
+
+    for (var index = 0; index < size; index++) {
+      var role = sortedRoles.get(index);
+
+      result.append(role.name());
+
+      if (index < size - 1) {
+        result.append(
+            role.superiority() == sortedRoles.get(index + 1).superiority() ? " = " : " > ");
+      }
+    }
+
+    return result.toString();
+  }
+
   // Temporary solution to avoid filter being called twice for every request
-  private class JwtFilter extends OncePerRequestFilter {
+  class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(

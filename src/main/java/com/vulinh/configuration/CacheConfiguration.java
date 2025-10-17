@@ -32,7 +32,7 @@ public class CacheConfiguration {
     return cacheManager;
   }
 
-  private static RemovalListener<Object, Object> keyInvalidationListener(String action) {
+  static RemovalListener<Object, Object> keyInvalidationListener(String action) {
     return (key, value, cause) ->
         log.debug(
             "Key {} with value {} has been {}. Reason: {}",

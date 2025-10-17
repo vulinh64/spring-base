@@ -40,9 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-  private static final ValidatorStepFactory VALIDATOR_STEP_FACTORY = ValidatorStepFactory.INSTANCE;
+  static final ValidatorStepFactory VALIDATOR_STEP_FACTORY = ValidatorStepFactory.INSTANCE;
 
-  private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
+  static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
   private final ApplicationProperties applicationProperties;
 

@@ -90,7 +90,7 @@ class TaxUtils {
         .build();
   }
 
-  private static Map<String, Double> calculateProgressiveTax(double taxableIncome) {
+  static Map<String, Double> calculateProgressiveTax(double taxableIncome) {
     var resultBuilder = ImmutableMap.<String, Double>builder();
 
     var taxLevelOrdinal = 0;
@@ -173,7 +173,7 @@ class TaxUtils {
     private final double threshold;
     private final double rate;
 
-    private static final Map<Integer, TaxLevel> MAPS =
+    static final Map<Integer, TaxLevel> MAPS =
         Arrays.stream(values()).collect(Collectors.toMap(TaxLevel::ordinal, Function.identity()));
 
     public static TaxLevel parseTaxLevel(int taxLevel) {

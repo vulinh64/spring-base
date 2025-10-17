@@ -203,7 +203,7 @@ public class SpecificationBuilder {
 
   @SafeVarargs
   @NonNull
-  private static <E> Specification<E> combineSpecifications(
+  static <E> Specification<E> combineSpecifications(
       SpecificationOperation specificationOperation,
       BinaryOperator<Specification<E>> combiner,
       Specification<E>... specifications) {

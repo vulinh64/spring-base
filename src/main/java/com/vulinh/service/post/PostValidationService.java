@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class PostValidationService {
 
-  private static final int TITLE_MAX_LENGTH = 5000;
-  private static final int TAG_MAX_LENGTH = 1000;
+  static final int TITLE_MAX_LENGTH = 5000;
+  static final int TAG_MAX_LENGTH = 1000;
 
   public static final ValidatorChain<PostCreationRequest> BASIC_POST_VALIDATOR =
       ValidatorChain.<PostCreationRequest>start().addValidator(PostRule.values());
@@ -107,7 +107,7 @@ public class PostValidationService {
     private final ServiceErrorCode applicationError;
     private final String exceptionMessage;
 
-    private static boolean isValidTags(PostCreationRequest dto) {
+    static boolean isValidTags(PostCreationRequest dto) {
       for (var tag : dto.tags()) {
         if (StringUtils.isBlank(tag) || tag.length() > TAG_MAX_LENGTH) {
           log.debug("Tag {} is empty or too long", tag);

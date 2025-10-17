@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService
     implements PageableQueryService<Users, SingleUserResponse, UserSearchRequest> {
 
-  private static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
+  static final UserMapper USER_MAPPER = UserMapper.INSTANCE;
 
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;

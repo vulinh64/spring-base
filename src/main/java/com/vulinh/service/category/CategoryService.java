@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService
     implements PageableQueryService<Category, CategoryResponse, CategorySearchRequest> {
 
-  private static final CategoryMapper CATEGORY_MAPPER = CategoryMapper.INSTANCE;
+  static final CategoryMapper CATEGORY_MAPPER = CategoryMapper.INSTANCE;
 
   private final CategoryRepository categoryRepository;
 

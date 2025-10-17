@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
                     .orElse("unknown or empty type")));
   }
 
-  private static GenericResponse<Object> badRequestBody(String additionalMessage) {
+  static GenericResponse<Object> badRequestBody(String additionalMessage) {
     return GenericResponse.builder()
         .errorCode(ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST.getErrorCode())
         .displayMessage(
@@ -130,13 +130,13 @@ public class GlobalExceptionHandler {
         .build();
   }
 
-  private static GenericResponse<Object> logAndReturn(ApplicationException applicationException) {
+  static GenericResponse<Object> logAndReturn(ApplicationException applicationException) {
     log.info(applicationException.getMessage());
 
     return ResponseCreator.toError(applicationException);
   }
 
-  private static GenericResponse<Object> stackTraceAndReturn(
+  static GenericResponse<Object> stackTraceAndReturn(
       String prependMessage, ApplicationException applicationException) {
     log.info(prependMessage, applicationException);
 

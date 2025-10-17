@@ -13,8 +13,8 @@ import org.springframework.lang.NonNull;
 public class SlugUtils {
 
   // New UUID length is only 32 (after removing 4 dashes)
-  private static final int UUID_LENGTH = 32;
-  private static final int SLUG_MAX_LENGTH = 5000 + UUID_LENGTH + 1;
+  static final int UUID_LENGTH = 32;
+  static final int SLUG_MAX_LENGTH = 5000 + UUID_LENGTH + 1;
 
   public static String createPostSlug(@NonNull String title) {
     var randomUUID = generateRandomUUID();
@@ -40,14 +40,14 @@ public class SlugUtils {
         .replace("đ", "d");
   }
 
-  private static String generateRandomUUID() {
+  static String generateRandomUUID() {
     return NoDashedUUIDGenerator.createNonDashedUUID(UUID.randomUUID());
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   static class NoDashedUUIDGenerator {
 
-    private static final char[] HEXADECIMAL_DIGITS = {
+    static final char[] HEXADECIMAL_DIGITS = {
       '0', '1', '2', '3', '4', '5',
       '6', '7', '8', '9', 'a', 'b',
       'c', 'd', 'e', 'f'
@@ -109,7 +109,7 @@ public class SlugUtils {
       return new String(buffer);
     }
 
-    private static void formatUnsignedLong(byte[] buffer, long value, int length, int offset) {
+    static void formatUnsignedLong(byte[] buffer, long value, int length, int offset) {
       var characterPosition = offset + length;
       var radix = 1 << 4;
       var mask = radix - 1;

@@ -62,7 +62,7 @@ final class Utils {
     return true;
   }
 
-  private static boolean noNullElement(List<Integer> list) {
+  static boolean noNullElement(List<Integer> list) {
     return list.stream().noneMatch(Objects::isNull);
   }
 }

@@ -77,7 +77,7 @@ public record Equivalence<T>(T value, Object id, EqualityDeepness equalityDeepne
     ///
     /// @param object The object to hash.
     /// @return The hash code.
-    private static int handleGetHashCode(Object object) {
+    static int handleGetHashCode(Object object) {
       if (object.getClass().isArray()) {
         return switch (object) {
           case int[] intArray -> Arrays.hashCode(intArray);

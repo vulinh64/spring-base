@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 class EquivalenceArrayTest {
 
-  private static final String TEST_VALUE = "testValue";
+  static final String TEST_VALUE = "testValue";
 
   // Helper method to create Equivalence for brevity
   private <T> Equivalence<String> createEquivalence(T id, EqualityDeepness deepness) {
-    return Creator.of(TEST_VALUE, v -> id, deepness);
+    return Creator.of(TEST_VALUE, _ -> id, deepness);
   }
 
   @Nested

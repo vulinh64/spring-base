@@ -35,7 +35,7 @@ public abstract class AbstractIdentifiable<I> implements Identifiable<I> {
     return id == null ? getEffectiveClass(this).hashCode() : id.hashCode();
   }
 
-  private static Class<?> getEffectiveClass(Object object) {
+  static Class<?> getEffectiveClass(Object object) {
     return object instanceof HibernateProxy hibernateProxy
         ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass()
         : object.getClass();

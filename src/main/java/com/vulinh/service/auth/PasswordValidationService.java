@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PasswordValidationService {
 
-  private static final int PASSWORD_MIN_LENGTH = 8;
+  static final int PASSWORD_MIN_LENGTH = 8;
 
   private final PasswordEncoder passwordEncoder;
 

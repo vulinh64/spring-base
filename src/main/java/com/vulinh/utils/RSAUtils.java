@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RSAUtils {
 
-  private static final KeyFactory RSA_KEY_FACTORY;
+  static final KeyFactory RSA_KEY_FACTORY;
 
   static {
     try {
@@ -27,14 +27,14 @@ public class RSAUtils {
     }
   }
 
-  private static final String[] PUBLIC_PEM_HEADER_FOOTER = {
+  static final String[] PUBLIC_PEM_HEADER_FOOTER = {
     "-----BEGIN PUBLIC KEY-----",
     "-----END PUBLIC KEY-----",
     "-----BEGIN RSA PUBLIC KEY-----",
     "-----END RSA PUBLIC KEY-----"
   };
 
-  private static final String[] PRIVATE_PEM_HEADER_FOOTER = {
+  static final String[] PRIVATE_PEM_HEADER_FOOTER = {
     "-----BEGIN PRIVATE KEY-----",
     "-----END PRIVATE KEY-----",
     "-----BEGIN RSA PRIVATE KEY-----",
@@ -88,7 +88,7 @@ public class RSAUtils {
     return rsaPrivateKey;
   }
 
-  private static String stripRawKey(String rawKey, String[] partsToRemove) {
+  static String stripRawKey(String rawKey, String[] partsToRemove) {
     var atomicCounter = new AtomicInteger(0);
 
     return rawKey
@@ -98,7 +98,7 @@ public class RSAUtils {
         .replace(partsToRemove[atomicCounter.getAndIncrement()], StringUtils.EMPTY);
   }
 
-  private static PublicKey generateRSAPublicKey(String refinedPublicKey) {
+  static PublicKey generateRSAPublicKey(String refinedPublicKey) {
     try {
       return RSA_KEY_FACTORY.generatePublic(
           new X509EncodedKeySpec(Base64.getDecoder().decode(refinedPublicKey)));
@@ -110,7 +110,7 @@ public class RSAUtils {
     }
   }
 
-  private static PrivateKey generateRSAPrivateKey(String refinedPrivateKey) {
+  static PrivateKey generateRSAPrivateKey(String refinedPrivateKey) {
     try {
       return RSA_KEY_FACTORY.generatePrivate(
           new PKCS8EncodedKeySpec(Base64.getDecoder().decode(refinedPrivateKey)));

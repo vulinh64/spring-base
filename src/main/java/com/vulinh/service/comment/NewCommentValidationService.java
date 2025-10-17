@@ -21,9 +21,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NewCommentValidationService {
 
-  private final CommentRepository commentRepository;
+  static final int COMMENT_MAX_LENGTH = 10000;
 
-  private static final int COMMENT_MAX_LENGTH = 10000;
+  private final CommentRepository commentRepository;
 
   public Comment validateEditComment(NewCommentRequest newCommentRequest, UUID commentId) {
     validate(newCommentRequest);

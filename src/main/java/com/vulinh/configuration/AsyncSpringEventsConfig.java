@@ -27,7 +27,7 @@ public class AsyncSpringEventsConfig {
 
   // Use virtual threads only if Java version is 21
   // Not that it is necessary, but a safeguard nonetheless
-  private static TaskExecutor getTaskExecutor() {
+  static TaskExecutor getTaskExecutor() {
     if (JavaVersion.getJavaVersion().isEqualOrNewerThan(JavaVersion.TWENTY_ONE)) {
       return new VirtualThreadTaskExecutor(THREAD_NAME_PREFIX);
     }

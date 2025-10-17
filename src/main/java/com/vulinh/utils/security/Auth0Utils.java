@@ -30,8 +30,8 @@ public class Auth0Utils {
 
   public static final String TOKEN_TYPE = "tokenType";
 
-  private static Algorithm rsaAlgorithm;
-  private static JWTVerifier jwtVerifier;
+  static Algorithm rsaAlgorithm;
+  static JWTVerifier jwtVerifier;
 
   public static Algorithm getAlgorithm(SecurityProperties securityProperties) {
     if (rsaAlgorithm == null) {

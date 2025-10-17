@@ -94,7 +94,7 @@ public record OrderedObject<T>(T value, int order) {
           .toList();
     }
 
-    private static <T> OrderedObject<T> wrapNonNull(List<T> originalList, int index) {
+    static <T> OrderedObject<T> wrapNonNull(List<T> originalList, int index) {
       var value = originalList.get(index);
 
       if (value == null) {

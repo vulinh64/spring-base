@@ -10,12 +10,12 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TitleCaseUtils {
 
-  private static final Set<String> MINOR_WORDS =
+  static final Set<String> MINOR_WORDS =
       Set.of(
           "a", "an", "the", "and", "but", "or", "nor", "so", "yet", "at", "by", "for", "in", "of",
           "off", "on", "to", "up", "via", "as");
 
-  private static final Set<Character> SPLITTERS = Set.of(';', ':', '.');
+  static final Set<Character> SPLITTERS = Set.of(';', ':', '.');
 
   @Nullable
   public static String toTitleCase(@Nullable String input) {

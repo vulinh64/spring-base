@@ -18,7 +18,7 @@ public enum UserRole {
   // The higher the value, the more "superior" a role is
   private final int superiority;
 
-  private static final Set<String> ROLE_LITERAL_SET =
+  static final Set<String> ROLE_LITERAL_SET =
       Arrays.stream(values()).map(UserRole::name).collect(Collectors.toSet());
 
   public static Set<UserRole> fromRawRole(Collection<String> rawRoles) {
@@ -29,31 +29,8 @@ public enum UserRole {
         .collect(Collectors.toSet());
   }
 
-  public static boolean isValidRole(String role) {
+  static boolean isValidRole(String role) {
     return ROLE_LITERAL_SET.stream().anyMatch(userRole -> userRole.equalsIgnoreCase(role));
   }
 
-  public static String toHierarchyPhrase() {
-    var sortedRoles =
-        Arrays.stream(values())
-            .sorted(Comparator.comparingInt(UserRole::superiority).reversed())
-            .toList();
-
-    var result = new StringBuilder();
-
-    var size = sortedRoles.size();
-
-    for (var index = 0; index < size; index++) {
-      var role = sortedRoles.get(index);
-
-      result.append(role.name());
-
-      if (index < size - 1) {
-        result.append(
-            role.superiority() == sortedRoles.get(index + 1).superiority() ? " = " : " > ");
-      }
-    }
-
-    return result.toString();
-  }
 }

@@ -24,7 +24,7 @@ public class TaxService {
     return TaxMapper.INSTANCE.toTaxDetail(taxRequestDTO, null, personalTax);
   }
 
-  private static TaxDetail calculateNonProbation(TaxRequestDTO taxRequestDTO) {
+  static TaxDetail calculateNonProbation(TaxRequestDTO taxRequestDTO) {
     // Bảo hiểm - BHYT (1.5%), BHXH (8%), BH thất nghiệp (1%)
     var insurance = TaxUtils.calculateInsurance(taxRequestDTO);
 

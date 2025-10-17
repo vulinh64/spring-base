@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CleanExpiredUserSession {
 
-  private static final int ITEMS_PER_BATCH = 10;
+  static final int ITEMS_PER_BATCH = 10;
 
   private final UserSessionRepository userSessionRepository;
 

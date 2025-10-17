@@ -38,12 +38,12 @@ public class JsonUtils {
     return MAPPER.readValue(message, type);
   }
 
-  private static <T> String toJSONString(T t, boolean isPretty) throws JsonProcessingException {
+  static <T> String toJSONString(T t, boolean isPretty) throws JsonProcessingException {
     return isPretty ? PRETTY_WRITER.writeValueAsString(t) : MAPPER.writeValueAsString(t);
   }
 
-  private static final ObjectMapper MAPPER;
-  private static final ObjectWriter PRETTY_WRITER;
+  static final ObjectMapper MAPPER;
+  static final ObjectWriter PRETTY_WRITER;
 
   static {
     MAPPER =

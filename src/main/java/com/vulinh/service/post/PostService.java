@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
-  private static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
+  static final PostMapper POST_MAPPER = PostMapper.INSTANCE;
 
   private final PostRepository postRepository;
 

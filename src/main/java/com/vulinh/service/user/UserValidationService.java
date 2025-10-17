@@ -27,7 +27,7 @@ public class UserValidationService {
   public static final int PASSWORD_MINIMUM_LENGTH = 8;
   public static final int USERNAME_MAX_LENGTH = 200;
 
-  private static final char UNDERSCORE = '_';
+  static final char UNDERSCORE = '_';
 
   private final UserRepository userRepository;
 

@@ -16,9 +16,9 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocalizationSupport {
 
-  private static final String BASE_NAME = "i18n";
+  static final String BASE_NAME = "i18n";
 
-  private static final Control BUNDLE_CONTROL =
+  static final Control BUNDLE_CONTROL =
       new MultiResourceBundleControl(List.of("i18n/messages"));
 
   @NonNull
