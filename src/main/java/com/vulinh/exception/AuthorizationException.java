@@ -57,7 +57,7 @@ public class AuthorizationException extends ApplicationException {
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @param throwable The underlying cause of this exception (can be null)
   /// @param args Variable arguments that will be used for message interpolation
-  public AuthorizationException(
+  AuthorizationException(
       String message, ApplicationError applicationError, Throwable throwable, Object... args) {
     super(message, applicationError, throwable, args);
   }

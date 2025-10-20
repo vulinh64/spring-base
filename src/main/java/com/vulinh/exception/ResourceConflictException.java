@@ -40,7 +40,7 @@ public class ResourceConflictException extends ApplicationException {
   /// already exists")
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @param args Variable arguments that will be used for message interpolation (such as the conflicting field value)
-  public ResourceConflictException(
+  ResourceConflictException(
       String message, ApplicationError applicationError, Object... args) {
     super(message, applicationError, null, args);
   }

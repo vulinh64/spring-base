@@ -28,8 +28,7 @@ public class InvalidCredentialsException extends ApplicationException {
   /// @param message The detail message describing the error
   /// @param applicationError The application-specific error code
   /// @param args Variable arguments that will be used for message formatting
-  public InvalidCredentialsException(
-      String message, ApplicationError applicationError, Object... args) {
+  InvalidCredentialsException(String message, ApplicationError applicationError, Object... args) {
     super(message, applicationError, null, args);
   }
 }

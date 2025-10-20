@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public GenericResponse<Object> handleRuntimeErrorException(RuntimeException runtimeException) {
+  GenericResponse<Object> handleRuntimeErrorException(RuntimeException runtimeException) {
     log.error("Internal server error", runtimeException);
 
     return GenericResponse.builder()
@@ -37,14 +37,13 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(ApplicationException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public GenericResponse<Object> handleApplicationException(
-      ApplicationException applicationException) {
+  GenericResponse<Object> handleApplicationException(ApplicationException applicationException) {
     return stackTraceAndReturn("Application error", applicationException);
   }
 
   @ExceptionHandler(AuthorizationException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  public GenericResponse<Object> handleAuthorizationException(
+  GenericResponse<Object> handleAuthorizationException(
       AuthorizationException authorizationException) {
     log.info(authorizationException.getMessage());
 
@@ -53,48 +52,47 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(SecurityConfigurationException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public GenericResponse<Object> handleConfigurationException(
+  GenericResponse<Object> handleConfigurationException(
       SecurityConfigurationException securityConfigurationException) {
     return stackTraceAndReturn("Configuration error", securityConfigurationException);
   }
 
   @ExceptionHandler(InvalidCredentialsException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public GenericResponse<Object> handleInvalidCredentialsException(
+  GenericResponse<Object> handleInvalidCredentialsException(
       InvalidCredentialsException invalidCredentialsException) {
     return logAndReturn(invalidCredentialsException);
   }
 
   @ExceptionHandler(NoSuchPermissionException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  public GenericResponse<Object> handleNoSuchPermissionException(
+  GenericResponse<Object> handleNoSuchPermissionException(
       NoSuchPermissionException noSuchPermissionException) {
     return logAndReturn(noSuchPermissionException);
   }
 
   @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public GenericResponse<Object> handleNotFoundException(NotFoundException notFoundException) {
+  GenericResponse<Object> handleNotFoundException(NotFoundException notFoundException) {
     return logAndReturn(notFoundException);
   }
 
   @ExceptionHandler(ValidationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GenericResponse<Object> handleValidationException(
-      ValidationException validationException) {
+  GenericResponse<Object> handleValidationException(ValidationException validationException) {
     return logAndReturn(validationException);
   }
 
   @ExceptionHandler(ResourceConflictException.class)
   @ResponseStatus(HttpStatus.CONFLICT)
-  public GenericResponse<Object> handleResourceConflictException(
+  GenericResponse<Object> handleResourceConflictException(
       ResourceConflictException resourceConflictException) {
     return logAndReturn(resourceConflictException);
   }
 
   @ExceptionHandler(HttpMessageConversionException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GenericResponse<Object> handleHttpMessageConversionException(
+  GenericResponse<Object> handleHttpMessageConversionException(
       HttpMessageConversionException httpMessageConversionException) {
     log.info("Bad request body format: {}", httpMessageConversionException.getMessage());
 
@@ -103,8 +101,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(TypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public GenericResponse<Object> handleTypeMismatchException(
-      TypeMismatchException typeMismatchException) {
+  GenericResponse<Object> handleTypeMismatchException(TypeMismatchException typeMismatchException) {
     log.info(
         "Bad request format: {} (Property name: {}, required type: {}, value: {})",
         typeMismatchException.getMessage(),

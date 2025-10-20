@@ -37,7 +37,7 @@ public class NotFoundException extends ApplicationException {
   /// @param message The detailed message describing which entity was not found
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @param args Variable arguments that will be used for message interpolation
-  public NotFoundException(String message, ApplicationError applicationError, Object... args) {
+  NotFoundException(String message, ApplicationError applicationError, Object... args) {
     super(message, applicationError, null, args);
   }
 }

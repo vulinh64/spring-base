@@ -7,6 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 // https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
 // I changed hashCode calculation to use entity ID when
 // available instead of effective class-based hash
+// Every JPA entity MUST extend this class if wanted to use equals and hashCode!!!
 public abstract class AbstractIdentifiable<I> implements Identifiable<I> {
 
   @Serial private static final long serialVersionUID = 6946378021605529170L;

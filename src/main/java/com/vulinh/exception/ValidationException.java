@@ -44,7 +44,7 @@ public class ValidationException extends ApplicationException {
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @param args Variable arguments that will be used for message interpolation (such as field names, invalid values,
   /// or limits)
-  public ValidationException(String message, ApplicationError applicationError, Object... args) {
+  ValidationException(String message, ApplicationError applicationError, Object... args) {
     super(message, applicationError, null, args);
   }
 }

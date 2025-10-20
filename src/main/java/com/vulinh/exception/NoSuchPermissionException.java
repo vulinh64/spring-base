@@ -14,7 +14,8 @@ import com.vulinh.data.base.ApplicationError;
 ///
 /// - Access is attempted to a protected resource without the required permission level
 ///
-/// Only superusers with overriding permissions would typically be allowed to perform the operations that trigger this exception for regular users.
+/// Only superusers with overriding permissions would typically be allowed to perform the operations that trigger this
+/// exception for regular users.
 public class NoSuchPermissionException extends ApplicationException {
 
   @Serial private static final long serialVersionUID = 8590613467771448158L;
@@ -36,8 +37,7 @@ public class NoSuchPermissionException extends ApplicationException {
   /// @param message The detailed message describing the permission violation
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @param args Variable arguments that will be used for message interpolation
-  public NoSuchPermissionException(
-      String message, ApplicationError applicationError, Object... args) {
+  NoSuchPermissionException(String message, ApplicationError applicationError, Object... args) {
     super(message, applicationError, null, args);
   }
 }
