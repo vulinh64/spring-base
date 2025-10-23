@@ -42,6 +42,11 @@ class PostControllerIT {
 
   static final Set<String> TAGS = Set.of("integration test");
 
+  static final String AUTH_USER = "admin";
+  static final String TITLE = "Test Title";
+  static final String EXCERPT = "Test Excerpt";
+  static final String SLUG = "test-slug";
+
   @Autowired MockMvc mockMvc;
 
   @Autowired PostRepository postRepository;
@@ -53,10 +58,10 @@ class PostControllerIT {
 
     var postCreationRequest =
         PostCreationRequest.builder()
-            .title("Test Title")
-            .excerpt("Test Excerpt")
-            .postContent("Test Content")
-            .slug("test-slug")
+            .title(TITLE)
+            .excerpt(EXCERPT)
+            .postContent("<script>Test Content</script>Test blank")
+            .slug(SLUG)
             .tags(TAGS)
             .build();
 
@@ -68,7 +73,7 @@ class PostControllerIT {
                     .content(
                         JsonUtils.toMinimizedJSON(
                             UserLoginRequest.builder()
-                                .username("admin")
+                                .username(AUTH_USER)
                                 .password("12345678")
                                 .build())))
             .andExpect(status().isOk())
@@ -99,9 +104,9 @@ class PostControllerIT {
 
     var data = response.data();
 
-    assertEquals(data.title(), postCreationRequest.title());
-    assertEquals(data.slug(), postCreationRequest.slug());
-    assertEquals(data.excerpt(), postCreationRequest.excerpt());
+    assertEquals(TITLE, postCreationRequest.title());
+    assertEquals(SLUG, postCreationRequest.slug());
+    assertEquals(EXCERPT, postCreationRequest.excerpt());
 
     var author = data.author();
 
@@ -109,11 +114,11 @@ class PostControllerIT {
         .findById(data.id())
         .ifPresentOrElse(
             post -> {
-              assertEquals(post.getTitle(), postCreationRequest.title());
-              assertEquals(post.getExcerpt(), postCreationRequest.excerpt());
-              assertEquals(post.getPostContent(), postCreationRequest.postContent());
-              assertEquals(post.getSlug(), postCreationRequest.slug());
-              assertEquals(author.username(), post.getAuthor().getUsername());
+              assertEquals(TITLE, post.getTitle());
+              assertEquals(EXCERPT, post.getExcerpt());
+              assertEquals("Test blank", post.getPostContent());
+              assertEquals(SLUG, post.getSlug());
+              assertEquals(AUTH_USER, author.username());
               assertTrue(
                   TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
             },
