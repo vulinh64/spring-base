@@ -76,5 +76,10 @@ USER springuser
 # - MaxRAMPercentage: Limit max heap to 75% of container memory
 # - InitialRAMPercentage: Start with 50% of container memory
 # - MaxMetaspaceSize: Limit metaspace to 512MB
-# - UseG1GC: Use the G1 garbage collector for better performance
-ENTRYPOINT ["java", "-XX:+UseCompactObjectHeaders", "-XX:MaxRAMPercentage=75.0", "-XX:InitialRAMPercentage=50.0", "-XX:MaxMetaspaceSize=512m", "-XX:+UseG1GC", "-jar", "app.jar"]
+ENTRYPOINT ["java", \
+    "-XX:+UseCompactObjectHeaders", \
+    "-XX:MaxRAMPercentage=75.0", \
+    "-XX:InitialRAMPercentage=50.0", \
+    "-XX:MaxMetaspaceSize=512m", \
+    "-jar", \
+    "app.jar"]

@@ -45,7 +45,6 @@
         <!-- https://mvnrepository.com/artifact/com.github.auties00/optional -->
         <optional.version>1.0</optional.version>
 
-
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <jsoup.version>1.21.2</jsoup.version>
 

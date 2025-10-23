@@ -127,7 +127,7 @@ class PostControllerIT {
 
   @Container
   static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
-      new PostgreSQLContainer<>("postgres:17.5-alpine");
+      new PostgreSQLContainer<>("postgres:18.0-alpine3.22");
 
   @DynamicPropertySource
   static void dynamicProperties(DynamicPropertyRegistry registry) {

@@ -13,7 +13,7 @@ if errorlevel 1 (
 REM Define container name and command
 SET PG_CONTAINER_NAME=standalone-postgresql
 SET PG_VOLUME_NAME=postgres-volume
-SET PG_COMMAND=docker run -d --name !PG_CONTAINER_NAME! -e "POSTGRES_USER=postgres" -e "POSTGRES_PASSWORD=123456" -e "POSTGRES_DB=myspringdatabase" -p 5432:5432 -v !PG_VOLUME_NAME!:/var/lib/postgresql/data postgres:17.5-alpine
+SET PG_COMMAND=docker run -d --name !PG_CONTAINER_NAME! -e "POSTGRES_USER=postgres" -e "POSTGRES_PASSWORD=123456" -e "POSTGRES_DB=myspringdatabase" -p 5432:5432 -v !PG_VOLUME_NAME!:/var/lib/postgresql/data postgres:18.0-alpine3.22
 
 REM Check and start PostgreSQL container
 echo Checking PostgreSQL container...
