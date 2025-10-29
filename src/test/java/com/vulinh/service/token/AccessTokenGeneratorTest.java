@@ -10,7 +10,6 @@ import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.configuration.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
-import com.vulinh.utils.security.RefreshTokenGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,12 +17,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class Auth0AccessTokenGeneratorTest {
+class AccessTokenGeneratorTest {
 
   @Mock ApplicationProperties securityConfigProperties;
   @Mock RefreshTokenGenerator refreshTokenGenerator;
 
-  @InjectMocks Auth0AccessTokenGenerator auth0AccessTokenGenerator;
+  @InjectMocks
+  AccessTokenGenerator accessTokenGenerator;
 
   @Test
   void testGenerateAccessToken() {
@@ -53,7 +53,7 @@ class Auth0AccessTokenGeneratorTest {
                 .build());
 
     var actualToken =
-        auth0AccessTokenGenerator.generateAccessToken(
+        accessTokenGenerator.generateAccessToken(
             CommonConstant.NIL_UUID, CommonConstant.NIL_UUID, Instant.EPOCH);
 
     assertEquals(

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class Auth0TokenValidator {
+class TokenValidator {
 
   final ApplicationProperties securityConfigProperties;
 

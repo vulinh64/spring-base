@@ -5,7 +5,7 @@ import module java.base;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.utils.security.AccessTokenValidator;
+import com.vulinh.service.token.AccessTokenValidator;
 import com.vulinh.utils.security.Auth0Utils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
