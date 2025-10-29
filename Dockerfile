@@ -56,6 +56,7 @@ ENV PATH=$JAVA_HOME/bin:$JAVA_HOME/lib:$PATH
 ENV USER=springuser
 ENV GROUP=springgroup
 ENV WORKDIR=app
+ENV APP_NAME=app.jar
 
 # Copy the custom JRE from the build stage
 COPY --from=build /jre-minimalist $JAVA_HOME
