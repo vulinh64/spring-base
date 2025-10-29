@@ -7,7 +7,10 @@ import com.vulinh.locale.ServiceErrorCode;
 import org.springframework.lang.NonNull;
 
 public record ValidatorStepImpl<T>(
-        Predicate<T> predicate, ServiceErrorCode applicationError, String exceptionMessage, Object[] args)
+    Predicate<T> predicate,
+    ServiceErrorCode applicationError,
+    String exceptionMessage,
+    Object[] args)
     implements ValidatorStep<T> {
 
   public ValidatorStepImpl {

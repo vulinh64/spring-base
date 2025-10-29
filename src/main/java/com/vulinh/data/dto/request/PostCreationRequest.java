@@ -20,7 +20,8 @@ public record PostCreationRequest(
     Set<String> tags) {
 
   // Testing only
-  public PostCreationRequest(String title, String excerpt, String postContent, String slug, Set<String> e) {
+  public PostCreationRequest(
+      String title, String excerpt, String postContent, String slug, Set<String> e) {
     this(title, excerpt, postContent, slug, null, e);
   }
 
@@ -29,6 +30,9 @@ public record PostCreationRequest(
     excerpt = TextSanitizer.sanitize(StringUtils.normalizeSpace(excerpt));
     postContent = TextSanitizer.sanitize(StringUtils.normalizeSpace(postContent));
     slug = TextSanitizer.sanitize(StringUtils.normalizeSpace(slug));
-    tags = SetUtils.emptyIfNull(tags).stream().map(TextSanitizer::sanitize).collect(Collectors.toSet());
+    tags =
+        SetUtils.emptyIfNull(tags).stream()
+            .map(TextSanitizer::sanitize)
+            .collect(Collectors.toSet());
   }
 }

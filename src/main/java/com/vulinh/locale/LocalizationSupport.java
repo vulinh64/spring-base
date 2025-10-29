@@ -18,8 +18,7 @@ public class LocalizationSupport {
 
   static final String BASE_NAME = "i18n";
 
-  static final Control BUNDLE_CONTROL =
-      new MultiResourceBundleControl(List.of("i18n/messages"));
+  static final Control BUNDLE_CONTROL = new MultiResourceBundleControl(List.of("i18n/messages"));
 
   @NonNull
   public static String getParsedMessage(ApplicationError applicationError, Object... args) {
