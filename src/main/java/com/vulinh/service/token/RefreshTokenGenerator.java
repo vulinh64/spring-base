@@ -27,11 +27,7 @@ public class RefreshTokenGenerator {
         .expirationDate(issuedAt.plus(ttl))
         .refreshToken(
             Auth0Utils.buildTokenCommonParts(
-                    userSessionId,
-                    issuedAt,
-                    securityProperties.issuer(),
-                    ttl,
-                    TokenType.REFRESH_TOKEN)
+                    securityProperties, userSessionId, issuedAt, TokenType.REFRESH_TOKEN)
                 .sign(Auth0Utils.getAlgorithm(securityProperties)))
         .build();
   }

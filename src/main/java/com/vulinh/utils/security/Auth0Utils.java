@@ -34,14 +34,13 @@ public class Auth0Utils {
   static final AtomicReference<JWTVerifier> JWT_VERIFIER = new AtomicReference<>();
 
   public static JWTCreator.Builder buildTokenCommonParts(
+      SecurityProperties securityProperties,
       UserSessionId userSessionId,
       Instant issuedAt,
-      String issuer,
-      Duration ttl,
       TokenType tokenType) {
     return JWT.create()
-        .withIssuer(issuer)
-        .withExpiresAt(issuedAt.plus(ttl))
+        .withIssuer(securityProperties.issuer())
+        .withExpiresAt(issuedAt.plus(securityProperties.jwtDuration()))
         .withClaim(USER_ID_CLAIM, String.valueOf(userSessionId.userId()))
         .withClaim(SESSION_ID_CLAIM, String.valueOf(userSessionId.sessionId()))
         .withClaim(TOKEN_TYPE, tokenType.name());

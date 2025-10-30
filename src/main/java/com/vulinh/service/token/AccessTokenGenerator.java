@@ -33,11 +33,7 @@ public class AccessTokenGenerator {
             TokenResponse.builder()
                 .accessToken(
                     Auth0Utils.buildTokenCommonParts(
-                            userSessionId,
-                            issuedAt,
-                            securityProperties.issuer(),
-                            securityProperties.jwtDuration(),
-                            TokenType.ACCESS_TOKEN)
+                            securityProperties, userSessionId, issuedAt, TokenType.ACCESS_TOKEN)
                         .withIssuedAt(issuedAt)
                         .sign(Auth0Utils.getAlgorithm(securityProperties)))
                 .refreshToken(refreshTokenContainer.refreshToken())
