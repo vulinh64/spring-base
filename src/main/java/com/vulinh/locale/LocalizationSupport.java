@@ -3,7 +3,6 @@ package com.vulinh.locale;
 import module java.base;
 
 import com.vulinh.data.base.ApplicationError;
-import java.util.ResourceBundle.Control;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,8 @@ public class LocalizationSupport {
 
   static final String BASE_NAME = "i18n";
 
-  static final Control BUNDLE_CONTROL = new MultiResourceBundleControl(List.of("i18n/messages"));
+  static final ResourceBundle.Control BUNDLE_CONTROL =
+      new MultiResourceBundleControl(List.of("i18n/messages"));
 
   @NonNull
   public static String getParsedMessage(ApplicationError applicationError, Object... args) {

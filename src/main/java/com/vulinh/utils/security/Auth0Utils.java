@@ -30,19 +30,8 @@ public class Auth0Utils {
 
   public static final String TOKEN_TYPE = "tokenType";
 
-  static Algorithm rsaAlgorithm;
-  static JWTVerifier jwtVerifier;
-
-  public static Algorithm getAlgorithm(SecurityProperties securityProperties) {
-    if (rsaAlgorithm == null) {
-      rsaAlgorithm =
-          Algorithm.RSA512(
-              RSAUtils.generatePublicKey(securityProperties.publicKey()),
-              RSAUtils.generatePrivateKey(securityProperties.privateKey()));
-    }
-
-    return rsaAlgorithm;
-  }
+  static final AtomicReference<Algorithm> RSA_ALGORITHM = new AtomicReference<>();
+  static final AtomicReference<JWTVerifier> JWT_VERIFIER = new AtomicReference<>();
 
   public static JWTCreator.Builder buildTokenCommonParts(
       UserSessionId userSessionId,
@@ -56,17 +45,6 @@ public class Auth0Utils {
         .withClaim(USER_ID_CLAIM, String.valueOf(userSessionId.userId()))
         .withClaim(SESSION_ID_CLAIM, String.valueOf(userSessionId.sessionId()))
         .withClaim(TOKEN_TYPE, tokenType.name());
-  }
-
-  public static JWTVerifier getJwtVerifier(SecurityProperties securityProperties) {
-    if (jwtVerifier == null) {
-      jwtVerifier =
-          JWT.require(getAlgorithm(securityProperties))
-              .withIssuer(securityProperties.issuer())
-              .build();
-    }
-
-    return jwtVerifier;
   }
 
   public static String claimAsString(DecodedJWT decodedJWT, String claimName) {
@@ -89,5 +67,35 @@ public class Auth0Utils {
     }
 
     return token.startsWith("Bearer") ? token.substring(7) : token;
+  }
+
+  public static Algorithm getAlgorithm(SecurityProperties securityProperties) {
+    var current = RSA_ALGORITHM.get();
+
+    if (current == null) {
+      var created =
+          Algorithm.RSA512(
+              RSAUtils.generatePublicKey(securityProperties.publicKey()),
+              RSAUtils.generatePrivateKey(securityProperties.privateKey()));
+
+      return RSA_ALGORITHM.compareAndSet(null, created) ? created : RSA_ALGORITHM.get();
+    }
+
+    return current;
+  }
+
+  public static JWTVerifier getJwtVerifier(SecurityProperties securityProperties) {
+    var current = JWT_VERIFIER.get();
+
+    if (current == null) {
+      var created =
+          JWT.require(getAlgorithm(securityProperties))
+              .withIssuer(securityProperties.issuer())
+              .build();
+
+      return JWT_VERIFIER.compareAndSet(null, created) ? created : JWT_VERIFIER.get();
+    }
+
+    return current;
   }
 }

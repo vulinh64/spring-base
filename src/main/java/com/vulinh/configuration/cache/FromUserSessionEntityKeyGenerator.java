@@ -1,8 +1,9 @@
 package com.vulinh.configuration.cache;
 
+import module java.base;
+
 import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
-import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.lang.NonNull;

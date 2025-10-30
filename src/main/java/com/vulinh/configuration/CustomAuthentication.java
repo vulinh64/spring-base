@@ -1,8 +1,9 @@
 package com.vulinh.configuration;
 
+import module java.base;
+
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.dto.response.data.RoleData;
-import java.io.Serial;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

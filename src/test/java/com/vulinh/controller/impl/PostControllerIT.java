@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import module java.base;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.carrier.TokenResponse;
@@ -15,7 +17,6 @@ import com.vulinh.data.entity.Tag;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
