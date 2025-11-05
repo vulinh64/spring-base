@@ -40,6 +40,8 @@ application-properties:
     jwt-duration: ${JWT_DURATION:5m}
     refresh-jwt-duration: ${REFRESH_JWT_DURATION:1d}
     password-reset-code-duration: ${PASSWORD_RESET_CODE_DURATION:1h}
+  schedule:
+    clean-expired-user-sessions: ${CLEAN_EXPIRED_SESSIONS_CRON:0 0/1 1-5 * * *} # Runs every minute between 1:00 AM and 5:59 AM daily
 #
 # End of application properties
 #
@@ -61,7 +63,11 @@ spring:
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
   application.name: spring-base
-  # START: change this to fit your computer's configuration
+  data.redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:123456}
+    client-type: lettuce
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
     username: ${DATABASE_USERNAME:postgres}

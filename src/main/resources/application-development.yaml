@@ -10,5 +10,4 @@ logging.level.com.vulinh:
     eventlistener.CustomEventListener: DEBUG
   configuration:
     SecurityConfig: DEBUG
-    CacheConfiguration: DEBUG
     cache.FromUserSessionEntityKeyGenerator: DEBUG
