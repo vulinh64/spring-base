@@ -52,7 +52,7 @@ class TaxUtils {
   }
 
   public static PersonalTaxDTO calculatePersonalTax(
-      TaxRequestDTO taxRequestDTO, InsuranceDTO insuranceDTO) {
+      TaxRequestDTO taxRequestDTO, InsuranceDTO insuranceDTO, TaxPeriod taxPeriod) {
     var totalSalary = taxRequestDTO.totalSalary();
 
     // Tổng đóng BH
@@ -63,11 +63,11 @@ class TaxUtils {
 
     // Người phụ thuộc * Giảm trừ mỗi người phụ thuộc
     var dependantDeduction =
-        TaxConstant.DEDUCTION_PER_DEPENDANTS.value() * taxRequestDTO.numberOfDependants();
+        taxPeriod.dependantDeduction() * taxRequestDTO.numberOfDependants();
 
     // Thu nhập chịu thuế = Thu nhập trước thuế - Thu nhập miễn thuế - Giảm trừ người phụ thuộc
     var taxableIncome =
-        pretaxSalary - (TaxConstant.NON_TAXABLE_INCOME.value() + dependantDeduction);
+        pretaxSalary - (taxPeriod.personalDeduction() + dependantDeduction);
 
     // Thu nhập chịu thuế luôn phải lớn hơn hoặc bằng 0
     if (taxableIncome < 0) {
@@ -149,8 +149,6 @@ class TaxUtils {
   @Getter
   @Accessors(fluent = true)
   enum TaxConstant {
-    NON_TAXABLE_INCOME(11_000_000),
-    DEDUCTION_PER_DEPENDANTS(4_400_000),
     MAX_BASIC_SALARY(46_800_000),
     MIN_BASIC_SALARY(5_100_000);
 
@@ -181,4 +179,5 @@ class TaxUtils {
           .orElseThrow(() -> new IllegalArgumentException("taxLevel = %d".formatted(taxLevel)));
     }
   }
+
 }
