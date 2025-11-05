@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import module java.base;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.redis.testcontainers.RedisContainer;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.dto.request.PostCreationRequest;
@@ -19,6 +20,7 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +32,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.ShellStrategy;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -126,14 +129,39 @@ class PostControllerIT {
             () -> fail("Post was not found in the database"));
   }
 
+  static final String TEST_REDIS_PASSWORD = "123456";
+
+  @SuppressWarnings("resource")
   @Container
   static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
-      new PostgreSQLContainer<>("postgres:18.0-alpine3.22");
+      new PostgreSQLContainer<>("postgres:18.0-alpine3.22")
+          .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck());
+
+  @Container
+  static final RedisContainer REDIS_CONTAINER =
+      new RedisContainer("redis:8.2.3-bookworm")
+          .withCommand("redis-server", "--requirepass", TEST_REDIS_PASSWORD, "--save", "60", "1")
+          .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck("123456"));
 
   @DynamicPropertySource
   static void dynamicProperties(DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
     registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
     registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
+    registry.add("spring.data.redis.host", REDIS_CONTAINER::getHost);
+    registry.add("spring.data.redis.port", REDIS_CONTAINER::getRedisPort);
+  }
+
+  @RequiredArgsConstructor
+  public enum HealthCheckCommand {
+    POSTGRESQL("pg_isready -U postgres"),
+    REDIS("redis-cli -a %s ping");
+
+    final String shellCommand;
+
+    public ShellStrategy shellStrategyHealthCheck(Object... args) {
+      return new ShellStrategy()
+          .withCommand(ArrayUtils.isEmpty(args) ? shellCommand : shellCommand.formatted(args));
+    }
   }
 }

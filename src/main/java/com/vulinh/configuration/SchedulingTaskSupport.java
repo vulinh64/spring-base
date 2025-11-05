@@ -1,6 +1,5 @@
 package com.vulinh.configuration;
 
-import com.vulinh.data.constant.EnvironmentConstant;
 import com.vulinh.utils.springcron.HourExpression;
 import com.vulinh.utils.springcron.MinuteExpression;
 import com.vulinh.utils.springcron.dto.ExpressionObject;
@@ -9,10 +8,8 @@ import com.vulinh.utils.springcron.dto.MinuteExpressionObject;
 import com.vulinh.utils.springcron.dto.SpringCronGeneratorDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile(EnvironmentConstant.ENV_PRODUCTION)
 @Component
 @RequiredArgsConstructor
 public class SchedulingTaskSupport {
