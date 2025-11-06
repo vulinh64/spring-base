@@ -36,7 +36,7 @@ class TaxServiceTest {
     assertEquals(TaxMapper.toBigDecimal(4_400_000), personalTax.deductedAmount());
     assertEquals(TaxMapper.toBigDecimal(31_379_875), personalTax.netIncome());
 
-    var highestLevel = personalTax.progressiveTaxLevels().get("LEVEL_2");
+    var highestLevel = personalTax.progressiveTaxLevels().get(2);
 
     assertNotNull(highestLevel);
     assertEquals(TaxMapper.toBigDecimal(1_187_625), highestLevel);
@@ -71,7 +71,7 @@ class TaxServiceTest {
     assertEquals(TaxMapper.toBigDecimal(0), personalTax.deductedAmount());
     assertEquals(TaxMapper.toBigDecimal(32_490_000), personalTax.netIncome());
 
-    var highestLevel = personalTax.progressiveTaxLevels().get("LEVEL_3");
+    var highestLevel = personalTax.progressiveTaxLevels().get(3);
 
     assertNotNull(highestLevel);
     assertEquals(TaxMapper.toBigDecimal(1_360_000), highestLevel);

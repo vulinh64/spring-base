@@ -53,12 +53,12 @@ public record TaxRequestDTO(
       double taxableIncome,
       double deductedAmount,
       double taxAmount,
-      Map<String, Double> progressiveTaxLevels,
+      List<Double> progressiveTaxLevels,
       double netIncome) {
 
     PersonalTaxDTO {
       progressiveTaxLevels =
-          progressiveTaxLevels == null ? Collections.emptyMap() : progressiveTaxLevels;
+          progressiveTaxLevels == null ? Collections.emptyList() : progressiveTaxLevels;
     }
   }
 

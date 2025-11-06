@@ -32,6 +32,6 @@ public record TaxDetail(
       @JsonProperty("Thu nhập chịu thuế") BigDecimal taxableIncome,
       @JsonProperty("Giảm trừ người phụ thuộc") BigDecimal deductedAmount,
       @JsonProperty("Thuế") BigDecimal taxAmount,
-      @JsonProperty("Thuế lũy tiến") Map<String, BigDecimal> progressiveTaxLevels,
+      @JsonProperty("Thuế lũy tiến") List<BigDecimal> progressiveTaxLevels,
       @JsonProperty("Thu nhập sau thuế") BigDecimal netIncome) {}
 }

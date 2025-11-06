@@ -2,7 +2,7 @@ package com.vulinh.service.taxcalculator;
 
 import module java.base;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.vulinh.service.taxcalculator.TaxRequestDTO.InsuranceDTO;
 import com.vulinh.service.taxcalculator.TaxRequestDTO.PersonalTaxDTO;
 import lombok.AccessLevel;
@@ -62,12 +62,10 @@ class TaxUtils {
     var pretaxSalary = totalSalary - totalInsurance;
 
     // Người phụ thuộc * Giảm trừ mỗi người phụ thuộc
-    var dependantDeduction =
-        taxPeriod.dependantDeduction() * taxRequestDTO.numberOfDependants();
+    var dependantDeduction = taxPeriod.dependantDeduction() * taxRequestDTO.numberOfDependants();
 
     // Thu nhập chịu thuế = Thu nhập trước thuế - Thu nhập miễn thuế - Giảm trừ người phụ thuộc
-    var taxableIncome =
-        pretaxSalary - (taxPeriod.personalDeduction() + dependantDeduction);
+    var taxableIncome = pretaxSalary - (taxPeriod.personalDeduction() + dependantDeduction);
 
     // Thu nhập chịu thuế luôn phải lớn hơn hoặc bằng 0
     if (taxableIncome < 0) {
@@ -75,10 +73,10 @@ class TaxUtils {
     }
 
     // Thuế lũy tiến
-    var progressiveTaxLevels = calculateProgressiveTax(taxableIncome);
+    var progressiveTaxLevels = calculateProgressiveTax(taxableIncome, taxPeriod);
 
     // Tổng thuế từ các bậc
-    var taxAmount = progressiveTaxLevels.values().stream().mapToDouble(Double::doubleValue).sum();
+    var taxAmount = progressiveTaxLevels.stream().mapToDouble(Double::doubleValue).sum();
 
     return PersonalTaxDTO.builder()
         .pretaxSalary(pretaxSalary)
@@ -90,13 +88,15 @@ class TaxUtils {
         .build();
   }
 
-  static Map<String, Double> calculateProgressiveTax(double taxableIncome) {
-    var resultBuilder = ImmutableMap.<String, Double>builder();
+  static List<Double> calculateProgressiveTax(double taxableIncome, TaxPeriod taxPeriod) {
+    var resultBuilder = ImmutableList.<Double>builder();
 
     var taxLevelOrdinal = 0;
 
+    List<TaxPeriod.ProgressiveTaxLevel> progressiveTaxLevels = taxPeriod.progressiveTaxLevel();
+
     while (true) {
-      var taxLevel = TaxLevel.parseTaxLevel(taxLevelOrdinal);
+      var taxLevel = progressiveTaxLevels.get(taxLevelOrdinal);
 
       var deltaToNextLevel = taxableIncome - taxLevel.threshold();
 
@@ -104,7 +104,7 @@ class TaxUtils {
         break;
       }
 
-      var nextTaxLevel = TaxLevel.parseTaxLevel(taxLevelOrdinal + 1);
+      var nextTaxLevel = progressiveTaxLevels.get(taxLevelOrdinal + 1);
 
       // TN chịu thuế lớn hơn bậc tiếp -> (bậc tiếp - bậc hiện tại) * mức thuế bậc tiếp
       // TN chịu thuế nhỏ hơn bậc tiếp -> (TN chịu thuế - bậc hiện tại) * mức thuế bậc tiếp
@@ -114,7 +114,7 @@ class TaxUtils {
               : nextTaxLevel.threshold() - taxLevel.threshold();
 
       if (delta > 0) {
-        resultBuilder.put(taxLevel.name(), nextTaxLevel.rate() * delta);
+        resultBuilder.add(nextTaxLevel.rate() * delta);
       }
 
       taxLevelOrdinal++;
@@ -154,30 +154,4 @@ class TaxUtils {
 
     final double value;
   }
-
-  @RequiredArgsConstructor
-  @Getter
-  @Accessors(fluent = true)
-  enum TaxLevel {
-    LEVEL_0(0.0, 0.0),
-    LEVEL_1(5_000_000.0, 0.05),
-    LEVEL_2(10_000_000.0, 0.10),
-    LEVEL_3(18_000_000.0, 0.15),
-    LEVEL_4(32_000_000.0, 0.2),
-    LEVEL_5(52_000_000.0, 0.25),
-    LEVEL_6(80_000_000.0, 0.3),
-    LEVEL_7(Double.MAX_VALUE, 0.35); // Your income cannot be more than total assets of the world!!!
-
-    final double threshold;
-    final double rate;
-
-    static final Map<Integer, TaxLevel> MAPS =
-        Arrays.stream(values()).collect(Collectors.toMap(TaxLevel::ordinal, Function.identity()));
-
-    public static TaxLevel parseTaxLevel(int taxLevel) {
-      return Optional.ofNullable(MAPS.get(taxLevel))
-          .orElseThrow(() -> new IllegalArgumentException("taxLevel = %d".formatted(taxLevel)));
-    }
-  }
-
 }

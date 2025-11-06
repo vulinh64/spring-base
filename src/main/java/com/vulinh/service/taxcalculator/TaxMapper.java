@@ -18,9 +18,8 @@ interface TaxMapper {
     return BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING);
   }
 
-  static Map<String, BigDecimal> toBigDecimalMap(Map<String, Double> values) {
-    return values.entrySet().stream()
-        .collect(Collectors.toMap(Map.Entry::getKey, entry -> toBigDecimal(entry.getValue())));
+  static List<BigDecimal> toBigDecimalList(List<Double> values) {
+    return values.stream().map(TaxMapper::toBigDecimal).collect(Collectors.toList());
   }
 
   Insurance toInsurance(InsuranceDTO insuranceDTO);
