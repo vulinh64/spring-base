@@ -21,7 +21,7 @@ public class TaxService {
     }
 
     return calculateNonProbation(
-        taxRequest, LocalDate.now().getYear() == 2026 ? TaxPeriod.POST_2026 : TaxPeriod.PRE_2026);
+        taxRequest, LocalDate.now().getYear() >= 2026 ? TaxPeriod.POST_2026 : TaxPeriod.PRE_2026);
   }
 
   static TaxResponse calculateProbation(TaxRequest taxRequest) {
