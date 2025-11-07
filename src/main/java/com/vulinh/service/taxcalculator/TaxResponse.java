@@ -8,7 +8,7 @@ import lombok.With;
 
 @With
 @Builder
-public record TaxDetail(
+public record TaxResponse(
     @JsonProperty("Tổng thu nhập") BigDecimal totalSalary,
     @JsonProperty("Lương cơ bản") BigDecimal basicSalary,
     @JsonProperty("Số người phụ thuộc") int numberOfDependants,

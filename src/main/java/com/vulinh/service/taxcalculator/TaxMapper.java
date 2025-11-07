@@ -2,10 +2,10 @@ package com.vulinh.service.taxcalculator;
 
 import module java.base;
 
-import com.vulinh.service.taxcalculator.TaxDetail.Insurance;
-import com.vulinh.service.taxcalculator.TaxDetail.PersonalTax;
-import com.vulinh.service.taxcalculator.TaxRequestDTO.InsuranceDTO;
-import com.vulinh.service.taxcalculator.TaxRequestDTO.PersonalTaxDTO;
+import com.vulinh.service.taxcalculator.TaxSupport.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxSupport.PersonalTaxDTO;
+import com.vulinh.service.taxcalculator.TaxResponse.Insurance;
+import com.vulinh.service.taxcalculator.TaxResponse.PersonalTax;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,18 +14,20 @@ interface TaxMapper {
 
   TaxMapper INSTANCE = Mappers.getMapper(TaxMapper.class);
 
-  static BigDecimal toBigDecimal(double value) {
+  default BigDecimal toBigDecimal(double value) {
     return BigDecimal.valueOf(value).setScale(2, RoundingMode.CEILING);
   }
 
-  static List<BigDecimal> toBigDecimalList(List<Double> values) {
-    return values.stream().map(TaxMapper::toBigDecimal).collect(Collectors.toList());
+  default List<BigDecimal> toBigDecimalList(List<Double> values) {
+    return values == null
+        ? Collections.emptyList()
+        : values.stream().map(this::toBigDecimal).collect(Collectors.toList());
   }
 
   Insurance toInsurance(InsuranceDTO insuranceDTO);
 
   PersonalTax toPersonalTax(PersonalTaxDTO personalTaxDTO);
 
-  TaxDetail toTaxDetail(
-      TaxRequestDTO taxRequestDTO, InsuranceDTO insurance, PersonalTaxDTO personalTax);
+  TaxResponse toTaxDetail(
+      TaxRequest taxRequest, InsuranceDTO insurance, PersonalTaxDTO personalTax);
 }

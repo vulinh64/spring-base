@@ -1,5 +1,6 @@
 package com.vulinh.service.taxcalculator;
 
+import com.vulinh.service.taxcalculator.TaxSupport.TaxPeriod;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,34 +9,35 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TaxService {
 
-  public TaxDetail calculate(TaxRequestDTO taxRequestDTO) {
+  static final TaxMapper TAX_MAPPER = TaxMapper.INSTANCE;
+
+  public TaxResponse calculate(TaxRequest taxRequest) {
     log.debug(
         "Inside calculating personal tax according to Law of Vietnam... Looking at thread: {}",
         Thread.currentThread());
 
-    if (taxRequestDTO.isProbation()) {
-      return calculateProbation(taxRequestDTO);
+    if (taxRequest.isProbation()) {
+      return calculateProbation(taxRequest);
     }
 
     return calculateNonProbation(
-        taxRequestDTO,
-        LocalDate.now().getYear() == 2026 ? TaxPeriod.POST_2026 : TaxPeriod.PRE_2026);
+        taxRequest, LocalDate.now().getYear() == 2026 ? TaxPeriod.POST_2026 : TaxPeriod.PRE_2026);
   }
 
-  public static TaxDetail calculateProbation(TaxRequestDTO taxRequestDTO) {
+  static TaxResponse calculateProbation(TaxRequest taxRequest) {
     // Thuế TNCN thử việc
-    var personalTax = TaxUtils.calculatePersonalTaxProbation(taxRequestDTO);
+    var personalTax = TaxUtils.calculatePersonalTaxProbation(taxRequest);
 
-    return TaxMapper.INSTANCE.toTaxDetail(taxRequestDTO, null, personalTax);
+    return TAX_MAPPER.toTaxDetail(taxRequest, null, personalTax);
   }
 
-  static TaxDetail calculateNonProbation(TaxRequestDTO taxRequestDTO, TaxPeriod taxPeriod) {
+  static TaxResponse calculateNonProbation(TaxRequest taxRequest, TaxPeriod taxPeriod) {
     // Bảo hiểm - BHYT (1.5%), BHXH (8%), BH thất nghiệp (1%)
-    var insurance = TaxUtils.calculateInsurance(taxRequestDTO);
+    var insurance = TaxUtils.calculateInsurance(taxRequest);
 
     // Thuế TNCN
-    var personalTax = TaxUtils.calculatePersonalTax(taxRequestDTO, insurance, taxPeriod);
+    var personalTax = TaxUtils.calculatePersonalTax(taxRequest, insurance, taxPeriod);
 
-    return TaxMapper.INSTANCE.toTaxDetail(taxRequestDTO, insurance, personalTax);
+    return TAX_MAPPER.toTaxDetail(taxRequest, insurance, personalTax);
   }
 }

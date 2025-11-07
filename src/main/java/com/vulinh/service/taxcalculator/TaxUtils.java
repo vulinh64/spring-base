@@ -3,27 +3,23 @@ package com.vulinh.service.taxcalculator;
 import module java.base;
 
 import com.google.common.collect.ImmutableList;
-import com.vulinh.service.taxcalculator.TaxRequestDTO.InsuranceDTO;
-import com.vulinh.service.taxcalculator.TaxRequestDTO.PersonalTaxDTO;
+import com.vulinh.service.taxcalculator.TaxSupport.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class TaxUtils {
 
-  public static PersonalTaxDTO calculatePersonalTaxProbation(TaxRequestDTO taxRequestDTO) {
-    var probationPercentage = taxRequestDTO.probationPercentage();
+  static PersonalTaxDTO calculatePersonalTaxProbation(TaxRequest taxRequest) {
+    var probationPercentage = taxRequest.probationPercentage();
 
     if (Double.compare(probationPercentage, ProbationRate.MIN_PERCENTAGE.percentage()) < 0
         || Double.compare(probationPercentage, ProbationRate.MAX_PERCENTAGE.percentage()) > 0) {
-      throw new TaxRequestDTO.TaxCalculatorException("Invalid probation percentage");
+      throw new TaxCalculatorException("Invalid probation percentage");
     }
 
-    var totalSalary = taxRequestDTO.totalSalary();
-    var taxableAMount = totalSalary * taxRequestDTO.probationPercentage();
+    var totalSalary = taxRequest.totalSalary();
+    var taxableAMount = totalSalary * taxRequest.probationPercentage();
     var taxAmount = taxableAMount * ProbationRate.DEDUCTION_PERCENTAGE.percentage();
 
     return PersonalTaxDTO.builder()
@@ -34,8 +30,8 @@ class TaxUtils {
         .build();
   }
 
-  public static InsuranceDTO calculateInsurance(TaxRequestDTO taxRequestDTO) {
-    var basicSalary = taxRequestDTO.basicSalary();
+  static InsuranceDTO calculateInsurance(TaxRequest taxRequest) {
+    var basicSalary = taxRequest.basicSalary();
 
     var healthInsurance = basicSalary * InsuranceRate.HEALTH_INSURANCE.rate();
 
@@ -51,9 +47,9 @@ class TaxUtils {
         .build();
   }
 
-  public static PersonalTaxDTO calculatePersonalTax(
-      TaxRequestDTO taxRequestDTO, InsuranceDTO insuranceDTO, TaxPeriod taxPeriod) {
-    var totalSalary = taxRequestDTO.totalSalary();
+  static PersonalTaxDTO calculatePersonalTax(
+      TaxRequest taxRequest, InsuranceDTO insuranceDTO, TaxPeriod taxPeriod) {
+    var totalSalary = taxRequest.totalSalary();
 
     // Tổng đóng BH
     var totalInsurance = insuranceDTO.totalInsurance();
@@ -62,7 +58,7 @@ class TaxUtils {
     var pretaxSalary = totalSalary - totalInsurance;
 
     // Người phụ thuộc * Giảm trừ mỗi người phụ thuộc
-    var dependantDeduction = taxPeriod.dependantDeduction() * taxRequestDTO.numberOfDependants();
+    var dependantDeduction = taxPeriod.dependantDeduction() * taxRequest.numberOfDependants();
 
     // Thu nhập chịu thuế = Thu nhập trước thuế - Thu nhập miễn thuế - Giảm trừ người phụ thuộc
     var taxableIncome = pretaxSalary - (taxPeriod.personalDeduction() + dependantDeduction);
@@ -93,25 +89,27 @@ class TaxUtils {
 
     var taxLevelOrdinal = 0;
 
-    List<TaxPeriod.ProgressiveTaxLevel> progressiveTaxLevels = taxPeriod.progressiveTaxLevel();
+    var progressiveTaxLevel = taxPeriod.progressiveTaxLevel();
 
     while (true) {
-      var taxLevel = progressiveTaxLevels.get(taxLevelOrdinal);
+      var taxLevel = progressiveTaxLevel.get(taxLevelOrdinal);
 
-      var deltaToNextLevel = taxableIncome - taxLevel.threshold();
+      var currentThreshold = taxLevel.threshold();
+
+      var deltaToNextLevel = taxableIncome - currentThreshold;
 
       if (deltaToNextLevel < 0) {
         break;
       }
 
-      var nextTaxLevel = progressiveTaxLevels.get(taxLevelOrdinal + 1);
+      var nextTaxLevel = progressiveTaxLevel.get(taxLevelOrdinal + 1);
 
       // TN chịu thuế lớn hơn bậc tiếp -> (bậc tiếp - bậc hiện tại) * mức thuế bậc tiếp
       // TN chịu thuế nhỏ hơn bậc tiếp -> (TN chịu thuế - bậc hiện tại) * mức thuế bậc tiếp
+      var nextThreshold = nextTaxLevel.threshold();
+
       var delta =
-          taxableIncome < nextTaxLevel.threshold()
-              ? deltaToNextLevel
-              : nextTaxLevel.threshold() - taxLevel.threshold();
+          taxableIncome < nextThreshold ? deltaToNextLevel : nextThreshold - currentThreshold;
 
       if (delta > 0) {
         resultBuilder.add(nextTaxLevel.rate() * delta);
@@ -121,37 +119,5 @@ class TaxUtils {
     }
 
     return resultBuilder.build();
-  }
-
-  @RequiredArgsConstructor
-  @Getter
-  @Accessors(fluent = true)
-  enum ProbationRate {
-    MIN_PERCENTAGE(0.85),
-    MAX_PERCENTAGE(1.0),
-    DEDUCTION_PERCENTAGE(0.1);
-
-    final double percentage;
-  }
-
-  @RequiredArgsConstructor
-  @Getter
-  @Accessors(fluent = true)
-  enum InsuranceRate {
-    SOCIAL_INSURANCE(0.08),
-    HEALTH_INSURANCE(0.015),
-    UNEMPLOYMENT_INSURANCE(0.01);
-
-    final double rate;
-  }
-
-  @RequiredArgsConstructor
-  @Getter
-  @Accessors(fluent = true)
-  enum TaxConstant {
-    MAX_BASIC_SALARY(46_800_000),
-    MIN_BASIC_SALARY(5_100_000);
-
-    final double value;
   }
 }
