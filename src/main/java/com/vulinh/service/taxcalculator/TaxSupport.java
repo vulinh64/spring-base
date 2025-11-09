@@ -79,27 +79,30 @@ public class TaxSupport {
 
   record ProgressiveTaxLevel(double threshold, double rate) {
 
+    static final ProgressiveTaxLevel ZERO_LEVEL = ProgressiveTaxLevel.of(0.0, 0.0);
+    static final ProgressiveTaxLevel MAX_LEVEL = ProgressiveTaxLevel.of(Double.MAX_VALUE, 0.35);
+
     // Before 2026
     static final List<ProgressiveTaxLevel> PRE_2026_LEVEL =
         List.of(
-            ProgressiveTaxLevel.of(0.0, 0.0),
+            ZERO_LEVEL,
             ProgressiveTaxLevel.of(5_000_000.0, 0.05),
             ProgressiveTaxLevel.of(10_000_000.0, 0.10),
             ProgressiveTaxLevel.of(18_000_000.0, 0.15),
             ProgressiveTaxLevel.of(32_000_000.0, 0.2),
             ProgressiveTaxLevel.of(52_000_000.0, 0.25),
             ProgressiveTaxLevel.of(80_000_000.0, 0.3),
-            ProgressiveTaxLevel.of(Double.MAX_VALUE, 0.35));
+            MAX_LEVEL);
 
     // Starting from 2026
     static final List<ProgressiveTaxLevel> POST_2026_LEVEL =
         List.of(
-            ProgressiveTaxLevel.of(0.0, 0.0),
+            ZERO_LEVEL,
             ProgressiveTaxLevel.of(10_000_000.0, 0.05),
             ProgressiveTaxLevel.of(30_000_000.0, 0.15),
             ProgressiveTaxLevel.of(60_000_000.0, 0.25),
             ProgressiveTaxLevel.of(100_000_000.0, 0.3),
-            ProgressiveTaxLevel.of(Double.MAX_VALUE, 0.35));
+            MAX_LEVEL);
 
     static ProgressiveTaxLevel of(double threshold, double rate) {
       return new ProgressiveTaxLevel(threshold, rate);
