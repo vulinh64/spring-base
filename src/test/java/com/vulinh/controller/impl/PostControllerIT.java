@@ -31,10 +31,10 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.ShellStrategy;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -129,13 +129,14 @@ class PostControllerIT {
             () -> fail("Post was not found in the database"));
   }
 
+  static final String TEST_POSTGRES_USER = "postgres";
   static final String TEST_REDIS_PASSWORD = "123456";
 
-  @SuppressWarnings("resource")
   @Container
-  static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
-      new PostgreSQLContainer<>("postgres:18.0-alpine3.22")
-          .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck());
+  static final PostgreSQLContainer POSTGRESQL_CONTAINER =
+      new PostgreSQLContainer("postgres:18.0-alpine3.22")
+          .withUsername(TEST_POSTGRES_USER)
+          .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck(TEST_POSTGRES_USER));
 
   @Container
   static final RedisContainer REDIS_CONTAINER =
@@ -154,7 +155,7 @@ class PostControllerIT {
 
   @RequiredArgsConstructor
   public enum HealthCheckCommand {
-    POSTGRESQL("pg_isready -U postgres"),
+    POSTGRESQL("pg_isready -U %s"),
     REDIS("redis-cli -a %s ping");
 
     final String shellCommand;

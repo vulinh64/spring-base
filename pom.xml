@@ -25,19 +25,19 @@
 
         <!-- The property "querydsl.version" is reserved by Spring, do not use that! -->
         <!-- https://mvnrepository.com/artifact/io.github.openfeign.querydsl/querydsl-jpa -->
-        <openfeign.querydsl.version>7.0</openfeign.querydsl.version>
+        <openfeign.querydsl.version>7.1</openfeign.querydsl.version>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <guava.version>33.5.0-jre</guava.version>
 
         <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-        <springdoc.openapi.version>2.8.13</springdoc.openapi.version>
+        <springdoc.openapi.version>2.8.14</springdoc.openapi.version>
 
         <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
         <java-jwt.version>4.5.0</java-jwt.version>
 
         <!-- https://mvnrepository.com/artifact/com.sanctionco.jmail/jmail -->
-        <jmail.version>2.0.2</jmail.version>
+        <jmail.version>2.1.0</jmail.version>
 
         <!-- https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter -->
         <p6spy-springboot.version>1.12.0</p6spy-springboot.version>
@@ -49,23 +49,14 @@
         <jsoup.version>1.21.2</jsoup.version>
 
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
-        <testcontainers.version>1.21.3</testcontainers.version>
+        <testcontainers.version>2.0.1</testcontainers.version>
 
         <!-- https://mvnrepository.com/artifact/com.redis/testcontainers-redis -->
         <testcontainers-redis.version>2.2.4</testcontainers-redis.version>
-    </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-bom</artifactId>
-                <version>${testcontainers.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
+        <testcontainers-jupiter.version>1.21.3</testcontainers-jupiter.version>
+    </properties>
 
     <dependencies>
         <!-- BEGIN: Spring Logging -->
@@ -238,11 +229,12 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -320,6 +312,7 @@
                 <configuration>
                     <argLine>
                         -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                        -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar
                         -Xshare:off
                     </argLine>
                     <includes>
