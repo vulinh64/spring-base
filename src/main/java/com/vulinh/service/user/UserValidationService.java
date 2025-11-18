@@ -27,8 +27,6 @@ public class UserValidationService {
   public static final int PASSWORD_MINIMUM_LENGTH = 8;
   public static final int USERNAME_MAX_LENGTH = 200;
 
-  static final char UNDERSCORE = '_';
-
   final UserRepository userRepository;
 
   public static boolean isActive(Users matcherUser) {
@@ -83,7 +81,7 @@ public class UserValidationService {
 
     var firstCharacter = username.charAt(0);
 
-    if (firstCharacter == UNDERSCORE || Character.isDigit(firstCharacter)) {
+    if (Character.isDigit(firstCharacter) || isUnderscoreOrDot(firstCharacter)) {
       log.debug("Username {} with invalid first character ({})", username, firstCharacter);
 
       return false;
@@ -91,7 +89,7 @@ public class UserValidationService {
 
     var lastCharacter = username.charAt(username.length() - 1);
 
-    if (lastCharacter == UNDERSCORE) {
+    if (isUnderscoreOrDot(lastCharacter)) {
       log.debug("Username {} with invalid last character ({})", username, lastCharacter);
 
       return false;
@@ -99,10 +97,11 @@ public class UserValidationService {
 
     var charArray = username.toCharArray();
 
+    // First and last characters are already checked
     for (int index = 1; index < charArray.length - 1; index++) {
       var character = charArray[index];
 
-      if (!(Character.isLetterOrDigit(character) || character == UNDERSCORE)) {
+      if (!(Character.isLetterOrDigit(character) || isUnderscoreOrDot(character))) {
         log.debug(
             "Username {} with invalid character ({}) at position {}", username, character, index);
 
@@ -145,6 +144,10 @@ public class UserValidationService {
     };
   }
 
+  static boolean isUnderscoreOrDot(char character) {
+    return character == '_' || character == '.';
+  }
+
   @Getter
   @RequiredArgsConstructor
   public enum UserRule implements NoArgsValidatorStep<UserRegistrationRequest> {
@@ -166,11 +169,7 @@ public class UserValidationService {
     USER_VALID_USERNAME(
         UserValidationService::isUsernameValid,
         ServiceErrorCode.MESSAGE_INVALID_USERNAME,
-        """
-        Invalid username (contains only alphanumeric characters and underscores, \
-        first character cannot be a number or an underscore, and last character \
-        cannot be an underscore)
-        """),
+        "Username must contain only letters, digits, dot, and underscore; must not start with a digit, underscore, or dot; and must not end with an underscore or dot."),
     USER_NO_BLANK_PASSWORD(
         ValidatorStepFactory.noBlankField(UserRegistrationRequest::password),
         ServiceErrorCode.MESSAGE_INVALID_PASSWORD,

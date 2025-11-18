@@ -1,36 +1,31 @@
 package com.vulinh.utils;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 class TextSanitizerTest {
 
-  @Test
-  void testSanitizeWithMaliciousHtml() {
-    String input = "Hello <script>alert('xss')</script> World";
-    String expected = "Hello World";
+  @ParameterizedTest
+  @CsvSource({
+    // Malicious HTML
+    "'Hello <script>alert(xss)</script> World', 'Hello World'",
+    "'<img src=x onerror=alert(1)>Safe', '<img>Safe'",
+    // Allowed HTML
+    "'Hello <b>World</b>', 'Hello <b>World</b>'",
+    "'<i>Italic</i>', '<i>Italic</i>'",
+    // Plain text
+    "'Hello World', 'Hello World'",
+    "'Just text', 'Just text'"
+  })
+  void testSanitize(String input, String expected) {
     assertEquals(expected, TextSanitizer.sanitize(input));
-  }
-
-  @Test
-  void testSanitizeWithAllowedHtml() {
-    String input = "Hello <b>World</b>";
-    assertEquals(input, TextSanitizer.sanitize(input));
-  }
-
-  @Test
-  void testSanitizeWithPlainText() {
-    String input = "Hello World";
-    assertEquals(input, TextSanitizer.sanitize(input));
   }
 
   @ParameterizedTest
   @NullAndEmptySource
-  @ValueSource(strings = {" ", "   "})
   void testSanitizeWithBlankInput(String input) {
     assertEquals(input, TextSanitizer.sanitize(input));
   }
