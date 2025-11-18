@@ -1,4 +1,4 @@
-package com.vulinh.controller.impl;
+package com.vulinh.it;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.testcontainers.junit.jupiter.Container;
@@ -37,41 +36,27 @@ public abstract class IntegrationTestBase {
 
   public static final String AUTH_USER = "admin";
 
-  static final String TEST_POSTGRES_USER = "postgres";
-  static final String TEST_POSTGRES_PASSWORD = "123465";
-  static final String TEST_REDIS_PASSWORD = "123456";
+  // spring.datasource.username
+  static final String POSTGRES_USERNAME = "postgres";
+
+  // spring.datasource.password
+  static final String POSTGRES_PASSWORD = "123456";
+
+  // spring.data.redis.password
+  static final String REDIS_PASSWORD = POSTGRES_PASSWORD;
 
   @Container
   static final PostgreSQLContainer POSTGRESQL_CONTAINER =
       new PostgreSQLContainer("postgres:18.0-alpine3.22")
-          .withUsername(TEST_POSTGRES_USER)
-          .withPassword(TEST_POSTGRES_PASSWORD)
-          .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck(TEST_POSTGRES_USER));
+          .withUsername(POSTGRES_USERNAME)
+          .withPassword(POSTGRES_PASSWORD)
+          .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck(POSTGRES_USERNAME));
 
   @Container
   static final RedisContainer REDIS_CONTAINER =
       new RedisContainer("redis:8.2.3-bookworm")
-          .withCommand("redis-server", "--requirepass", TEST_REDIS_PASSWORD, "--save", "60", "1")
-          .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck("123456"));
-
-  @DynamicPropertySource
-  static void dynamicProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-    registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-  }
-
-  // Stupid hack to reuse PostgreSQL container from parent class
-  static void reinitializeJdbcUrlInternal(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-    registry.add("spring.data.redis.host", REDIS_CONTAINER::getHost);
-    registry.add("spring.data.redis.port", REDIS_CONTAINER::getRedisPort);
-  }
-
-  static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(String endpoint, T payload) {
-    return post(endpoint)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(JsonUtils.toMinimizedJSON(payload));
-  }
+          .withCommand("redis-server", "--requirepass", REDIS_PASSWORD, "--save", "60", "1")
+          .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck(REDIS_PASSWORD));
 
   @Autowired private MockMvc mockMvc;
 
@@ -97,5 +82,16 @@ public abstract class IntegrationTestBase {
             response.getContentAsString(), new TypeReference<GenericResponse<TokenResponse>>() {})
         .data()
         .accessToken();
+  }
+
+  static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(String endpoint, T payload) {
+    return post(endpoint)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(JsonUtils.toMinimizedJSON(payload));
+  }
+
+  // Recall this method to get the renewed JDBC url for each test class
+  static void reinitializeConnectionPropertiesInternal(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
   }
 }

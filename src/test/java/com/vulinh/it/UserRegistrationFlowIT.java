@@ -1,4 +1,4 @@
-package com.vulinh.controller.impl;
+package com.vulinh.it;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,7 +15,7 @@ import com.vulinh.data.entity.QUsers;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.utils.JsonUtils;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -25,17 +25,12 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(OrderAnnotation.class)
 class UserRegistrationFlowIT extends IntegrationTestBase {
 
   static final String TEST_USERNAME = "linh.nguyen";
 
   @Autowired UserRepository userRepository;
-
-  @DynamicPropertySource
-  static void reinitializeJdbcUrl(DynamicPropertyRegistry registry) {
-    reinitializeJdbcUrlInternal(registry);
-  }
 
   @Order(0)
   @Test
@@ -116,6 +111,11 @@ class UserRegistrationFlowIT extends IntegrationTestBase {
               assertTrue(user.getIsActive());
             },
             () -> fail("User not found"));
+  }
+
+  @DynamicPropertySource
+  static void reinitializeConnectionProperties(DynamicPropertyRegistry registry) {
+    reinitializeConnectionPropertiesInternal(registry);
   }
 
   private static Predicate byUserName() {

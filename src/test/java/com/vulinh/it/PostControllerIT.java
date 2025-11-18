@@ -1,4 +1,4 @@
-package com.vulinh.controller.impl;
+package com.vulinh.it;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,11 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 class PostControllerIT extends IntegrationTestBase {
 
   static final Set<String> TAGS = Set.of("integration test");
-
-  @DynamicPropertySource
-  static void reinitializeJdbcUrl(DynamicPropertyRegistry registry) {
-    reinitializeJdbcUrlInternal(registry);
-  }
 
   static final String TITLE = "Test Title";
   static final String EXCERPT = "Test Excerpt";
@@ -89,5 +84,10 @@ class PostControllerIT extends IntegrationTestBase {
                   TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
             },
             () -> fail("Post was not found in the database"));
+  }
+
+  @DynamicPropertySource
+  static void reinitializeJdbcUrl(DynamicPropertyRegistry registry) {
+    reinitializeConnectionPropertiesInternal(registry);
   }
 }
