@@ -1,4 +1,4 @@
-package com.vulinh.configuration;
+package com.vulinh.annotation;
 
 import module java.base;
 

@@ -9,5 +9,5 @@ logging.level.com.vulinh:
     category.CategoryService: DEBUG
     eventlistener.CustomEventListener: DEBUG
   configuration:
-    SecurityConfig: DEBUG
+    com.vulinh.configuration.SecurityConfiguration: DEBUG
     cache.FromUserSessionEntityKeyGenerator: DEBUG

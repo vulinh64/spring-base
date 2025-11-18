@@ -2,7 +2,7 @@ package com.vulinh.service.token;
 
 import module java.base;
 
-import com.vulinh.configuration.ApplicationProperties;
+import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
 import com.vulinh.data.entity.ids.UserSessionId;

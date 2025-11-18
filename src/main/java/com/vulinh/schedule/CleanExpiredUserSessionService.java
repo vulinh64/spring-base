@@ -2,7 +2,6 @@ package com.vulinh.schedule;
 
 import module java.base;
 
-import com.vulinh.configuration.SchedulingTaskSupport;
 import com.vulinh.data.constant.CacheConstant;
 import com.vulinh.data.entity.QUserSession;
 import com.vulinh.data.entity.ids.UserSessionId;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CleanExpiredUserSession {
+public class CleanExpiredUserSessionService {
 
   static final int ITEMS_PER_BATCH = 10;
 
@@ -34,11 +33,11 @@ public class CleanExpiredUserSession {
 
   final CacheManager cacheManager;
 
-  final SchedulingTaskSupport schedulingTaskSupport;
+  final SchedulingTaskSupportService schedulingTaskSupportService;
 
   @PostConstruct
   public void info() {
-    var cronExpression = schedulingTaskSupport.cleanExpiredUserSessionsExpression();
+    var cronExpression = schedulingTaskSupportService.cleanExpiredUserSessionsExpression();
 
     log.info(
         "Expired user session cleaning bean enabled, cron expression: {}, next recent execution will be at {}",
@@ -46,7 +45,7 @@ public class CleanExpiredUserSession {
         CronExpression.parse(cronExpression).next(LocalDateTime.now()));
   }
 
-  @Scheduled(cron = "#{schedulingTaskSupport.cleanExpiredUserSessionsExpression()}")
+  @Scheduled(cron = "#{schedulingTaskSupportService.cleanExpiredUserSessionsExpression()}")
   @Transactional
   public void cleanExpiredUserSessions() {
     var qUserSession = QUserSession.userSession;

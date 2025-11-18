@@ -2,7 +2,7 @@ package com.vulinh.utils;
 
 import module java.base;
 
-import com.vulinh.configuration.CustomAuthentication;
+import com.vulinh.configuration.data.CustomAuthentication;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.exception.AuthorizationException;
 import lombok.AccessLevel;

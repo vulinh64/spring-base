@@ -1,13 +1,13 @@
 package com.vulinh.service.token;
 
-import module java.base;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.vulinh.configuration.ApplicationProperties;
-import com.vulinh.configuration.ApplicationProperties.SecurityProperties;
+import module java.base;
+
+import com.vulinh.configuration.data.ApplicationProperties;
+import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,7 @@ class AccessTokenGeneratorTest {
   @Mock ApplicationProperties securityConfigProperties;
   @Mock RefreshTokenGenerator refreshTokenGenerator;
 
-  @InjectMocks
-  AccessTokenGenerator accessTokenGenerator;
+  @InjectMocks AccessTokenGenerator accessTokenGenerator;
 
   @Test
   void testGenerateAccessToken() {

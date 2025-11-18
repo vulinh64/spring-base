@@ -1,5 +1,6 @@
 package com.vulinh.configuration;
 
+import com.vulinh.configuration.data.CustomAuthentication;
 import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import com.vulinh.data.mapper.UserMapper;
 import com.vulinh.data.repository.UserRepository;

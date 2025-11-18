@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Slf4j
 @Configuration
-public class AsyncSpringEventsConfig {
+public class AsyncSpringEventsConfiguration {
 
   static final String THREAD_NAME_PREFIX = "event_executor_";
 
@@ -20,7 +20,13 @@ public class AsyncSpringEventsConfig {
   public ApplicationEventMulticaster applicationEventMulticaster() {
     var eventMulticaster = new SimpleApplicationEventMulticaster();
 
-    eventMulticaster.setTaskExecutor(getTaskExecutor());
+    var taskExecutor = getTaskExecutor();
+
+    eventMulticaster.setTaskExecutor(taskExecutor);
+
+    log.info(
+        "Configured ApplicationEventMulticaster with async task executor: {}",
+        taskExecutor.getClass().getCanonicalName());
 
     return eventMulticaster;
   }

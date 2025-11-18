@@ -2,6 +2,7 @@ package com.vulinh.configuration;
 
 import module java.base;
 
+import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.locale.ServiceErrorCode;
@@ -42,7 +43,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
-public class SecurityConfig {
+public class SecurityConfiguration {
 
   static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 

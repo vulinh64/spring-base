@@ -1,7 +1,9 @@
 package com.vulinh;
 
-import com.vulinh.configuration.ApplicationProperties;
 import com.vulinh.configuration.AuditorConfiguration;
+import com.vulinh.configuration.data.ApplicationProperties;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties(ApplicationProperties.class)
 @EnableCaching
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class SpringBaseProjectApplication {
 
   static void main(String[] args) {

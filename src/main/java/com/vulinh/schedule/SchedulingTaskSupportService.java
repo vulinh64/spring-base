@@ -1,5 +1,6 @@
-package com.vulinh.configuration;
+package com.vulinh.schedule;
 
+import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.utils.springcron.HourExpression;
 import com.vulinh.utils.springcron.MinuteExpression;
 import com.vulinh.utils.springcron.dto.ExpressionObject;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SchedulingTaskSupport {
+public class SchedulingTaskSupportService {
 
   final ApplicationProperties applicationProperties;
 

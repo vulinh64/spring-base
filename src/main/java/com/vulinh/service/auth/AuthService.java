@@ -2,7 +2,7 @@ package com.vulinh.service.auth;
 
 import module java.base;
 
-import com.vulinh.configuration.ApplicationProperties;
+import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.dto.carrier.TokenResponse;
 import com.vulinh.data.dto.request.PasswordChangeRequest;
 import com.vulinh.data.dto.request.RefreshTokenRequest;

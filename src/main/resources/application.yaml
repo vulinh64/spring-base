@@ -79,7 +79,7 @@ spring:
     change-log: ${LIQUIBASE_CHANGELOG:classpath:changelog.yaml}
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
 decorator.datasource.p6spy:
-  custom-appender-class: com.vulinh.configuration.MyP6SpyLogging
+  custom-appender-class: com.vulinh.MyP6SpyLogging
   logging: CUSTOM
 management.endpoints.web:
   base-path: ''

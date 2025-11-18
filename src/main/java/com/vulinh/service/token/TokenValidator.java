@@ -4,7 +4,7 @@ import module java.base;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.vulinh.configuration.ApplicationProperties;
+import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.constant.TokenType;
 import com.vulinh.data.dto.carrier.DecodedJwtPayloadCarrier;
 import com.vulinh.exception.AuthorizationException;
