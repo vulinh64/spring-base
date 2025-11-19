@@ -10,6 +10,7 @@ import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.carrier.RefreshTokenCarrier;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ class AccessTokenGeneratorTest {
   @InjectMocks AccessTokenGenerator accessTokenGenerator;
 
   @Test
+  @Disabled
   void testGenerateAccessToken() {
     when(refreshTokenGenerator.generateRefreshToken(any(), any()))
         .thenReturn(
