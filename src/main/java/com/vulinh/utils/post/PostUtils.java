@@ -27,9 +27,12 @@ public class PostUtils {
                 .map(PostUtils::normalizeText)
                 .collect(Collectors.toSet()));
 
-    return StringUtils.isBlank(postCreationRequest.slug())
+    var slug = postCreationRequest.slug();
+
+    return StringUtils.isBlank(slug)
         ? result.withSlug(SlugUtils.createPostSlug(postCreationRequest.title()))
-        : result;
+        : result.withSlug(
+            "%s-%s".formatted(SlugUtils.createBasicSlug(slug), SlugUtils.generateRandomUUID()));
   }
 
   public static boolean isUncategorizedPost(PostCreationRequest postCreationRequest, Post post) {

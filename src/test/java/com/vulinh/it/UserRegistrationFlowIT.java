@@ -5,15 +5,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.querydsl.core.types.Predicate;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.AuthEndpoint;
 import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleUserResponse;
 import com.vulinh.data.entity.QUsers;
+import com.vulinh.data.entity.Users;
 import com.vulinh.data.repository.UserRepository;
 import com.vulinh.utils.JsonUtils;
+import java.util.Optional;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -81,8 +82,7 @@ class UserRegistrationFlowIT extends IntegrationTestBase {
   @Transactional
   @Commit
   void testConfirmUser() {
-    userRepository
-        .findOne(byUserName())
+    findUserByUsername()
         .ifPresentOrElse(
             user -> {
               try {
@@ -103,8 +103,7 @@ class UserRegistrationFlowIT extends IntegrationTestBase {
   @Test
   @Transactional(readOnly = true)
   void testVerifyConfirmedUser() {
-    userRepository
-        .findOne(byUserName())
+    findUserByUsername()
         .ifPresentOrElse(
             user -> {
               assertNull(user.getUserRegistrationCode());
@@ -113,12 +112,12 @@ class UserRegistrationFlowIT extends IntegrationTestBase {
             () -> fail("User not found"));
   }
 
+  private Optional<Users> findUserByUsername() {
+    return userRepository.findOne(QUsers.users.username.eq(TEST_USERNAME));
+  }
+
   @DynamicPropertySource
   static void reinitializeConnectionProperties(DynamicPropertyRegistry registry) {
     reinitializeConnectionPropertiesInternal(registry);
-  }
-
-  private static Predicate byUserName() {
-    return QUsers.users.username.eq(TEST_USERNAME);
   }
 }

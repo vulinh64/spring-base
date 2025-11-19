@@ -34,26 +34,30 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @Getter
 public abstract class IntegrationTestBase {
 
-  public static final String AUTH_USER = "admin";
+  protected static final String AUTH_USER = "admin";
 
   // spring.datasource.username
-  static final String POSTGRES_USERNAME = "postgres";
+  protected static final String POSTGRES_USERNAME = "postgres";
 
   // spring.datasource.password
-  static final String POSTGRES_PASSWORD = "123456";
+  protected static final String POSTGRES_PASSWORD = "123456";
 
   // spring.data.redis.password
-  static final String REDIS_PASSWORD = POSTGRES_PASSWORD;
+  protected static final String REDIS_PASSWORD = POSTGRES_PASSWORD;
+
+  protected static final String MOCK_UUID = "1234567890abcdef1234567890abcdef";
+
+  protected static final String MOCK_SLUG = "test-title-%s".formatted(MOCK_UUID);
 
   @Container
-  static final PostgreSQLContainer POSTGRESQL_CONTAINER =
+  protected static final PostgreSQLContainer POSTGRESQL_CONTAINER =
       new PostgreSQLContainer("postgres:18.0-alpine3.22")
           .withUsername(POSTGRES_USERNAME)
           .withPassword(POSTGRES_PASSWORD)
           .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck(POSTGRES_USERNAME));
 
   @Container
-  static final RedisContainer REDIS_CONTAINER =
+  protected static final RedisContainer REDIS_CONTAINER =
       new RedisContainer("redis:8.2.3-bookworm")
           .withCommand("redis-server", "--requirepass", REDIS_PASSWORD, "--save", "60", "1")
           .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck(REDIS_PASSWORD));
@@ -84,14 +88,15 @@ public abstract class IntegrationTestBase {
         .accessToken();
   }
 
-  static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(String endpoint, T payload) {
+  protected static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(
+      String endpoint, T payload) {
     return post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
         .content(JsonUtils.toMinimizedJSON(payload));
   }
 
   // Recall this method to get the renewed JDBC url for each test class
-  static void reinitializeConnectionPropertiesInternal(DynamicPropertyRegistry registry) {
+  protected static void reinitializeConnectionPropertiesInternal(DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
   }
 }
