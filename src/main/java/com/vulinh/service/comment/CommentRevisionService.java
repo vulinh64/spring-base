@@ -1,6 +1,7 @@
 package com.vulinh.service.comment;
 
 import com.vulinh.data.entity.Comment;
+import com.vulinh.data.entity.CommentRevision;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.mapper.CommentMapper;
 import com.vulinh.data.repository.CommentRevisionRepository;
@@ -15,8 +16,9 @@ public class CommentRevisionService {
   final CommentRevisionRepository commentRevisionRepository;
 
   @Transactional
-  public void createNewCommentRevision(Comment persistedComment, RevisionType revisionType) {
-    commentRevisionRepository.save(
+  public CommentRevision createNewCommentRevision(
+      Comment persistedComment, RevisionType revisionType) {
+    return commentRevisionRepository.save(
         CommentMapper.INSTANCE.fromComment(persistedComment, revisionType));
   }
 }

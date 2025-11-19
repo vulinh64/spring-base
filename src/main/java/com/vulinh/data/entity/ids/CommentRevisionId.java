@@ -32,6 +32,10 @@ public class CommentRevisionId implements UUIDRevisionId {
   @SequenceGenerator(name = REVISION_SEQ_NAME, sequenceName = REVISION_SEQ, allocationSize = 1)
   Long revisionNumber;
 
+  public static CommentRevisionId of(UUID commentId, long revisionNumber) {
+    return new CommentRevisionId(commentId, revisionNumber);
+  }
+
   @Override
   public UUID getId() {
     return commentId;

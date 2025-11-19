@@ -34,8 +34,6 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @Getter
 public abstract class IntegrationTestBase {
 
-  protected static final String AUTH_USER = "admin";
-
   // spring.datasource.username
   protected static final String POSTGRES_USERNAME = "postgres";
 
@@ -48,6 +46,8 @@ public abstract class IntegrationTestBase {
   protected static final String MOCK_UUID = "1234567890abcdef1234567890abcdef";
 
   protected static final String MOCK_SLUG = "test-title-%s".formatted(MOCK_UUID);
+
+  protected static final String COMMON_PASSWORD = "12345678";
 
   @Container
   protected static final PostgreSQLContainer POSTGRESQL_CONTAINER =
@@ -66,13 +66,16 @@ public abstract class IntegrationTestBase {
 
   // Get the f*** out of my face, checked exceptions
   @SneakyThrows
-  protected String getAdminAccessToken() {
+  protected String getAccessToken(String username) {
     var adminLoginResult =
         mockMvc
             .perform(
                 postWithEndpointAndPayload(
                     EndpointConstant.ENDPOINT_AUTH + AuthEndpoint.LOGIN,
-                    UserLoginRequest.builder().username(AUTH_USER).password("12345678").build()))
+                    UserLoginRequest.builder()
+                        .username(username)
+                        .password(COMMON_PASSWORD)
+                        .build()))
             .andExpect(status().isOk())
             .andReturn();
 

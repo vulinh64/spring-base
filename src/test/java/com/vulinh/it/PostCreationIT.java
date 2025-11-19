@@ -1,17 +1,26 @@
 package com.vulinh.it;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import module java.base;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
+import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.entity.Post;
 import com.vulinh.data.entity.QPost;
+import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.entity.Tag;
+import com.vulinh.data.entity.ids.CommentRevisionId;
+import com.vulinh.data.repository.CommentRepository;
+import com.vulinh.data.repository.CommentRevisionRepository;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
@@ -25,6 +34,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -39,8 +49,21 @@ class PostCreationIT extends IntegrationTestBase {
 
   static final String TITLE = "Test Title";
   static final String EXCERPT = "Test Excerpt";
+  static final String COMMENT_CONTENT = "This is a comment";
+  static final String EDITED_COMMENT_CONTENT = "Edited Comment";
+
+  static final String ADMIN_USER = "admin";
+  static final String POWER_USER = "power_user";
+
+  // Shared across tests
+  static UUID COMMENT_ID;
+  static Long REVISION_NUMBER;
+  static Long EDITED_REVISION_NUMBER;
+  static UUID POST_ID;
 
   @Autowired PostRepository postRepository;
+  @Autowired CommentRepository commentRepository;
+  @Autowired CommentRevisionRepository commentRevisionRepository;
 
   @Test
   @Transactional
@@ -48,7 +71,7 @@ class PostCreationIT extends IntegrationTestBase {
   @Order(0)
   @SneakyThrows
   void testCreatePost() {
-    var accessToken = getAdminAccessToken();
+    var accessToken = getAccessToken(ADMIN_USER);
 
     var postCreationResult =
         createPostRequest(
@@ -71,7 +94,7 @@ class PostCreationIT extends IntegrationTestBase {
 
     assertEquals(TITLE, data.title());
     assertEquals(EXCERPT, data.excerpt());
-    assertEquals(AUTH_USER, data.author().username());
+    assertEquals(ADMIN_USER, data.author().username());
     assertEquals(MOCK_SLUG, data.slug());
   }
 
@@ -79,19 +102,148 @@ class PostCreationIT extends IntegrationTestBase {
   @Transactional(readOnly = true)
   @Order(1)
   public void testVerifyPostCreation() {
-    postRepository
-        .findOne(QPost.post.slug.eq(MOCK_SLUG))
+    findCreatedPost()
         .ifPresentOrElse(
             post -> {
               assertEquals(TITLE, post.getTitle());
               assertEquals(EXCERPT, post.getExcerpt());
               assertEquals("Test blank", post.getPostContent());
               assertEquals(MOCK_SLUG, post.getSlug());
-              assertEquals(AUTH_USER, post.getAuthor().getUsername());
+              assertEquals(ADMIN_USER, post.getAuthor().getUsername());
               assertTrue(
                   TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
             },
             () -> fail("Post was not found"));
+  }
+
+  @Test
+  @Transactional
+  @Commit
+  @Order(2)
+  @SneakyThrows
+  void testCreateComment() {
+    var postId = findCreatedPost().map(Post::getId).orElseGet(() -> fail("Post not found"));
+
+    POST_ID = postId;
+
+    var accessToken = getAccessToken(POWER_USER);
+
+    var newCommentResult =
+        getMockMvc()
+            .perform(
+                postWithEndpointAndPayload(
+                        "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, postId),
+                        NewCommentRequest.builder().content(COMMENT_CONTENT).build())
+                    .header(HttpHeaders.AUTHORIZATION, accessToken))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+    var response =
+        JsonUtils.toObject(
+                newCommentResult.getResponse().getContentAsString(),
+                new TypeReference<GenericResponse<CommentResponse>>() {})
+            .data();
+
+    COMMENT_ID = response.commentId();
+    REVISION_NUMBER = response.revisionNumber();
+
+    assertEquals(postId, response.postId());
+  }
+
+  @Test
+  @Transactional(readOnly = true)
+  @Order(3)
+  void testVerifyComment() {
+    assertNotNull(COMMENT_ID);
+    assertNotNull(POST_ID);
+    assertNotNull(REVISION_NUMBER);
+
+    commentRepository
+        .findById(COMMENT_ID)
+        .ifPresentOrElse(
+            comment -> {
+              assertEquals(COMMENT_CONTENT, comment.getContent());
+              assertEquals(POWER_USER, comment.getCreatedBy().getUsername());
+              assertEquals(POST_ID, comment.getPostId());
+            },
+            () -> fail("Comment not found"));
+
+    commentRevisionRepository
+        .findById(CommentRevisionId.of(COMMENT_ID, REVISION_NUMBER))
+        .ifPresentOrElse(
+            commentRevision -> {
+              assertEquals(COMMENT_CONTENT, commentRevision.getContent());
+              assertEquals(POST_ID, commentRevision.getPostId());
+              assertEquals(RevisionType.CREATED, commentRevision.getRevisionType());
+            },
+            () -> fail("Comment revision not found"));
+  }
+
+  @Test
+  @Transactional
+  @Commit
+  @Order(4)
+  @SneakyThrows
+  void testEditComment() {
+    var editCommentResponse =
+        getMockMvc()
+            .perform(
+                patch(
+                        "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, "{commentId}"),
+                        COMMENT_ID)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, getAccessToken(POWER_USER))
+                    .content(
+                        JsonUtils.toMinimizedJSON(
+                            NewCommentRequest.builder().content(EDITED_COMMENT_CONTENT).build())))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse();
+
+    assertNotNull(editCommentResponse);
+
+    var response =
+        JsonUtils.toObject(
+                editCommentResponse.getContentAsString(),
+                new TypeReference<GenericResponse<CommentResponse>>() {})
+            .data();
+
+    assertEquals(COMMENT_ID, response.commentId());
+    assertEquals(POST_ID, response.postId());
+
+    var editedRevisionNumber = response.revisionNumber();
+
+    assertNotEquals(REVISION_NUMBER, editedRevisionNumber);
+
+    EDITED_REVISION_NUMBER = editedRevisionNumber;
+  }
+
+  @Test
+  @Transactional(readOnly = true)
+  @Order(5)
+  void testVerifyEditedComment() {
+    assertNotNull(EDITED_REVISION_NUMBER);
+
+    commentRepository
+        .findById(COMMENT_ID)
+        .ifPresentOrElse(
+            comment -> {
+              assertEquals(EDITED_COMMENT_CONTENT, comment.getContent());
+              assertEquals(POWER_USER, comment.getCreatedBy().getUsername());
+              assertEquals(POST_ID, comment.getPostId());
+            },
+            () -> fail("Edited comment not found"));
+
+    commentRevisionRepository
+        .findById(CommentRevisionId.of(COMMENT_ID, EDITED_REVISION_NUMBER))
+        .ifPresentOrElse(
+            commentRevision -> {
+              assertEquals(EDITED_COMMENT_CONTENT, commentRevision.getContent());
+              assertEquals(POST_ID, commentRevision.getPostId());
+              assertEquals(RevisionType.UPDATED, commentRevision.getRevisionType());
+              assertEquals(EDITED_REVISION_NUMBER, commentRevision.getId().getRevisionNumber());
+            },
+            () -> fail("Edited comment revision not found"));
   }
 
   @SneakyThrows
@@ -99,7 +251,7 @@ class PostCreationIT extends IntegrationTestBase {
     try (var mockNoDashUUID = Mockito.mockStatic(NoDashedUUIDGenerator.class)) {
       // Return a fixed UUID for testing
       mockNoDashUUID
-          .when(() -> NoDashedUUIDGenerator.createNonDashedUUID(Mockito.any()))
+          .when(() -> NoDashedUUIDGenerator.createNonDashedUUID(any()))
           .thenReturn(MOCK_UUID);
 
       return getMockMvc()
@@ -109,6 +261,10 @@ class PostCreationIT extends IntegrationTestBase {
           .andExpect(status().isCreated())
           .andReturn();
     }
+  }
+
+  private Optional<Post> findCreatedPost() {
+    return postRepository.findOne(QPost.post.slug.eq(MOCK_SLUG));
   }
 
   @DynamicPropertySource

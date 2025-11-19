@@ -4,6 +4,7 @@ import module java.base;
 
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.request.NewCommentRequest;
+import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,9 +23,10 @@ public interface CommentAPI {
 
   @PostMapping("/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
-  GenericResponse<Map<String, UUID>> addComment(
+  GenericResponse<CommentResponse> addComment(
       @PathVariable UUID postId, @RequestBody NewCommentRequest newCommentRequest);
 
   @PatchMapping("/{commentId}")
-  void editComment(@RequestBody NewCommentRequest newCommentRequest, @PathVariable UUID commentId);
+  GenericResponse<CommentResponse> editComment(
+      @RequestBody NewCommentRequest newCommentRequest, @PathVariable UUID commentId);
 }

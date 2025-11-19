@@ -4,6 +4,7 @@ import module java.base;
 
 import com.vulinh.controller.api.CommentAPI;
 import com.vulinh.data.dto.request.NewCommentRequest;
+import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.SingleCommentResponse;
@@ -26,15 +27,14 @@ public class CommentController implements CommentAPI {
   }
 
   @Override
-  public GenericResponse<Map<String, UUID>> addComment(
+  public GenericResponse<CommentResponse> addComment(
       UUID postId, NewCommentRequest newCommentRequest) {
-    var uuid = commentService.addComment(postId, newCommentRequest);
-
-    return ResponseCreator.success(Map.of("commentId", uuid));
+    return ResponseCreator.success(commentService.addComment(postId, newCommentRequest));
   }
 
   @Override
-  public void editComment(NewCommentRequest newCommentRequest, UUID commentId) {
-    commentService.editComment(newCommentRequest, commentId);
+  public GenericResponse<CommentResponse> editComment(
+      NewCommentRequest newCommentRequest, UUID commentId) {
+    return ResponseCreator.success(commentService.editComment(newCommentRequest, commentId));
   }
 }

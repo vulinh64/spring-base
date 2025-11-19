@@ -3,6 +3,7 @@ package com.vulinh.service.comment;
 import module java.base;
 
 import com.vulinh.data.dto.request.NewCommentRequest;
+import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.RevisionType;
@@ -29,7 +30,7 @@ public class CommentService {
   final CommentFetchingService commentFetchingService;
 
   @Transactional
-  public UUID addComment(UUID postId, NewCommentRequest newCommentRequest) {
+  public CommentResponse addComment(UUID postId, NewCommentRequest newCommentRequest) {
     commentValidationService.validate(newCommentRequest);
 
     var createdBy =
@@ -42,17 +43,23 @@ public class CommentService {
         commentRepository.save(
             CommentMapper.INSTANCE.fromNewComment(newCommentRequest, createdBy, postId));
 
-    commentRevisionService.createNewCommentRevision(persistedComment, RevisionType.CREATED);
+    var commentRevision =
+        commentRevisionService.createNewCommentRevision(persistedComment, RevisionType.CREATED);
 
-    return persistedComment.getId();
+    return CommentResponse.of(postId, commentRevision);
   }
 
-  public void editComment(NewCommentRequest newCommentRequest, UUID commentId) {
+  public CommentResponse editComment(NewCommentRequest newCommentRequest, UUID commentId) {
     var comment = commentValidationService.validateEditComment(newCommentRequest, commentId);
 
-    var newComment = commentRepository.save(comment.withContent(newCommentRequest.content()));
+    comment.setContent(newCommentRequest.content());
 
-    commentRevisionService.createNewCommentRevision(newComment, RevisionType.UPDATED);
+    var newComment = commentRepository.save(comment);
+
+    var newCommentRevision =
+        commentRevisionService.createNewCommentRevision(newComment, RevisionType.UPDATED);
+
+    return CommentResponse.of(comment.getPostId(), newCommentRevision);
   }
 
   public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
