@@ -46,14 +46,7 @@ application-properties:
 # End of application properties
 #
 server:
-  ssl:
-    key-store-type: pkcs12
-    key-store: 'classpath:localhost.p12'
-    key-store-password: ''
-    key-alias: localhost
-    key-password: ''
-    enabled: ${SERVER_SSL_ENABLED:true}
-  port: ${SERVER_PORT:8443}
+  port: ${PORT:8080}
   shutdown: GRACEFUL
   # Require configuration on the server to enable HTTP/2
   # You can try https://brytecode.be/articles/using-http-2-in-your-spring-boot-application/
@@ -76,7 +69,6 @@ spring:
   # END: change this to fit your computer's configuration
   liquibase:
     enabled: ${LIQUIBASE_ENABLED:true}
-    change-log: ${LIQUIBASE_CHANGELOG:classpath:changelog.yaml}
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.MyP6SpyLogging
