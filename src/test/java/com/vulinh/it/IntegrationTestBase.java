@@ -40,9 +40,6 @@ public abstract class IntegrationTestBase {
   // spring.datasource.password
   protected static final String POSTGRES_PASSWORD = "123456";
 
-  // spring.data.redis.password
-  protected static final String REDIS_PASSWORD = POSTGRES_PASSWORD;
-
   protected static final String MOCK_UUID = "1234567890abcdef1234567890abcdef";
 
   protected static final String MOCK_SLUG = "test-title-%s".formatted(MOCK_UUID);
@@ -59,8 +56,8 @@ public abstract class IntegrationTestBase {
   @Container
   protected static final RedisContainer REDIS_CONTAINER =
       new RedisContainer("redis:8.2.3-bookworm")
-          .withCommand("redis-server", "--requirepass", REDIS_PASSWORD, "--save", "60", "1")
-          .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck(REDIS_PASSWORD));
+          .withCommand("redis-server", "--save", "60", "1")
+          .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck());
 
   @Autowired private MockMvc mockMvc;
 

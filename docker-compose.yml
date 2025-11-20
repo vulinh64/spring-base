@@ -54,13 +54,12 @@ services:
     volumes:
       - redis-volume:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "-a", "123456", "ping" ]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
       timeout: 5s
       retries: 5
     command:
       - redis-server
-      - --requirepass 123456
       - --save 60 1
       - --loglevel warning
 volumes:

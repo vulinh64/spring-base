@@ -60,7 +60,6 @@ spring:
     repositories.enabled: false
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:123456}
     client-type: lettuce
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}

@@ -31,7 +31,7 @@ if errorlevel 1 (
 
 SET REDIS_CONTAINER_NAME=standalone-redis
 SET REDIS_VOLUME_NAME=redis-volume
-SET REDIS_COMMAND=docker run --detach --name !REDIS_CONTAINER_NAME! -v !REDIS_VOLUME_NAME!:/data -p 6379:6379 redis:8.2.3-bookworm redis-server --requirepass 123456 --save 60 1 --loglevel warning
+SET REDIS_COMMAND=docker run --detach --name !REDIS_CONTAINER_NAME! -v !REDIS_VOLUME_NAME!:/data -p 6379:6379 redis:8.2.3-bookworm redis-server --save 60 1 --loglevel warning
 
 echo Checking Redis container...
 docker ps -a | findstr /C:"!REDIS_CONTAINER_NAME!" >nul
