@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/*
+ * Those methods must be used only after the controller level, where the authentication process has been completed.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtils {
 

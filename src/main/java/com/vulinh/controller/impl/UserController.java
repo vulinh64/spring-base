@@ -8,11 +8,8 @@ import com.vulinh.data.dto.request.UserSearchRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.SingleUserResponse;
-import com.vulinh.data.dto.response.UserBasicResponse;
-import com.vulinh.exception.AuthorizationException;
 import com.vulinh.service.user.UserService;
 import com.vulinh.utils.ResponseUtils;
-import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,14 +31,6 @@ public class UserController implements UserAPI {
   @Override
   public ResponseEntity<Void> deleteUser(UUID id) {
     return ResponseUtils.returnOkOrNoContent(userService.delete(id));
-  }
-
-  @Override
-  public ResponseEntity<GenericResponse<UserBasicResponse>> getSelfDetail() {
-    return SecurityUtils.getUserDTO()
-        .map(ResponseCreator::success)
-        .map(ResponseEntity::ok)
-        .orElseThrow(AuthorizationException::invalidAuthorization);
   }
 
   @Override

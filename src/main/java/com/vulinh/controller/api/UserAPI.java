@@ -9,7 +9,6 @@ import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.request.UserSearchRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleUserResponse;
-import com.vulinh.data.dto.response.UserBasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -132,46 +131,6 @@ public interface UserAPI {
                         @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
       })
   ResponseEntity<Void> deleteUser(@PathVariable UUID id);
-
-  @GetMapping(UserEndpoint.DETAILS)
-  @Operation(
-      summary = "User basic detail",
-      description = "Get current user's basic detail",
-      responses = {
-        @ApiResponse(
-            responseCode = CommonConstant.MESSAGE_OK,
-            content =
-                @Content(
-                    examples =
-                        @ExampleObject(
-                            value =
-                                """
-                                {
-                                  "errorCode": "M0000",
-                                  "displayMessage": "Success",
-                                  "data": {
-                                    "id": "user-uuid-here",
-                                    "username": "user-name-here",
-                                    "fullName": "full-name-here",
-                                    "email": "user-email@company.com",
-                                    "createdDate": "ISO  and Time",
-                                    "updatedDate": "ISO Date and Time",
-                                    "userRoles": [
-                                      "user-role-here"
-                                    ]
-                                  }
-                                }
-                                """))),
-        @ApiResponse(responseCode = CommonConstant.MESSAGE_FORBIDDEN),
-        @ApiResponse(
-            responseCode = CommonConstant.MESSAGE_INTERNAL_SERVER_CODE,
-            description = CommonConstant.MESSAGE_INTERNAL_SERVER_SUMMARY,
-            content =
-                @Content(
-                    examples =
-                        @ExampleObject(value = CommonConstant.MESSAGE_INTERNAL_SERVER_ERROR)))
-      })
-  ResponseEntity<GenericResponse<UserBasicResponse>> getSelfDetail();
 
   @GetMapping(UserEndpoint.SEARCH)
   @Operation(
