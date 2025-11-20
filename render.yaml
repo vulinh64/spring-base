@@ -46,16 +46,15 @@ services:
     # Health Check (Assuming Spring Boot Actuator is configured)
     healthCheckPath: /health # Updated health check path
 
-  - type: pserv
-    name: postgresql-db
-    runtime: docker
-    region: singapore
-    plan: free
-
-  - type: redis
+  - type: keyvalue
     name: redis-cache
     region: singapore
     plan: free
     ipAllowList:
       - source: 0.0.0.0
         description: 'Nope'
+
+databases:
+  - name: postgresql-db
+    region: singapore
+    plan: free
