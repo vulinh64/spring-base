@@ -17,7 +17,7 @@ services:
       - key: spring.datasource.url
         fromService:
           name: postgresql-db
-          type: pserv
+          type: dpg
           property: connectionString
       - key: REDIS_HOST
         fromService:
