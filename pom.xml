@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>3.5.8</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.0</version>
     <name>Spring Base project</name>
     <description>Your dumb comments go boom!</description>
 
@@ -49,7 +49,7 @@
         <jsoup.version>1.21.2</jsoup.version>
 
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
-        <testcontainers.version>2.0.1</testcontainers.version>
+        <testcontainers.version>2.0.2</testcontainers.version>
 
         <!-- https://mvnrepository.com/artifact/com.redis/testcontainers-redis -->
         <testcontainers-redis.version>2.2.4</testcontainers-redis.version>
@@ -60,6 +60,10 @@
         <!-- https://github.com/netty/netty/tags -->
         <!-- this should be fixed by Spring in the future -->
         <netty.version>4.2.7.Final</netty.version>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <!-- this should be fixed by Spring in the future -->
+        <commons-lang3.version>3.20.0</commons-lang3.version>
     </properties>
 
     <dependencies>

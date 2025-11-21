@@ -4,7 +4,7 @@ import module java.base;
 
 import com.vulinh.data.constant.CacheConstant;
 import com.vulinh.data.entity.QUserSession;
-import com.vulinh.data.entity.ids.UserSessionId;
+import com.vulinh.data.entity.UserSession;
 import com.vulinh.data.repository.UserSessionRepository;
 import com.vulinh.utils.PredicateBuilder;
 import jakarta.annotation.PostConstruct;
@@ -48,6 +48,8 @@ public class CleanExpiredUserSessionService {
   @Scheduled(cron = "#{schedulingTaskSupportService.cleanExpiredUserSessionsExpression()}")
   @Transactional
   public void cleanExpiredUserSessions() {
+    log.info("Started cleaning expired user sessions...");
+
     var qUserSession = QUserSession.userSession;
 
     var userSessions =
@@ -62,13 +64,9 @@ public class CleanExpiredUserSessionService {
 
     Optional.ofNullable(cacheManager.getCache(CacheConstant.USER_SESSION_CACHE))
         .ifPresent(
-            userSessionCache -> {
-              for (var userSession : userSessions) {
-                var userSessionId = userSession.getId();
-
-                userSessionCache.evictIfPresent(
-                    UserSessionId.of(userSessionId.userId(), userSessionId.sessionId()));
-              }
-            });
+            userSessionCache ->
+                userSessions.stream()
+                    .map(UserSession::getId)
+                    .forEach(userSessionCache::evictIfPresent));
   }
 }
