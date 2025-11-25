@@ -11,13 +11,6 @@ import lombok.NoArgsConstructor;
 class TaxUtils {
 
   static PersonalTaxDTO calculatePersonalTaxProbation(TaxRequest taxRequest) {
-    var probationPercentage = taxRequest.probationPercentage();
-
-    if (Double.compare(probationPercentage, ProbationRate.MIN_PERCENTAGE.percentage()) < 0
-        || Double.compare(probationPercentage, ProbationRate.MAX_PERCENTAGE.percentage()) > 0) {
-      throw new TaxCalculatorException("Invalid probation percentage");
-    }
-
     var totalSalary = taxRequest.totalSalary();
     var taxableAMount = totalSalary * taxRequest.probationPercentage();
     var taxAmount = taxableAMount * ProbationRate.DEDUCTION_PERCENTAGE.percentage();

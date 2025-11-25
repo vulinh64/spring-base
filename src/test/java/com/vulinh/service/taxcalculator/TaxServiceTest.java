@@ -2,8 +2,12 @@ package com.vulinh.service.taxcalculator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import module java.base;
+
 import com.vulinh.service.taxcalculator.TaxSupport.TaxCalculatorException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class TaxServiceTest {
 
@@ -11,9 +15,6 @@ class TaxServiceTest {
 
   final TaxService taxService = new TaxService();
 
-  // Lương thực nhận: 34M
-  // Lương đóng BH: 6.5M
-  // Có 1 người phụ thuộc
   @Test
   void calculateTax01() {
     var result =
@@ -45,9 +46,6 @@ class TaxServiceTest {
     assertEquals(TAX_MAPPER.toBigDecimal(1_187_625), highestLevel);
   }
 
-  // Lương thực nhận: 40M
-  // Lương đóng BH: 36M (theo luật Việt Nam)
-  // Không có người phụ thuộc
   @Test
   void calculateTax02() {
     var result =
@@ -109,29 +107,19 @@ class TaxServiceTest {
     assertTrue(personalTax.progressiveTaxLevels().isEmpty());
   }
 
-  @Test
-  void calculateTax04() {
+  @ParameterizedTest
+  @CsvSource({"10000000, 8000000, 0", "4800000, 8000000, 0"})
+  void testInvalidTaxRequest(long basicSalary, long totalSalary, int numberOfDependants) {
     assertThrows(
         TaxCalculatorException.class,
-        () ->
-            taxService.calculate(
-                TaxRequest.builder()
-                    .basicSalary(10_000_000L)
-                    .totalSalary(8_000_000L)
-                    .numberOfDependants(0)
-                    .build()));
-  }
-
-  @Test
-  void calculateTax05() {
-    assertThrows(
-        TaxCalculatorException.class,
-        () ->
-            taxService.calculate(
-                TaxRequest.builder()
-                    .basicSalary(4_800_000)
-                    .totalSalary(8_000_000L)
-                    .numberOfDependants(0)
-                    .build()));
+        () -> {
+          // Nope
+          var _ =
+              TaxRequest.builder()
+                  .basicSalary(basicSalary)
+                  .totalSalary(totalSalary)
+                  .numberOfDependants(numberOfDependants)
+                  .build();
+        });
   }
 }
