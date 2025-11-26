@@ -1,13 +1,15 @@
-logging.level.com.vulinh:
-  configuration.cache.Common: DEBUG
-  service:
-    taxcalculator.TaxService: DEBUG
-    user.UserValidationService: DEBUG
-    post:
-      PostValidationService: DEBUG
-      PostEditValidationService: DEBUG
-    category.CategoryService: DEBUG
-    eventlistener.CustomEventListener: DEBUG
-  configuration:
-    com.vulinh.configuration.SecurityConfiguration: DEBUG
-    cache.FromUserSessionEntityKeyGenerator: DEBUG
+logging.level:
+  com.vulinh:
+    configuration.cache.Common: DEBUG
+    service:
+      taxcalculator.TaxService: DEBUG
+      user.UserValidationService: DEBUG
+      post:
+        PostValidationService: DEBUG
+        PostEditValidationService: DEBUG
+      category.CategoryService: DEBUG
+      eventlistener.CustomEventListener: DEBUG
+    configuration:
+      com.vulinh.configuration.SecurityConfiguration: DEBUG
+      cache.FromUserSessionEntityKeyGenerator: DEBUG
+  org.springframework.security.oauth2: TRACE

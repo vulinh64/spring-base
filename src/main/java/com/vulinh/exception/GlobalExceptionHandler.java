@@ -128,6 +128,13 @@ public class GlobalExceptionHandler {
     return ResponseCreator.toError(AuthorizationException.invalidAuthorization());
   }
 
+  @ExceptionHandler(UnsupportedOperationException.class)
+  @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+  void handleUnsupportedOperationException(
+      UnsupportedOperationException unsupportedOperationException) {
+    log.info("Unsupported operation: {}", unsupportedOperationException.getMessage());
+  }
+
   static GenericResponse<Object> badRequestBody(String additionalMessage) {
     return GenericResponse.builder()
         .errorCode(ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST.getErrorCode())

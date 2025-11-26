@@ -36,7 +36,6 @@ public class AccessTokenGenerator {
                             securityProperties, userSessionId, issuedAt, TokenType.ACCESS_TOKEN)
                         .withIssuedAt(issuedAt)
                         .sign(Auth0Utils.getAlgorithm(securityProperties)))
-                .refreshToken(refreshTokenContainer.refreshToken())
                 .build())
         .userId(userId)
         .sessionId(sessionId)
