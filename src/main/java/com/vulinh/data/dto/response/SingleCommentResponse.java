@@ -14,7 +14,5 @@ public record SingleCommentResponse(
     String content,
     Instant createdDate,
     Instant updatedDate,
-    String username,
-    String fullName,
     Boolean isEdited)
     implements RecordUuidIdentifiable, RecordDateTimeAuditable {}

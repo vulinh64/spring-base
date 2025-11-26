@@ -64,6 +64,9 @@
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <!-- this should be fixed by Spring in the future -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
+
+        <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
+        <testcontainers-keycloak.version>4.0.0</testcontainers-keycloak.version>
     </properties>
 
     <dependencies>
@@ -249,6 +252,12 @@
             <groupId>com.redis</groupId>
             <artifactId>testcontainers-redis</artifactId>
             <version>${testcontainers-redis.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.dasniko</groupId>
+            <artifactId>testcontainers-keycloak</artifactId>
+            <version>${testcontainers-keycloak.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- END: Testcontainers -->

@@ -6,7 +6,6 @@ import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.CommentRevision;
 import com.vulinh.data.entity.RevisionType;
-import com.vulinh.data.entity.Users;
 import com.vulinh.data.entity.ids.CommentRevisionId;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
@@ -22,7 +21,7 @@ public interface CommentMapper {
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
-  Comment fromNewComment(NewCommentRequest newComment, Users createdBy, UUID postId);
+  Comment fromNewComment(NewCommentRequest newComment, UUID createdBy, UUID postId);
 
   @Mapping(target = "id", expression = "java(createTransientId(comment))")
   @Mapping(target = "revisionCreatedBy", ignore = true)

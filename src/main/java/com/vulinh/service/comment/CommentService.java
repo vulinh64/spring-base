@@ -9,7 +9,6 @@ import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.mapper.CommentMapper;
 import com.vulinh.data.repository.CommentRepository;
-import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentService {
 
-  final UserRepository userRepository;
   final CommentRepository commentRepository;
 
   final NewCommentValidationService commentValidationService;
@@ -36,7 +34,6 @@ public class CommentService {
     var createdBy =
         SecurityUtils.getUserDTO()
             .map(UserBasicResponse::id)
-            .flatMap(userRepository::findByIdAndIsActiveIsTrue)
             .orElseThrow(AuthorizationException::invalidAuthorization);
 
     var persistedComment =

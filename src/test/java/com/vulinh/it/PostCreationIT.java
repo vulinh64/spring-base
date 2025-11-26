@@ -27,10 +27,9 @@ import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.post.NoDashedUUIDGenerator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -52,9 +51,6 @@ class PostCreationIT extends IntegrationTestBase {
   static final String COMMENT_CONTENT = "This is a comment";
   static final String EDITED_COMMENT_CONTENT = "Edited Comment";
 
-  static final String ADMIN_USER = "admin";
-  static final String POWER_USER = "power_user";
-
   // Shared across tests
   static UUID COMMENT_ID;
   static Long REVISION_NUMBER;
@@ -71,6 +67,9 @@ class PostCreationIT extends IntegrationTestBase {
   @Order(0)
   @SneakyThrows
   void testCreatePost() {
+    // Ugly hack to get it runs ONLY ONCE
+    initializeKeycloak();
+
     var accessToken = getAccessToken(ADMIN_USER);
 
     var postCreationResult =
@@ -94,7 +93,6 @@ class PostCreationIT extends IntegrationTestBase {
 
     assertEquals(TITLE, data.title());
     assertEquals(EXCERPT, data.excerpt());
-    assertEquals(ADMIN_USER, data.author().username());
     assertEquals(MOCK_SLUG, data.slug());
   }
 
@@ -109,7 +107,6 @@ class PostCreationIT extends IntegrationTestBase {
               assertEquals(EXCERPT, post.getExcerpt());
               assertEquals("Test blank", post.getPostContent());
               assertEquals(MOCK_SLUG, post.getSlug());
-              assertEquals(ADMIN_USER, post.getAuthor().getUsername());
               assertTrue(
                   TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
             },
@@ -134,7 +131,7 @@ class PostCreationIT extends IntegrationTestBase {
                 postWithEndpointAndPayload(
                         "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, postId),
                         NewCommentRequest.builder().content(COMMENT_CONTENT).build())
-                    .header(HttpHeaders.AUTHORIZATION, accessToken))
+                    .header(HttpHeaders.AUTHORIZATION, bearerToken(accessToken)))
             .andExpect(status().isCreated())
             .andReturn();
 
@@ -150,6 +147,10 @@ class PostCreationIT extends IntegrationTestBase {
     assertEquals(postId, response.postId());
   }
 
+  private static @NotNull String bearerToken(String accessToken) {
+    return "Bearer %s".formatted(accessToken);
+  }
+
   @Test
   @Transactional(readOnly = true)
   @Order(3)
@@ -163,7 +164,6 @@ class PostCreationIT extends IntegrationTestBase {
         .ifPresentOrElse(
             comment -> {
               assertEquals(COMMENT_CONTENT, comment.getContent());
-              assertEquals(POWER_USER, comment.getCreatedBy().getUsername());
               assertEquals(POST_ID, comment.getPostId());
             },
             () -> fail("Comment not found"));
@@ -192,7 +192,7 @@ class PostCreationIT extends IntegrationTestBase {
                         "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, "{commentId}"),
                         COMMENT_ID)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, getAccessToken(POWER_USER))
+                    .header(HttpHeaders.AUTHORIZATION, bearerToken(getAccessToken(POWER_USER)))
                     .content(
                         JsonUtils.toMinimizedJSON(
                             NewCommentRequest.builder().content(EDITED_COMMENT_CONTENT).build())))
@@ -229,7 +229,6 @@ class PostCreationIT extends IntegrationTestBase {
         .ifPresentOrElse(
             comment -> {
               assertEquals(EDITED_COMMENT_CONTENT, comment.getContent());
-              assertEquals(POWER_USER, comment.getCreatedBy().getUsername());
               assertEquals(POST_ID, comment.getPostId());
             },
             () -> fail("Edited comment not found"));
@@ -257,7 +256,7 @@ class PostCreationIT extends IntegrationTestBase {
       return getMockMvc()
           .perform(
               postWithEndpointAndPayload(EndpointConstant.ENDPOINT_POST, postCreationRequest)
-                  .header(HttpHeaders.AUTHORIZATION, accessToken))
+                  .header(HttpHeaders.AUTHORIZATION, bearerToken(accessToken)))
           .andExpect(status().isCreated())
           .andReturn();
     }

@@ -9,4 +9,9 @@ import lombok.*;
 @With
 @Builder
 public record RoleData(UserRole id, int superiority)
-    implements RecordIdentifiable<UserRole>, Serializable {}
+    implements RecordIdentifiable<UserRole>, Serializable {
+
+  public static RoleData fromUserRole(UserRole userRole) {
+    return RoleData.builder().id(userRole).superiority(userRole.superiority()).build();
+  }
+}

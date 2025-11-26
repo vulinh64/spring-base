@@ -5,7 +5,6 @@ import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.data.repository.UserRepository;
 import com.vulinh.exception.AuthorizationException;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
@@ -25,7 +24,6 @@ public class PostCreationService {
   final TagService tagService;
 
   final PostRepository postRepository;
-  final UserRepository userRepository;
   final CategoryService categoryService;
 
   @Transactional
@@ -34,10 +32,9 @@ public class PostCreationService {
 
     var actualCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
-    var author =
+    var authorId =
         SecurityUtils.getUserDTO()
             .map(UserBasicResponse::id)
-            .flatMap(userRepository::findById)
             .orElseThrow(AuthorizationException::invalidAuthorization);
 
     var categoryId = postCreationRequest.categoryId();
@@ -46,6 +43,6 @@ public class PostCreationService {
 
     var tags = tagService.parseTags(postCreationRequest);
 
-    return postRepository.save(POST_MAPPER.toEntity(actualCreationDTO, author, category, tags));
+    return postRepository.save(POST_MAPPER.toEntity(actualCreationDTO, authorId, category, tags));
   }
 }
