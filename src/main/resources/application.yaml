@@ -48,9 +48,6 @@ application-properties:
 server:
   port: ${PORT:8080}
   shutdown: GRACEFUL
-  # Require configuration on the server to enable HTTP/2
-  # You can try https://brytecode.be/articles/using-http-2-in-your-spring-boot-application/
-  http2.enabled: ${SERVER_SSL_ENABLED:true}
   servlet.application-display-name: ${application.name}
 spring:
   # Make your default spring boot logging colorful (if you are using Community version lmao)
