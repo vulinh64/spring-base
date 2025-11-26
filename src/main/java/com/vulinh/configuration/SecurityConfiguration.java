@@ -3,41 +3,32 @@ package com.vulinh.configuration;
 import module java.base;
 
 import com.vulinh.configuration.data.ApplicationProperties;
+import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.UserRole;
-import com.vulinh.exception.AuthorizationException;
-import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.service.token.AccessTokenValidator;
-import com.vulinh.utils.security.Auth0Utils;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.BadJwtException;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -45,23 +36,20 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 public class SecurityConfiguration {
 
-  static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
-
-  static final UserRole ROLE_ADMIN = UserRole.ADMIN;
+  static final String ROLE_ADMIN_NAME = UserRole.ADMIN.name();
 
   final ApplicationProperties applicationProperties;
-
-  final HandlerExceptionResolver handlerExceptionResolver;
-  final AccessTokenValidator accessTokenValidator;
-  final CustomAuthenticationManager customAuthenticationManager;
 
   @Bean
   @SneakyThrows
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+    var security = applicationProperties.security();
+
     return httpSecurity
         .headers(
-            shc ->
-                shc.xssProtection(
+            headersConfigurer ->
+                headersConfigurer
+                    .xssProtection(
                         xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
                     .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
         .csrf(AbstractHttpConfigurer::disable)
@@ -69,14 +57,16 @@ public class SecurityConfiguration {
         .sessionManagement(
             sessionManagementConfigurer ->
                 sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(this::configureAuthorizeHttpRequestCustomizer)
-        .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
-        .addFilterBefore(createCorsFilter(), UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling(
-            exceptionHandlingCustomizer ->
-                exceptionHandlingCustomizer
-                    .accessDeniedHandler(this::handleSecurityException)
-                    .authenticationEntryPoint(this::handleSecurityException))
+        .authorizeHttpRequests(
+            authorizeHttpRequestsCustomizer ->
+                configureAuthorizeHttpRequestCustomizer(authorizeHttpRequestsCustomizer, security))
+        .cors(corsConfigurer -> corsConfigurer.configurationSource(createCorsFilter()))
+        .oauth2ResourceServer(
+            oAuth2ResourceServerProperties ->
+                oAuth2ResourceServerProperties.jwt(
+                    jwtConfigurer ->
+                        jwtConfigurer.jwtAuthenticationConverter(
+                            jwt -> parseAuthoritiesByCustomClaims(jwt, security.clientName()))))
         .build();
   }
 
@@ -85,7 +75,7 @@ public class SecurityConfiguration {
     return RoleHierarchyImpl.fromHierarchy(toHierarchyPhrase());
   }
 
-  CorsFilter createCorsFilter() {
+  CorsConfigurationSource createCorsFilter() {
     var config = new CorsConfiguration();
 
     config.setAllowCredentials(true);
@@ -97,14 +87,13 @@ public class SecurityConfiguration {
 
     source.registerCorsConfiguration("/**", config);
 
-    return new CorsFilter(source);
+    return source;
   }
 
-  void configureAuthorizeHttpRequestCustomizer(
+  static void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
-          authorizeHttpRequestsCustomizer) {
-    var securityProperties = applicationProperties.security();
-
+          authorizeHttpRequestsCustomizer,
+      SecurityProperties securityProperties) {
     for (var verbUrl : securityProperties.noAuthenticatedVerbUrls()) {
       authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
     }
@@ -112,28 +101,41 @@ public class SecurityConfiguration {
     for (var privilegeVerbUrl : securityProperties.highPrivilegeVerbUrls()) {
       authorizeHttpRequestsCustomizer
           .requestMatchers(privilegeVerbUrl.method(), privilegeVerbUrl.url())
-          .hasAuthority(ROLE_ADMIN.name());
+          .hasAuthority(ROLE_ADMIN_NAME);
     }
 
     authorizeHttpRequestsCustomizer
         .requestMatchers(securityProperties.noAuthenticatedUrls().toArray(String[]::new))
         .permitAll()
         .requestMatchers(securityProperties.highPrivilegeUrls().toArray(String[]::new))
-        .hasAuthority(ROLE_ADMIN.name())
+        .hasAuthority(ROLE_ADMIN_NAME)
         .anyRequest()
         .authenticated();
   }
 
-  void handleSecurityException(
-      HttpServletRequest request, HttpServletResponse response, Throwable authException) {
-    handlerExceptionResolver.resolveException(
-        request,
-        response,
-        null,
-        AuthorizationException.invalidAuthorization(
-            "Invalid user authorization",
-            ServiceErrorCode.MESSAGE_INVALID_AUTHORIZATION,
-            authException));
+  @SuppressWarnings("unchecked")
+  private static AbstractAuthenticationToken parseAuthoritiesByCustomClaims(
+      Jwt jwt, @NonNull String clientName) {
+    if (!clientName.equals(jwt.getClaim("azp"))) {
+      throw new BadJwtException("Invalid authorized party");
+    }
+
+    if (!jwt.hasClaim("resource_access")) {
+      throw new BadJwtException("Missing resource access claim");
+    }
+
+    var resourceAccess = jwt.getClaimAsMap("resource_access");
+
+    if (!resourceAccess.containsKey(clientName)) {
+      throw new BadJwtException("Missing resource access claim");
+    }
+
+    var clientRoleContainer = (Map<String, Object>) resourceAccess.get(clientName);
+
+    var roles = (List<String>) clientRoleContainer.getOrDefault("roles", Collections.emptyList());
+
+    return new JwtAuthenticationToken(
+        jwt, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
   }
 
   static String toHierarchyPhrase() {
@@ -158,82 +160,5 @@ public class SecurityConfiguration {
     }
 
     return result.toString();
-  }
-
-  // Temporary solution to avoid filter being called twice for every request
-  class JwtFilter extends OncePerRequestFilter {
-
-    @Override
-    protected void doFilterInternal(
-        @NonNull HttpServletRequest request,
-        @NonNull HttpServletResponse response,
-        @NonNull FilterChain filterChain) {
-      try {
-        var header = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (header != null) {
-          var jwtPayload =
-              accessTokenValidator.validateAccessToken(Auth0Utils.parseBearerToken(header));
-
-          var authentication =
-              customAuthenticationManager.authenticate(
-                  new PreAuthenticatedAuthenticationToken(jwtPayload, null));
-
-          var customAuthentication =
-              authentication.addDetails(
-                  new PreAuthenticatedGrantedAuthoritiesWebAuthenticationDetails(
-                      request, authentication.getAuthorities()));
-
-          SecurityContextHolder.getContext().setAuthentication(customAuthentication);
-        }
-
-        filterChain.doFilter(request, response);
-      } catch (Exception exception) {
-        handlerExceptionResolver.resolveException(request, response, null, exception);
-      }
-    }
-
-    @Override
-    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
-      var requestURI = request.getRequestURI();
-
-      var securityProperties = applicationProperties.security();
-
-      return securityProperties.noAuthenticatedUrls().stream()
-              .anyMatch(
-                  antUrl -> {
-                    var result = ANT_PATH_MATCHER.match(antUrl, requestURI);
-
-                    if (result) {
-                      log.debug(
-                          "Request URI [{}] matched against ant pattern [{}]", requestURI, antUrl);
-                    }
-
-                    return result;
-                  })
-          || securityProperties.noAuthenticatedVerbUrls().stream()
-              .anyMatch(
-                  verbAntUrl -> {
-                    var requestMethod = request.getMethod();
-
-                    var antUrl = verbAntUrl.url();
-                    var antMethod = verbAntUrl.method();
-
-                    var result =
-                        antMethod.name().equals(requestMethod)
-                            && ANT_PATH_MATCHER.match(antUrl, requestURI);
-
-                    if (result) {
-                      log.debug(
-                          "Request URI [{} {}] matched against ant pattern [{} {}]",
-                          requestMethod,
-                          requestURI,
-                          antMethod,
-                          antUrl);
-                    }
-
-                    return result;
-                  });
-    }
   }
 }
