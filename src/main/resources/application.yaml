@@ -3,6 +3,8 @@
 #
 application-properties:
   security:
+    realm-name: ${KEYCLOAK_REALM:spring-base}
+    client-name: ${KEYCLOAK_CLIENT:spring-base-client}
     issuer: ${SECURITY_ISSUER:spring-base-service}
     #
     # Go to https://www.devglan.com/online-tools/rsa-encryption-decryption to generate your own key
@@ -46,7 +48,7 @@ application-properties:
 # End of application properties
 #
 server:
-  port: ${PORT:8080}
+  port: ${SERVER_PORT:8088}
   shutdown: GRACEFUL
   # Require configuration on the server to enable HTTP/2
   # You can try https://brytecode.be/articles/using-http-2-in-your-spring-boot-application/
@@ -69,6 +71,11 @@ spring:
   liquibase:
     enabled: ${LIQUIBASE_ENABLED:true}
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
+  security.oauth2.resourceserver.jwt:
+      # noinspection HttpUrlsUsage
+    issuer-uri: http://${KEYCLOAK_HOST:localhost:8080}/realms/${application-properties.security.realm-name}
+    audiences: account
+    authorities-claim-name: realm_access.${application-properties.security.client-name}.roles
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.MyP6SpyLogging
   logging: CUSTOM
