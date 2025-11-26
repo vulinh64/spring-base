@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
         "Public controller that allows user login, user registration and user confirmation")
 public interface AuthAPI {
 
+  @Deprecated(forRemoval = true)
   @PostMapping(AuthEndpoint.LOGIN)
   @Operation(
       summary = "User login",
@@ -91,6 +92,7 @@ public interface AuthAPI {
       })
   GenericResponse<TokenResponse> login(@RequestBody UserLoginRequest userLoginRequest);
 
+  @Deprecated(forRemoval = true)
   @PostMapping(AuthEndpoint.REGISTER)
   @Operation(
       summary = "User Registration",
@@ -153,6 +155,7 @@ public interface AuthAPI {
   GenericResponse<SingleUserResponse> register(
       @RequestBody UserRegistrationRequest userRegistrationRequest);
 
+  @Deprecated(forRemoval = true)
   @GetMapping(AuthEndpoint.CONFIRM_USER)
   @Operation(
       summary = "Confirm user registration",
@@ -187,14 +190,17 @@ public interface AuthAPI {
   ResponseEntity<GenericResponse<Object>> confirmUser(
       @RequestParam UUID userId, @RequestParam String code);
 
+  @Deprecated(forRemoval = true)
   @PatchMapping(AuthEndpoint.CHANGE_PASSWORD)
   ResponseEntity<Object> changePassword(
       @RequestBody PasswordChangeRequest passwordChangeRequest,
       HttpServletRequest httpServletRequest);
 
+  @Deprecated(forRemoval = true)
   @PostMapping(AuthEndpoint.REFRESH_TOKEN)
   GenericResponse<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest);
 
+  @Deprecated(forRemoval = true)
   @DeleteMapping(AuthEndpoint.LOG_OUT)
   ResponseEntity<Void> logout(
       @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorization);

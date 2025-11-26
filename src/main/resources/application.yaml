@@ -6,6 +6,8 @@ application-properties:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
     issuer: ${SECURITY_ISSUER:spring-base-service}
+    # noinspection HttpUrlsUsage
+    issuer-uri: http://${KEYCLOAK_HOST:localhost:8080}/realms/${application-properties.security.realm-name}
     #
     # Go to https://www.devglan.com/online-tools/rsa-encryption-decryption to generate your own key
     #
@@ -69,10 +71,8 @@ spring:
     enabled: ${LIQUIBASE_ENABLED:true}
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
   security.oauth2.resourceserver.jwt:
-      # noinspection HttpUrlsUsage
-    issuer-uri: http://${KEYCLOAK_HOST:localhost:8080}/realms/${application-properties.security.realm-name}
+    issuer-uri: ${application-properties.security.issuer-uri}
     audiences: account
-    authorities-claim-name: realm_access.${application-properties.security.client-name}.roles
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.MyP6SpyLogging
   logging: CUSTOM

@@ -12,8 +12,7 @@ import lombok.experimental.Accessors;
 public enum UserRole {
   ADMIN(Integer.MAX_VALUE),
   POWER_USER(Integer.MAX_VALUE - 1),
-  USER(0),
-  INVALID(Integer.MIN_VALUE);
+  USER(0);
 
   // The higher the value, the more "superior" a role is
   final int superiority;

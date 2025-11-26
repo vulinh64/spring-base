@@ -22,7 +22,9 @@ public record ApplicationProperties(
       Duration jwtDuration,
       Duration refreshJwtDuration,
       Duration passwordResetCodeDuration,
-      String issuer) {}
+      String issuer,
+      String issuerUri,
+      String clientName) {}
 
   public record SchedulingTaskProperties(String cleanExpiredUserSessions) {}
 

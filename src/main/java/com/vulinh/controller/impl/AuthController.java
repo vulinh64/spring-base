@@ -11,11 +11,9 @@ import com.vulinh.data.dto.request.UserRegistrationRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.SingleUserResponse;
-import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,36 +31,31 @@ public class AuthController implements AuthAPI {
   @Override
   public GenericResponse<SingleUserResponse> register(
       UserRegistrationRequest userRegistrationRequest) {
-    return ResponseCreator.success(authService.registerUser(userRegistrationRequest));
+    throw deprecatedException("register");
   }
 
   @Override
   public ResponseEntity<GenericResponse<Object>> confirmUser(UUID userId, String code) {
-    boolean isUserConfirmed = authService.confirmUser(userId, code);
-
-    return isUserConfirmed
-        ? ResponseEntity.ok(ResponseCreator.success())
-        : ResponseEntity.badRequest()
-            .body(ResponseCreator.toError(ServiceErrorCode.MESSAGE_INVALID_CONFIRMATION));
+    throw deprecatedException("confirmUser");
   }
 
   @Override
   public ResponseEntity<Object> changePassword(
       PasswordChangeRequest passwordChangeRequest, HttpServletRequest httpServletRequest) {
-    authService.changePassword(passwordChangeRequest);
-
-    return ResponseEntity.ok().build();
+    throw deprecatedException("changePassword");
   }
 
   @Override
   public GenericResponse<TokenResponse> refreshToken(RefreshTokenRequest refreshTokenRequest) {
-    return ResponseCreator.success(authService.refreshToken(refreshTokenRequest));
+    throw deprecatedException("refreshToken");
   }
 
   @Override
   public ResponseEntity<Void> logout(String authorization) {
-    return ResponseEntity.status(
-            authService.logout(authorization) ? HttpStatus.OK : HttpStatus.NO_CONTENT)
-        .build();
+    throw deprecatedException("logout");
+  }
+
+  static UnsupportedOperationException deprecatedException(String what) {
+    return new UnsupportedOperationException(what);
   }
 }
