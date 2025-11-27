@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import module java.base;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.vulinh.Constants;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.request.PostCreationRequest;
@@ -24,6 +25,7 @@ import com.vulinh.data.repository.CommentRevisionRepository;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
+import com.vulinh.utils.KeycloakInitializationUtils;
 import com.vulinh.utils.post.NoDashedUUIDGenerator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,13 @@ class PostCreationIT extends IntegrationTestBase {
   @Autowired CommentRepository commentRepository;
   @Autowired CommentRevisionRepository commentRevisionRepository;
 
+  @DynamicPropertySource
+  static void reinitializeJdbcUrl(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
+    registry.add(
+        "application-properties.security.auth-server", KEYCLOAK_CONTAINER::getAuthServerUrl);
+  }
+
   @Test
   @Transactional
   @Commit
@@ -68,9 +77,10 @@ class PostCreationIT extends IntegrationTestBase {
   @SneakyThrows
   void testCreatePost() {
     // Ugly hack to get it runs ONLY ONCE
-    initializeKeycloak();
+    KeycloakInitializationUtils.initializeKeycloak(
+        getApplicationProperties().security(), KEYCLOAK_CONTAINER);
 
-    var accessToken = getAccessToken(TEST_ADMIN);
+    var accessToken = getAccessToken(Constants.TEST_ADMIN);
 
     var postCreationResult =
         createPostRequest(
@@ -93,7 +103,7 @@ class PostCreationIT extends IntegrationTestBase {
 
     assertEquals(TITLE, data.title());
     assertEquals(EXCERPT, data.excerpt());
-    assertEquals(MOCK_SLUG, data.slug());
+    assertEquals(Constants.MOCK_SLUG, data.slug());
   }
 
   @Test
@@ -106,7 +116,7 @@ class PostCreationIT extends IntegrationTestBase {
               assertEquals(TITLE, post.getTitle());
               assertEquals(EXCERPT, post.getExcerpt());
               assertEquals("Test blank", post.getPostContent());
-              assertEquals(MOCK_SLUG, post.getSlug());
+              assertEquals(Constants.MOCK_SLUG, post.getSlug());
               assertTrue(
                   TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
             },
@@ -123,7 +133,7 @@ class PostCreationIT extends IntegrationTestBase {
 
     POST_ID = postId;
 
-    var accessToken = getAccessToken(TEST_POWER_USER);
+    var accessToken = getAccessToken(Constants.TEST_POWER_USER);
 
     var newCommentResult =
         getMockMvc()
@@ -192,7 +202,9 @@ class PostCreationIT extends IntegrationTestBase {
                         "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, "{commentId}"),
                         COMMENT_ID)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, bearerToken(getAccessToken(TEST_POWER_USER)))
+                    .header(
+                        HttpHeaders.AUTHORIZATION,
+                        bearerToken(getAccessToken(Constants.TEST_POWER_USER)))
                     .content(
                         JsonUtils.toMinimizedJSON(
                             NewCommentRequest.builder().content(EDITED_COMMENT_CONTENT).build())))
@@ -251,7 +263,7 @@ class PostCreationIT extends IntegrationTestBase {
       // Return a fixed UUID for testing
       mockNoDashUUID
           .when(() -> NoDashedUUIDGenerator.createNonDashedUUID(any()))
-          .thenReturn(MOCK_UUID);
+          .thenReturn(Constants.MOCK_UUID);
 
       return getMockMvc()
           .perform(
@@ -263,11 +275,6 @@ class PostCreationIT extends IntegrationTestBase {
   }
 
   private Optional<Post> findCreatedPost() {
-    return postRepository.findOne(QPost.post.slug.eq(MOCK_SLUG));
-  }
-
-  @DynamicPropertySource
-  static void reinitializeJdbcUrl(DynamicPropertyRegistry registry) {
-    reinitializeConnectionPropertiesInternal(registry);
+    return postRepository.findOne(QPost.post.slug.eq(Constants.MOCK_SLUG));
   }
 }
