@@ -1,8 +1,8 @@
 package com.vulinh.utils;
 
-import module java.base;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import module java.base;
 
 import com.vulinh.utils.OrderedObject.NullsOrder;
 import com.vulinh.utils.OrderedObject.Order;

@@ -32,17 +32,6 @@
 
 ### Specifying Environment Variables
 
-There are two mandatory environment variables that you need to set before running the service:
-
-| Variable Name | Description                                                            | Remarks                             |
-|---------------|------------------------------------------------------------------------|-------------------------------------|
-| `PUBLIC_KEY`  | The public key used to verify JWT authorization                        | RSA public key (2048 bits or more)  |
-| `PRIVATE_KEY` | The private key used to generate access tokens for authenticated users | RSA private key (2048 bits or more) |
-
-> [!TIP]
-> 
-> You can visit [this link](https://travistidwell.com/jsencrypt/demo/) to generate a pair of RSA keys for testing purposes.
-
 The `SPRING_PROFILES_ACTIVE` variable is optional, but you can set it to `development` for local development.
 
 You can either specify these environment variables in a `.env` file or set them directly in Run Configurations.

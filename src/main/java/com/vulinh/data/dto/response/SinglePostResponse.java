@@ -3,7 +3,6 @@ package com.vulinh.data.dto.response;
 import module java.base;
 
 import com.vulinh.data.base.RecordUuidIdentifiable;
-import com.vulinh.data.dto.response.data.AuthorData;
 import com.vulinh.data.dto.response.data.TagData;
 import lombok.Builder;
 import lombok.With;
@@ -18,7 +17,7 @@ public record SinglePostResponse(
     String postContent,
     Instant createdDate,
     Instant updatedDate,
-    AuthorData author,
+    UUID authorId,
     CategoryResponse category,
     List<TagData> tags)
     implements RecordUuidIdentifiable, Serializable {}

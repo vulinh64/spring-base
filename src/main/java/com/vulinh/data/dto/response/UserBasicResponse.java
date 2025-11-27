@@ -3,7 +3,7 @@ package com.vulinh.data.dto.response;
 import module java.base;
 
 import com.vulinh.data.base.RecordUuidIdentifiable;
-import com.vulinh.data.dto.response.data.RoleData;
+import com.vulinh.data.constant.UserRole;
 import lombok.Builder;
 import lombok.With;
 
@@ -13,5 +13,5 @@ public record UserBasicResponse(
     UUID id,
     String username,
     String email,
-    Collection<RoleData> userRoles)
+    Collection<UserRole> userRoles)
     implements RecordUuidIdentifiable, Serializable {}

@@ -1,0 +1,27 @@
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.util.Arrays;
+
+class HealthCheck {
+
+  static final int OK = 0;
+  static final int NOK = -1;
+
+  public static void main(String[] args) {
+    try {
+      System.exit(doHealthCheck(URI.create(Arrays.stream(args).findFirst().orElseThrow())));
+    } catch (Exception ignored) {
+      // Just quietly exit with NOK
+      System.exit(NOK);
+    }
+  }
+
+  private static int doHealthCheck(URI uri) throws IOException {
+    if (!(uri.toURL().openConnection() instanceof HttpURLConnection httpConnection)) {
+      return NOK;
+    }
+
+    return HttpURLConnection.HTTP_OK == httpConnection.getResponseCode() ? OK : NOK;
+  }
+}
