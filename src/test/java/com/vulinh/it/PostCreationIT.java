@@ -70,7 +70,7 @@ class PostCreationIT extends IntegrationTestBase {
     // Ugly hack to get it runs ONLY ONCE
     initializeKeycloak();
 
-    var accessToken = getAccessToken(ADMIN_USER);
+    var accessToken = getAccessToken(TEST_ADMIN);
 
     var postCreationResult =
         createPostRequest(
@@ -123,7 +123,7 @@ class PostCreationIT extends IntegrationTestBase {
 
     POST_ID = postId;
 
-    var accessToken = getAccessToken(POWER_USER);
+    var accessToken = getAccessToken(TEST_POWER_USER);
 
     var newCommentResult =
         getMockMvc()
@@ -192,7 +192,7 @@ class PostCreationIT extends IntegrationTestBase {
                         "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, "{commentId}"),
                         COMMENT_ID)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, bearerToken(getAccessToken(POWER_USER)))
+                    .header(HttpHeaders.AUTHORIZATION, bearerToken(getAccessToken(TEST_POWER_USER)))
                     .content(
                         JsonUtils.toMinimizedJSON(
                             NewCommentRequest.builder().content(EDITED_COMMENT_CONTENT).build())))

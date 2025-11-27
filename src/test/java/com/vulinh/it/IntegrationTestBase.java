@@ -1,11 +1,6 @@
 package com.vulinh.it;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import module java.base;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.redis.testcontainers.RedisContainer;
 import com.vulinh.configuration.data.ApplicationProperties;
@@ -34,6 +29,11 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
+import static com.vulinh.it.KeycloakShellCommandUtils.wrapByBrackets;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -54,9 +54,15 @@ public abstract class IntegrationTestBase {
 
   protected static final String COMMON_PASSWORD = "123456";
 
-  protected static final String ADMIN_USER = "admin";
+  protected static final String KC_ADMIN_USERNAME = "administrator";
 
-  protected static final String POWER_USER = "power_user";
+  protected static final String KC_ADMIN_PASSWORD = "administrator";
+
+  protected static final String TEST_ADMIN = "admin";
+
+  protected static final String TEST_POWER_USER = "power_user";
+
+  protected static final String KC_ADM_SHELL = "/opt/keycloak/bin/kcadm.sh";
 
   @Container
   protected static final PostgreSQLContainer POSTGRESQL_CONTAINER =
@@ -74,8 +80,8 @@ public abstract class IntegrationTestBase {
   @Container
   protected static final KeycloakContainer KEYCLOAK_CONTAINER =
       new KeycloakContainer("quay.io/keycloak/keycloak:26.4")
-          .withAdminUsername("admin")
-          .withAdminPassword("123456")
+          .withAdminUsername(KC_ADMIN_USERNAME)
+          .withAdminPassword(KC_ADMIN_PASSWORD)
           .waitingFor(HealthCheckCommand.KEYCLOAK.shellStrategyHealthCheck());
 
   @Autowired private MockMvc mockMvc;
@@ -113,16 +119,7 @@ public abstract class IntegrationTestBase {
   void initializeKeycloak() {
     var clientIdMap = new AtomicReference<String>();
 
-    var security = applicationProperties.security();
-
-    var replacementMap =
-        Map.ofEntries(
-            Map.entry("%%KEYCLOAK_REALM%%", security.realmName()),
-            Map.entry("%%CLIENT_ID%%", security.clientName()),
-            Map.entry("%%ROLE_ADMIN%%", UserRole.ADMIN.name()),
-            Map.entry("%%ROLE_POWER_USER%%", UserRole.POWER_USER.name()),
-            Map.entry("%%ADMIN_USERNAME%%", ADMIN_USER),
-            Map.entry("%%POWER_USER_USERNAME%%", POWER_USER));
+    var replacementMap = generateReplacementMap();
 
     var commands = KeycloakShellCommandUtils.readKeycloakExecCommands(replacementMap);
 
@@ -132,20 +129,42 @@ public abstract class IntegrationTestBase {
       if (possibleUuid != null) {
         command =
             Arrays.stream(command)
-                .map(s -> s.replace("%%CLIENT_UUID%%", possibleUuid))
+                .map(s -> s.replace(wrapByBrackets("CLIENT_UUID"), possibleUuid))
                 .toArray(String[]::new);
       }
 
       var result = KEYCLOAK_CONTAINER.execInContainer(command);
 
-      var output = StringUtils.defaultIfBlank(result.getStdout(), result.getStderr());
+      var singleCommand = String.join(" ", command);
+
+      var output =
+          StringUtils.defaultIfBlank(
+                  StringUtils.defaultIfBlank(result.getStdout(), result.getStderr()), singleCommand)
+              .replace("\r", StringUtils.EMPTY)
+              .replace("\n", StringUtils.EMPTY);
 
       log.info(output);
 
-      if (String.join(" ", command).contains("create clients -r")) {
-        clientIdMap.set(output.replace("\r", StringUtils.EMPTY).replace("\n", StringUtils.EMPTY));
+      if (singleCommand.contains("create clients -r")) {
+        clientIdMap.set(output);
       }
     }
+  }
+
+  private Map<String, String> generateReplacementMap() {
+    var security = applicationProperties.security();
+
+    return Map.ofEntries(
+        Map.entry("KC_ADMIN_USERNAME", KC_ADMIN_USERNAME),
+        Map.entry("KC_ADMIN_PASSWORD", KC_ADMIN_PASSWORD),
+        Map.entry("KEYCLOAK_REALM", security.realmName()),
+        Map.entry("CLIENT_ID", security.clientName()),
+        Map.entry("ROLE_ADMIN", UserRole.ADMIN.name()),
+        Map.entry("ROLE_POWER_USER", UserRole.POWER_USER.name()),
+        Map.entry("ADMIN_USERNAME", TEST_ADMIN),
+        Map.entry("POWER_USER_USERNAME", TEST_POWER_USER),
+        Map.entry("COMMON_PASSWORD", COMMON_PASSWORD),
+        Map.entry("KC_ADM_SHELL", KC_ADM_SHELL));
   }
 
   protected static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(

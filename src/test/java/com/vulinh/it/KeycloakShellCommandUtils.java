@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ClassPathResource;
 
 @Slf4j
@@ -13,24 +15,24 @@ import org.springframework.core.io.ClassPathResource;
 class KeycloakShellCommandUtils {
 
   @SneakyThrows
-  public static List<String[]> readKeycloakExecCommands(
-      Map<String, String> replacementMap) {
-    var resource = new ClassPathResource("keycloak-exec.txt");
-
-    try (var lines = Files.lines(resource.getFile().toPath())) {
+  public static List<String[]> readKeycloakExecCommands(Map<String, String> replacementMap) {
+    try (var lines = Files.lines(new ClassPathResource("keycloak-exec.txt").getFile().toPath())) {
       return lines
-          .map(String::trim)
-          .filter(Predicate.not(String::isEmpty))
+          .filter(Predicate.not(StringUtils::isBlank))
+          .map(StringUtils::normalizeSpace)
           .map(
-              cmd -> {
+              command -> {
                 for (var entry : replacementMap.entrySet()) {
-                  cmd = cmd.replace(entry.getKey(), entry.getValue());
+                  command = command.replace(wrapByBrackets(entry.getKey()), entry.getValue());
                 }
 
-                return cmd;
+                return command.split("\\s+");
               })
-          .map(line -> line.split("\\s+"))
           .toList();
     }
+  }
+
+  public static @NotNull String wrapByBrackets(String variable) {
+    return "{{%s}}".formatted(variable);
   }
 }
