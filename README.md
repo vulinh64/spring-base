@@ -44,7 +44,7 @@ You can run [this script (Windows only)](/initialize-postgres-keycloak.cmd) and 
 
 ## Running the Compose Stack
 
-You can run [this script](/run-docker.cmd) and it will build the service image and start the containers for you.
+You can run [this script(Windows only)](/run-docker-compose-stack.cmd) and it will build the service image and start the containers for you.
 
 # Additional Notes
 
