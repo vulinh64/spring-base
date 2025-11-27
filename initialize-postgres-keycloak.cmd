@@ -28,30 +28,10 @@ if errorlevel 1 (
     )
 )
 
-:: --- Redis Setup ---
-SET REDIS_CONTAINER_NAME=standalone-redis
-SET REDIS_VOLUME_NAME=redis-volume
-SET REDIS_COMMAND=docker run --detach --name !REDIS_CONTAINER_NAME! -v !REDIS_VOLUME_NAME!:/data -p 6379:6379 redis:8.2.3-bookworm redis-server --save 60 1 --loglevel warning
-
-echo Checking Redis container [%REDIS_CONTAINER_NAME%]...
-docker ps -a | findstr /C:"!REDIS_CONTAINER_NAME!" >nul
-if errorlevel 1 (
-    echo Container [%REDIS_CONTAINER_NAME%] not existed, creating with volume [%REDIS_VOLUME_NAME%]...
-    !REDIS_COMMAND!
-) else (
-    docker ps | findstr /C:"!REDIS_CONTAINER_NAME!" >nul
-    if errorlevel 1 (
-        echo Container with the same name [%REDIS_CONTAINER_NAME%] stopped, restarting...
-        docker start !REDIS_CONTAINER_NAME!
-    ) else (
-        echo Container [%REDIS_CONTAINER_NAME%] is already running...
-    )
-)
-
 :: KEYCLOAK_REALM and CLIENT_ID should match the values in application.properties
 
 :: --- Keycloak Setup ---
-set KEYCLOAK_IMAGE=my-keycloak
+set KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:26.4
 set KEYCLOAK_CONTAINER=standalone-keycloak
 
 :: application-properties.security.realm-name
@@ -65,17 +45,15 @@ set KEYCLOAK_ADMIN_PASSWORD=123456
 
 echo Stopping and removing old Keycloak containers/images...
 docker container rm -f %KEYCLOAK_CONTAINER% 2>nul
-docker image rm -f %KEYCLOAK_IMAGE% 2>nul
-
-echo Building custom Keycloak image [%KEYCLOAK_IMAGE%]...
-docker build -t %KEYCLOAK_IMAGE% my-keycloak
 
 echo Starting Keycloak container [%KEYCLOAK_CONTAINER%]...
 docker run --name %KEYCLOAK_CONTAINER% --detach -p 8080:8080 -p 9000:9000 -e "KC_BOOTSTRAP_ADMIN_USERNAME=%KEYCLOAK_OVERLORD%" -e "KC_BOOTSTRAP_ADMIN_PASSWORD=%KEYCLOAK_ADMIN_PASSWORD%" -e "KC_HEALTH_ENABLED=true" -e "KC_METRICS_ENABLED=true" %KEYCLOAK_IMAGE% start-dev
 
+docker cp HealthCheck %KEYCLOAK_CONTAINER%:/tmp/HealthCheck.java
+
 :health_check
-docker exec -it %KEYCLOAK_CONTAINER% java HealthCheck.java
-if %ERRORLEVEL%==0 (
+docker exec %KEYCLOAK_CONTAINER% sh -c "java /tmp/HealthCheck.java http://localhost:9000/health/live"
+if !ERRORLEVEL!==0 (
     echo Keycloak is serviceable!
     goto after_health_check
 ) else (

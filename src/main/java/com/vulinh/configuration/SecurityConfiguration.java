@@ -5,25 +5,20 @@ import module java.base;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.UserRole;
+import com.vulinh.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.BadJwtException;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
 import org.springframework.web.cors.CorsConfiguration;
@@ -66,7 +61,9 @@ public class SecurityConfiguration {
                 oAuth2ResourceServerProperties.jwt(
                     jwtConfigurer ->
                         jwtConfigurer.jwtAuthenticationConverter(
-                            jwt -> parseAuthoritiesByCustomClaims(jwt, security.clientName()))))
+                            jwt ->
+                                JwtUtils.parseAuthoritiesByCustomClaims(
+                                    jwt, security.clientName()))))
         .build();
   }
 
@@ -111,31 +108,6 @@ public class SecurityConfiguration {
         .hasAuthority(ROLE_ADMIN_NAME)
         .anyRequest()
         .authenticated();
-  }
-
-  @SuppressWarnings("unchecked")
-  private static AbstractAuthenticationToken parseAuthoritiesByCustomClaims(
-      Jwt jwt, @NonNull String clientName) {
-    if (!clientName.equals(jwt.getClaim("azp"))) {
-      throw new BadJwtException("Invalid authorized party");
-    }
-
-    if (!jwt.hasClaim("resource_access")) {
-      throw new BadJwtException("Missing resource access claim");
-    }
-
-    var resourceAccess = jwt.getClaimAsMap("resource_access");
-
-    if (!resourceAccess.containsKey(clientName)) {
-      throw new BadJwtException("Missing client name claim");
-    }
-
-    var clientRoleContainer = (Map<String, Object>) resourceAccess.get(clientName);
-
-    var roles = (List<String>) clientRoleContainer.getOrDefault("roles", Collections.emptyList());
-
-    return new JwtAuthenticationToken(
-        jwt, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
   }
 
   static String toHierarchyPhrase() {

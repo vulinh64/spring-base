@@ -1,4 +1,4 @@
-package com.vulinh.data.dto.response.data;
+package com.vulinh.data;
 
 import module java.base;
 

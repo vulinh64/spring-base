@@ -4,7 +4,7 @@ import module java.base;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.vulinh.data.dto.response.data.AuthorData;
+import com.vulinh.data.AuthorData;
 import com.vulinh.utils.Equivalence.Creator;
 import com.vulinh.utils.Equivalence.EqualityDeepness;
 import lombok.Getter;

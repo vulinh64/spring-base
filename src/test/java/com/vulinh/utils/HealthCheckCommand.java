@@ -7,7 +7,6 @@ import org.testcontainers.containers.wait.strategy.ShellStrategy;
 @RequiredArgsConstructor
 public enum HealthCheckCommand {
   POSTGRESQL("pg_isready -U %s"),
-  REDIS("redis-cli -a %s ping"),
   // Weird health check, but it is because there is no way to do Keycloak healthcheck
   // Because Keycloak image is based on alpine
   KEYCLOAK(

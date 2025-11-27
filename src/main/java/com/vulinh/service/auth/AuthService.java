@@ -16,16 +16,19 @@ public class AuthService {
   static final String GRANT_TYPE_DEFAULT = "password";
 
   final KeycloakAuthExchange keycloakAuthExchange;
+
   final ApplicationProperties applicationProperties;
 
+  /// @deprecated Dedicate to KeyCloak
+  @Deprecated(forRemoval = true)
   public TokenResponse login(UserLoginRequest userLoginRequest) {
-    return new TokenResponse(
-        keycloakAuthExchange
-            .getToken(
-                GRANT_TYPE_DEFAULT,
-                applicationProperties.security().clientName(),
-                userLoginRequest.username(),
-                userLoginRequest.password())
-            .accessToken());
+    var keycloakResponse =
+        keycloakAuthExchange.getToken(
+            GRANT_TYPE_DEFAULT,
+            applicationProperties.security().clientName(),
+            userLoginRequest.username(),
+            userLoginRequest.password());
+
+    return new TokenResponse(keycloakResponse.accessToken(), keycloakResponse.refreshToken());
   }
 }

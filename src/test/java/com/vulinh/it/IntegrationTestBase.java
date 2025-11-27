@@ -2,7 +2,6 @@ package com.vulinh.it;
 
 import module java.base;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.redis.testcontainers.RedisContainer;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.AuthEndpoint;
@@ -70,12 +69,6 @@ public abstract class IntegrationTestBase {
           .withUsername(POSTGRES_USERNAME)
           .withPassword(POSTGRES_PASSWORD)
           .waitingFor(HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck(POSTGRES_USERNAME));
-
-  @Container
-  protected static final RedisContainer REDIS_CONTAINER =
-      new RedisContainer("redis:8.2.3-bookworm")
-          .withCommand("redis-server", "--save", "60", "1")
-          .waitingFor(HealthCheckCommand.REDIS.shellStrategyHealthCheck());
 
   @Container
   protected static final KeycloakContainer KEYCLOAK_CONTAINER =
