@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.vulinh.data.base.RecordDateTimeAuditable;
 import com.vulinh.data.base.RecordUuidIdentifiable;
-import com.vulinh.data.dto.response.data.AuthorData;
 import com.vulinh.data.dto.response.data.TagData;
 import lombok.Builder;
 import lombok.With;
@@ -21,7 +20,7 @@ public record BasicPostResponse(
     String slug,
     Instant createdDate,
     Instant updatedDate,
-    AuthorData author,
+    UUID authorId,
     CategoryResponse category,
     Collection<TagData> tags)
     implements RecordUuidIdentifiable, RecordDateTimeAuditable {}

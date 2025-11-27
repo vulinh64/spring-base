@@ -24,6 +24,7 @@ public record ApplicationProperties(
       Duration passwordResetCodeDuration,
       String issuer,
       String issuerUri,
+      String realmName,
       String clientName) {}
 
   public record SchedulingTaskProperties(String cleanExpiredUserSessions) {}

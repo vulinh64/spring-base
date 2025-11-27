@@ -40,9 +40,7 @@ public class Post extends UuidJpaEntity implements DateTimeAuditable {
 
   @LastModifiedBy UUID updatedBy;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @ToString.Exclude
-  Users author;
+  UUID authorId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude

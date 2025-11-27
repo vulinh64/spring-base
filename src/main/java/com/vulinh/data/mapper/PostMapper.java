@@ -33,7 +33,7 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(target = "comments", ignore = true)
-  Post toEntity(PostCreationRequest dto, Users author, Category category, Collection<Tag> tags);
+  Post toEntity(PostCreationRequest dto, UUID authorId, Category category, Collection<Tag> tags);
 
   @Mapping(
       target = "id",
@@ -42,13 +42,11 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
       target = "tags",
       expression =
           "java(post.getTags().stream().map(Tag::getDisplayName).collect(Collectors.joining(\",\")))")
-  @Mapping(target = "authorId", source = "post.author.id")
   @Mapping(target = "categoryId", source = "post.category.id")
   @Mapping(target = "revisionCreatedDate", ignore = true)
   @Mapping(target = "revisionCreatedBy", ignore = true)
   PostRevision toPostRevision(Post post, RevisionType revisionType);
 
-  @Mapping(target = "author", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "updatedDate", ignore = true)
@@ -66,7 +64,7 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "updatedDate", ignore = true)
-  @Mapping(target = "author", ignore = true)
+  @Mapping(target = "authorId", ignore = true)
   @Mapping(target = "comments", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(

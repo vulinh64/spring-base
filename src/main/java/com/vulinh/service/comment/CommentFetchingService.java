@@ -51,7 +51,6 @@ public class CommentFetchingService {
     var qComment = QComment.comment;
     var qCommentCreatedDate = qComment.createdDate;
     var qCommentRevision = QCommentRevision.commentRevision;
-    var qCommentAuthor = qComment.createdBy;
     var qCommentId = qComment.id;
 
     var select =
@@ -61,8 +60,6 @@ public class CommentFetchingService {
             qComment.content,
             qCommentCreatedDate,
             qComment.updatedDate,
-            qCommentAuthor.username,
-            qCommentAuthor.fullName,
             new CaseBuilder()
                 .when(
                     getQueryFactory()

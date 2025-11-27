@@ -127,7 +127,7 @@ public class SecurityConfiguration {
     var resourceAccess = jwt.getClaimAsMap("resource_access");
 
     if (!resourceAccess.containsKey(clientName)) {
-      throw new BadJwtException("Missing resource access claim");
+      throw new BadJwtException("Missing client name claim");
     }
 
     var clientRoleContainer = (Map<String, Object>) resourceAccess.get(clientName);
