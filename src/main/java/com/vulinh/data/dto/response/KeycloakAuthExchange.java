@@ -1,6 +1,6 @@
-package com.vulinh.keycloak;
+package com.vulinh.data.dto.response;
 
-import com.vulinh.data.dto.response.KeycloakAuthExchange.KeycloakTokenResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.service.annotation.HttpExchange;
@@ -9,6 +9,10 @@ import org.springframework.web.service.annotation.PostExchange;
 // This will no longer be needed, so who cares?
 @HttpExchange
 public interface KeycloakAuthExchange {
+
+  record KeycloakTokenResponse(
+      @JsonProperty("access_token") String accessToken,
+      @JsonProperty("refresh_token") String refreshToken) {}
 
   @PostExchange(
       url = "/protocol/openid-connect/token",

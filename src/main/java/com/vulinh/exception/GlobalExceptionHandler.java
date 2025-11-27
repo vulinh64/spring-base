@@ -2,7 +2,6 @@ package com.vulinh.exception;
 
 import module java.base;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.locale.LocalizationSupport;
@@ -58,13 +57,6 @@ public class GlobalExceptionHandler {
     return stackTraceAndReturn("Configuration error", securityConfigurationException);
   }
 
-  @ExceptionHandler(InvalidCredentialsException.class)
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  GenericResponse<Object> handleInvalidCredentialsException(
-      InvalidCredentialsException invalidCredentialsException) {
-    return logAndReturn(invalidCredentialsException);
-  }
-
   @ExceptionHandler(NoSuchPermissionException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
   GenericResponse<Object> handleNoSuchPermissionException(
@@ -117,22 +109,6 @@ public class GlobalExceptionHandler {
                 Optional.ofNullable(typeMismatchException.getRequiredType())
                     .map(Class::getName)
                     .orElse("unknown or empty type")));
-  }
-
-  @ExceptionHandler(JWTVerificationException.class)
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  GenericResponse<Object> handleJWTVerificationException(
-      JWTVerificationException jwtVerificationException) {
-    log.info("Invalid JWT token: {}", jwtVerificationException.getMessage());
-
-    return ResponseCreator.toError(AuthorizationException.invalidAuthorization());
-  }
-
-  @ExceptionHandler(UnsupportedOperationException.class)
-  @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-  void handleUnsupportedOperationException(
-      UnsupportedOperationException unsupportedOperationException) {
-    log.info("Unsupported operation: {}", unsupportedOperationException.getMessage());
   }
 
   static GenericResponse<Object> badRequestBody(String additionalMessage) {

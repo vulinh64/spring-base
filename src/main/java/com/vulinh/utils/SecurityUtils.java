@@ -4,7 +4,6 @@ import module java.base;
 
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.response.UserBasicResponse;
-import com.vulinh.data.dto.response.data.RoleData;
 import com.vulinh.exception.AuthorizationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -37,7 +36,6 @@ public class SecurityUtils {
                 jat.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .map(UserRole::valueOf)
-                    .map(RoleData::fromUserRole)
                     .collect(Collectors.toSet()))
             .build();
 

@@ -5,7 +5,6 @@ import module java.base;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.UserBasicResponse;
-import com.vulinh.data.dto.response.data.RoleData;
 import com.vulinh.data.entity.Post;
 import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.factory.ValidatorStepFactory;
@@ -60,7 +59,7 @@ public class PostValidationService {
   public static boolean isPowerUser(UserBasicResponse userDTO) {
     var maximumRole =
         userDTO.userRoles().stream()
-            .mapToInt(RoleData::superiority)
+            .mapToInt(UserRole::superiority)
             .max()
             .orElse(UserRole.USER.superiority());
 
@@ -71,7 +70,7 @@ public class PostValidationService {
           "User {} ({}) with role {} is not a power user!",
           userDTO.id(),
           userDTO.username(),
-          userDTO.userRoles().stream().map(RoleData::id).collect(Collectors.toSet()));
+          userDTO.userRoles().stream().map(UserRole::name).collect(Collectors.toSet()));
     }
 
     return result;

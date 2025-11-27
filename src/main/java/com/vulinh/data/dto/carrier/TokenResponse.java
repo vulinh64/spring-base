@@ -5,4 +5,4 @@ import lombok.With;
 
 @With
 @Builder
-public record TokenResponse(String accessToken) {}
+public record TokenResponse(String accessToken, String refreshToken) {}
