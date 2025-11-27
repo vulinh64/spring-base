@@ -40,7 +40,7 @@ An example `.env` file can be copied from [this file](/.env-example).
 
 ### Running the Required Containers
 
-You can run [this script (Windows only)](/run-docker.cmd) and it will start the required containers for local development: PostgreSQL and Redis.
+You can run [this script (Windows only)](/initialize-postgres-keycloak.cmd) and it will start the required containers for local development: PostgreSQL and KeyCloak.
 
 ## Running the Compose Stack
 
