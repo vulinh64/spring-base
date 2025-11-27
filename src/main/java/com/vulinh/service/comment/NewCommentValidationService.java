@@ -42,10 +42,10 @@ public class NewCommentValidationService {
 
     var createdBy = comment.getCreatedBy();
 
-    if (!Objects.equals(createdBy.getId(), user.id())) {
+    if (!Objects.equals(createdBy, user.id())) {
       throw NoSuchPermissionException.noSuchPermissionException(
           "User [%s] cannot edit comment [%s] which belonged to user [%s]"
-              .formatted(user.username(), comment.getId(), createdBy.getUsername()),
+              .formatted(user.username(), comment.getId(), createdBy),
           ServiceErrorCode.MESSAGE_INVALID_OWNER_OR_NO_RIGHT);
     }
 

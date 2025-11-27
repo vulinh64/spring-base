@@ -7,7 +7,6 @@ import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.PasswordResponse;
 import com.vulinh.exception.ValidationException;
 import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.service.user.UserValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class BcryptPublicController implements BcryptPublicAPI {
 
+  private static final int PASSWORD_MINIMUM_LENGTH = 6;
+
   final PasswordEncoder passwordEncoder;
 
   @Override
@@ -26,12 +27,9 @@ public class BcryptPublicController implements BcryptPublicAPI {
       BCryptPasswordGenerationRequest bcryptPasswordGenerationRequest) {
     var rawPassword = bcryptPasswordGenerationRequest.rawPassword();
 
-    if (StringUtils.isBlank(rawPassword)
-        || rawPassword.length() < UserValidationService.PASSWORD_MINIMUM_LENGTH) {
+    if (StringUtils.isBlank(rawPassword) || rawPassword.length() < PASSWORD_MINIMUM_LENGTH) {
       throw ValidationException.validationException(
-          "Invalid password",
-          ServiceErrorCode.MESSAGE_INVALID_PASSWORD,
-          UserValidationService.PASSWORD_MINIMUM_LENGTH);
+          "Invalid password", ServiceErrorCode.MESSAGE_INVALID_PASSWORD, PASSWORD_MINIMUM_LENGTH);
     }
 
     var encodedPassword = passwordEncoder.encode(rawPassword);

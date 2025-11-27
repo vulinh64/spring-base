@@ -39,8 +39,5 @@ public class Comment extends UuidJpaEntity implements DateTimeAuditable {
   @Column(name = "post_id")
   UUID postId;
 
-  @ToString.Exclude
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "created_by")
-  Users createdBy;
+  UUID createdBy;
 }

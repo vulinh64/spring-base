@@ -13,7 +13,7 @@ public interface PrefetchPostProjection extends UUIDIdentifiable, DateTimeAudita
 
   String getSlug();
 
-  AuthorProjection getAuthor();
+  UUID getAuthorId();
 
   CategoryProjection getCategory();
 

@@ -6,8 +6,9 @@ application-properties:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
     issuer: ${SECURITY_ISSUER:spring-base-service}
+    auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
     # noinspection HttpUrlsUsage
-    issuer-uri: http://${KEYCLOAK_HOST:localhost:8080}/realms/${application-properties.security.realm-name}
+    issuer-uri: ${application-properties.security.auth-server}/realms/${application-properties.security.realm-name}
     #
     # Go to https://www.devglan.com/online-tools/rsa-encryption-decryption to generate your own key
     #

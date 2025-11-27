@@ -33,27 +33,25 @@ public class PostValidationService {
     if (!(PostValidationService.isOwner(userDTO, post)
         || PostValidationService.isPowerUser(userDTO))) {
       throw NoSuchPermissionException.noSuchPermissionException(
-          "Invalid author or no permission to edit",
+          "Invalid authorId or no permission to edit",
           ServiceErrorCode.MESSAGE_INVALID_OWNER_OR_NO_RIGHT);
     }
   }
 
   public static boolean isOwner(UserBasicResponse userDTO, Post post) {
     var userId = userDTO.id();
-    var postAuthor = post.getAuthor();
-    var postAuthorId = postAuthor.getId();
+    var postAuthorId = post.getAuthorId();
 
     var result = Objects.equals(userId, postAuthorId);
 
     if (!result) {
       log.debug(
-          "User {} ({}) is not the owner of post ({}) {} (actual owner: {} ({}))",
+          "User {} ({}) is not the owner of post ({}) {} (actual owner: {})",
           userId,
           userDTO.username(),
           post.getId(),
           post.getTitle(),
-          postAuthorId,
-          postAuthor.getUsername());
+          postAuthorId);
     }
 
     return result;

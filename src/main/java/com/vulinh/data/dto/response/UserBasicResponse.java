@@ -11,11 +11,7 @@ import lombok.With;
 @Builder
 public record UserBasicResponse(
     UUID id,
-    UUID sessionId,
     String username,
-    String fullName,
     String email,
-    Instant createdDate,
-    Instant updatedDate,
     Collection<RoleData> userRoles)
     implements RecordUuidIdentifiable, Serializable {}
