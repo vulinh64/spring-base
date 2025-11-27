@@ -6,19 +6,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EndpointConstant {
 
-  public static final String ENDPOINT_AUTH = "/auth";
   public static final String ENDPOINT_POST = "/post";
   public static final String ENDPOINT_CATEGORY = "/category";
   public static final String ENDPOINT_FREE = "/free";
 
   public static final String COMMON_SEARCH_ENDPOINT = "/search";
   public static final String ENDPOINT_COMMENT = "/comment";
-
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  public static class AuthEndpoint {
-
-    public static final String LOGIN = "/login";
-  }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class PostEndpoint {
