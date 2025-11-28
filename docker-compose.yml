@@ -32,7 +32,7 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=myspringdatabase
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - postgresql-volume:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -46,7 +46,7 @@ services:
     networks:
       - spring-base-network
     image: quay.io/keycloak/keycloak:26.4
-    container_name: standalone-keycloak
+    container_name: keycloak
     command: start-dev
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
@@ -64,8 +64,8 @@ services:
       retries: 15
       start_period: 10s
 volumes:
-  postgres-volume:
-    name: postgres-volume
+  postgresql-volume:
+    name: postgresql-volume
 networks:
   spring-base-network:
     driver: bridge

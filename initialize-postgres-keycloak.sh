@@ -9,8 +9,8 @@ if [ $? -ne 0 ]; then
 fi
 
 # --- PostgreSQL Setup ---
-PG_CONTAINER_NAME="standalone-postgresql"
-PG_VOLUME_NAME="postgres-volume"
+PG_CONTAINER_NAME="postgresql"
+PG_VOLUME_NAME="postgresql-volume"
 PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=myspringdatabase\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql/data postgres:18.0-alpine3.22"
 
 echo "Checking PostgreSQL container [${PG_CONTAINER_NAME}]..."
@@ -29,7 +29,7 @@ fi
 # KEYCLOAK_REALM and CLIENT_ID should match the values in application.properties
 # --- Keycloak Setup ---
 KEYCLOAK_IMAGE="quay.io/keycloak/keycloak:26.4"
-KEYCLOAK_CONTAINER="standalone-keycloak"
+KEYCLOAK_CONTAINER="keycloak"
 # application-properties.security.realm-name
 KEYCLOAK_REALM="spring-base"
 # application-properties.security.client-name

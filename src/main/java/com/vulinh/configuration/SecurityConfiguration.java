@@ -33,11 +33,10 @@ public class SecurityConfiguration {
 
   static final String ROLE_ADMIN_NAME = UserRole.ADMIN.name();
 
-  final ApplicationProperties applicationProperties;
-
   @Bean
   @SneakyThrows
-  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity httpSecurity, ApplicationProperties applicationProperties) {
     var security = applicationProperties.security();
 
     return httpSecurity

@@ -12,7 +12,7 @@ docker compose down
 docker rmi --force spring-base:1.0.0
 docker compose up --detach
 
-KEYCLOAK_CONTAINER="standalone-keycloak"
+KEYCLOAK_CONTAINER="keycloak"
 KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
 KEYCLOAK_REALM="spring-base"
 CLIENT_ID="spring-base-client"

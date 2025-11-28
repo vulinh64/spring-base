@@ -9,8 +9,8 @@ if errorlevel 1 (
 )
 
 :: --- PostgreSQL Setup ---
-SET PG_CONTAINER_NAME=standalone-postgresql
-SET PG_VOLUME_NAME=postgres-volume
+SET PG_CONTAINER_NAME=postgresql
+SET PG_VOLUME_NAME=postgresql-volume
 SET PG_COMMAND=docker run -d --name !PG_CONTAINER_NAME! -e "POSTGRES_USER=postgres" -e "POSTGRES_PASSWORD=123456" -e "POSTGRES_DB=myspringdatabase" -p 5432:5432 -v !PG_VOLUME_NAME!:/var/lib/postgresql/data postgres:18.0-alpine3.22
 
 echo Checking PostgreSQL container [%PG_CONTAINER_NAME%]...
@@ -32,7 +32,7 @@ if errorlevel 1 (
 
 :: --- Keycloak Setup ---
 set KEYCLOAK_IMAGE=quay.io/keycloak/keycloak:26.4
-set KEYCLOAK_CONTAINER=standalone-keycloak
+set KEYCLOAK_CONTAINER=keycloak
 
 :: application-properties.security.realm-name
 set KEYCLOAK_REALM=spring-base
