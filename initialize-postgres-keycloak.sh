@@ -11,7 +11,7 @@ fi
 # --- PostgreSQL Setup ---
 PG_CONTAINER_NAME="postgresql"
 PG_VOLUME_NAME="postgresql-volume"
-PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=myspringdatabase\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql/data postgres:18.0-alpine3.22"
+PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=myspringdatabase\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql/data postgres:18.1-alpine3.22"
 
 echo "Checking PostgreSQL container [${PG_CONTAINER_NAME}]..."
 if ! docker ps -a | grep -q "${PG_CONTAINER_NAME}"; then
@@ -28,7 +28,7 @@ fi
 
 # KEYCLOAK_REALM and CLIENT_ID should match the values in application.properties
 # --- Keycloak Setup ---
-KEYCLOAK_IMAGE="quay.io/keycloak/keycloak:26.4"
+KEYCLOAK_IMAGE="quay.io/keycloak/keycloak:26.4.6"
 KEYCLOAK_CONTAINER="keycloak"
 # application-properties.security.realm-name
 KEYCLOAK_REALM="spring-base"

@@ -23,7 +23,7 @@ services:
   postgresql:
     networks:
       - spring-base-network
-    image: 'postgres:18.0-alpine3.22'
+    image: 'postgres:18.1-alpine3.22'
     container_name: postgresql
     ports:
       - "5432:5432"
@@ -45,7 +45,7 @@ services:
   keycloak:
     networks:
       - spring-base-network
-    image: quay.io/keycloak/keycloak:26.4
+    image: quay.io/keycloak/keycloak:26.4.6
     container_name: keycloak
     command: start-dev
     environment:

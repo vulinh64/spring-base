@@ -29,7 +29,7 @@ public abstract class IntegrationTestBase {
 
   @Container
   protected static final PostgreSQLContainer POSTGRESQL_CONTAINER =
-      new PostgreSQLContainer("postgres:18.0-alpine3.22")
+      new PostgreSQLContainer("postgres:18.1-alpine3.22")
           .withUsername(Constants.POSTGRES_USERNAME)
           .withPassword(Constants.POSTGRES_PASSWORD)
           .waitingFor(
@@ -37,7 +37,7 @@ public abstract class IntegrationTestBase {
 
   @Container
   protected static final KeycloakContainer KEYCLOAK_CONTAINER =
-      new KeycloakContainer("quay.io/keycloak/keycloak:26.4")
+      new KeycloakContainer("quay.io/keycloak/keycloak:26.4.6")
           .withAdminUsername(Constants.KC_ADMIN_USERNAME)
           .withAdminPassword(Constants.KC_ADMIN_PASSWORD)
           .waitingFor(HealthCheckCommand.KEYCLOAK.shellStrategyHealthCheck());
