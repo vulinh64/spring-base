@@ -2,6 +2,7 @@ logging.level:
   com.vulinh:
     configuration.cache.Common: DEBUG
     service:
+      event.EventService: DEBUG
       taxcalculator.TaxService: DEBUG
       user.UserValidationService: DEBUG
       post:

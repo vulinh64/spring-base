@@ -11,6 +11,7 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.NotFoundException;
 import com.vulinh.locale.ServiceErrorCode;
+import com.vulinh.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class PostService {
   final PostEditService postEditService;
   final PostDeletionService postDeletionService;
   final PostRevisionService postRevisionService;
+  final EventService eventService;
 
   public Page<PrefetchPostProjection> findPrefetchPosts(Pageable pageable) {
     return postRepository.findPrefetchPosts(pageable);
@@ -49,12 +51,15 @@ public class PostService {
   @Transactional
   public BasicPostResponse createPost(PostCreationRequest postCreationRequest) {
     // Delegate to PostCreationService
-    var entity = postCreationService.createPost(postCreationRequest);
+    var newPost = postCreationService.createPost(postCreationRequest);
 
     // Delegate to PostRevisionService
-    postRevisionService.createPostCreationRevision(entity);
+    postRevisionService.createPostCreationRevision(newPost);
 
-    return POST_MAPPER.toDto(entity);
+    // Delegate to EventService
+    eventService.sendNewPostEvent(newPost);
+
+    return POST_MAPPER.toDto(newPost);
   }
 
   @Transactional
