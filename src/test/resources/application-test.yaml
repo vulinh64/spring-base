@@ -1,3 +1,4 @@
+# Duplicated of application-development.yaml
 logging.level:
   com.vulinh:
     configuration.cache.Common: DEBUG
