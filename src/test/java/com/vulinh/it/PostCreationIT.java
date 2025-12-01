@@ -68,6 +68,10 @@ class PostCreationIT extends IntegrationTestBase {
     registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
     registry.add(
         "application-properties.security.auth-server", KEYCLOAK_CONTAINER::getAuthServerUrl);
+    registry.add("spring.rabbitmq.host", RABBIT_MQ_CONTAINER::getHost);
+    registry.add("spring.rabbitmq.port", RABBIT_MQ_CONTAINER::getAmqpPort);
+    registry.add("spring.rabbitmq.username", RABBIT_MQ_CONTAINER::getAdminUsername);
+    registry.add("spring.rabbitmq.password", RABBIT_MQ_CONTAINER::getAdminPassword);
   }
 
   @Test

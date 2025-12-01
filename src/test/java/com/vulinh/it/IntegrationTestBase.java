@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.vulinh.Constants;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.keycloak.KeycloakAuthExchange;
-import com.vulinh.utils.HealthCheckCommand;
+import com.vulinh.utils.ImageProperties;
 import com.vulinh.utils.JsonUtils;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.Getter;
@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.testcontainers.rabbitmq.RabbitMQContainer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -29,19 +30,22 @@ public abstract class IntegrationTestBase {
 
   @Container
   protected static final PostgreSQLContainer POSTGRESQL_CONTAINER =
-      new PostgreSQLContainer("postgres:18.1-alpine3.22")
+      new PostgreSQLContainer(ImageProperties.POSTGRESQL.getFullImageName())
           .withUsername(Constants.POSTGRES_USERNAME)
           .withPassword(Constants.POSTGRES_PASSWORD)
           .waitingFor(
-              HealthCheckCommand.POSTGRESQL.shellStrategyHealthCheck(Constants.POSTGRES_USERNAME));
+              ImageProperties.POSTGRESQL.shellStrategyHealthCheck(Constants.POSTGRES_USERNAME));
 
   @Container
   protected static final KeycloakContainer KEYCLOAK_CONTAINER =
-      new KeycloakContainer("quay.io/keycloak/keycloak:26.4.6")
+      new KeycloakContainer(ImageProperties.KEYCLOAK.getFullImageName())
           .withAdminUsername(Constants.KC_ADMIN_USERNAME)
           .withAdminPassword(Constants.KC_ADMIN_PASSWORD)
-          .waitingFor(HealthCheckCommand.KEYCLOAK.shellStrategyHealthCheck());
+          .waitingFor(ImageProperties.KEYCLOAK.shellStrategyHealthCheck());
 
+  @Container
+  protected static final RabbitMQContainer RABBIT_MQ_CONTAINER =
+      new RabbitMQContainer(ImageProperties.RABBIT_MQ.getFullImageName());
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ApplicationProperties applicationProperties;
