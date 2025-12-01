@@ -45,9 +45,7 @@ public abstract class IntegrationTestBase {
 
   @Container
   protected static final RabbitMQContainer RABBIT_MQ_CONTAINER =
-      new RabbitMQContainer(ImageProperties.RABBIT_MQ.getFullImageName())
-          .waitingFor(ImageProperties.RABBIT_MQ.shellStrategyHealthCheck());
-
+      new RabbitMQContainer(ImageProperties.RABBIT_MQ.getFullImageName());
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ApplicationProperties applicationProperties;
