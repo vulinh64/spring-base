@@ -2,6 +2,8 @@
 # Application properties will be set here
 #
 application-properties:
+  message-topic:
+    new-post-topic: new-post
   security:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
@@ -43,14 +45,18 @@ server:
   port: ${SERVER_PORT:8088}
   shutdown: GRACEFUL
 spring:
-  # Make your default spring boot logging colorful (if you are using Community version lmao)
-  output.ansi.enabled: ALWAYS
   application.name: spring-base
+  cloud.stream:
+    bindings:
+      newPost-out-0:
+        destination: ${application-properties.message-topic.new-post-topic}
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:123456}
   liquibase.enabled: ${LIQUIBASE_ENABLED:true}
+  # Make your default spring boot logging colorful (if you are using Community version lmao)
+  output.ansi.enabled: ALWAYS
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}

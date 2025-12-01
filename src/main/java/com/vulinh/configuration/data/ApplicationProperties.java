@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpMethod;
 
 @ConfigurationProperties(prefix = "application-properties")
-public record ApplicationProperties(SecurityProperties security) {
+public record ApplicationProperties(SecurityProperties security, MessageTopic messageTopic) {
 
   // Testability
   @Builder
@@ -21,4 +21,6 @@ public record ApplicationProperties(SecurityProperties security) {
       String clientName) {}
 
   public record VerbUrl(HttpMethod method, String url) {}
+
+  public record MessageTopic(String newPostTopic) {}
 }
