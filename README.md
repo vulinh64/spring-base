@@ -40,7 +40,7 @@ An example `.env` file can be copied from [this file](/.env-example).
 
 ### Running the Required Containers
 
-You can run [this script (Windows only)](/initialize-postgres-keycloak.cmd) and it will start the required containers for local development: PostgreSQL and KeyCloak.
+You can run [this script (Windows only)](/initialize-postgres-keycloak-rabbitmq.cmd) or [this script (Linux only)](/initialize-postgres-keycloak-rabbitmq.sh), and it will start the required containers for local development: PostgreSQL and KeyCloak.
 
 ## Running the Compose Stack
 
