@@ -61,6 +61,9 @@
 
         <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
         <testcontainers-keycloak.version>4.0.0</testcontainers-keycloak.version>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit/4.3.0 -->
+        <spring-cloud-starter-stream-rabbit.version>4.3.0</spring-cloud-starter-stream-rabbit.version>
     </properties>
 
     <dependencies>
@@ -193,6 +196,20 @@
         </dependency>
         <!-- END: Google Guava -->
 
+        <!-- BEGIN: JSoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+        <!-- END: JSoup -->
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+            <version>${spring-cloud-starter-stream-rabbit.version}</version>
+        </dependency>
+
         <!-- BEGIN: JUnit Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -205,14 +222,6 @@
             <scope>test</scope>
         </dependency>
         <!-- END: JUnit Test -->
-
-        <!-- BEGIN: JSoup -->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>${jsoup.version}</version>
-        </dependency>
-        <!-- END: JSoup -->
 
         <!-- BEGIN: Testcontainers -->
         <dependency>

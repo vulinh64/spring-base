@@ -20,6 +20,8 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   postgresql:
     networks:
       - spring-base-network
@@ -42,6 +44,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  rabbitmq:
+    networks:
+      - spring-base-network
+    image: 'rabbitmq:4.2.1-management-alpine'
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=123456
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   keycloak:
     networks:
       - spring-base-network
@@ -62,7 +80,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 15
-      start_period: 10s
 volumes:
   postgresql-volume:
     name: postgresql-volume
