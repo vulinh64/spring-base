@@ -52,6 +52,11 @@ spring:
     password: ${DATABASE_PASSWORD:123456}
   liquibase.enabled: ${LIQUIBASE_ENABLED:true}
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:rabbitmq}
+    password: ${RABBITMQ_PASSWORD:123456}
   security.oauth2.resourceserver.jwt:
     issuer-uri: ${application-properties.security.issuer-uri}
     audiences: account

@@ -28,6 +28,26 @@ if errorlevel 1 (
     )
 )
 
+:: --- RabbitMQ Setup ---
+SET RABBITMQ_CONTAINER_NAME=rabbitmq
+SET RABBITMQ_IMAGE=rabbitmq:4.2.1-management-alpine
+SET RABBITMQ_COMMAND=docker run --detach --name !RABBITMQ_CONTAINER_NAME! --hostname rabbitmq -e RABBITMQ_DEFAULT_USER=rabbitmq -e RABBITMQ_DEFAULT_PASS=123456 -p 5672:5672 -p 15672:15672 !RABBITMQ_IMAGE!
+
+echo Checking RabbitMQ container [%RABBITMQ_CONTAINER_NAME%]...
+docker ps -a | findstr /C:"!RABBITMQ_CONTAINER_NAME!" >nul
+if errorlevel 1 (
+    echo Container [%RABBITMQ_CONTAINER_NAME%] not existed, creating...
+    !RABBITMQ_COMMAND!
+) else (
+    docker ps | findstr /C:"!RABBITMQ_CONTAINER_NAME!" >nul
+    if errorlevel 1 (
+        echo Container [%RABBITMQ_CONTAINER_NAME%] stopped, restarting...
+        docker start !RABBITMQ_CONTAINER_NAME!
+    ) else (
+        echo Container [%RABBITMQ_CONTAINER_NAME%] is already running...
+    )
+)
+
 :: KEYCLOAK_REALM and CLIENT_ID should match the values in application.properties
 
 :: --- Keycloak Setup ---
