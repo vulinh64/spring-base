@@ -11,7 +11,7 @@ import com.vulinh.data.entity.ids.PostRevisionId;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
-import com.vulinh.exception.NotFoundException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.factory.PostFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
@@ -48,7 +48,7 @@ public class PostRevisionService {
   public Page<PostRevisionResponse> getPostRevisions(UUID postId, Pageable pageable) {
 
     if (postRevisionRepository.exists(checkPostRevisionJPAQuery(postId).notExists())) {
-      throw NotFoundException.entityNotFound(
+      throw NotFound404Exception.entityNotFound(
           CommonConstant.POST_ENTITY, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
     }
 
@@ -73,7 +73,7 @@ public class PostRevisionService {
                 checkPostRevisionJPAQuery(postId).exists(), FluentQuery.FetchableFluentQuery::first)
             .orElseThrow(
                 () ->
-                    NotFoundException.entityNotFound(
+                    NotFound404Exception.entityNotFound(
                         CommonConstant.POST_ENTITY,
                         postId,
                         ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
@@ -95,7 +95,7 @@ public class PostRevisionService {
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->
-                NotFoundException.entityNotFound(
+                NotFound404Exception.entityNotFound(
                     CommonConstant.POST_REVISION_ENTITY,
                     PostRevisionId.of(postId, revisionNumber),
                     ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
