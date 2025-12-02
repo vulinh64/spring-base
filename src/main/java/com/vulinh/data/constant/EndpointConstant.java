@@ -9,6 +9,7 @@ public class EndpointConstant {
   public static final String ENDPOINT_POST = "/post";
   public static final String ENDPOINT_CATEGORY = "/category";
   public static final String ENDPOINT_FREE = "/free";
+  public static final String ENDPOINT_SUBSCRIPTION = "/subscription";
 
   public static final String COMMON_SEARCH_ENDPOINT = "/search";
   public static final String ENDPOINT_COMMENT = "/comment";

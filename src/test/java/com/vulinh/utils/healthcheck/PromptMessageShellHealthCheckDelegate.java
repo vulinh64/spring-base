@@ -16,12 +16,12 @@ public class PromptMessageShellHealthCheckDelegate extends ShellStrategy {
   protected void waitUntilReady() {
     // SONARSUPPRESS: Allow printing to console for health check purposes
     IO.println(
-        "HEALTH CHECK: Container %s health check is in progress..."
+        "HEALTH CHECK: Service %s health check is in progress..."
             .formatted(containerDescription));
 
     actualWaitStrategy.waitUntilReady(waitStrategyTarget);
 
     // SONARSUPPRESS: Allow printing to console for health check purposes
-    IO.println("HEALTH CHECK: Container %s is ready".formatted(containerDescription));
+    IO.println("HEALTH CHECK: Service %s is ready".formatted(containerDescription));
   }
 }

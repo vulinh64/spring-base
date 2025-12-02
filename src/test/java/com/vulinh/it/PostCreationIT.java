@@ -51,7 +51,9 @@ class PostCreationIT extends IntegrationTestBase {
 
   static final String TITLE = "Test Title";
   static final String EXCERPT = "Test Excerpt";
-  static final String COMMENT_CONTENT = "This is a comment";
+  static final String DANGEROUS_COMMENT_CONTENT =
+      "<script>This is a comment</script>This is a comment";
+  static final String SANITIZED_COMMENT_CONTENT = "This is a comment";
   static final String EDITED_COMMENT_CONTENT = "Edited Comment";
 
   // Shared across tests
@@ -85,7 +87,7 @@ class PostCreationIT extends IntegrationTestBase {
   }
 
   @Test
-  @Order(-1)
+  @Order(Integer.MIN_VALUE)
   void testKeycloakClient() {
     // Ugly hack to get it runs ONLY ONCE
     var clientId =
@@ -98,7 +100,10 @@ class PostCreationIT extends IntegrationTestBase {
 
     assertDoesNotThrow(() -> keycloak.realm(realm).toRepresentation());
 
-    assertDoesNotThrow(() -> keycloak.realm(realm).clients().get(clientId).toRepresentation());
+    var client =
+        assertDoesNotThrow(() -> keycloak.realm(realm).clients().get(clientId).toRepresentation());
+
+    assertEquals(clientId, client.getId());
 
     assertEquals(2, keycloak.realm(realm).users().count());
   }
@@ -148,6 +153,7 @@ class PostCreationIT extends IntegrationTestBase {
               assertEquals(Constants.MOCK_SLUG, post.getSlug());
               assertTrue(
                   TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
+              assertEquals(getUserId(Constants.TEST_ADMIN), post.getAuthorId());
             },
             () -> fail("Post was not found"));
   }
@@ -169,7 +175,7 @@ class PostCreationIT extends IntegrationTestBase {
             .perform(
                 postWithEndpointAndPayload(
                         "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, postId),
-                        NewCommentRequest.builder().content(COMMENT_CONTENT).build())
+                        NewCommentRequest.builder().content(DANGEROUS_COMMENT_CONTENT).build())
                     .header(HttpHeaders.AUTHORIZATION, bearerToken(accessToken)))
             .andExpect(status().isCreated())
             .andReturn();
@@ -202,8 +208,9 @@ class PostCreationIT extends IntegrationTestBase {
         .findById(COMMENT_ID)
         .ifPresentOrElse(
             comment -> {
-              assertEquals(COMMENT_CONTENT, comment.getContent());
+              assertEquals(SANITIZED_COMMENT_CONTENT, comment.getContent());
               assertEquals(POST_ID, comment.getPostId());
+              assertEquals(getUserId(Constants.TEST_POWER_USER), comment.getCreatedBy());
             },
             () -> fail("Comment not found"));
 
@@ -211,7 +218,7 @@ class PostCreationIT extends IntegrationTestBase {
         .findById(CommentRevisionId.of(COMMENT_ID, REVISION_NUMBER))
         .ifPresentOrElse(
             commentRevision -> {
-              assertEquals(COMMENT_CONTENT, commentRevision.getContent());
+              assertEquals(SANITIZED_COMMENT_CONTENT, commentRevision.getContent());
               assertEquals(POST_ID, commentRevision.getPostId());
               assertEquals(RevisionType.CREATED, commentRevision.getRevisionType());
             },
@@ -305,5 +312,15 @@ class PostCreationIT extends IntegrationTestBase {
 
   private Optional<Post> findCreatedPost() {
     return postRepository.findOne(QPost.post.slug.eq(Constants.MOCK_SLUG));
+  }
+
+  private UUID getUserId(String user) {
+    return UUID.fromString(
+        keycloak
+            .realm(getApplicationProperties().security().realmName())
+            .users()
+            .search(user)
+            .getFirst()
+            .getId());
   }
 }

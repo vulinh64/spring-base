@@ -8,8 +8,11 @@ application-properties:
     client-id: ${KC_ADMIN_CLIENT:admin-cli}
     realm: ${KC_MASTER_REALM:master}
     auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
+  # One single point for reusability
   message-topic:
+    new-comment-event-topic: new-comment
     new-post-topic: new-post
+    subscribe-to-user-topic: subscribe-to-user
   security:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
@@ -44,6 +47,11 @@ spring:
     bindings:
       newPost-out-0:
         destination: ${application-properties.message-topic.new-post-topic}
+      subscribeToUser-out-0:
+        destination: ${application-properties.message-topic.subscribe-to-user-topic}
+      newComment-out-0:
+        destination: ${application-properties.message-topic.new-comment-event-topic}
+    default-binder: rabbit
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
     username: ${DATABASE_USERNAME:postgres}
