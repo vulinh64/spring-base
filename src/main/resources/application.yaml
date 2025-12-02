@@ -2,14 +2,19 @@
 # Application properties will be set here
 #
 application-properties:
+  keycloak-authentication:
+    username: ${KC_USERNAME:admin}
+    password: ${KC_PASSWORD:123456}
+    client-id: ${KC_ADMIN_CLIENT:admin-cli}
+    realm: ${KC_MASTER_REALM:master}
+    auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
   message-topic:
     new-post-topic: new-post
   security:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
-    auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
     # noinspection HttpUrlsUsage
-    issuer-uri: ${application-properties.security.auth-server}/realms/${application-properties.security.realm-name}
+    issuer-uri: ${application-properties.keycloak-authentication.auth-server}/realms/${application-properties.security.realm-name}
     no-authenticated-verb-urls:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/search/** }
@@ -25,17 +30,6 @@ application-properties:
       - /configuration/ui/**
       - /configuration/security/**
       - /webjars/**
-      - /auth/login/**
-      - /auth/register/**
-      - /auth/confirm-user/**
-      - /auth/reset-password/**
-      - /auth/refresh-token/**
-      - /password/**
-      - /user/search/**
-    high-privilege-urls:
-      - /user/create-user/**
-      - /user/delete-user/**
-      - /user/search/**
     high-privilege-verb-urls:
       - { method: DELETE, url: /category/** }
 #

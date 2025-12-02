@@ -7,7 +7,7 @@ import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.NotFoundException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
@@ -41,7 +41,7 @@ public class PostEditService {
             .findById(postId)
             .orElseThrow(
                 () ->
-                    NotFoundException.entityNotFound(
+                    NotFound404Exception.entityNotFound(
                         CommonConstant.POST_ENTITY,
                         postId,
                         ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));

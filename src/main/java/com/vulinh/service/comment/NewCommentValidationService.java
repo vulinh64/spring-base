@@ -7,7 +7,7 @@ import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.repository.CommentRepository;
 import com.vulinh.exception.NoSuchPermissionException;
-import com.vulinh.exception.NotFoundException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.SecurityUtils;
@@ -33,7 +33,7 @@ public class NewCommentValidationService {
             .findById(commentId)
             .orElseThrow(
                 () ->
-                    NotFoundException.entityNotFound(
+                    NotFound404Exception.entityNotFound(
                         CommonConstant.COMMENT_ENTITY,
                         commentId,
                         ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));

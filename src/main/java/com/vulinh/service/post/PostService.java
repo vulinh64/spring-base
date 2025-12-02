@@ -9,7 +9,7 @@ import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.NotFoundException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.event.EventService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class PostService {
         .map(POST_MAPPER::toSinglePostDTO)
         .orElseThrow(
             () ->
-                NotFoundException.entityNotFound(
+                NotFound404Exception.entityNotFound(
                     CommonConstant.POST_ENTITY,
                     postId,
                     ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));

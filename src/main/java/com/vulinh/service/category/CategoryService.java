@@ -12,7 +12,7 @@ import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.mapper.CategoryMapper;
 import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.NoSuchPermissionException;
-import com.vulinh.exception.NotFoundException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
@@ -41,7 +41,7 @@ public class CategoryService
         .flatMap(categoryRepository::findById)
         .orElseThrow(
             () ->
-                NotFoundException.entityNotFound(
+                NotFound404Exception.entityNotFound(
                     CommonConstant.CATEGORY_ENTITY,
                     categoryId,
                     ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));

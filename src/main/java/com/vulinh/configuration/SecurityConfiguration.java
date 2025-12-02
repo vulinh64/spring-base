@@ -103,8 +103,6 @@ public class SecurityConfiguration {
     authorizeHttpRequestsCustomizer
         .requestMatchers(securityProperties.noAuthenticatedUrls().toArray(String[]::new))
         .permitAll()
-        .requestMatchers(securityProperties.highPrivilegeUrls().toArray(String[]::new))
-        .hasAuthority(ROLE_ADMIN_NAME)
         .anyRequest()
         .authenticated();
   }
