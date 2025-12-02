@@ -2,7 +2,9 @@ package com.vulinh.service.event;
 
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.entity.Post;
+import com.vulinh.data.event.BaseEvent;
 import com.vulinh.data.mapper.EventMapper;
+import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
@@ -20,12 +22,14 @@ public class EventService {
   final ApplicationProperties applicationProperties;
 
   public void sendNewPostEvent(Post post) {
-    var newPostTopic = applicationProperties.messageTopic().newPostTopic();
+    sendMessageInternal(
+        applicationProperties.messageTopic().newPostTopic(),
+        EventMapper.INSTANCE.toNewPostEvent(post, SecurityUtils.getUserDTOOrThrow()));
+  }
 
-    var newPostEvent = EventMapper.INSTANCE.toNewPostEvent(post);
+  private <T extends BaseEvent> void sendMessageInternal(String topic, T event) {
+    log.debug("Sending message {} to topic [{}] @ {}...", event, topic, event.timestamp());
 
-    log.debug("Sending message {} to topic [{}]...", newPostEvent, newPostTopic);
-
-    streamBridge.send(newPostTopic, newPostEvent);
+    streamBridge.send(topic, event);
   }
 }
