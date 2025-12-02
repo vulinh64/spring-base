@@ -3,6 +3,7 @@ package com.vulinh.exception;
 import module java.base;
 
 import com.vulinh.data.base.ApplicationError;
+import com.vulinh.locale.ServiceErrorCode;
 
 /// Exception thrown when a user attempts to access resources without proper permissions.
 ///
@@ -31,6 +32,18 @@ public class NoSuchPermissionException extends ApplicationException {
     return new NoSuchPermissionException(message, applicationError, args);
   }
 
+  /// Creates a `NoSuchPermissionException` for an invalid Keycloak client authorization.
+  ///
+  /// @param notAuthorizedException The NotAuthorizedException thrown during Keycloak client authorization
+  /// @return A new `NoSuchPermissionException` instance for the invalid Keycloak client
+  public static NoSuchPermissionException noPermissionKeycloakClient(
+      String adminUser, Throwable notAuthorizedException) {
+    return new NoSuchPermissionException(
+        "Invalid Keycloak admin client authorization for user %s".formatted(adminUser),
+        ServiceErrorCode.MESSAGE_INVALID_KEYCLOAK,
+        notAuthorizedException);
+  }
+
   /// Constructs a new [NoSuchPermissionException] with the specified message, error details,
   /// and interpolation arguments.
   ///
@@ -38,6 +51,18 @@ public class NoSuchPermissionException extends ApplicationException {
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @param args Variable arguments that will be used for message interpolation
   NoSuchPermissionException(String message, ApplicationError applicationError, Object... args) {
-    super(message, applicationError, null, args);
+    this(message, applicationError, null, args);
+  }
+
+  /// Constructs a new `NoSuchPermissionException` with the specified message, error details, cause, and interpolation
+  /// arguments.
+  ///
+  /// @param message The detailed message describing the permission violation
+  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param throwable The cause of this exception
+  /// @param args Variable arguments that will be used for message interpolation
+  NoSuchPermissionException(
+      String message, ApplicationError applicationError, Throwable throwable, Object... args) {
+    super(message, applicationError, throwable, args);
   }
 }

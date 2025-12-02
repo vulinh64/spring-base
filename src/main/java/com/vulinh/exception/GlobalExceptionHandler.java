@@ -64,10 +64,10 @@ public class GlobalExceptionHandler {
     return logAndReturn(noSuchPermissionException);
   }
 
-  @ExceptionHandler(NotFoundException.class)
+  @ExceptionHandler(NotFound404Exception.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  GenericResponse<Object> handleNotFoundException(NotFoundException notFoundException) {
-    return logAndReturn(notFoundException);
+  GenericResponse<Object> handleNotFoundException(NotFound404Exception notFound404Exception) {
+    return logAndReturn(notFound404Exception);
   }
 
   @ExceptionHandler(ValidationException.class)

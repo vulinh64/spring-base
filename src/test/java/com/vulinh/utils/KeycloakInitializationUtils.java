@@ -21,16 +21,16 @@ public class KeycloakInitializationUtils {
   static final String KC_ADM_SHELL = "/opt/keycloak/bin/kcadm.sh";
 
   @SneakyThrows
-  public static void initializeKeycloak(
+  public static String initializeKeycloak(
       ApplicationProperties.SecurityProperties security, KeycloakContainer keycloakContainer) {
-    var clientIdMap = new AtomicReference<String>();
+    var clientAtomic = new AtomicReference<String>();
 
     var replacementMap = generateReplacementMap(security);
 
     var commands = KeycloakShellCommandUtils.readKeycloakExecCommands(replacementMap);
 
     for (var command : commands) {
-      var possibleUuid = clientIdMap.get();
+      var possibleUuid = clientAtomic.get();
 
       if (possibleUuid != null) {
         command =
@@ -52,9 +52,11 @@ public class KeycloakInitializationUtils {
       log.info(output);
 
       if (singleCommand.contains("create clients -r")) {
-        clientIdMap.set(output);
+        clientAtomic.set(output);
       }
     }
+
+    return clientAtomic.get();
   }
 
   private static Map<String, String> generateReplacementMap(

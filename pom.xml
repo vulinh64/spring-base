@@ -64,6 +64,9 @@
 
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit/4.3.0 -->
         <spring-cloud-starter-stream-rabbit.version>4.3.0</spring-cloud-starter-stream-rabbit.version>
+
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
+        <keycloak-admin-client.version>26.0.7</keycloak-admin-client.version>
     </properties>
 
     <dependencies>
@@ -208,6 +211,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
             <version>${spring-cloud-starter-stream-rabbit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak-admin-client.version}</version>
         </dependency>
 
         <!-- BEGIN: JUnit Test -->

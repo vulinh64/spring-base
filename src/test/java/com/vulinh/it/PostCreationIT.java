@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.keycloak.admin.client.Keycloak;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -63,15 +64,43 @@ class PostCreationIT extends IntegrationTestBase {
   @Autowired CommentRepository commentRepository;
   @Autowired CommentRevisionRepository commentRevisionRepository;
 
+  @Autowired Keycloak keycloak;
+
   @DynamicPropertySource
-  static void reinitializeJdbcUrl(DynamicPropertyRegistry registry) {
+  static void initialize(DynamicPropertyRegistry registry) {
     registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
     registry.add(
-        "application-properties.security.auth-server", KEYCLOAK_CONTAINER::getAuthServerUrl);
+        "application-properties.keycloak-authentication.auth-server",
+        KEYCLOAK_CONTAINER::getAuthServerUrl);
     registry.add("spring.rabbitmq.host", RABBIT_MQ_CONTAINER::getHost);
     registry.add("spring.rabbitmq.port", RABBIT_MQ_CONTAINER::getAmqpPort);
     registry.add("spring.rabbitmq.username", RABBIT_MQ_CONTAINER::getAdminUsername);
     registry.add("spring.rabbitmq.password", RABBIT_MQ_CONTAINER::getAdminPassword);
+    registry.add(
+        "application-properties.keycloak-authentication.username",
+        KEYCLOAK_CONTAINER::getAdminUsername);
+    registry.add(
+        "application-properties.keycloak-authentication.password",
+        KEYCLOAK_CONTAINER::getAdminPassword);
+  }
+
+  @Test
+  @Order(-1)
+  void testKeycloakClient() {
+    // Ugly hack to get it runs ONLY ONCE
+    var clientId =
+        KeycloakInitializationUtils.initializeKeycloak(
+            getApplicationProperties().security(), KEYCLOAK_CONTAINER);
+
+    assertNotNull(clientId);
+
+    var realm = getApplicationProperties().security().realmName();
+
+    assertDoesNotThrow(() -> keycloak.realm(realm).toRepresentation());
+
+    assertDoesNotThrow(() -> keycloak.realm(realm).clients().get(clientId).toRepresentation());
+
+    assertEquals(2, keycloak.realm(realm).users().count());
   }
 
   @Test
@@ -80,10 +109,6 @@ class PostCreationIT extends IntegrationTestBase {
   @Order(0)
   @SneakyThrows
   void testCreatePost() {
-    // Ugly hack to get it runs ONLY ONCE
-    KeycloakInitializationUtils.initializeKeycloak(
-        getApplicationProperties().security(), KEYCLOAK_CONTAINER);
-
     var accessToken = getAccessToken(Constants.TEST_ADMIN);
 
     var postCreationResult =

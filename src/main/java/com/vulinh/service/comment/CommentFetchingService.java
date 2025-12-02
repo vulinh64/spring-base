@@ -13,7 +13,7 @@ import com.vulinh.data.entity.QComment;
 import com.vulinh.data.entity.QCommentRevision;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.NotFoundException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.locale.ServiceErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -35,7 +35,7 @@ public class CommentFetchingService {
 
   public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
-      throw NotFoundException.entityNotFound(
+      throw NotFound404Exception.entityNotFound(
           CommonConstant.POST_ENTITY, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
     }
 
