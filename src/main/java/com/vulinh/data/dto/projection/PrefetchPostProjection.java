@@ -3,9 +3,9 @@ package com.vulinh.data.dto.projection;
 import module java.base;
 
 import com.vulinh.data.base.DateTimeAuditable;
-import com.vulinh.data.base.UUIDIdentifiable;
+import com.vulinh.data.base.UuidIdentifiable;
 
-public interface PrefetchPostProjection extends UUIDIdentifiable, DateTimeAuditable {
+public interface PrefetchPostProjection extends UuidIdentifiable, DateTimeAuditable {
 
   String getTitle();
 
