@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -40,7 +41,7 @@ public class Post extends UuidJpaEntity implements DateTimeAuditable {
 
   @LastModifiedBy UUID updatedBy;
 
-  UUID authorId;
+  @CreatedBy UUID authorId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @ToString.Exclude

@@ -2,11 +2,13 @@ package com.vulinh.controller.api;
 
 import module java.base;
 
+import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +25,12 @@ public interface CommentAPI {
 
   @PostMapping("/{postId}")
   @ResponseStatus(HttpStatus.CREATED)
+  @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   GenericResponse<CommentResponse> addComment(
       @PathVariable UUID postId, @RequestBody NewCommentRequest newCommentRequest);
 
   @PatchMapping("/{commentId}")
+  @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   GenericResponse<CommentResponse> editComment(
       @RequestBody NewCommentRequest newCommentRequest, @PathVariable UUID commentId);
 }

@@ -3,6 +3,7 @@ package com.vulinh.exception;
 import module java.base;
 
 import com.vulinh.data.base.ApplicationError;
+import com.vulinh.data.constant.EntityType;
 import com.vulinh.locale.ServiceErrorCode;
 
 /// Exception thrown when an entity cannot be found by the provided identifier.
@@ -18,19 +19,27 @@ public class NotFound404Exception extends ApplicationException {
 
   @Serial private static final long serialVersionUID = 5815209580420516331L;
 
+  /// Creates a [NotFound404Exception] specifically for a missing Post entity.
+  /// @param postId The identifier of the Post that was not found
+  /// @return A new [NotFound404Exception] instance for the missing Post
+  public static NotFound404Exception postNotFound(UUID postId) {
+    return entityNotFound(
+        EntityType.POST, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
+  }
+
   /// Creates a [NotFound404Exception] with a formatted message indicating which entity could not
   /// be found by its ID.
   ///
-  /// @param entityName The name of the entity type that was being searched for (e.g., "Post", "Comment")
+  /// @param entityType The name of the entity type that was being searched for (e.g., "Post", "Comment")
   /// @param entityId The identifier used to search for the entity
   /// @param applicationError The specific application error encapsulating the error code and details
   /// @return A new [NotFound404Exception] instance with a formatted message
   public static NotFound404Exception entityNotFound(
-      String entityName, Object entityId, ApplicationError applicationError) {
+      EntityType entityType, Object entityId, ApplicationError applicationError) {
     return new NotFound404Exception(
-        "Entity [%s] with ID [%s] not found".formatted(entityName, entityId),
+        "Entity [%s] with ID [%s] not found".formatted(entityType.getEntityName(), entityId),
         applicationError,
-        entityName);
+        entityType);
   }
 
   /// Creates a `NotFoundException` for an invalid Keycloak user.
@@ -54,14 +63,13 @@ public class NotFound404Exception extends ApplicationException {
     this(message, applicationError, null, args);
   }
 
-  /**
-   * Constructs a new {@code NotFoundException} with the specified message, error details, cause, and interpolation arguments.
-   *
-   * @param message The detailed message describing which entity was not found
-   * @param applicationError The specific application error encapsulating the error code and details
-   * @param throwable The cause of this exception
-   * @param args Variable arguments that will be used for message interpolation
-   */
+  /// Constructs a new `NotFoundException` with the specified message, error details, cause, and interpolation
+  /// arguments.
+  ///
+  /// @param message The detailed message describing which entity was not found
+  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param throwable The cause of this exception
+  /// @param args Variable arguments that will be used for message interpolation
   NotFound404Exception(String message, ApplicationError applicationError, Throwable throwable, Object... args) {
     super(message, applicationError, throwable, args);
   }

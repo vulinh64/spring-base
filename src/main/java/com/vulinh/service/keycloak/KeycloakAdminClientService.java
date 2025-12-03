@@ -1,31 +1,36 @@
 package com.vulinh.service.keycloak;
 
+import module java.base;
+
 import com.vulinh.configuration.data.ApplicationProperties;
+import com.vulinh.data.dto.response.KeycloakUserResponse;
+import com.vulinh.data.mapper.EventMapper;
 import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.exception.NotFound404Exception;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ProcessingException;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KeycloakClientService {
+public class KeycloakAdminClientService {
 
-  private final ApplicationProperties applicationProperties;
+  final ApplicationProperties applicationProperties;
 
   final Keycloak keycloak;
 
-  public UserRepresentation getUserRepresentation(UUID userId) {
+  @NonNull
+  public KeycloakUserResponse getKeycloakUser(UUID userId) {
     try {
-      return keycloak
-          .realm(applicationProperties.security().realmName())
-          .users()
-          .get(String.valueOf(userId))
-          .toRepresentation();
+      return EventMapper.INSTANCE.toKeycloakUserResponse(
+          keycloak
+              .realm(applicationProperties.security().realmName())
+              .users()
+              .get(String.valueOf(userId))
+              .toRepresentation());
     } catch (NotFoundException notFoundException) {
       throw NotFound404Exception.invalidKeycloakUser(userId, notFoundException);
     } catch (ProcessingException processingException) {

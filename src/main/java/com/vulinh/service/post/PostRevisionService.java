@@ -4,7 +4,7 @@ import module java.base;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.entity.*;
 import com.vulinh.data.entity.ids.PostRevisionId;
@@ -48,8 +48,7 @@ public class PostRevisionService {
   public Page<PostRevisionResponse> getPostRevisions(UUID postId, Pageable pageable) {
 
     if (postRevisionRepository.exists(checkPostRevisionJPAQuery(postId).notExists())) {
-      throw NotFound404Exception.entityNotFound(
-          CommonConstant.POST_ENTITY, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
+      throw NotFound404Exception.postNotFound(postId);
     }
 
     var actualPageable =
@@ -71,12 +70,7 @@ public class PostRevisionService {
         postRepository
             .findBy(
                 checkPostRevisionJPAQuery(postId).exists(), FluentQuery.FetchableFluentQuery::first)
-            .orElseThrow(
-                () ->
-                    NotFound404Exception.entityNotFound(
-                        CommonConstant.POST_ENTITY,
-                        postId,
-                        ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+            .orElseThrow(() -> NotFound404Exception.postNotFound(postId));
 
     postValidationService.validateModifyingPermission(SecurityUtils.getUserDTOOrThrow(), post);
 
@@ -96,7 +90,7 @@ public class PostRevisionService {
         .orElseThrow(
             () ->
                 NotFound404Exception.entityNotFound(
-                    CommonConstant.POST_REVISION_ENTITY,
+                    EntityType.POST_REVISION,
                     PostRevisionId.of(postId, revisionNumber),
                     ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }

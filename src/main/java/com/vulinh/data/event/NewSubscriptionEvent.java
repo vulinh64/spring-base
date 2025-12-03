@@ -7,6 +7,6 @@ import lombok.With;
 
 @Builder
 @With
-public record NewPostEvent(
-    UUID postId, String title, String excerpt, UUID actionUserId, String username)
+public record NewSubscriptionEvent(
+    UUID actionUserId, UUID subscribedUserId, String actionUsername, String subscribedUsername)
     implements BaseEvent {}

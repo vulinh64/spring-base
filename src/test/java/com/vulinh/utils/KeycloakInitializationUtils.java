@@ -1,18 +1,18 @@
 package com.vulinh.utils;
 
+import module java.base;
+
 import com.vulinh.Constants;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.constant.UserRole;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.util.StopWatch;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
@@ -23,6 +23,12 @@ public class KeycloakInitializationUtils {
   @SneakyThrows
   public static String initializeKeycloak(
       ApplicationProperties.SecurityProperties security, KeycloakContainer keycloakContainer) {
+    var clock = new StopWatch();
+
+    clock.start();
+
+    log.info("Initializing Keycloak data, please wait for a while...");
+
     var clientAtomic = new AtomicReference<String>();
 
     var replacementMap = generateReplacementMap(security);
@@ -55,6 +61,13 @@ public class KeycloakInitializationUtils {
         clientAtomic.set(output);
       }
     }
+
+    clock.stop();
+
+    log.info(
+        "Finished Keycloak data initialization! Took {} ns ({} seconds).",
+        clock.getTotalTimeNanos(),
+        clock.getTotalTimeSeconds());
 
     return clientAtomic.get();
   }

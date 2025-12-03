@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -39,5 +40,6 @@ public class Comment extends UuidJpaEntity implements DateTimeAuditable {
   @Column(name = "post_id")
   UUID postId;
 
+  @CreatedBy
   UUID createdBy;
 }
