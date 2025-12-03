@@ -4,7 +4,7 @@ import module java.base;
 
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.dto.response.KeycloakUserResponse;
-import com.vulinh.data.mapper.EventMapper;
+import com.vulinh.data.mapper.KeycloakMapper;
 import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.exception.NotFound404Exception;
 import jakarta.ws.rs.NotFoundException;
@@ -25,7 +25,7 @@ public class KeycloakAdminClientService {
   @NonNull
   public KeycloakUserResponse getKeycloakUser(UUID userId) {
     try {
-      return EventMapper.INSTANCE.toKeycloakUserResponse(
+      return KeycloakMapper.INSTANCE.toKeycloakUserResponse(
           keycloak
               .realm(applicationProperties.security().realmName())
               .users()

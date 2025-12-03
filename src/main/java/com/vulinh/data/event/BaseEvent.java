@@ -21,6 +21,9 @@ public interface BaseEvent extends UuidIdentifiable {
   // No need for @JsonProperty, the implementations will need to provide this
   UUID actionUserId();
 
+  // No need for @JsonProperty, the implementations will need to provide this
+  String actionUsername();
+
   // eventId is enough
   @JsonIgnore
   @Override

@@ -51,8 +51,9 @@ public class EventService {
     streamBridge.send(topic, payload);
 
     log.debug(
-        "Action user [ {} ] | Sent message [ {} ] to topic [ {} ] @ {}...",
+        "Action user [ {} ] - [ {} ] | Sent message [ {} ] to topic [ {} ] @ {}...",
         payload.actionUserId(),
+        payload.actionUsername(),
         JsonUtils.toMinimizedJSON(payload),
         topic,
         payload.timestamp());
