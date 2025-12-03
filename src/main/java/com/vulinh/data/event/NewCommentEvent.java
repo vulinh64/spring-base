@@ -7,5 +7,6 @@ import lombok.With;
 
 @Builder
 @With
-public record NewCommentEvent(UUID postId, String title, UUID actionUserId, String comment)
+public record NewCommentEvent(
+    UUID postId, String title, UUID actionUserId, String username, String comment)
     implements BaseEvent {}
