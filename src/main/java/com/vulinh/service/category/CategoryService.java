@@ -4,6 +4,7 @@ import module java.base;
 
 import com.querydsl.core.types.Predicate;
 import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
@@ -42,9 +43,7 @@ public class CategoryService
         .orElseThrow(
             () ->
                 NotFound404Exception.entityNotFound(
-                    CommonConstant.CATEGORY_ENTITY,
-                    categoryId,
-                    ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+                    EntityType.CATEGORY, categoryId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
   @Transactional

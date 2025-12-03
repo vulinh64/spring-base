@@ -2,7 +2,7 @@ package com.vulinh.service.comment;
 
 import module java.base;
 
-import com.vulinh.data.constant.CommonConstant;
+import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.repository.CommentRepository;
@@ -34,9 +34,7 @@ public class NewCommentValidationService {
             .orElseThrow(
                 () ->
                     NotFound404Exception.entityNotFound(
-                        CommonConstant.COMMENT_ENTITY,
-                        commentId,
-                        ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+                        EntityType.COMMENT, commentId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
 
     var user = SecurityUtils.getUserDTOOrThrow();
 

@@ -111,6 +111,13 @@ public class GlobalExceptionHandler {
                     .orElse("unknown or empty type")));
   }
 
+  @ExceptionHandler(KeycloakUserDisabledException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  GenericResponse<Object> handleKeycloakUserDisabledException(
+      KeycloakUserDisabledException keycloakUserDisabledException) {
+    return logAndReturn(keycloakUserDisabledException);
+  }
+
   static GenericResponse<Object> badRequestBody(String additionalMessage) {
     return GenericResponse.builder()
         .errorCode(ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST.getErrorCode())

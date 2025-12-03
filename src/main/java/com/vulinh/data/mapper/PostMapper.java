@@ -31,9 +31,10 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   @Mapping(target = "createdDate", ignore = true)
   @Mapping(target = "updatedDate", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
+  @Mapping(target = "authorId", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(target = "comments", ignore = true)
-  Post toEntity(PostCreationRequest dto, UUID authorId, Category category, Collection<Tag> tags);
+  Post toEntity(PostCreationRequest dto, Category category, Set<Tag> tags);
 
   @Mapping(
       target = "id",

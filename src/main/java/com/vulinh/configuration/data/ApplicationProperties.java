@@ -2,7 +2,6 @@ package com.vulinh.configuration.data;
 
 import module java.base;
 
-import lombok.Builder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpMethod;
 
@@ -12,8 +11,6 @@ public record ApplicationProperties(
     MessageTopic messageTopic,
     KeycloakAuthentication keycloakAuthentication) {
 
-  // Testability
-  @Builder
   public record SecurityProperties(
       List<String> noAuthenticatedUrls,
       List<VerbUrl> noAuthenticatedVerbUrls,
@@ -24,7 +21,8 @@ public record ApplicationProperties(
 
   public record VerbUrl(HttpMethod method, String url) {}
 
-  public record MessageTopic(String newPostTopic) {}
+  public record MessageTopic(
+      String newPostTopic, String subscribeToUserTopic, String newCommentEventTopic) {}
 
   public record KeycloakAuthentication(
       String authServer, String username, String password, String clientId, String realm) {}

@@ -6,7 +6,9 @@ import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Post;
+import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.NoSuchPermissionException;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.NoArgsValidatorStep;
@@ -19,8 +21,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class PostValidationService {
+
+  final PostRepository postRepository;
 
   static final int TITLE_MAX_LENGTH = 5000;
   static final int TAG_MAX_LENGTH = 1000;
@@ -78,6 +83,12 @@ public class PostValidationService {
 
   public void validatePost(@NonNull PostCreationRequest postCreationRequest) {
     BASIC_POST_VALIDATOR.executeValidation(postCreationRequest);
+  }
+
+  public Post getPost(UUID postId) {
+    return postRepository
+        .findById(postId)
+        .orElseThrow(() -> NotFound404Exception.postNotFound(postId));
   }
 
   @Getter

@@ -2,13 +2,10 @@ package com.vulinh.service.post;
 
 import module java.base;
 
-import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.NotFound404Exception;
-import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
@@ -36,15 +33,7 @@ public class PostEditService {
 
     var actualPostCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
-    var post =
-        postRepository
-            .findById(postId)
-            .orElseThrow(
-                () ->
-                    NotFound404Exception.entityNotFound(
-                        CommonConstant.POST_ENTITY,
-                        postId,
-                        ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+    var post = postValidationService.getPost(postId);
 
     postValidationService.validateModifyingPermission(userDTO, post);
 

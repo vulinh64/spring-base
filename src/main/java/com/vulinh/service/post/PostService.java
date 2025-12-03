@@ -2,7 +2,6 @@ package com.vulinh.service.post;
 
 import module java.base;
 
-import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
@@ -10,8 +9,8 @@ import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.NotFound404Exception;
-import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.event.EventService;
+import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,12 +39,7 @@ public class PostService {
     return postRepository
         .findById(postId)
         .map(POST_MAPPER::toSinglePostDTO)
-        .orElseThrow(
-            () ->
-                NotFound404Exception.entityNotFound(
-                    CommonConstant.POST_ENTITY,
-                    postId,
-                    ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+        .orElseThrow(() -> NotFound404Exception.postNotFound(postId));
   }
 
   @Transactional
@@ -57,7 +51,7 @@ public class PostService {
     postRevisionService.createPostCreationRevision(newPost);
 
     // Delegate to EventService
-    eventService.sendNewPostEvent(newPost);
+    eventService.sendNewPostEvent(newPost, SecurityUtils.getUserDTOOrThrow());
 
     return POST_MAPPER.toDto(newPost);
   }

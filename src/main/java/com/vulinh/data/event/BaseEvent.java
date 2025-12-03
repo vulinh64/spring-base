@@ -2,16 +2,29 @@ package com.vulinh.data.event;
 
 import module java.base;
 
-import com.vulinh.data.base.RecordUuidIdentifiable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vulinh.data.base.UuidIdentifiable;
 
-public interface BaseEvent extends RecordUuidIdentifiable {
+public interface BaseEvent extends UuidIdentifiable {
 
-  UUID eventId();
+  @JsonProperty("eventId")
+  default UUID eventId() {
+    return UUID.randomUUID();
+  }
 
-  Instant timestamp();
+  @JsonProperty("timestamp")
+  default Instant timestamp() {
+    return Instant.now();
+  }
 
+  // No need for @JsonProperty, the implementations will need to provide this
+  UUID actionUserId();
+
+  // eventId is enough
+  @JsonIgnore
   @Override
-  default UUID id() {
+  default UUID getId() {
     return eventId();
   }
 }
