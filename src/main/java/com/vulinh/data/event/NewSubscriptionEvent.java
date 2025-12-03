@@ -8,5 +8,5 @@ import lombok.With;
 @Builder
 @With
 public record NewSubscriptionEvent(
-    UUID actionUserId, UUID subscribedUserId, String actionUsername, String subscribedUsername)
-    implements BaseEvent {}
+    ActionUser actionUser, UUID subscribedUserId, String subscribedUsername)
+    implements RecordBaseEvent {}

@@ -16,21 +16,18 @@ public interface EventMapper {
 
   EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
-  @Mapping(target = "actionUserId", source = "actionUser.id")
   @Mapping(target = "postId", source = "post.id")
-  @Mapping(target = "actionUsername", source = "actionUser.username")
   NewPostEvent toNewPostEvent(Post post, UserBasicResponse actionUser);
 
-  @Mapping(target = "actionUserId", source = "actionUser.id")
-  @Mapping(target = "actionUsername", source = "actionUser.username")
   @Mapping(target = "subscribedUserId", source = "subscribedUser.id")
   @Mapping(target = "subscribedUsername", source = "subscribedUser.username")
   NewSubscriptionEvent toNewSubscriptionEvent(
       UserBasicResponse actionUser, KeycloakUserResponse subscribedUser);
 
-  @Mapping(target = "actionUsername", source = "actionUser.username")
-  @Mapping(target = "actionUserId", source = "actionUser.id")
-  @Mapping(target = "comment", source = "comment.content")
   @Mapping(target = "postId", source = "post.id")
   NewCommentEvent toNewCommentEvent(Comment comment, Post post, UserBasicResponse actionUser);
+
+  default String toComment(Comment comment) {
+    return comment.getContent();
+  }
 }

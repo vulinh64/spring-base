@@ -47,15 +47,18 @@ public class EventService {
         EVENT_MAPPER.toNewCommentEvent(comment, post, actionUser));
   }
 
-  private <T extends BaseEvent> void sendMessageInternal(String topic, T payload) {
-    streamBridge.send(topic, payload);
+  private <T extends BaseEvent> void sendMessageInternal(String topic, T eventData) {
+    streamBridge.send(topic, eventData);
+
+    var actionUser = eventData.getActionUser();
 
     log.debug(
-        "Action user [ {} ] - [ {} ] | Sent message [ {} ] to topic [ {} ] @ {}...",
-        payload.actionUserId(),
-        payload.actionUsername(),
-        JsonUtils.toMinimizedJSON(payload),
+        "Event ID [ {} ] | Action user [ {} ] - [ {} ] | Sent message [ {} ] to topic [ {} ] @ {}...",
+        eventData.getEventId(),
+        actionUser.getId(),
+        actionUser.getUsername(),
+        JsonUtils.toMinimizedJSON(eventData),
         topic,
-        payload.timestamp());
+        eventData.getTimestamp());
   }
 }
