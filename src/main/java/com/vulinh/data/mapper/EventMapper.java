@@ -4,6 +4,7 @@ import com.vulinh.data.dto.response.KeycloakUserResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.Post;
+import com.vulinh.data.event.ActionUser;
 import com.vulinh.data.event.NewCommentEvent;
 import com.vulinh.data.event.NewPostEvent;
 import com.vulinh.data.event.NewSubscriptionEvent;
@@ -17,17 +18,13 @@ public interface EventMapper {
   EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
   @Mapping(target = "postId", source = "post.id")
-  NewPostEvent toNewPostEvent(Post post, UserBasicResponse actionUser);
+  NewPostEvent toNewPostEvent(Post post);
 
-  @Mapping(target = "subscribedUserId", source = "subscribedUser.id")
   @Mapping(target = "subscribedUsername", source = "subscribedUser.username")
-  NewSubscriptionEvent toNewSubscriptionEvent(
-      UserBasicResponse actionUser, KeycloakUserResponse subscribedUser);
+  @Mapping(target = "subscribedUserId", source = "subscribedUser.id")
+  NewSubscriptionEvent toNewSubscriptionEvent(KeycloakUserResponse subscribedUser);
 
-  @Mapping(target = "postId", source = "post.id")
-  NewCommentEvent toNewCommentEvent(Comment comment, Post post, UserBasicResponse actionUser);
+  NewCommentEvent toNewCommentEvent(Comment comment, Post post);
 
-  default String toComment(Comment comment) {
-    return comment.getContent();
-  }
+  ActionUser toActionUser(UserBasicResponse basicActionUser);
 }

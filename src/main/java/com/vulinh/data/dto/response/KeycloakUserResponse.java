@@ -1,14 +1,13 @@
 package com.vulinh.data.dto.response;
 
+import module java.base;
+
+import com.vulinh.data.base.RecordUuidIdentifiable;
 import lombok.Builder;
 import lombok.With;
 
 @Builder
 @With
 public record KeycloakUserResponse(
-    String id,
-    String username,
-    String firstName,
-    String lastName,
-    String email,
-    boolean isEnabled) {}
+    UUID id, String username, String firstName, String lastName, String email, boolean isEnabled)
+    implements RecordUuidIdentifiable {}

@@ -15,8 +15,6 @@ public interface BaseEvent extends UuidIdentifiable {
     return Instant.now();
   }
 
-  BaseActionUser getActionUser();
-
   // eventId is enough
   @JsonIgnore
   @Override

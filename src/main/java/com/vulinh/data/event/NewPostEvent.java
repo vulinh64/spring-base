@@ -7,5 +7,4 @@ import lombok.With;
 
 @Builder
 @With
-public record NewPostEvent(UUID postId, String title, String excerpt, ActionUser actionUser)
-    implements RecordBaseEvent {}
+public record NewPostEvent(UUID postId, String title, String excerpt) {}
