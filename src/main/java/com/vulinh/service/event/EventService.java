@@ -7,7 +7,7 @@ import com.vulinh.data.dto.response.KeycloakUserResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.Post;
-import com.vulinh.data.event.BaseEvent;
+import com.vulinh.data.event.EventMessageWrapper;
 import com.vulinh.data.mapper.EventMapper;
 import com.vulinh.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,31 +31,41 @@ public class EventService {
   public void sendNewPostEvent(Post post, UserBasicResponse actionUser) {
     sendMessageInternal(
         applicationProperties.messageTopic().newPostTopic(),
-        EVENT_MAPPER.toNewPostEvent(post, actionUser));
+        actionUser,
+        EVENT_MAPPER.toNewPostEvent(post));
   }
 
   public void sendSubscribeToUserEvent(
-      UserBasicResponse actionUser, KeycloakUserResponse subscribedUserId) {
+      UserBasicResponse basicActionUser, KeycloakUserResponse subscribedUser) {
     sendMessageInternal(
         applicationProperties.messageTopic().subscribeToUserTopic(),
-        EVENT_MAPPER.toNewSubscriptionEvent(actionUser, subscribedUserId));
+        basicActionUser,
+        EVENT_MAPPER.toNewSubscriptionEvent(subscribedUser));
   }
 
-  public void sendNewCommentEvent(Comment comment, Post post, UserBasicResponse actionUser) {
+  public void sendNewCommentEvent(Comment comment, Post post, UserBasicResponse basicActionUser) {
     sendMessageInternal(
         applicationProperties.messageTopic().newCommentEventTopic(),
-        EVENT_MAPPER.toNewCommentEvent(comment, post, actionUser));
+        basicActionUser,
+        EVENT_MAPPER.toNewCommentEvent(comment, post));
   }
 
-  private <T extends BaseEvent> void sendMessageInternal(String topic, T payload) {
-    streamBridge.send(topic, payload);
+  private <T> void sendMessageInternal(
+      String topic, UserBasicResponse basicActionUser, T eventData) {
+    var eventMessage =
+        EventMessageWrapper.of(EVENT_MAPPER.toActionUser(basicActionUser), eventData);
+
+    streamBridge.send(topic, eventMessage);
+
+    var actionUser = eventMessage.actionUser();
 
     log.debug(
-        "Action user [ {} ] - [ {} ] | Sent message [ {} ] to topic [ {} ] @ {}...",
-        payload.actionUserId(),
-        payload.actionUsername(),
-        JsonUtils.toMinimizedJSON(payload),
+        "Event ID [ {} ] | Action user [ {} ] - [ {} ] | Sent message {} to topic [ {} ] @ {}",
+        eventMessage.getEventId(),
+        actionUser.id(),
+        actionUser.username(),
+        JsonUtils.toMinimizedJSON(eventMessage.data()),
         topic,
-        payload.timestamp());
+        eventMessage.getTimestamp());
   }
 }
