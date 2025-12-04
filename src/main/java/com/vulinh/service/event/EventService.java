@@ -53,8 +53,7 @@ public class EventService {
 
   private <T> void sendMessageInternal(
       TopicProperties topic, UserBasicResponse basicActionUser, T eventData) {
-    var eventMessage =
-        EventMessageWrapper.of(topic, EVENT_MAPPER.toActionUser(basicActionUser), eventData);
+    var eventMessage = EventMessageWrapper.of(topic, basicActionUser, eventData);
 
     streamBridge.send(topic.topicName(), eventMessage);
 

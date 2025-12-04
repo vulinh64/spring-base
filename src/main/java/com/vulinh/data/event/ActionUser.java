@@ -7,4 +7,4 @@ import lombok.With;
 
 @Builder
 @With
-public record ActionUser(UUID id, String username) implements RecordBaseActionUser {}
+public record ActionUser(UUID id, String username) {}
