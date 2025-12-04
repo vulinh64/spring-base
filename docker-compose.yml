@@ -15,6 +15,7 @@ services:
       - DATABASE_USERNAME=postgres
       - SERVER_PORT=8088
       - KEYCLOAK_HOST=http://keycloak:8080
+      - RABBITMQ_HOST=rabbitmq
     depends_on:
       postgresql:
         condition: service_healthy
@@ -37,12 +38,9 @@ services:
       - postgresql-volume:/var/lib/postgresql/data
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U postgres"
-        ]
+        [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
   rabbitmq:
     networks:
@@ -57,7 +55,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=123456
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 30s
+      interval: 10s
       timeout: 10s
       retries: 5
   keycloak:
@@ -77,8 +75,8 @@ services:
       - "9000:9000"
     healthcheck:
       test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { java.net.URI uri = java.net.URI.create(args[0]); System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)uri.toURL().openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
-      interval: 5s
-      timeout: 5s
+      interval: 10s
+      timeout: 10s
       retries: 15
 volumes:
   postgresql-volume:
