@@ -11,8 +11,8 @@ services:
       - "8088:8088"
     environment:
       - SPRING_PROFILES_ACTIVE=development
-      - DATABASE_HOST=postgresql
-      - DATABASE_USERNAME=postgres
+      - POSTGRESQL_HOST=postgresql
+      - POSTGRESQL_USERNAME=postgres
       - SERVER_PORT=8088
       - KEYCLOAK_HOST=http://keycloak:8080
       - RABBITMQ_HOST=rabbitmq

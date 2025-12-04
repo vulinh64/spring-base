@@ -3,10 +3,10 @@
 #
 application-properties:
   keycloak-authentication:
-    username: ${KC_USERNAME:admin}
-    password: ${KC_PASSWORD:123456}
-    client-id: ${KC_ADMIN_CLIENT:admin-cli}
-    realm: ${KC_MASTER_REALM:master}
+    username: ${KEYCLOAK_USERNAME:admin}
+    password: ${KEYCLOAK_PASSWORD:123456}
+    client-id: ${KEYCLOAK_ADMIN_CLIENT:admin-cli}
+    realm: ${KEYCLOAK_MASTER_REALM:master}
     auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
   # One single point for reusability
   message-topic:
@@ -59,9 +59,9 @@ spring:
         destination: ${application-properties.message-topic.new-comment.topic-name}
     default-binder: rabbit
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:123456}
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_NAME:myspringdatabase}
+    username: ${POSTGRESQL_USERNAME:postgres}
+    password: ${POSTGRESQL_PASSWORD:123456}
   liquibase.enabled: ${LIQUIBASE_ENABLED:true}
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
