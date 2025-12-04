@@ -7,4 +7,4 @@ import lombok.With;
 
 @Builder
 @With
-public record NewSubscriptionEvent(UUID subscribedUserId, String subscribedUsername) {}
+public record NewSubscriberEvent(UUID subscribedUserId, String subscribedUsername) {}

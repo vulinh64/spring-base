@@ -19,7 +19,7 @@ public interface EventMapper {
 
   @Mapping(target = "subscribedUsername", source = "subscribedUser.username")
   @Mapping(target = "subscribedUserId", source = "subscribedUser.id")
-  NewSubscriptionEvent toNewSubscriptionEvent(KeycloakUserResponse subscribedUser);
+  NewSubscriberEvent toNewSubscriptionEvent(KeycloakUserResponse subscribedUser);
 
   NewCommentEvent toNewCommentEvent(Comment comment, Post post);
 
