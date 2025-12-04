@@ -10,9 +10,15 @@ application-properties:
     auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
   # One single point for reusability
   message-topic:
-    new-comment-event-topic: new-comment
-    new-post-topic: new-post
-    subscribe-to-user-topic: subscribe-to-user
+    new-comment:
+      topic-name: new-comment
+      type: NEW_COMMENT
+    new-post:
+      topic-name: new-post
+      type: NEW_POST
+    new-subscriber:
+      topic-name: new-subscriber
+      type: NEW_SUBSCRIBER
   security:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
@@ -46,11 +52,11 @@ spring:
   cloud.stream:
     bindings:
       newPost-out-0:
-        destination: ${application-properties.message-topic.new-post-topic}
-      subscribeToUser-out-0:
-        destination: ${application-properties.message-topic.subscribe-to-user-topic}
+        destination: ${application-properties.message-topic.new-post.topic-name}
+      newSubscriber-out-0:
+        destination: ${application-properties.message-topic.new-subscriber.topic-name}
       newComment-out-0:
-        destination: ${application-properties.message-topic.new-comment-event-topic}
+        destination: ${application-properties.message-topic.new-comment.topic-name}
     default-binder: rabbit
   datasource:
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myspringdatabase}

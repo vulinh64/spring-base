@@ -3,6 +3,7 @@ package com.vulinh.service.event;
 import module java.base;
 
 import com.vulinh.configuration.data.ApplicationProperties;
+import com.vulinh.configuration.data.ApplicationProperties.TopicProperties;
 import com.vulinh.data.dto.response.KeycloakUserResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Comment;
@@ -30,7 +31,7 @@ public class EventService {
 
   public void sendNewPostEvent(Post post, UserBasicResponse actionUser) {
     sendMessageInternal(
-        applicationProperties.messageTopic().newPostTopic(),
+        applicationProperties.messageTopic().newPost(),
         actionUser,
         EVENT_MAPPER.toNewPostEvent(post));
   }
@@ -38,34 +39,35 @@ public class EventService {
   public void sendSubscribeToUserEvent(
       UserBasicResponse basicActionUser, KeycloakUserResponse subscribedUser) {
     sendMessageInternal(
-        applicationProperties.messageTopic().subscribeToUserTopic(),
+        applicationProperties.messageTopic().newSubscriber(),
         basicActionUser,
         EVENT_MAPPER.toNewSubscriptionEvent(subscribedUser));
   }
 
   public void sendNewCommentEvent(Comment comment, Post post, UserBasicResponse basicActionUser) {
     sendMessageInternal(
-        applicationProperties.messageTopic().newCommentEventTopic(),
+        applicationProperties.messageTopic().newComment(),
         basicActionUser,
         EVENT_MAPPER.toNewCommentEvent(comment, post));
   }
 
   private <T> void sendMessageInternal(
-      String topic, UserBasicResponse basicActionUser, T eventData) {
+      TopicProperties topic, UserBasicResponse basicActionUser, T eventData) {
     var eventMessage =
-        EventMessageWrapper.of(EVENT_MAPPER.toActionUser(basicActionUser), eventData);
+        EventMessageWrapper.of(topic, EVENT_MAPPER.toActionUser(basicActionUser), eventData);
 
-    streamBridge.send(topic, eventMessage);
+    streamBridge.send(topic.topicName(), eventMessage);
 
     var actionUser = eventMessage.actionUser();
 
     log.debug(
-        "Event ID [ {} ] | Action user [ {} ] - [ {} ] | Sent message {} to topic [ {} ] @ {}",
+        "Event ID [ {} ] | Type [ {} ] | Action user [ {} ] - [ {} ] | Sent message {} to topic [ {} ] @ {}",
         eventMessage.getEventId(),
+        topic.type(),
         actionUser.id(),
         actionUser.username(),
         JsonUtils.toMinimizedJSON(eventMessage.data()),
-        topic,
+        topic.topicName(),
         eventMessage.getTimestamp());
   }
 }
