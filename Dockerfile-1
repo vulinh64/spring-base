@@ -1,0 +1,68 @@
+# File: dockerfile-1
+#
+# Multi-stage Dockerfile for Java Spring Boot application (pre-built JAR)
+#
+
+FROM amazoncorretto:25-alpine-full AS build
+
+WORKDIR /usr/src/project
+
+ENV JAVA_VERSION=25
+ENV APP_NAME=app.jar
+ENV DEPS_FILE=deps.info
+
+# Copy the already-built application JAR into the build stage
+COPY target/${APP_NAME} ${APP_NAME}
+
+# Extract the JAR to analyze its dependencies
+RUN jar xf ${APP_NAME}
+
+# Use jdeps to identify necessary Java modules for a minimal JRE
+RUN jdeps  \
+    --ignore-missing-deps  \
+    -q --recursive  \
+    --multi-release ${JAVA_VERSION} \
+    --print-module-deps  \
+    --class-path 'BOOT-INF/lib/*' \
+    ${APP_NAME} > ${DEPS_FILE}
+
+# Create a custom JRE with only the required modules
+# jdk.crypto.ec is needed for HTTPS
+# JDEPS currently does not detect this module
+RUN jlink \
+    --add-modules $(cat ${DEPS_FILE}) \
+    --strip-java-debug-attributes  \
+    --compress 2  \
+    --no-header-files  \
+    --no-man-pages \
+    --output /jre-minimalist
+
+FROM alpine:3.22 AS final
+
+ENV JAVA_HOME=/opt/java/jre-minimalist
+ENV PATH=$JAVA_HOME/bin:$JAVA_HOME/lib:$PATH
+ENV USER=springuser
+ENV GROUP=springgroup
+ENV WORKDIR=app
+ENV APP_NAME=app.jar
+
+COPY --from=build /jre-minimalist $JAVA_HOME
+
+RUN addgroup -S ${GROUP} \
+    && adduser -S ${USER} -G ${GROUP} \
+    && mkdir -p /app \
+    && chown -R ${USER}:${GROUP} /${WORKDIR}
+
+COPY --from=build /usr/src/project/${APP_NAME} /${WORKDIR}/
+
+WORKDIR /${WORKDIR}
+
+USER ${USER}
+
+ENTRYPOINT ["java", \
+    "-XX:+UseCompactObjectHeaders", \
+    "-XX:MaxRAMPercentage=75.0", \
+    "-XX:InitialRAMPercentage=50.0", \
+    "-XX:MaxMetaspaceSize=512m", \
+    "-jar", \
+    "app.jar"]

@@ -1,0 +1,86 @@
+services:
+  spring-base:
+    networks:
+      - spring-base-network
+    image: 'spring-base:1.0.0'
+    container_name: spring-base
+    build:
+      context: .
+      dockerfile: ./Dockerfile-1
+    ports:
+      - "8088:8088"
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
+      - POSTGRESQL_HOST=postgresql
+      - POSTGRESQL_USERNAME=postgres
+      - SERVER_PORT=8088
+      - KEYCLOAK_HOST=http://keycloak:8080
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  postgresql:
+    networks:
+      - spring-base-network
+    image: 'postgres:18.1-alpine3.22'
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=myspringdatabase
+    volumes:
+      - postgresql-volume:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  rabbitmq:
+    networks:
+      - spring-base-network
+    image: 'rabbitmq:4.2.1-management-alpine'
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=123456
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  keycloak:
+    networks:
+      - spring-base-network
+    image: quay.io/keycloak/keycloak:26.4.6
+    container_name: keycloak
+    command: start-dev
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=123456
+      - KC_HEALTH_ENABLED=true
+      - KC_METRICS_ENABLED=true
+      - KC_HOSTNAME=keycloak
+    ports:
+      - "8080:8080"
+      - "9000:9000"
+    healthcheck:
+      test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { java.net.URI uri = java.net.URI.create(args[0]); System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)uri.toURL().openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
+      interval: 10s
+      timeout: 10s
+      retries: 15
+volumes:
+  postgresql-volume:
+    name: postgresql-volume
+networks:
+  spring-base-network:
+    driver: bridge

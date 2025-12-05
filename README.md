@@ -21,6 +21,9 @@
     * [**MapStruct Support** (if you plan to use MapStruct in your project)](#mapstruct-support-if-you-plan-to-use-mapstruct-in-your-project)
     * [And the (in)famous **SonarLint**](#and-the-infamous-sonarlint)
 * [JDK 25 Compact Object Headers](#jdk-25-compact-object-headers)
+  * [Share the `.m2` Folder to WSL2 Ubuntu](#share-the-m2-folder-to-wsl2-ubuntu)
+    * [Create a "Link" from WSL2 Ubuntu to Windows's `.m2` Folder](#create-a-link-from-wsl2-ubuntu-to-windowss-m2-folder)
+    * [Unlink:](#unlink)
 <!-- TOC -->
 
 ## Running the Container Stack for Local Development
@@ -170,4 +173,28 @@ You can use the following JVM option to enable compact object headers in JDK 25 
 
 ```
 -XX:+UseCompactObjectHeaders
+```
+
+## Share the `.m2` Folder to WSL2 Ubuntu
+
+> [!WARNING]
+>
+> This will introduce some performance penalty, due to the overhead of translating Windows's NTFS file system calls to Linux's ext4 file system calls. But in return, it saves you some time downloading or storing the dependencies multiple times in both Windows and WSL2 Ubuntu.
+
+### Create a "Link" from WSL2 Ubuntu to Windows's `.m2` Folder
+
+```shell
+# Remove existing .m2 folder if existed
+rm -rf ~/.m2
+
+# Link the .m2 folder from Windows to WSL2 Ubuntu
+ln -s /mnt/c/Users/[your Windows user name]/.m2 ~/.m2
+```
+
+Replace `[your Windows user name]` with your actual Windows user name.
+
+### Unlink:
+
+```shell
+rm -f ~/.m2
 ```

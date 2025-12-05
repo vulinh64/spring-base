@@ -10,14 +10,17 @@ fi
 
 docker compose down
 docker rmi --force spring-base:1.0.0
-docker compose up --detach
 
-KEYCLOAK_CONTAINER="keycloak"
-KCADM_PATH="/opt/keycloak/bin/kcadm.sh"
-KEYCLOAK_REALM="spring-base"
-CLIENT_ID="spring-base-client"
-KEYCLOAK_OVERLORD="admin"
-KEYCLOAK_ADMIN_PASSWORD="123456"
+./mvnw clean verify -DskipTests
+
+docker compose -f docker-compose-1.yml up --detach
+
+KEYCLOAK_CONTAINER=keycloak
+KCADM_PATH=/opt/keycloak/bin/kcadm.sh
+KEYCLOAK_REALM=spring-base
+CLIENT_ID=spring-base-client
+KEYCLOAK_OVERLORD=admin
+KEYCLOAK_ADMIN_PASSWORD=123456
 
 echo "Configuring KCADM credentials..."
 docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" config credentials --server http://localhost:8080 --realm master --user "$KEYCLOAK_OVERLORD" --password "$KEYCLOAK_ADMIN_PASSWORD"
@@ -26,16 +29,17 @@ docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" create realms -s realm="$KEYCLOA
 
 echo "Creating client [$CLIENT_ID]..."
 
+# if anyone has any better idea to not use variable, let me know
 CLIENT_UUID=$(docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" create clients -r "$KEYCLOAK_REALM" -s clientId="$CLIENT_ID" -s enabled=true -s publicClient=true -s directAccessGrantsEnabled=true -i)
 
 # --- Role and User Setup ---
-ROLE_ADMIN="ADMIN"
-ROLE_POWER_USER="POWER_USER"
-ROLE_USER="USER"
+ROLE_ADMIN=ADMIN
+ROLE_POWER_USER=POWER_USER
+ROLE_USER=USER
 
-ADMIN_USERNAME="administrator"
-POWER_USER_USERNAME="power_user"
-USER_USERNAME="user"
+ADMIN_USERNAME=administrator
+POWER_USER_USERNAME=power_user
+USER_USERNAME=user
 
 docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" create clients/"$CLIENT_UUID"/roles -r "$KEYCLOAK_REALM" -s name="$ROLE_ADMIN"
 docker exec "$KEYCLOAK_CONTAINER" "$KCADM_PATH" create clients/"$CLIENT_UUID"/roles -r "$KEYCLOAK_REALM" -s name="$ROLE_POWER_USER"
