@@ -8,7 +8,6 @@ import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.dto.response.SinglePostResponse;
 import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
-import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.service.event.EventService;
 import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,7 @@ public class PostService {
 
   final PostRepository postRepository;
 
+  final PostValidationService postValidationService;
   final PostCreationService postCreationService;
   final PostEditService postEditService;
   final PostDeletionService postDeletionService;
@@ -36,10 +36,7 @@ public class PostService {
   }
 
   public SinglePostResponse getSinglePost(UUID postId) {
-    return postRepository
-        .findById(postId)
-        .map(POST_MAPPER::toSinglePostDTO)
-        .orElseThrow(() -> NotFound404Exception.postNotFound(postId));
+    return POST_MAPPER.toSinglePostDTO(postValidationService.getPost(postId));
   }
 
   @Transactional

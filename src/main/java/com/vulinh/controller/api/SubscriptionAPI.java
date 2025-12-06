@@ -18,4 +18,8 @@ public interface SubscriptionAPI {
   @PostMapping("/user/{userId}")
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   ResponseEntity<Void> subscribeToUser(@PathVariable UUID userId);
+
+  @PostMapping("/post/{postId}")
+  @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
+  ResponseEntity<Void> subscribeToPost(@PathVariable UUID postId);
 }

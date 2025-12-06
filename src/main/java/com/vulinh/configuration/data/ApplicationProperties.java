@@ -23,7 +23,10 @@ public record ApplicationProperties(
   public record VerbUrl(HttpMethod method, String url) {}
 
   public record MessageTopic(
-      TopicProperties newPost, TopicProperties newSubscriber, TopicProperties newComment) {}
+      TopicProperties newPost,
+      TopicProperties newSubscriber,
+      TopicProperties newComment,
+      TopicProperties newPostFollowing) {}
 
   public record TopicProperties(EventType type, String topicName) {}
 

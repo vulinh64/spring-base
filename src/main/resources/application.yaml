@@ -19,6 +19,9 @@ application-properties:
     new-subscriber:
       topic-name: new-subscriber
       type: NEW_SUBSCRIBER
+    new-post-following:
+      topic-name: new-post-following
+      type: NEW_POST_FOLLOWING
   security:
     realm-name: ${KEYCLOAK_REALM:spring-base}
     client-name: ${KEYCLOAK_CLIENT:spring-base-client}
@@ -57,6 +60,8 @@ spring:
         destination: ${application-properties.message-topic.new-subscriber.topic-name}
       newComment-out-0:
         destination: ${application-properties.message-topic.new-comment.topic-name}
+      newPostFollowing-out-0:
+        destination: ${application-properties.message-topic.new-post-following.topic-name}
     default-binder: rabbit
   datasource:
     url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_NAME:myspringdatabase}

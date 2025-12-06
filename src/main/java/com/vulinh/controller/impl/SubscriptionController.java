@@ -19,4 +19,9 @@ public class SubscriptionController implements SubscriptionAPI {
   public ResponseEntity<Void> subscribeToUser(UUID userId) {
     return ResponseUtils.returnOkOrNoContent(userSubscriptionService.subscribeToUser(userId));
   }
+
+  @Override
+  public ResponseEntity<Void> subscribeToPost(UUID postId) {
+    return ResponseUtils.returnOkOrNoContent(userSubscriptionService.subscribeToPost(postId));
+  }
 }

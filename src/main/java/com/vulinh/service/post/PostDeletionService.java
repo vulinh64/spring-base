@@ -4,6 +4,7 @@ import module java.base;
 
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.repository.PostRepository;
+import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,16 @@ public class PostDeletionService {
 
   @Transactional
   public Optional<Post> deletePost(UUID postId) {
+    try {
+      var post = postValidationService.getPost(postId);
 
-    return postRepository
-        .findById(postId)
-        .map(
-            post -> {
-              postValidationService.validateModifyingPermission(
-                  SecurityUtils.getUserDTOOrThrow(), post);
+      postValidationService.validateModifyingPermission(SecurityUtils.getUserDTOOrThrow(), post);
 
-              postRepository.delete(post);
+      postRepository.delete(post);
 
-              return post;
-            });
+      return Optional.of(post);
+    } catch (NotFound404Exception notFound404Exception) {
+      return Optional.empty();
+    }
   }
 }
