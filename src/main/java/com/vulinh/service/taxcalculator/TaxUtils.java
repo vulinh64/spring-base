@@ -41,7 +41,10 @@ class TaxUtils {
   }
 
   static PersonalTaxDTO calculatePersonalTax(
-      TaxRequest taxRequest, InsuranceDTO insuranceDTO, TaxPeriod taxPeriod) {
+      TaxRequest taxRequest,
+      InsuranceDTO insuranceDTO,
+      TaxDeductionPeriod taxDeductionPeriod,
+      ProgressiveTaxPeriod progressiveTaxPeriod) {
     var totalSalary = taxRequest.totalSalary();
 
     // Tổng đóng BH
@@ -51,10 +54,12 @@ class TaxUtils {
     var pretaxSalary = totalSalary - totalInsurance;
 
     // Người phụ thuộc * Giảm trừ mỗi người phụ thuộc
-    var dependantDeduction = taxPeriod.dependantDeduction() * taxRequest.numberOfDependants();
+    var dependantDeduction =
+        taxDeductionPeriod.dependantDeduction() * taxRequest.numberOfDependants();
 
     // Thu nhập chịu thuế = Thu nhập trước thuế - Thu nhập miễn thuế - Giảm trừ người phụ thuộc
-    var taxableIncome = pretaxSalary - (taxPeriod.personalDeduction() + dependantDeduction);
+    var taxableIncome =
+        pretaxSalary - (taxDeductionPeriod.personalDeduction() + dependantDeduction);
 
     // Thu nhập chịu thuế luôn phải lớn hơn hoặc bằng 0
     if (taxableIncome < 0) {
@@ -62,7 +67,7 @@ class TaxUtils {
     }
 
     // Thuế lũy tiến
-    var progressiveTaxLevels = calculateProgressiveTax(taxableIncome, taxPeriod);
+    var progressiveTaxLevels = calculateProgressiveTax(taxableIncome, progressiveTaxPeriod);
 
     // Tổng thuế từ các bậc
     var taxAmount = progressiveTaxLevels.stream().mapToDouble(Double::doubleValue).sum();
@@ -77,12 +82,13 @@ class TaxUtils {
         .build();
   }
 
-  static List<Double> calculateProgressiveTax(double taxableIncome, TaxPeriod taxPeriod) {
+  static List<Double> calculateProgressiveTax(
+      double taxableIncome, ProgressiveTaxPeriod taxDeductionPeriod) {
     var resultBuilder = ImmutableList.<Double>builder();
 
     var taxLevelOrdinal = 0;
 
-    var progressiveTaxLevel = taxPeriod.progressiveTaxLevel();
+    var progressiveTaxLevel = taxDeductionPeriod.levels();
 
     while (true) {
       var taxLevel = progressiveTaxLevel.get(taxLevelOrdinal);

@@ -2,7 +2,8 @@ package com.vulinh.service.taxcalculator;
 
 import module java.base;
 
-import com.vulinh.service.taxcalculator.TaxSupport.TaxPeriod;
+import com.vulinh.service.taxcalculator.TaxSupport.ProgressiveTaxPeriod;
+import com.vulinh.service.taxcalculator.TaxSupport.TaxDeductionPeriod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,12 @@ public class TaxService {
       return calculateProbation(taxRequest);
     }
 
+    var today = LocalDate.now();
+
     return calculateNonProbation(
-        taxRequest, LocalDate.now().getYear() >= 2026 ? TaxPeriod.POST_2026 : TaxPeriod.PRE_2026);
+        taxRequest,
+        TaxDeductionPeriod.fromYear(today.getYear()),
+        ProgressiveTaxPeriod.fromDate(today));
   }
 
   static TaxResponse calculateProbation(TaxRequest taxRequest) {
@@ -32,12 +37,17 @@ public class TaxService {
     return TAX_MAPPER.toTaxDetail(taxRequest, null, personalTax);
   }
 
-  static TaxResponse calculateNonProbation(TaxRequest taxRequest, TaxPeriod taxPeriod) {
+  static TaxResponse calculateNonProbation(
+      TaxRequest taxRequest,
+      TaxDeductionPeriod taxDeductionPeriod,
+      ProgressiveTaxPeriod progressiveTaxPeriod) {
     // Bảo hiểm - BHYT (1.5%), BHXH (8%), BH thất nghiệp (1%)
     var insurance = TaxUtils.calculateInsurance(taxRequest);
 
     // Thuế TNCN
-    var personalTax = TaxUtils.calculatePersonalTax(taxRequest, insurance, taxPeriod);
+    var personalTax =
+        TaxUtils.calculatePersonalTax(
+            taxRequest, insurance, taxDeductionPeriod, progressiveTaxPeriod);
 
     return TAX_MAPPER.toTaxDetail(taxRequest, insurance, personalTax);
   }

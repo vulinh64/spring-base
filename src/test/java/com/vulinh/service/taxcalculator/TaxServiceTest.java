@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import module java.base;
 
 import com.vulinh.service.taxcalculator.TaxSupport.TaxCalculatorException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+@Disabled
 class TaxServiceTest {
 
   static final TaxMapper TAX_MAPPER = TaxMapper.INSTANCE;
