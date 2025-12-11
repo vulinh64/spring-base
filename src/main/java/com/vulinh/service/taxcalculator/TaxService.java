@@ -25,9 +25,7 @@ public class TaxService {
     var today = LocalDate.now();
 
     return calculateNonProbation(
-        taxRequest,
-        TaxDeductionPeriod.fromYear(today.getYear()),
-        ProgressiveTaxPeriod.fromDate(today));
+        taxRequest, TaxDeductionPeriod.fromYear(today), ProgressiveTaxPeriod.fromDate(today));
   }
 
   static TaxResponse calculateProbation(TaxRequest taxRequest) {

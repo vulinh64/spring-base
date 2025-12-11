@@ -55,8 +55,8 @@ public class TaxSupport {
     final double personalDeduction;
     final double dependantDeduction;
 
-    public static TaxDeductionPeriod fromYear(int year) {
-      return year >= NEW_DEDUCTION_EFFECTIVE_YEAR ? POST_2026 : PRE_2026;
+    public static TaxDeductionPeriod fromYear(LocalDate date) {
+      return date.getYear() < NEW_DEDUCTION_EFFECTIVE_YEAR ? PRE_2026 : POST_2026;
     }
   }
 
@@ -70,7 +70,7 @@ public class TaxSupport {
     final List<ProgressiveTaxLevel> levels;
 
     public static ProgressiveTaxPeriod fromDate(LocalDate date) {
-      return date.isAfter(NEW_PROGRESSIVE_LEVEL_EFFECTIVE_DATE) ? POST_2026_JUL : PRE_2026_JUL;
+      return date.isBefore(NEW_PROGRESSIVE_LEVEL_EFFECTIVE_DATE) ? PRE_2026_JUL : POST_2026_JUL;
     }
   }
 
