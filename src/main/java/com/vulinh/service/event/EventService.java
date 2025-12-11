@@ -9,7 +9,6 @@ import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.event.EventMessageWrapper;
-import com.vulinh.data.event.NewPostFollowingEvent;
 import com.vulinh.data.mapper.EventMapper;
 import com.vulinh.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,7 @@ public class EventService {
     sendMessageInternal(
         applicationProperties.messageTopic().newPostFollowing(),
         basicActionUser,
-        new NewPostFollowingEvent(post.getId()));
+        EVENT_MAPPER.toNewPostFollowingEvent(post));
   }
 
   private <T> void sendMessageInternal(

@@ -7,4 +7,5 @@ import lombok.With;
 
 @Builder
 @With
-public record NewCommentEvent(UUID postId, String title, String content) {}
+public record NewCommentEvent(
+    UUID postId, String title, String excerpt, UUID commentId, String content) {}

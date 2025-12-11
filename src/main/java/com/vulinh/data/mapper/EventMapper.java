@@ -17,10 +17,15 @@ public interface EventMapper {
   @Mapping(target = "postId", source = "post.id")
   NewPostEvent toNewPostEvent(Post post);
 
+  @Mapping(target = "postId", source = "post.id")
+  NewPostFollowingEvent toNewPostFollowingEvent(Post post);
+
   @Mapping(target = "subscribedUsername", source = "subscribedUser.username")
   @Mapping(target = "subscribedUserId", source = "subscribedUser.id")
   NewSubscriberEvent toNewSubscriptionEvent(KeycloakUserResponse subscribedUser);
 
+  @Mapping(target = "commentId", source = "comment.id")
+  @Mapping(target = "postId", source = "post.id")
   NewCommentEvent toNewCommentEvent(Comment comment, Post post);
 
   ActionUser toActionUser(UserBasicResponse basicActionUser);
