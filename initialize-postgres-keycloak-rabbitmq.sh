@@ -8,6 +8,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+./initialize-data-classes.sh
+
 # --- PostgreSQL Setup ---
 PG_CONTAINER_NAME="postgresql"
 PG_VOLUME_NAME="postgresql-volume"

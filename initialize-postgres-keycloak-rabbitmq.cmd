@@ -8,6 +8,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
+:: Initialize data dependency
+call ./initialize-data-classes.cmd
+
 :: --- PostgreSQL Setup ---
 SET PG_CONTAINER_NAME=postgresql
 SET PG_VOLUME_NAME=postgresql-volume
@@ -24,10 +27,10 @@ if errorlevel 1 (
 ) else (
     docker ps | findstr /C:"!PG_CONTAINER_NAME!" >nul
     if errorlevel 1 (
-        echo Container with the same name [%PG_CONTAINER_NAME%] stopped, restarting...
+        echo Container [%PG_CONTAINER_NAME%] stopped, restarting...
         docker start !PG_CONTAINER_NAME!
     ) else (
-        echo Container [%PG_CONTAINER_NAME%] is already running...
+        echo Container [%PG_CONTAINER_NAME%] is already running.
     )
 )
 
@@ -49,7 +52,7 @@ if errorlevel 1 (
         echo Container [%RABBITMQ_CONTAINER_NAME%] stopped, restarting...
         docker start !RABBITMQ_CONTAINER_NAME!
     ) else (
-        echo Container [%RABBITMQ_CONTAINER_NAME%] is already running...
+        echo Container [%RABBITMQ_CONTAINER_NAME%] is already running.
     )
 )
 
@@ -70,21 +73,42 @@ set CLIENT_ID=spring-base-client
 set KEYCLOAK_OVERLORD=admin
 set KEYCLOAK_ADMIN_PASSWORD=123456
 
-echo Stopping and removing old Keycloak containers/images...
-docker container rm -f %KEYCLOAK_CONTAINER% 2>nul
+SET KEYCLOAK_COMMAND=docker run --name !KEYCLOAK_CONTAINER! --detach -p 8080:8080 -p 9000:9000 -e "KC_BOOTSTRAP_ADMIN_USERNAME=!KEYCLOAK_OVERLORD!" -e "KC_BOOTSTRAP_ADMIN_PASSWORD=!KEYCLOAK_ADMIN_PASSWORD!" -e "KC_HEALTH_ENABLED=true" -e "KC_METRICS_ENABLED=true" !KEYCLOAK_IMAGE! start-dev
 
-echo Starting Keycloak container [%KEYCLOAK_CONTAINER%]...
-docker run --name %KEYCLOAK_CONTAINER% --detach -p 8080:8080 -p 9000:9000 -e "KC_BOOTSTRAP_ADMIN_USERNAME=%KEYCLOAK_OVERLORD%" -e "KC_BOOTSTRAP_ADMIN_PASSWORD=%KEYCLOAK_ADMIN_PASSWORD%" -e "KC_HEALTH_ENABLED=true" -e "KC_METRICS_ENABLED=true" %KEYCLOAK_IMAGE% start-dev
+echo Checking Keycloak container [%KEYCLOAK_CONTAINER%]...
+docker ps -a | findstr /C:"!KEYCLOAK_CONTAINER!" >nul
+if errorlevel 1 goto create_and_configure_keycloak
+
+:: Container exists, check if it is running then exit
+docker ps | findstr /C:"!KEYCLOAK_CONTAINER!" >nul
+if not errorlevel 1 (
+    echo Container [%KEYCLOAK_CONTAINER%] is already running.
+) else (
+    echo Container [%KEYCLOAK_CONTAINER%] existed but stopped, restarting...
+    docker start !KEYCLOAK_CONTAINER!
+)
+goto :eof
+
+:create_and_configure_keycloak
+echo Container [%KEYCLOAK_CONTAINER%] not existed, creating...
+!KEYCLOAK_COMMAND!
 
 docker cp HealthCheck %KEYCLOAK_CONTAINER%:/tmp/HealthCheck.java
 
+set RETRY_COUNT=0
+set MAX_RETRIES=12
 :health_check
 docker exec %KEYCLOAK_CONTAINER% sh -c "java /tmp/HealthCheck.java http://localhost:9000/health/live"
 if !ERRORLEVEL!==0 (
     echo Keycloak is serviceable!
     goto after_health_check
 ) else (
-    echo Waiting for Keycloak to be healthy...
+    set /a RETRY_COUNT+=1
+    if !RETRY_COUNT! geq !MAX_RETRIES! (
+        echo Error: Keycloak is not healthy after !MAX_RETRIES! retries.
+        exit /b 1
+    )
+    echo Waiting for Keycloak to be healthy... !RETRY_COUNT!/!MAX_RETRIES!
     timeout /t 5 >nul
     goto health_check
 )

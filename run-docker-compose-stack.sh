@@ -8,6 +8,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+./initialize-data-classes.sh
+
 docker compose down
 docker rmi --force spring-base:1.0.0
 docker compose up --detach

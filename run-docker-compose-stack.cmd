@@ -9,6 +9,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
+:: Initialize data dependency
+call ./initialize-data-classes.cmd
+
 docker compose down
 docker rmi --force spring-base:1.0.0
 docker compose up --detach
