@@ -256,6 +256,13 @@
             <scope>test</scope>
         </dependency>
         <!-- END: Testcontainers -->
+
+        <!-- Custom dependency -->
+        <dependency>
+            <groupId>com.vulinh</groupId>
+            <artifactId>spring-base-commons</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
