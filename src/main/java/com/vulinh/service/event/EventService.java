@@ -60,7 +60,7 @@ public class EventService {
 
   private <T> void sendMessageInternal(
       TopicProperties topic, UserBasicResponse basicActionUser, T eventData) {
-    var eventMessage = EventMessageWrapper.of(topic, basicActionUser, eventData);
+    var eventMessage = of(topic, basicActionUser, eventData);
 
     streamBridge.send(topic.topicName(), eventMessage);
 
@@ -68,12 +68,21 @@ public class EventService {
 
     log.debug(
         "Event ID [ {} ] | Type [ {} ] | Action user [ {} ] - [ {} ] | Sent message {} to topic [ {} ] @ {}",
-        eventMessage.getEventId(),
+        eventMessage.eventId(),
         topic.type(),
         actionUser.id(),
         actionUser.username(),
         JsonUtils.toMinimizedJSON(eventMessage.data()),
         topic.topicName(),
-        eventMessage.getTimestamp());
+        eventMessage.timestamp());
+  }
+
+  private <T> EventMessageWrapper<T> of(
+      TopicProperties topic, UserBasicResponse basicActionUser, T eventData) {
+    return EventMessageWrapper.<T>builder()
+        .eventType(topic.type())
+        .actionUser(EVENT_MAPPER.toActionUser(basicActionUser))
+        .data(eventData)
+        .build();
   }
 }
