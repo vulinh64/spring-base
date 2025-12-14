@@ -16,8 +16,8 @@ COPY pom.xml mvnw ./
 COPY .mvn/ .mvn/
 RUN chmod +x mvnw
 
-# Download dependencies (will be cached if pom.xml doesn't change)
-RUN ./mvnw dependency:go-offline
+# Copy local dependency to the local Maven repository in the build stage
+COPY build/spring-base-commons/target/spring-base-commons-1.0.0.jar /root/.m2/repository/com/vulinh/spring-base-commons/1.0.0/spring-base-commons-1.0.0.jar
 
 # Copy source code
 COPY src/ src/

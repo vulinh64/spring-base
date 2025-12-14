@@ -7,6 +7,7 @@
   * [Table of Contents](#table-of-contents)
   * [Running the Container Stack for Local Development](#running-the-container-stack-for-local-development)
     * [Prerequisites](#prerequisites)
+    * [Required External Dependency](#required-external-dependency)
     * [Specifying Environment Variables](#specifying-environment-variables)
     * [Running the Required Containers](#running-the-required-containers)
   * [Running the Compose Stack](#running-the-compose-stack)
@@ -23,7 +24,7 @@
 * [JDK 25 Compact Object Headers](#jdk-25-compact-object-headers)
   * [Share the `.m2` Folder to WSL2 Ubuntu](#share-the-m2-folder-to-wsl2-ubuntu)
     * [Create a "Link" from WSL2 Ubuntu to Windows's `.m2` Folder](#create-a-link-from-wsl2-ubuntu-to-windowss-m2-folder)
-    * [Unlink:](#unlink)
+    * [Unlink](#unlink)
 <!-- TOC -->
 
 ## Running the Container Stack for Local Development
@@ -32,6 +33,26 @@
 
 * JDK 25+ (for coding and debugging, but not necessary if running the service in containers)
 * Docker Desktop
+
+### Required External Dependency
+
+The project makes use of external dependency [spring-base-commons](https://github.com/vulinh64/spring-base-commons).
+
+* For Windows, run [this script](/create-data-classes.cmd)
+
+* For Linux, run [this script](/create-data-classes.sh)
+  
+  * Run `chmod +x ./create-data-classes.sh` if you do not have the permission to run the SH file.
+
+Check if your `pom.xml` contains those lines in the `<dependencies>` section:
+
+```xml
+<dependency>
+  <groupId>com.vulinh</groupId>
+  <artifactId>spring-base-commons</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 
 ### Specifying Environment Variables
 
@@ -45,9 +66,13 @@ An example `.env` file can be copied from [this file](/.env-example).
 
 You can run [this script (Windows only)](/initialize-postgres-keycloak-rabbitmq.cmd) or [this script (Linux only)](/initialize-postgres-keycloak-rabbitmq.sh), and it will start the required containers for local development: PostgreSQL and KeyCloak.
 
+> Both scripts have already handled the external dependency for you. See the [Required External Dependency](#required-external-dependency) section for more info. 
+
 ## Running the Compose Stack
 
-You can run [this script(Windows only)](/run-docker-compose-stack.cmd) and it will build the service image and start the containers for you.
+You can run [this script(Windows only)](/run-docker-compose-stack.cmd), and it will build the service image and start the containers for you.
+
+> Again, both scripts have already handled the external dependency for you.
 
 # Additional Notes
 
@@ -59,7 +84,7 @@ platform threads managed by some sort of reactor library.
 > [!WARNING]
 >
 > Test your application thoroughly, as the usage of virtual threads might (theoretically) break critical functions in
-your app. Use virtual threads with caution for older projects.
+> your app. Use virtual threads with caution for older projects.
 
 ### Spring Boot 3.2+
 
@@ -191,9 +216,9 @@ rm -rf ~/.m2
 ln -s /mnt/c/Users/[your Windows user name]/.m2 ~/.m2
 ```
 
-Replace `[your Windows user name]` with your actual Windows user name.
+Replace `[your Windows user name]` with your actual Windows username.
 
-### Unlink:
+### Unlink
 
 ```shell
 rm -f ~/.m2

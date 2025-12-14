@@ -2,7 +2,7 @@ name: Java CI with Maven
 
 on:
   pull_request:
-    branches: ["main", "master"]
+    branches: ["main"]
 
 jobs:
   build:
@@ -16,5 +16,15 @@ jobs:
         java-version: '25'
         distribution: 'temurin'
         cache: maven
+    - name: Clone and build spring-base-commons
+      run: |
+        git clone --depth 1 https://github.com/vulinh64/spring-base-commons.git
+        cd spring-base-commons
+        mvn clean install
+        cd ..
+    - name: Copy commons artifact to local Maven repo
+      run: |
+        mkdir -p ~/.m2/repository/com/vulinh/spring-base-commons/1.0.0/
+        cp spring-base-commons/target/spring-base-commons-1.0.0.jar ~/.m2/repository/com/vulinh/spring-base-commons/1.0.0/spring-base-commons-1.0.0.jar
     - name: Run unit tests
       run: mvn clean verify

@@ -78,7 +78,7 @@ public class KeycloakInitializationUtils {
         Map.entry("KC_ADMIN_USERNAME", Constants.KC_ADMIN_USERNAME),
         Map.entry("KC_ADMIN_PASSWORD", Constants.KC_ADMIN_PASSWORD),
         Map.entry("KEYCLOAK_REALM", security.realmName()),
-        Map.entry("CLIENT_ID", security.clientName()),
+        Map.entry("CLIENT_NAME", security.clientName()),
         Map.entry("ROLE_ADMIN", UserRole.ADMIN.name()),
         Map.entry("ROLE_POWER_USER", UserRole.POWER_USER.name()),
         Map.entry("ADMIN_USERNAME", Constants.TEST_ADMIN),
