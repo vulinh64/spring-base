@@ -1,5 +1,3 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
-/create-data-classes.sh text eol=lf
-/create-keycloak-data.sh text eol=lf
-/initialize-postgres-keycloak-rabbitmq.sh text eol=lf
+*.sh text eol=lf
