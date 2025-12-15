@@ -8,8 +8,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-chmod +x ./create-data-classes.sh
+docker compose down
+docker compose -f docker-compose-1.yml down
 
+# Create local repository for data classes
+chmod +x ./create-data-classes.sh
 ./create-data-classes.sh
 
 # --- PostgreSQL Setup ---

@@ -12,7 +12,7 @@ if errorlevel 1 (
 docker compose down
 docker rmi --force spring-base:1.0.0
 
-:: Initialize data dependency
+:: Create local repository for data classes
 call ./create-data-classes.cmd
 
 call mvnw.cmd clean verify -DskipTests

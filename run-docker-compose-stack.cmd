@@ -9,15 +9,13 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: Initialize data dependency
-call ./create-data-classes.cmd
-
 docker compose down
 docker rmi --force spring-base:1.0.0
 docker compose up --detach
 
 :: Configure Keycloak
 call ./create-keycloak-data
+
 if errorlevel 1 (
     echo Error: Keycloak configuration failed
     exit /b 1

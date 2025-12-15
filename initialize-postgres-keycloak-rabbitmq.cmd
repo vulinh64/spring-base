@@ -8,7 +8,10 @@ if errorlevel 1 (
     exit /b 1
 )
 
-:: Initialize data dependency
+docker compose down
+docker compose -f docker-compose-1.yml down
+
+:: Create local repository for data classes
 call ./create-data-classes
 
 :: --- PostgreSQL Setup ---

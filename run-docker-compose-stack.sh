@@ -8,18 +8,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-chmod +x ./create-data-classes.sh
-
-./create-data-classes.sh
-
 docker compose down
 docker rmi --force spring-base:1.0.0
 docker compose up --detach
 
-chmod +x ./create-keycloak-data.sh
-
 # Configure Keycloak
+chmod +x ./create-keycloak-data.sh
 ./create-keycloak-data.sh
+
 if [ $? -ne 0 ]; then
     echo "Error: Keycloak configuration failed"
     exit 1

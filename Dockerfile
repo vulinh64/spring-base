@@ -2,23 +2,36 @@
 # Multi-stage Dockerfile for Java Spring Boot application
 #
 
-# Stage 1: Build stage - Compile the application and create a minimal JRE
+# Stage 1: Build stage
+# Install the application and its dependencies
+# Create a custom minimal JRE
 FROM amazoncorretto:25-alpine-full AS build
+
+# Install git
+RUN apk add --no-cache git
 
 WORKDIR /usr/src/project
 
 ENV JAVA_VERSION=25
 ENV APP_NAME=app.jar
 ENV DEPS_FILE=deps.info
+
+# Change this when there is an update
 ENV SPRING_BASE_COMMONS_VERSION=1.0.0
 
-# Copy Maven configuration files first to leverage Docker cache
-COPY pom.xml mvnw ./
+# Clone the spring-base-commons repository
+RUN git clone --depth 1 --branch ${SPRING_BASE_COMMONS_VERSION} https://github.com/vulinh64/spring-base-commons.git
+
+# Copy Maven wrapper files
+COPY mvnw ./
 COPY .mvn/ .mvn/
 RUN chmod +x mvnw
 
-# Copy local dependency to the local Maven repository in the build stage
-COPY build/spring-base-commons/target/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar /root/.m2/repository/com/vulinh/spring-base-commons/${SPRING_BASE_COMMONS_VERSION}/spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar
+# Build and install spring-base-commons to local Maven repository
+RUN ./mvnw clean install -f spring-base-commons/pom.xml -DskipTests
+
+# Copy main application Maven configuration files
+COPY pom.xml ./
 
 # Copy source code
 COPY src/ src/

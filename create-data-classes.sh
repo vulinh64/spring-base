@@ -2,12 +2,14 @@
 
 set -e
 
+SPRING_BASE_COMMONS_VERSION=1.0.0
+
 if [ -d "./build/spring-base-commons" ]; then
   rm -rf ./build/spring-base-commons
 fi
 
-# Shallowly clone the repository
-git clone --depth 1 https://github.com/vulinh64/spring-base-commons.git ./build/spring-base-commons
+# Shallowly clone the repository at the specified version
+git clone --depth 1 --branch "$SPRING_BASE_COMMONS_VERSION" https://github.com/vulinh64/spring-base-commons.git ./build/spring-base-commons
 
 rm -rf ./build/spring-base-commons/.git
 
