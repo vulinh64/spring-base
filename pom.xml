@@ -67,6 +67,8 @@
 
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
         <keycloak-admin-client.version>26.0.7</keycloak-admin-client.version>
+
+        <spring-base-commons.version>1.0.0</spring-base-commons.version>
     </properties>
 
     <dependencies>
@@ -261,7 +263,7 @@
         <dependency>
             <groupId>com.vulinh</groupId>
             <artifactId>spring-base-commons</artifactId>
-            <version>1.0.0</version>
+            <version>${spring-base-commons.version}</version>
         </dependency>
     </dependencies>
 
