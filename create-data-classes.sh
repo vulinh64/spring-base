@@ -2,7 +2,7 @@
 
 set -e
 
-SPRING_BASE_COMMONS_VERSION=1.0.0
+SPRING_BASE_COMMONS_VERSION=1.1.0
 
 if [ -d "./build/spring-base-commons" ]; then
   rm -rf ./build/spring-base-commons
