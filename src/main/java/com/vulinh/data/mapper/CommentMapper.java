@@ -19,15 +19,15 @@ public interface CommentMapper {
 
   CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
-  @Mapping(target = "updatedDate", ignore = true)
+  @Mapping(target = "updatedDateTime", ignore = true)
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "createdDate", ignore = true)
+  @Mapping(target = "createdDateTime", ignore = true)
   @Mapping(target = "postId", source = "post.id")
   Comment fromNewComment(NewCommentRequest newComment, Post post);
 
   @Mapping(target = "id", expression = "java(createTransientId(comment))")
   @Mapping(target = "revisionCreatedBy", ignore = true)
-  @Mapping(target = "revisionCreatedDate", ignore = true)
+  @Mapping(target = "revisionCreatedDateTime", ignore = true)
   CommentRevision fromComment(Comment comment, RevisionType revisionType);
 
   default CommentRevisionId createTransientId(Comment comment) {

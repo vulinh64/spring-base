@@ -57,7 +57,7 @@ public class PostRevisionService {
             pageable.getPageSize(),
             Sort.by(
                 Order.desc(
-                    QPostRevision.postRevision.revisionCreatedDate.getMetadata().getName())));
+                    QPostRevision.postRevision.revisionCreatedDateTime.getMetadata().getName())));
 
     return postRevisionRepository
         .findByPostIdOrPostSlug(postId, actualPageable)
@@ -96,8 +96,8 @@ public class PostRevisionService {
   }
 
   @Transactional
-  public void createPostCreationRevision(Post post) {
-    createRevisionInternal(post, RevisionType.CREATED);
+  public long createPostCreationRevision(Post post) {
+    return createRevisionInternal(post, RevisionType.CREATED);
   }
 
   @Transactional
@@ -110,15 +110,19 @@ public class PostRevisionService {
     createRevisionInternal(post, RevisionType.DELETED);
   }
 
-  void createRevisionInternal(Post post, RevisionType revisionType) {
-    postRevisionRepository.save(POST_MAPPER.toPostRevision(post, revisionType));
+  long createRevisionInternal(Post post, RevisionType revisionType) {
+    var revision = postRevisionRepository.save(POST_MAPPER.toPostRevision(post, revisionType));
+
+    return revision.getId().getRevisionNumber();
   }
 
   boolean applyRevisionInternal(PostRevision postRevision, Post post) {
+    var categoryId = postRevision.getCategoryId();
+
     var category =
-        Objects.equals(postRevision.getCategoryId(), post.getCategory().getId())
+        Objects.equals(categoryId, post.getCategory().getId())
             ? null
-            : categoryService.getCategory(postRevision.getCategoryId());
+            : categoryService.getCategory(categoryId);
 
     var tags = tagService.parseTags(postRevision.getTags());
 

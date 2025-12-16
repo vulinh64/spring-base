@@ -2,10 +2,10 @@ package com.vulinh.data.dto.projection;
 
 import module java.base;
 
-import com.vulinh.data.base.DateTimeAuditable;
-import com.vulinh.data.base.UuidIdentifiable;
+import com.vulinh.data.base.Identifiable;
+import com.vulinh.data.base.InstantDateTimeAuditable;
 
-public interface PrefetchPostProjection extends UuidIdentifiable, DateTimeAuditable {
+public interface PrefetchPostProjection extends InstantDateTimeAuditable, Identifiable<UUID> {
 
   String getTitle();
 
@@ -18,8 +18,8 @@ public interface PrefetchPostProjection extends UuidIdentifiable, DateTimeAudita
   CategoryProjection getCategory();
 
   @Override
-  Instant getCreatedDate();
+  Instant getCreatedDateTime();
 
   @Override
-  Instant getUpdatedDate();
+  Instant getUpdatedDateTime();
 }

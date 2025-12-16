@@ -3,7 +3,7 @@ package com.vulinh.data.entity;
 import module java.base;
 
 import com.vulinh.annotation.UUIDAsIdIfNullGenerator;
-import com.vulinh.data.base.UuidJpaEntity;
+import com.vulinh.data.base.AbstractEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
@@ -15,7 +15,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class Category extends UuidJpaEntity {
+public class Category extends AbstractEntity<UUID> {
 
   @Serial private static final long serialVersionUID = 106688923162808538L;
 

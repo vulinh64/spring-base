@@ -2,15 +2,13 @@ package com.vulinh.data.entity;
 
 import module java.base;
 
-import com.vulinh.data.base.DateTimeAuditable;
-import com.vulinh.data.base.UuidJpaEntity;
+import com.vulinh.data.base.AbstractTimestampAuditableEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -22,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @ToString
 @Builder
 @With
-public class Comment extends UuidJpaEntity implements DateTimeAuditable {
+public class Comment extends AbstractTimestampAuditableEntity<UUID> {
 
   @Serial private static final long serialVersionUID = 8024056047258352378L;
 
@@ -32,14 +30,11 @@ public class Comment extends UuidJpaEntity implements DateTimeAuditable {
 
   String content;
 
-  @CreatedDate Instant createdDate;
-
-  @LastModifiedDate Instant updatedDate;
-
   // So that mapping on Post works
   @Column(name = "post_id")
   UUID postId;
 
-  @CreatedBy
-  UUID createdBy;
+  @CreatedBy UUID createdBy;
+
+  @LastModifiedBy UUID updatedBy;
 }

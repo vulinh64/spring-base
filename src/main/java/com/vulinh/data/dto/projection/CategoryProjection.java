@@ -1,8 +1,10 @@
 package com.vulinh.data.dto.projection;
 
-import com.vulinh.data.base.UuidIdentifiable;
+import module java.base;
 
-public interface CategoryProjection extends UuidIdentifiable {
+import com.vulinh.data.base.Identifiable;
+
+public interface CategoryProjection extends Identifiable<UUID> {
 
   String getDisplayName();
 }

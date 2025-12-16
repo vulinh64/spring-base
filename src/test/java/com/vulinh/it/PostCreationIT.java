@@ -20,9 +20,11 @@ import com.vulinh.data.entity.QPost;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.data.entity.ids.CommentRevisionId;
+import com.vulinh.data.entity.ids.PostRevisionId;
 import com.vulinh.data.repository.CommentRepository;
 import com.vulinh.data.repository.CommentRevisionRepository;
 import com.vulinh.data.repository.PostRepository;
+import com.vulinh.data.repository.PostRevisionRepository;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.KeycloakInitializationUtils;
@@ -55,14 +57,17 @@ class PostCreationIT extends IntegrationTestBase {
       "<script>This is a comment</script>This is a comment";
   static final String SANITIZED_COMMENT_CONTENT = "This is a comment";
   static final String EDITED_COMMENT_CONTENT = "Edited Comment";
+  static final String SANITIZED_POST_CONTENT = "Test blank";
 
   // Shared across tests
   static UUID COMMENT_ID;
-  static Long REVISION_NUMBER;
-  static Long EDITED_REVISION_NUMBER;
+  static long COMMENT_REVISION_NUMBER;
+  static long EDITED_REVISION_NUMBER;
   static UUID POST_ID;
+  static long POST_REVISION_NUMBER;
 
   @Autowired PostRepository postRepository;
+  @Autowired PostRevisionRepository postRevisionIdRepository;
   @Autowired CommentRepository commentRepository;
   @Autowired CommentRevisionRepository commentRevisionRepository;
 
@@ -138,24 +143,50 @@ class PostCreationIT extends IntegrationTestBase {
     assertEquals(TITLE, data.title());
     assertEquals(EXCERPT, data.excerpt());
     assertEquals(Constants.MOCK_SLUG, data.slug());
+
+    POST_REVISION_NUMBER = data.revisionNumber();
   }
 
   @Test
   @Transactional(readOnly = true)
   @Order(1)
   public void testVerifyPostCreation() {
-    findCreatedPost()
+    var creatorId = getUserId(Constants.TEST_ADMIN);
+
+    var createdPost =
+        findCreatedPost()
+            .map(
+                post -> {
+                  assertEquals(TITLE, post.getTitle());
+                  assertEquals(EXCERPT, post.getExcerpt());
+                  assertEquals(SANITIZED_POST_CONTENT, post.getPostContent());
+                  assertEquals(Constants.MOCK_SLUG, post.getSlug());
+                  assertTrue(
+                      TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
+                  assertEquals(creatorId, post.getAuthorId());
+                  assertNotNull(post.getCreatedDateTime());
+                  assertNotNull(post.getUpdatedDateTime());
+
+                  return post;
+                })
+            .orElseGet(() -> fail("Post was not found"));
+
+    postRevisionIdRepository
+        .findById(PostRevisionId.of(createdPost.getId(), POST_REVISION_NUMBER))
         .ifPresentOrElse(
-            post -> {
-              assertEquals(TITLE, post.getTitle());
-              assertEquals(EXCERPT, post.getExcerpt());
-              assertEquals("Test blank", post.getPostContent());
-              assertEquals(Constants.MOCK_SLUG, post.getSlug());
+            postRevision -> {
+              assertEquals(TITLE, postRevision.getTitle());
+              assertEquals(EXCERPT, postRevision.getExcerpt());
+              assertEquals(SANITIZED_POST_CONTENT, postRevision.getPostContent());
+              assertEquals(Constants.MOCK_SLUG, postRevision.getSlug());
               assertTrue(
-                  TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
-              assertEquals(getUserId(Constants.TEST_ADMIN), post.getAuthorId());
+                  TAGS.containsAll(Arrays.stream(postRevision.getTags().split(",")).toList()));
+              assertEquals(RevisionType.CREATED, postRevision.getRevisionType());
+              assertNotNull(postRevision.getRevisionCreatedDateTime());
+              assertEquals(creatorId, postRevision.getRevisionCreatedBy());
+              assertEquals(creatorId, postRevision.getAuthorId());
             },
-            () -> fail("Post was not found"));
+            () -> fail("Post revision was not found"));
   }
 
   @Test
@@ -187,7 +218,7 @@ class PostCreationIT extends IntegrationTestBase {
             .data();
 
     COMMENT_ID = response.commentId();
-    REVISION_NUMBER = response.revisionNumber();
+    COMMENT_REVISION_NUMBER = response.revisionNumber();
 
     assertEquals(postId, response.postId());
   }
@@ -202,7 +233,6 @@ class PostCreationIT extends IntegrationTestBase {
   void testVerifyComment() {
     assertNotNull(COMMENT_ID);
     assertNotNull(POST_ID);
-    assertNotNull(REVISION_NUMBER);
 
     commentRepository
         .findById(COMMENT_ID)
@@ -211,16 +241,19 @@ class PostCreationIT extends IntegrationTestBase {
               assertEquals(SANITIZED_COMMENT_CONTENT, comment.getContent());
               assertEquals(POST_ID, comment.getPostId());
               assertEquals(getUserId(Constants.TEST_POWER_USER), comment.getCreatedBy());
+              assertNotNull(comment.getCreatedDateTime());
+              assertNotNull(comment.getUpdatedDateTime());
             },
             () -> fail("Comment not found"));
 
     commentRevisionRepository
-        .findById(CommentRevisionId.of(COMMENT_ID, REVISION_NUMBER))
+        .findById(CommentRevisionId.of(COMMENT_ID, COMMENT_REVISION_NUMBER))
         .ifPresentOrElse(
             commentRevision -> {
               assertEquals(SANITIZED_COMMENT_CONTENT, commentRevision.getContent());
               assertEquals(POST_ID, commentRevision.getPostId());
               assertEquals(RevisionType.CREATED, commentRevision.getRevisionType());
+              assertNotNull(commentRevision.getRevisionCreatedDateTime());
             },
             () -> fail("Comment revision not found"));
   }
@@ -261,7 +294,7 @@ class PostCreationIT extends IntegrationTestBase {
 
     var editedRevisionNumber = response.revisionNumber();
 
-    assertNotEquals(REVISION_NUMBER, editedRevisionNumber);
+    assertNotEquals(COMMENT_REVISION_NUMBER, editedRevisionNumber);
 
     EDITED_REVISION_NUMBER = editedRevisionNumber;
   }
@@ -270,8 +303,6 @@ class PostCreationIT extends IntegrationTestBase {
   @Transactional(readOnly = true)
   @Order(5)
   void testVerifyEditedComment() {
-    assertNotNull(EDITED_REVISION_NUMBER);
-
     commentRepository
         .findById(COMMENT_ID)
         .ifPresentOrElse(

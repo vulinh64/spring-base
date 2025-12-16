@@ -29,7 +29,7 @@ public class CommentFetchingService {
 
   final PostRepository postRepository;
 
-  JPAQueryFactory queryFactory;
+  static volatile JPAQueryFactory queryFactory;
 
   public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
@@ -46,7 +46,7 @@ public class CommentFetchingService {
 
   JPAQuery<SingleCommentResponse> buildFetchQuery(UUID postId, Pageable pageable) {
     var qComment = QComment.comment;
-    var qCommentCreatedDate = qComment.createdDate;
+    var qCommentCreatedDate = qComment.createdDateTime;
     var qCommentRevision = QCommentRevision.commentRevision;
     var qCommentId = qComment.id;
 
@@ -56,7 +56,7 @@ public class CommentFetchingService {
             qCommentId,
             qComment.content,
             qCommentCreatedDate,
-            qComment.updatedDate,
+            qComment.updatedDateTime,
             new CaseBuilder()
                 .when(
                     getQueryFactory()
