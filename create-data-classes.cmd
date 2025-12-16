@@ -1,6 +1,6 @@
 @echo off
 
-SET SPRING_BASE_COMMONS_VERSION=1.0.0
+SET SPRING_BASE_COMMONS_VERSION=1.1.0
 
 IF EXIST .\build\spring-base-commons rmdir /s /q .\build\spring-base-commons
 

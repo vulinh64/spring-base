@@ -7,24 +7,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      SPRING_BASE_COMMONS_VERSION: 1.1.0
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 25
       uses: actions/setup-java@v4
       with:
         java-version: '25'
-        distribution: 'temurin'
+        distribution: 'corretto'
         cache: maven
     - name: Clone and build spring-base-commons
       run: |
-        git clone --depth 1 https://github.com/vulinh64/spring-base-commons.git
+        git clone --depth 1 --branch ${{ env.SPRING_BASE_COMMONS_VERSION }} https://github.com/vulinh64/spring-base-commons.git
         cd spring-base-commons
         mvn clean install
         cd ..
     - name: Copy commons artifact to local Maven repo
       run: |
-        mkdir -p ~/.m2/repository/com/vulinh/spring-base-commons/1.0.0/
-        cp spring-base-commons/target/spring-base-commons-1.0.0.jar ~/.m2/repository/com/vulinh/spring-base-commons/1.0.0/spring-base-commons-1.0.0.jar
+        mkdir -p ~/.m2/repository/com/vulinh/spring-base-commons/${{ env.SPRING_BASE_COMMONS_VERSION }}/
+        cp spring-base-commons/target/spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar ~/.m2/repository/com/vulinh/spring-base-commons/${{ env.SPRING_BASE_COMMONS_VERSION }}/spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar
     - name: Run unit tests
       run: mvn clean verify

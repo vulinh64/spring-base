@@ -55,8 +55,6 @@ Check if your `pom.xml` contains these lines in the `<dependencies>` section:
 </dependency>
 ```
 
-At the time of writing, `${spring-base-commons.version}` is set to `1.0.0`.
-
 ### Dependency Version
 
 This project uses `spring-base-commons` as an external dependency (see above). If you want to change the version, check the following locations:
@@ -70,6 +68,8 @@ This project uses `spring-base-commons` as an external dependency (see above). I
   * [create-data-classes.cmd](/create-data-classes.cmd) (Windows)
 
   * [create-data-classes.sh](/create-data-classes.sh) (Linux)
+
+  * [GitHub Actions workflows](/.github/workflows/unit-test.yml) (the variable is `${{ env.SPRING_BASE_COMMONS_VERSION }}`)
 
 ### Specifying Environment Variables
 
