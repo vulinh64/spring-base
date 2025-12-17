@@ -11,8 +11,8 @@ CREATE TABLE "users"
     password_reset_code            varchar(36) NULL,
     password_reset_code_expiration timestamptz NULL,
     user_registration_code         varchar(36) NULL,
-    created_date                   timestamptz NULL,
-    updated_date                   timestamptz NULL,
+    created_date_time              timestamptz NULL,
+    updated_date_time              timestamptz NULL,
     CONSTRAINT user_pk PRIMARY KEY (id),
     CONSTRAINT user_unique UNIQUE (username),
     CONSTRAINT email_unique UNIQUE ("email")

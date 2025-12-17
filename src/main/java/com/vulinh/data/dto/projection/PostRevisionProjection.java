@@ -20,7 +20,7 @@ public record PostRevisionProjection(
     UUID authorId,
     UUID categoryId,
     String tags,
-    Instant revisionCreatedDate,
+    Instant revisionCreatedDateTime,
     UUID revisionCreatedBy)
     implements UUIDRevisionId, Serializable {
 

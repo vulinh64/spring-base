@@ -17,7 +17,7 @@ ENV APP_NAME=app.jar
 ENV DEPS_FILE=deps.info
 
 # Change this when there is an update
-ENV SPRING_BASE_COMMONS_VERSION=1.1.0
+ENV SPRING_BASE_COMMONS_VERSION=2.0.0
 
 # Clone the spring-base-commons repository
 RUN git clone --depth 1 --branch ${SPRING_BASE_COMMONS_VERSION} https://github.com/vulinh64/spring-base-commons.git

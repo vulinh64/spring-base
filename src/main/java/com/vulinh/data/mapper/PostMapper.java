@@ -25,11 +25,12 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   SinglePostResponse toSinglePostDTO(Post post);
 
   @Override
+  @Mapping(target = "revisionNumber", ignore = true) // will be set manually
   BasicPostResponse toDto(Post entity);
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "updatedDate", ignore = true)
+  @Mapping(target = "createdDateTime", ignore = true)
+  @Mapping(target = "updatedDateTime", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "authorId", ignore = true)
   @Mapping(target = "tags", source = "tags")
@@ -44,13 +45,13 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
       expression =
           "java(post.getTags().stream().map(Tag::getDisplayName).collect(Collectors.joining(\",\")))")
   @Mapping(target = "categoryId", source = "post.category.id")
-  @Mapping(target = "revisionCreatedDate", ignore = true)
+  @Mapping(target = "revisionCreatedDateTime", ignore = true)
   @Mapping(target = "revisionCreatedBy", ignore = true)
   PostRevision toPostRevision(Post post, RevisionType revisionType);
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "updatedDate", ignore = true)
+  @Mapping(target = "createdDateTime", ignore = true)
+  @Mapping(target = "updatedDateTime", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(target = "category", source = "category")
@@ -63,8 +64,8 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
-  @Mapping(target = "createdDate", ignore = true)
-  @Mapping(target = "updatedDate", ignore = true)
+  @Mapping(target = "createdDateTime", ignore = true)
+  @Mapping(target = "updatedDateTime", ignore = true)
   @Mapping(target = "authorId", ignore = true)
   @Mapping(target = "comments", ignore = true)
   @Mapping(target = "tags", source = "tags")

@@ -68,7 +68,7 @@
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
         <keycloak-admin-client.version>26.0.7</keycloak-admin-client.version>
 
-        <spring-base-commons.version>1.1.0</spring-base-commons.version>
+        <spring-base-commons.version>2.0.0</spring-base-commons.version>
     </properties>
 
     <dependencies>

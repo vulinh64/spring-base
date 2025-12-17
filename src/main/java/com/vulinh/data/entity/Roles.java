@@ -2,7 +2,7 @@ package com.vulinh.data.entity;
 
 import module java.base;
 
-import com.vulinh.data.base.AbstractIdentifiable;
+import com.vulinh.data.base.AbstractEntity;
 import com.vulinh.data.constant.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +14,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class Roles extends AbstractIdentifiable<UserRole> {
+public class Roles extends AbstractEntity<UserRole> {
 
   public static final Comparator<Roles> COMPARATOR =
       Comparator.comparing(Roles::getSuperiority, Comparator.nullsLast(Comparator.reverseOrder()));

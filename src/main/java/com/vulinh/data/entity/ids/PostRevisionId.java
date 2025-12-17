@@ -22,7 +22,7 @@ public class PostRevisionId implements UUIDRevisionId {
 
   @Serial private static final long serialVersionUID = 944099295600818675L;
 
-  public static Object of(UUID postId, long revisionNumber) {
+  public static PostRevisionId of(UUID postId, long revisionNumber) {
     return new PostRevisionId(postId, revisionNumber);
   }
 

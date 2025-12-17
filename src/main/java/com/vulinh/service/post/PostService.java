@@ -45,12 +45,12 @@ public class PostService {
     var newPost = postCreationService.createPost(postCreationRequest);
 
     // Delegate to PostRevisionService
-    postRevisionService.createPostCreationRevision(newPost);
+    var revisionNumber = postRevisionService.createPostCreationRevision(newPost);
 
     // Delegate to EventService
     eventService.sendNewPostEvent(newPost, SecurityUtils.getUserDTOOrThrow());
 
-    return POST_MAPPER.toDto(newPost);
+    return POST_MAPPER.toDto(newPost).withRevisionNumber(revisionNumber);
   }
 
   @Transactional

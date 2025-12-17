@@ -15,7 +15,7 @@ import com.vulinh.data.repository.CategoryRepository;
 import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.utils.PageableQueryService;
+import com.vulinh.service.PageableQueryService;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.post.SlugUtils;
 import lombok.RequiredArgsConstructor;
@@ -87,8 +87,8 @@ public class CategoryService
   }
 
   @Override
-  public Predicate toPredicate(@NonNull CategorySearchRequest categorySearchRequest) {
-    QCategory qCategory = QCategory.category;
+  public Predicate buildSearchPredicate(@NonNull CategorySearchRequest categorySearchRequest) {
+    var qCategory = QCategory.category;
 
     return PredicateBuilder.and(
         PredicateBuilder.likeIgnoreCase(qCategory.displayName, categorySearchRequest.displayName()),
@@ -97,7 +97,7 @@ public class CategoryService
 
   @Override
   @NonNull
-  public CategoryRepository getDslRepository() {
+  public CategoryRepository getRepository() {
     return categoryRepository;
   }
 }
