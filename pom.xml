@@ -58,8 +58,8 @@
         <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
         <testcontainers-keycloak.version>4.0.1</testcontainers-keycloak.version>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit/4.3.0 -->
-        <spring-cloud-starter-stream-rabbit.version>4.3.0</spring-cloud-starter-stream-rabbit.version>
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit -->
+        <spring-cloud-starter-stream-rabbit.version>4.3.1</spring-cloud-starter-stream-rabbit.version>
 
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
         <keycloak-admin-client.version>26.0.7</keycloak-admin-client.version>
