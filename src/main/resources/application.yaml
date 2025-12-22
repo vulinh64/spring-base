@@ -80,7 +80,7 @@ spring:
     issuer-uri: ${application-properties.security.issuer-uri}
     audiences: account
 decorator.datasource.p6spy:
-  custom-appender-class: com.vulinh.MyP6SpyLogging
+  custom-appender-class: com.vulinh.utils.MyP6SpyLogging
   logging: CUSTOM
 management.endpoints.web:
   base-path: ''

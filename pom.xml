@@ -68,7 +68,7 @@
         <!-- this should be fixed by Spring in the future -->
         <netty.version>4.2.9.Final</netty.version>
 
-        <spring-base-commons.version>2.0.0</spring-base-commons.version>
+        <spring-base-commons.version>2.2.0</spring-base-commons.version>
     </properties>
 
     <dependencies>
