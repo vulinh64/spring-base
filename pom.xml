@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.8</version>
+        <version>3.5.9</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -37,7 +37,7 @@
         <jmail.version>2.1.0</jmail.version>
 
         <!-- https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter -->
-        <p6spy-springboot.version>1.12.0</p6spy-springboot.version>
+        <p6spy-springboot.version>1.12.1</p6spy-springboot.version>
 
         <!-- https://mvnrepository.com/artifact/com.github.auties00/optional -->
         <optional.version>1.0</optional.version>
@@ -46,27 +46,27 @@
         <jsoup.version>1.21.2</jsoup.version>
 
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
-        <testcontainers.version>2.0.2</testcontainers.version>
+        <testcontainers.version>2.0.3</testcontainers.version>
 
         <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
-        <testcontainers-jupiter.version>1.21.3</testcontainers-jupiter.version>
-
-        <!-- https://github.com/netty/netty/tags -->
-        <!-- this should be fixed by Spring in the future -->
-        <netty.version>4.2.7.Final</netty.version>
+        <testcontainers-jupiter.version>1.21.4</testcontainers-jupiter.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <!-- this should be fixed by Spring in the future -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
 
         <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
-        <testcontainers-keycloak.version>4.0.0</testcontainers-keycloak.version>
+        <testcontainers-keycloak.version>4.0.1</testcontainers-keycloak.version>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit/4.3.0 -->
         <spring-cloud-starter-stream-rabbit.version>4.3.0</spring-cloud-starter-stream-rabbit.version>
 
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
         <keycloak-admin-client.version>26.0.7</keycloak-admin-client.version>
+
+        <!-- https://github.com/netty/netty/tags -->
+        <!-- this should be fixed by Spring in the future -->
+        <netty.version>4.2.9.Final</netty.version>
 
         <spring-base-commons.version>2.0.0</spring-base-commons.version>
     </properties>
@@ -109,6 +109,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+            <version>${spring-cloud-starter-stream-rabbit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -208,12 +213,6 @@
             <version>${jsoup.version}</version>
         </dependency>
         <!-- END: JSoup -->
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-            <version>${spring-cloud-starter-stream-rabbit.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.keycloak</groupId>
