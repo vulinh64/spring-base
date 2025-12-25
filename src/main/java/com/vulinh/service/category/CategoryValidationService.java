@@ -5,12 +5,13 @@ import module java.base;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.repository.CategoryRepository;
+import com.vulinh.exception.ApplicationValidationException;
 import com.vulinh.exception.ResourceConflictException;
-import com.vulinh.exception.ValidationException;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.PredicateBuilder;
 import com.vulinh.utils.validator.ValidatorChain;
+import com.vulinh.utils.validator.ValidatorChainBuilder;
 import com.vulinh.utils.validator.ValidatorStep;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,18 +26,18 @@ public class CategoryValidationService {
   static final int CATEGORY_SLUG_MAX_LENGTH = 500;
 
   public static final ValidatorChain<CategoryCreationRequest> BASIC_CATEGORY_VALIDATION =
-      ValidatorChain.<CategoryCreationRequest>start().addValidator(CategoryRule.values());
+      new ValidatorChainBuilder<CategoryCreationRequest>().add(CategoryRule.values()).build();
 
   final CategoryRepository categoryRepository;
 
   public void validateCategoryCreation(CategoryCreationRequest categoryCreationRequest) {
-    BASIC_CATEGORY_VALIDATION.executeValidation(categoryCreationRequest);
+    BASIC_CATEGORY_VALIDATION.validate(categoryCreationRequest);
   }
 
   public void validateCategorySlug(
       CategoryCreationRequest categoryCreationRequest, String categorySlug) {
     if (StringUtils.length(categorySlug) > CATEGORY_SLUG_MAX_LENGTH) {
-      throw ValidationException.validationException(
+      throw new ApplicationValidationException(
           "Category slug exceeded %s characters".formatted(CATEGORY_SLUG_MAX_LENGTH),
           ServiceErrorCode.MESSAGE_INVALID_CATEGORY_SLUG,
           CATEGORY_SLUG_MAX_LENGTH);

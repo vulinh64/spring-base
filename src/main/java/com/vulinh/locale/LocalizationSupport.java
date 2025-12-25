@@ -2,7 +2,7 @@ package com.vulinh.locale;
 
 import module java.base;
 
-import com.vulinh.data.base.ApplicationError;
+import com.vulinh.utils.validator.ApplicationError;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

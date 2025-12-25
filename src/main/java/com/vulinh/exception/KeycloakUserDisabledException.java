@@ -2,8 +2,8 @@ package com.vulinh.exception;
 
 import module java.base;
 
-import com.vulinh.data.base.ApplicationError;
 import com.vulinh.locale.ServiceErrorCode;
+import com.vulinh.utils.validator.ApplicationError;
 
 /// The exception to represent the state when a Keycloak user has been disabled
 public class KeycloakUserDisabledException extends ApplicationException {

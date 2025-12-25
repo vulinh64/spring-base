@@ -11,8 +11,9 @@ import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.SecurityUtils;
-import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
+import com.vulinh.utils.validator.ValidatorChainBuilder;
+import com.vulinh.utils.validator.ValidatorStep;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ import org.springframework.stereotype.Service;
 public class NewCommentValidationService {
 
   static final int COMMENT_MAX_LENGTH = 10000;
+  
+  static final ValidatorChain<NewCommentRequest> NEW_COMMENT_VALIDATOR =
+      new ValidatorChainBuilder<NewCommentRequest>().add(NewCommentRule.values()).build();
 
   final CommentRepository commentRepository;
 
@@ -51,14 +55,12 @@ public class NewCommentValidationService {
   }
 
   protected void validate(NewCommentRequest newCommentRequest) {
-    ValidatorChain.<NewCommentRequest>start()
-        .addValidator(NewCommentRule.values())
-        .executeValidation(newCommentRequest);
+    NEW_COMMENT_VALIDATOR.validate(newCommentRequest);
   }
 
   @Getter
   @RequiredArgsConstructor
-  public enum NewCommentRule implements NoArgsValidatorStep<NewCommentRequest> {
+  public enum NewCommentRule implements ValidatorStep<NewCommentRequest> {
     COMMENT_NOT_BLANK(
         ValidatorStepFactory.noBlankField(NewCommentRequest::content),
         ServiceErrorCode.MESSAGE_COMMENT_INVALID,

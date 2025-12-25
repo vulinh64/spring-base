@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ApplicationException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   GenericResponse<Object> handleApplicationException(ApplicationException applicationException) {
-    return stackTraceAndReturn("Application error", applicationException);
+    return stackTraceAndReturn(applicationException);
   }
 
   @ExceptionHandler(AuthorizationException.class)
@@ -48,13 +48,6 @@ public class GlobalExceptionHandler {
     log.info(authorizationException.getMessage());
 
     return ResponseCreator.toError(authorizationException);
-  }
-
-  @ExceptionHandler(SecurityConfigurationException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  GenericResponse<Object> handleConfigurationException(
-      SecurityConfigurationException securityConfigurationException) {
-    return stackTraceAndReturn("Configuration error", securityConfigurationException);
   }
 
   @ExceptionHandler(NoSuchPermissionException.class)
@@ -70,9 +63,10 @@ public class GlobalExceptionHandler {
     return logAndReturn(notFound404Exception);
   }
 
-  @ExceptionHandler(ValidationException.class)
+  @ExceptionHandler(ApplicationValidationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  GenericResponse<Object> handleValidationException(ValidationException validationException) {
+  GenericResponse<Object> handleValidationException(
+      ApplicationValidationException validationException) {
     return logAndReturn(validationException);
   }
 
@@ -133,9 +127,8 @@ public class GlobalExceptionHandler {
     return ResponseCreator.toError(applicationException);
   }
 
-  static GenericResponse<Object> stackTraceAndReturn(
-      String prependMessage, ApplicationException applicationException) {
-    log.info(prependMessage, applicationException);
+  static GenericResponse<Object> stackTraceAndReturn(ApplicationException applicationException) {
+    log.info("Application error", applicationException);
 
     return ResponseCreator.toError(applicationException);
   }

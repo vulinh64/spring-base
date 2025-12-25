@@ -134,8 +134,8 @@ public class TaxSupport {
 
     @Serial private static final long serialVersionUID = -4699666572519989228L;
 
-    protected TaxCalculatorException(String message) {
-      super(message, () -> "MXXXX", null);
+    TaxCalculatorException(String message) {
+      super(message, () -> "MXXXX");
     }
   }
 }

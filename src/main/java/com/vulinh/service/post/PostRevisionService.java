@@ -12,7 +12,6 @@ import com.vulinh.data.mapper.PostMapper;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
 import com.vulinh.exception.NotFound404Exception;
-import com.vulinh.factory.PostFactory;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
@@ -85,7 +84,7 @@ public class PostRevisionService {
     }
 
     return postRevisionRepository
-        .findById(PostFactory.INSTANCE.createRevisionId(postId, revisionNumber))
+        .findById(new PostRevisionId(postId, revisionNumber))
         .map(postRevision -> applyRevisionInternal(postRevision, post))
         .orElseThrow(
             () ->

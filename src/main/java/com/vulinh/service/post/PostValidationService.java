@@ -11,8 +11,9 @@ import com.vulinh.exception.NoSuchPermissionException;
 import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.factory.ValidatorStepFactory;
 import com.vulinh.locale.ServiceErrorCode;
-import com.vulinh.utils.validator.NoArgsValidatorStep;
 import com.vulinh.utils.validator.ValidatorChain;
+import com.vulinh.utils.validator.ValidatorChainBuilder;
+import com.vulinh.utils.validator.ValidatorStep;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class PostValidationService {
   static final int TAG_MAX_LENGTH = 1000;
 
   public static final ValidatorChain<PostCreationRequest> BASIC_POST_VALIDATOR =
-      ValidatorChain.<PostCreationRequest>start().addValidator(PostRule.values());
+      new ValidatorChainBuilder<PostCreationRequest>().add(PostRule.values()).build();
 
   public void validateModifyingPermission(UserBasicResponse userDTO, Post post) {
     if (!(PostValidationService.isOwner(userDTO, post)
@@ -82,7 +83,7 @@ public class PostValidationService {
   }
 
   public void validatePost(@NonNull PostCreationRequest postCreationRequest) {
-    BASIC_POST_VALIDATOR.executeValidation(postCreationRequest);
+    BASIC_POST_VALIDATOR.validate(postCreationRequest);
   }
 
   public Post getPost(UUID postId) {
@@ -93,7 +94,7 @@ public class PostValidationService {
 
   @Getter
   @RequiredArgsConstructor
-  public enum PostRule implements NoArgsValidatorStep<PostCreationRequest> {
+  public enum PostRule implements ValidatorStep<PostCreationRequest> {
     POST_NO_BLANK_TITLE(
         ValidatorStepFactory.noBlankField(PostCreationRequest::title),
         ServiceErrorCode.MESSAGE_POST_INVALID_TITLE,

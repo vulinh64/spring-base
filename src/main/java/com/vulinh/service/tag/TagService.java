@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableSet;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.entity.Tag;
 import com.vulinh.data.repository.TagRepository;
-import com.vulinh.factory.PostFactory;
 import com.vulinh.utils.post.PostUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +47,7 @@ public class TagService {
                         || existingTags.stream()
                             .map(Tag::getDisplayName)
                             .noneMatch(tag -> tag.equalsIgnoreCase(rawTag)))
-            .map(PostFactory.INSTANCE::createTag)
+            .map(displayName -> Tag.builder().displayName(displayName).build())
             .toList();
 
     resultBuilder.addAll(tagRepository.saveAll(nonMatchingTags));

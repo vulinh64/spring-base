@@ -2,7 +2,7 @@ package com.vulinh.exception;
 
 import module java.base;
 
-import com.vulinh.data.base.ApplicationError;
+import com.vulinh.utils.validator.ApplicationError;
 
 /// Exception thrown when attempting to create a resource that would conflict with an existing one.
 ///

@@ -1,6 +1,6 @@
 package com.vulinh.locale;
 
-import com.vulinh.data.base.ApplicationError;
+import com.vulinh.utils.validator.ApplicationError;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

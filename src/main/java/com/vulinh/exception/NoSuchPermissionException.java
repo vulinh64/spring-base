@@ -2,8 +2,8 @@ package com.vulinh.exception;
 
 import module java.base;
 
-import com.vulinh.data.base.ApplicationError;
 import com.vulinh.locale.ServiceErrorCode;
+import com.vulinh.utils.validator.ApplicationError;
 
 /// Exception thrown when a user attempts to access resources without proper permissions.
 ///
