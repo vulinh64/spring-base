@@ -75,11 +75,6 @@ public class SecurityConfiguration {
         .build();
   }
 
-  private void delegateToHandlerExceptionResolver(
-      HttpServletRequest request, HttpServletResponse response, Exception exception) {
-    handlerExceptionResolver.resolveException(request, response, null, exception);
-  }
-
   @Bean
   public RoleHierarchy roleHierarchy() {
     return RoleHierarchyImpl.fromHierarchy(toHierarchyPhrase());
@@ -98,6 +93,11 @@ public class SecurityConfiguration {
     source.registerCorsConfiguration("/**", config);
 
     return source;
+  }
+
+  private void delegateToHandlerExceptionResolver(
+      HttpServletRequest request, HttpServletResponse response, Exception exception) {
+    handlerExceptionResolver.resolveException(request, response, null, exception);
   }
 
   static void configureAuthorizeHttpRequestCustomizer(
