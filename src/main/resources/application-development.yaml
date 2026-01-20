@@ -10,4 +10,5 @@ logging.level:
         PostEditValidationService: DEBUG
       category.CategoryService: DEBUG
     configuration.com.vulinh.configuration.SecurityConfiguration: DEBUG
-  org.springframework.security.oauth2: TRACE
+    # org.springframework.security.oauth2: TRACE
+    # Remove the comment sign for extra debugging information

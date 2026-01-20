@@ -35,6 +35,7 @@ application-properties:
     no-authenticated-urls:
       - /free/**
       - /health
+      - /health/**
       - /v3/api-docs/**
       - /swagger-ui.html
       - /swagger-ui/**

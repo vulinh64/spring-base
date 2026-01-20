@@ -6,11 +6,13 @@ import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.locale.LocalizationSupport;
 import com.vulinh.locale.ServiceErrorCode;
+import com.vulinh.utils.validator.ApplicationError;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -112,6 +114,19 @@ public class GlobalExceptionHandler {
     return logAndReturn(keycloakUserDisabledException);
   }
 
+  @ExceptionHandler(AuthenticationException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  GenericResponse<Object> handleInvalidBearerTokenException(
+      AuthenticationException authenticationException) {
+    return securityError(ServiceErrorCode.MESSAGE_INVALID_AUTHENTICATION, authenticationException);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  GenericResponse<Object> handleAccessDeniedException(AccessDeniedException accessDeniedException) {
+    return securityError(ServiceErrorCode.MESSAGE_INSUFFICIENT_PERMISSION, accessDeniedException);
+  }
+
   static GenericResponse<Object> badRequestBody(String additionalMessage) {
     return GenericResponse.builder()
         .errorCode(ServiceErrorCode.MESSAGE_INVALID_BODY_REQUEST.getErrorCode())
@@ -131,5 +146,12 @@ public class GlobalExceptionHandler {
     log.info("Application error", applicationException);
 
     return ResponseCreator.toError(applicationException);
+  }
+
+  static GenericResponse<Object> securityError(
+      ApplicationError applicationError, Throwable throwable) {
+    log.info(throwable.getMessage(), throwable);
+
+    return ResponseCreator.toError(applicationError);
   }
 }

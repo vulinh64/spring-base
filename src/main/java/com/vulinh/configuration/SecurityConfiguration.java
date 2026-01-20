@@ -6,6 +6,8 @@ import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.utils.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,12 +25,16 @@ import org.springframework.security.web.header.writers.XXssProtectionHeaderWrite
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
+
+  // One of the best and the most elegant ways to handle exceptions in Spring Security filters
+  private final HandlerExceptionResolver handlerExceptionResolver;
 
   static final String ROLE_ADMIN_NAME = UserRole.ADMIN.name();
 
@@ -47,7 +52,6 @@ public class SecurityConfiguration {
                         xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
                     .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
         .csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults())
         .sessionManagement(
             sessionManagementConfigurer ->
                 sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -57,12 +61,17 @@ public class SecurityConfiguration {
         .cors(corsConfigurer -> corsConfigurer.configurationSource(createCorsFilter()))
         .oauth2ResourceServer(
             oAuth2ResourceServerProperties ->
-                oAuth2ResourceServerProperties.jwt(
-                    jwtConfigurer ->
-                        jwtConfigurer.jwtAuthenticationConverter(
-                            jwt ->
-                                JwtUtils.parseAuthoritiesByCustomClaims(
-                                    jwt, security.clientName()))))
+                oAuth2ResourceServerProperties
+                    // Return something to client rather than a blank 403 page
+                    .accessDeniedHandler(this::delegateToHandlerExceptionResolver)
+                    // Return something to client rather than a blank 401 page
+                    .authenticationEntryPoint(this::delegateToHandlerExceptionResolver)
+                    .jwt(
+                        jwtConfigurer ->
+                            jwtConfigurer.jwtAuthenticationConverter(
+                                jwt ->
+                                    JwtUtils.parseAuthoritiesByCustomClaims(
+                                        jwt, security.clientName()))))
         .build();
   }
 
@@ -84,6 +93,11 @@ public class SecurityConfiguration {
     source.registerCorsConfiguration("/**", config);
 
     return source;
+  }
+
+  private void delegateToHandlerExceptionResolver(
+      HttpServletRequest request, HttpServletResponse response, Exception exception) {
+    handlerExceptionResolver.resolveException(request, response, null, exception);
   }
 
   static void configureAuthorizeHttpRequestCustomizer(
