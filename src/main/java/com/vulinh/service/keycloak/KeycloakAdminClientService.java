@@ -2,6 +2,7 @@ package com.vulinh.service.keycloak;
 
 import module java.base;
 
+import com.vulinh.annotation.ExecutionTime;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.dto.response.KeycloakUserResponse;
 import com.vulinh.data.mapper.KeycloakMapper;
@@ -22,6 +23,7 @@ public class KeycloakAdminClientService {
 
   final Keycloak keycloak;
 
+  @ExecutionTime
   @NonNull
   public KeycloakUserResponse getKeycloakUser(UUID userId) {
     try {

@@ -2,6 +2,7 @@ package com.vulinh.service.event;
 
 import module java.base;
 
+import com.vulinh.annotation.ExecutionTime;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.TopicProperties;
 import com.vulinh.data.dto.response.KeycloakUserResponse;
@@ -29,6 +30,7 @@ public class EventService {
 
   final ApplicationProperties applicationProperties;
 
+  @ExecutionTime
   public void sendNewPostEvent(Post post, UserBasicResponse actionUser) {
     sendMessageInternal(
         applicationProperties.messageTopic().newPost(),
@@ -36,6 +38,7 @@ public class EventService {
         EVENT_MAPPER.toNewPostEvent(post));
   }
 
+  @ExecutionTime
   public void sendSubscribeToUserEvent(
       UserBasicResponse basicActionUser, KeycloakUserResponse subscribedUser) {
     sendMessageInternal(
@@ -44,6 +47,7 @@ public class EventService {
         EVENT_MAPPER.toNewSubscriptionEvent(subscribedUser));
   }
 
+  @ExecutionTime
   public void sendNewCommentEvent(Comment comment, Post post, UserBasicResponse basicActionUser) {
     sendMessageInternal(
         applicationProperties.messageTopic().newComment(),
@@ -51,6 +55,7 @@ public class EventService {
         EVENT_MAPPER.toNewCommentEvent(comment, post));
   }
 
+  @ExecutionTime
   public void sendNewPostFollowingEvent(Post post, UserBasicResponse basicActionUser) {
     sendMessageInternal(
         applicationProperties.messageTopic().newPostFollowing(),

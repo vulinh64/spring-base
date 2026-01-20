@@ -24,7 +24,7 @@ public class AuthorizationException extends ApplicationException {
   /// @return A new [AuthorizationException] instance
   public static AuthorizationException invalidAuthorization(Object... args) {
     return invalidAuthorization(
-        "Invalid user authorization", ServiceErrorCode.MESSAGE_INVALID_AUTHORIZATION, args);
+        "Invalid user authorization", ServiceErrorCode.MESSAGE_INVALID_AUTHENTICATION, args);
   }
 
   /// Creates an [AuthorizationException] with a custom message and error code.

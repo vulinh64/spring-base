@@ -1,8 +1,9 @@
-package com.vulinh.service.event;
+package com.vulinh.service;
 
 import module java.base;
 
 import com.vulinh.exception.KeycloakUserDisabledException;
+import com.vulinh.service.event.EventService;
 import com.vulinh.service.keycloak.KeycloakAdminClientService;
 import com.vulinh.service.post.PostValidationService;
 import com.vulinh.utils.SecurityUtils;

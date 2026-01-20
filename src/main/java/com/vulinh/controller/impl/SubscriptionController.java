@@ -3,7 +3,7 @@ package com.vulinh.controller.impl;
 import module java.base;
 
 import com.vulinh.controller.api.SubscriptionAPI;
-import com.vulinh.service.event.UserSubscriptionService;
+import com.vulinh.service.UserSubscriptionService;
 import com.vulinh.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
