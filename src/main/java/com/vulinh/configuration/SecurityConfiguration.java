@@ -63,9 +63,9 @@ public class SecurityConfiguration {
             oAuth2ResourceServerProperties ->
                 oAuth2ResourceServerProperties
                     // Return something to client rather than a blank 403 page
-                    .accessDeniedHandler(this::delegateToExceptionResolverHandler)
+                    .accessDeniedHandler(this::delegateToHandlerExceptionResolver)
                     // Return something to client rather than a blank 401 page
-                    .authenticationEntryPoint(this::delegateToExceptionResolverHandler)
+                    .authenticationEntryPoint(this::delegateToHandlerExceptionResolver)
                     .jwt(
                         jwtConfigurer ->
                             jwtConfigurer.jwtAuthenticationConverter(
@@ -75,7 +75,7 @@ public class SecurityConfiguration {
         .build();
   }
 
-  private void delegateToExceptionResolverHandler(
+  private void delegateToHandlerExceptionResolver(
       HttpServletRequest request, HttpServletResponse response, Exception exception) {
     handlerExceptionResolver.resolveException(request, response, null, exception);
   }
