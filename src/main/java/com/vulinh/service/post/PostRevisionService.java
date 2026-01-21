@@ -15,15 +15,14 @@ import com.vulinh.exception.NotFound404Exception;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
+import com.vulinh.utils.DslOrderBuilder;
 import com.vulinh.utils.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,16 +49,14 @@ public class PostRevisionService {
       throw NotFound404Exception.postNotFound(postId);
     }
 
-    var actualPageable =
-        PageRequest.of(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            Sort.by(
-                Order.desc(
-                    QPostRevision.postRevision.revisionCreatedDateTime.getMetadata().getName())));
-
     return postRevisionRepository
-        .findByPostIdOrPostSlug(postId, actualPageable)
+        .findByPostIdOrPostSlug(
+            postId,
+            QPageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                DslOrderBuilder.fromField(QPostRevision.postRevision.revisionCreatedDateTime)
+                    .withDesc()))
         .map(POST_MAPPER::toPostRevisionResponse);
   }
 

@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepository extends org.springframework.data.jpa.repository.JpaRepository<Post, UUID>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Post>, org.springframework.data.querydsl.ListQuerydslPredicateExecutor<Post>, org.springframework.data.repository.query.QueryByExampleExecutor<Post> {
+public interface PostRepository extends BaseRepository<Post, UUID> {
 
   @Query(
         """
