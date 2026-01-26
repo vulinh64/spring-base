@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.9</version>
+        <version>3.5.10</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -31,7 +31,7 @@
         <guava.version>33.5.0-jre</guava.version>
 
         <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-        <springdoc.openapi.version>2.8.14</springdoc.openapi.version>
+        <springdoc.openapi.version>2.8.15</springdoc.openapi.version>
 
         <!-- https://mvnrepository.com/artifact/com.sanctionco.jmail/jmail -->
         <jmail.version>2.1.0</jmail.version>
@@ -43,7 +43,7 @@
         <optional.version>1.0</optional.version>
 
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
-        <jsoup.version>1.21.2</jsoup.version>
+        <jsoup.version>1.22.1</jsoup.version>
 
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
         <testcontainers.version>2.0.3</testcontainers.version>
@@ -51,24 +51,25 @@
         <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
         <testcontainers-jupiter.version>1.21.4</testcontainers-jupiter.version>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-        <!-- this should be fixed by Spring in the future -->
-        <commons-lang3.version>3.20.0</commons-lang3.version>
-
         <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
-        <testcontainers-keycloak.version>4.0.1</testcontainers-keycloak.version>
+        <testcontainers-keycloak.version>4.1.1</testcontainers-keycloak.version>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit -->
         <spring-cloud-starter-stream-rabbit.version>4.3.1</spring-cloud-starter-stream-rabbit.version>
 
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
-        <keycloak-admin-client.version>26.0.7</keycloak-admin-client.version>
+        <keycloak-admin-client.version>26.0.8</keycloak-admin-client.version>
 
         <!-- https://github.com/netty/netty/tags -->
-        <!-- this should be fixed by Spring in the future -->
+        <!-- this should be fixed by Spring Boot in the future -->
         <netty.version>4.2.9.Final</netty.version>
 
-        <spring-base-commons.version>2.4.2</spring-base-commons.version>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <!-- this should be fixed by Spring Boot in the future -->
+        <commons-lang3.version>3.20.0</commons-lang3.version>
+
+        <!-- https://github.com/vulinh64/spring-base-commons/releases -->
+        <spring-base-commons.version>2.4.3</spring-base-commons.version>
     </properties>
 
     <dependencies>
