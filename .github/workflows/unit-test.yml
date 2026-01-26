@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SPRING_BASE_COMMONS_VERSION: 2.4.2
+      SPRING_BASE_COMMONS_VERSION: 2.4.3
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 25
