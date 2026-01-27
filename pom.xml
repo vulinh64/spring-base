@@ -69,7 +69,7 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
 
         <!-- https://github.com/vulinh64/spring-base-commons/releases -->
-        <spring-base-commons.version>2.4.3</spring-base-commons.version>
+        <spring-base-commons.version>2.4.4</spring-base-commons.version>
     </properties>
 
     <dependencies>
