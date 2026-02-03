@@ -7,9 +7,6 @@
 # Create a custom minimal JRE
 FROM amazoncorretto:25-alpine-full AS build
 
-# Install git
-RUN apk add --no-cache git
-
 WORKDIR /usr/src/project
 
 ENV JAVA_VERSION=25
@@ -17,18 +14,27 @@ ENV APP_NAME=app.jar
 ENV DEPS_FILE=deps.info
 
 # Change this when there is an update
-ENV SPRING_BASE_COMMONS_VERSION=2.4.5
-
-# Clone the spring-base-commons repository
-RUN git clone --depth 1 --branch ${SPRING_BASE_COMMONS_VERSION} https://github.com/vulinh64/spring-base-commons.git
+ENV COMMONS_NAME=spring-base-commons
+ENV COMMONS_GROUP_ID=com.vulinh
+ENV COMMONS_VERSION=2.4.5
+ENV GITHUB_USER=vulinh64
 
 # Copy Maven wrapper files
 COPY mvnw ./
 COPY .mvn/ .mvn/
 RUN chmod +x mvnw
 
-# Build and install spring-base-commons to local Maven repository
-RUN ./mvnw clean install -f spring-base-commons/pom.xml -DskipTests
+# Download the pre-built JAR from GitHub releases
+RUN wget -O ${COMMONS_NAME}.jar \
+    https://github.com/${GITHUB_USER}/${COMMONS_NAME}/releases/download/${COMMONS_VERSION}/${COMMONS_NAME}-${COMMONS_VERSION}.jar
+
+# Install the JAR to local Maven repository
+RUN ./mvnw install:install-file \
+    -Dfile=${COMMONS_NAME}.jar \
+    -DgroupId=${COMMONS_GROUP_ID} \
+    -DartifactId=${COMMONS_NAME} \
+    -Dversion=${COMMONS_VERSION} \
+    -Dpackaging=jar
 
 # Copy main application Maven configuration files
 COPY pom.xml ./
