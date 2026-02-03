@@ -2,7 +2,7 @@
 
 set -e
 
-SPRING_BASE_COMMONS_VERSION=2.4.4
+SPRING_BASE_COMMONS_VERSION=2.4.5
 
 if [ -d "./build/spring-base-commons" ]; then
   rm -rf ./build/spring-base-commons
