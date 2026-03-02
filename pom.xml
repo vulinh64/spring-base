@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.10</version>
+        <version>3.5.11</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -60,16 +60,18 @@
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
         <keycloak-admin-client.version>26.0.8</keycloak-admin-client.version>
 
-        <!-- https://github.com/netty/netty/tags -->
-        <!-- this should be fixed by Spring Boot in the future -->
-        <netty.version>4.2.9.Final</netty.version>
-
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <!-- this should be fixed by Spring Boot in the future -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
 
         <!-- https://github.com/vulinh64/spring-base-commons/releases -->
-        <spring-base-commons.version>2.4.5</spring-base-commons.version>
+        <spring-base-commons.version>2.4.6</spring-base-commons.version>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom/versions -->
+        <jackson-bom.version>2.21.1</jackson-bom.version>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core/versions -->
+        <log4j2.version>2.25.3</log4j2.version>
     </properties>
 
     <dependencies>
