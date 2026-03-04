@@ -9,9 +9,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TaxSupport {
 
-  static final int NEW_DEDUCTION_EFFECTIVE_YEAR = 2026;
-
-  static final LocalDate NEW_PROGRESSIVE_LEVEL_EFFECTIVE_DATE = LocalDate.of(2026, Month.JULY, 1);
+  static final int NEW_EFFECTIVE_YEAR = 2026;
 
   @RequiredArgsConstructor
   @Getter
@@ -39,8 +37,8 @@ public class TaxSupport {
   @Getter
   @Accessors(fluent = true)
   enum TaxConstant {
-    MAX_BASIC_SALARY(46_800_000),
-    MIN_BASIC_SALARY(5_100_000);
+    MAX_BASIC_SALARY(46_800_000D),
+    MIN_BASIC_SALARY(5_310_000D);
 
     final double value;
   }
@@ -48,29 +46,16 @@ public class TaxSupport {
   @RequiredArgsConstructor
   @Getter
   @Accessors(fluent = true)
-  enum TaxDeductionPeriod {
-    PRE_2026(11_000_000D, 4_400_000D),
-    POST_2026(15_500_000D, 6_200_000D);
+  enum TaxPeriod {
+    PRE_2026(11_000_000D, 4_400_000D, ProgressiveTaxLevel.PRE_2026_LEVEL),
+    POST_2026(15_500_000D, 6_200_000D, ProgressiveTaxLevel.POST_2026_LEVEL);
 
     final double personalDeduction;
     final double dependantDeduction;
-
-    public static TaxDeductionPeriod fromYear(LocalDate date) {
-      return date.getYear() < NEW_DEDUCTION_EFFECTIVE_YEAR ? PRE_2026 : POST_2026;
-    }
-  }
-
-  @RequiredArgsConstructor
-  @Getter
-  @Accessors(fluent = true)
-  enum ProgressiveTaxPeriod {
-    PRE_2026_JUL(ProgressiveTaxLevel.PRE_2026_JUL_LEVEL),
-    POST_2026_JUL(ProgressiveTaxLevel.POST_2026_JUL_LEVEL);
-
     final List<ProgressiveTaxLevel> levels;
 
-    public static ProgressiveTaxPeriod fromDate(LocalDate date) {
-      return date.isBefore(NEW_PROGRESSIVE_LEVEL_EFFECTIVE_DATE) ? PRE_2026_JUL : POST_2026_JUL;
+    public static TaxPeriod fromYear(LocalDate date) {
+      return date.getYear() < NEW_EFFECTIVE_YEAR ? PRE_2026 : POST_2026;
     }
   }
 
@@ -104,25 +89,25 @@ public class TaxSupport {
     static final ProgressiveTaxLevel MAX_LEVEL = ProgressiveTaxLevel.of(Double.MAX_VALUE, 0.35);
 
     // Before 2026
-    static final List<ProgressiveTaxLevel> PRE_2026_JUL_LEVEL =
+    static final List<ProgressiveTaxLevel> PRE_2026_LEVEL =
         List.of(
             ZERO_LEVEL,
-            ProgressiveTaxLevel.of(5_000_000.0, 0.05),
-            ProgressiveTaxLevel.of(10_000_000.0, 0.10),
-            ProgressiveTaxLevel.of(18_000_000.0, 0.15),
-            ProgressiveTaxLevel.of(32_000_000.0, 0.2),
-            ProgressiveTaxLevel.of(52_000_000.0, 0.25),
-            ProgressiveTaxLevel.of(80_000_000.0, 0.3),
+            ProgressiveTaxLevel.of(5_000_000D, 0.05),
+            ProgressiveTaxLevel.of(10_000_000D, 0.10),
+            ProgressiveTaxLevel.of(18_000_000D, 0.15),
+            ProgressiveTaxLevel.of(32_000_000D, 0.2),
+            ProgressiveTaxLevel.of(52_000_000D, 0.25),
+            ProgressiveTaxLevel.of(80_000_000D, 0.3),
             MAX_LEVEL);
 
     // Starting from 2026
-    static final List<ProgressiveTaxLevel> POST_2026_JUL_LEVEL =
+    static final List<ProgressiveTaxLevel> POST_2026_LEVEL =
         List.of(
             ZERO_LEVEL,
-            ProgressiveTaxLevel.of(10_000_000.0, 0.05),
-            ProgressiveTaxLevel.of(30_000_000.0, 0.10),
-            ProgressiveTaxLevel.of(60_000_000.0, 0.20),
-            ProgressiveTaxLevel.of(100_000_000.0, 0.3),
+            ProgressiveTaxLevel.of(10_000_000D, 0.05),
+            ProgressiveTaxLevel.of(30_000_000D, 0.10),
+            ProgressiveTaxLevel.of(60_000_000D, 0.20),
+            ProgressiveTaxLevel.of(100_000_000D, 0.3),
             MAX_LEVEL);
 
     static ProgressiveTaxLevel of(double threshold, double rate) {
