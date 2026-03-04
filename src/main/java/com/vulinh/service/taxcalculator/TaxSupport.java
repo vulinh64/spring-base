@@ -120,8 +120,8 @@ public class TaxSupport {
         List.of(
             ZERO_LEVEL,
             ProgressiveTaxLevel.of(10_000_000.0, 0.05),
-            ProgressiveTaxLevel.of(30_000_000.0, 0.15),
-            ProgressiveTaxLevel.of(60_000_000.0, 0.25),
+            ProgressiveTaxLevel.of(30_000_000.0, 0.10),
+            ProgressiveTaxLevel.of(60_000_000.0, 0.20),
             ProgressiveTaxLevel.of(100_000_000.0, 0.3),
             MAX_LEVEL);
 
