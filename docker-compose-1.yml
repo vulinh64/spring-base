@@ -26,7 +26,7 @@ services:
   postgresql:
     networks:
       - spring-base-network
-    image: 'postgres:18.1-alpine3.22'
+    image: 'postgres:18.3-alpine3.23'
     container_name: postgresql
     ports:
       - "5432:5432"
@@ -35,7 +35,7 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=myspringdatabase
     volumes:
-      - postgresql-volume:/var/lib/postgresql/data
+      - postgresql-volume:/var/lib/postgresql
     healthcheck:
       test:
         [ "CMD-SHELL", "pg_isready -U postgres" ]
@@ -45,7 +45,7 @@ services:
   rabbitmq:
     networks:
       - spring-base-network
-    image: 'rabbitmq:4.2.1-management-alpine'
+    image: 'rabbitmq:4.2.4-alpine'
     container_name: rabbitmq
     ports:
       - "5672:5672"
@@ -61,7 +61,7 @@ services:
   keycloak:
     networks:
       - spring-base-network
-    image: quay.io/keycloak/keycloak:26.4.6
+    image: quay.io/keycloak/keycloak:26.5.5
     container_name: keycloak
     command: start-dev
     environment:

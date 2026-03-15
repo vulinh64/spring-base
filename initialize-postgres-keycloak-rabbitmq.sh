@@ -19,9 +19,9 @@ chmod +x ./create-data-classes.sh
 PG_CONTAINER_NAME="postgresql"
 PG_VOLUME_NAME="postgresql-volume"
 POSTGRESQL_NAME="postgres"
-POSTGRESQL_TAG="18.1-alpine3.22"
+POSTGRESQL_TAG="18.3-alpine3.23"
 POSTGRESQL_IMAGE="${POSTGRESQL_NAME}:${POSTGRESQL_TAG}"
-PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=myspringdatabase\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql/data ${POSTGRESQL_IMAGE}"
+PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=myspringdatabase\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql ${POSTGRESQL_IMAGE}"
 
 echo "Checking PostgreSQL container [${PG_CONTAINER_NAME}]..."
 if ! docker ps -a | grep -q "${PG_CONTAINER_NAME}"; then
@@ -39,7 +39,7 @@ fi
 # --- RabbitMQ Setup ---
 RABBITMQ_CONTAINER_NAME="rabbitmq"
 RABBITMQ_NAME="rabbitmq"
-RABBITMQ_TAG="4.2.1-management-alpine"
+RABBITMQ_TAG="4.2.4-alpine"
 RABBITMQ_IMAGE="${RABBITMQ_NAME}:${RABBITMQ_TAG}"
 RABBITMQ_COMMAND="docker run --detach --name ${RABBITMQ_CONTAINER_NAME} --hostname rabbitmq -e RABBITMQ_DEFAULT_USER=rabbitmq -e RABBITMQ_DEFAULT_PASS=123456 -p 5672:5672 -p 15672:15672 ${RABBITMQ_IMAGE}"
 
@@ -59,7 +59,7 @@ fi
 # KEYCLOAK_REALM and CLIENT_NAME should match the values in application.properties
 # --- Keycloak Setup ---
 KEYCLOAK_NAME="quay.io/keycloak/keycloak"
-KEYCLOAK_TAG="26.4.6"
+KEYCLOAK_TAG="26.5.5"
 KEYCLOAK_IMAGE="${KEYCLOAK_NAME}:${KEYCLOAK_TAG}"
 KEYCLOAK_CONTAINER="keycloak"
 KEYCLOAK_OVERLORD="admin"

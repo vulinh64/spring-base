@@ -36,7 +36,7 @@ RUN jlink \
     --no-man-pages \
     --output /jre-minimalist
 
-FROM alpine:3.22 AS final
+FROM alpine:3.23.3 AS final
 
 ENV JAVA_HOME=/opt/java/jre-minimalist
 ENV PATH=$JAVA_HOME/bin:$JAVA_HOME/lib:$PATH

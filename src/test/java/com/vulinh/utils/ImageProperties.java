@@ -14,7 +14,7 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 public enum ImageProperties {
   POSTGRESQL(
       "postgres",
-      "18.1-alpine3.22",
+      "18.3-alpine3.23",
       args ->
           PromptMessageShellHealthCheckDelegate.builder()
               .containerDescription("PostgreSQL")
@@ -25,7 +25,7 @@ public enum ImageProperties {
   // Because Keycloak image is based on alpine
   KEYCLOAK(
       "quay.io/keycloak/keycloak",
-      "26.4.6",
+      "26.5.5",
       _ ->
           PromptMessageShellHealthCheckDelegate.builder()
               .containerDescription("Keycloak")
@@ -40,7 +40,7 @@ public enum ImageProperties {
   // The management-alpine is for local development debugging
   RABBIT_MQ(
       "rabbitmq",
-      "4.2.1-alpine",
+      "4.2.4-alpine",
       _ ->
           PromptMessageShellHealthCheckDelegate.builder()
               .containerDescription("RabbitMQ")
