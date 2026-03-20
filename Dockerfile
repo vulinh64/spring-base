@@ -16,7 +16,7 @@ ENV DEPS_FILE=deps.info
 # Change this when there is an update
 ENV COMMONS_NAME=spring-base-commons
 ENV COMMONS_GROUP_ID=com.vulinh
-ENV COMMONS_VERSION=2.4.6
+ENV COMMONS_VERSION=2.5.0
 ENV GITHUB_USER=vulinh64
 
 # Copy Maven wrapper files
