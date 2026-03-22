@@ -7,8 +7,10 @@ import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.keycloak.KeycloakAuthExchange;
 import com.vulinh.utils.ImageProperties;
 import com.vulinh.utils.JsonUtils;
+import com.vulinh.utils.KeycloakInitializationUtils;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.Getter;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +47,11 @@ public abstract class IntegrationTestBase {
   public static final RabbitMQContainer RABBIT_MQ_CONTAINER =
       new RabbitMQContainer(ImageProperties.RABBIT_MQ.getFullImageName())
           .waitingFor(ImageProperties.RABBIT_MQ.shellStrategyHealthCheck());
+
+  @BeforeAll
+  static void initializeKeycloakData() {
+    KeycloakInitializationUtils.initializeKeycloak(KEYCLOAK_CONTAINER);
+  }
 
   @Autowired private MockMvc mockMvc;
 

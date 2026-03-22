@@ -27,7 +27,6 @@ import com.vulinh.data.repository.PostRepository;
 import com.vulinh.data.repository.PostRevisionRepository;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.JsonUtils;
-import com.vulinh.utils.KeycloakInitializationUtils;
 import com.vulinh.utils.post.NoDashedUUIDGenerator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -89,28 +88,20 @@ class PostCreationIT extends IntegrationTestBase {
     registry.add(
         "application-properties.keycloak-authentication.password",
         KEYCLOAK_CONTAINER::getAdminPassword);
+    registry.add("application-properties.security.realm-name", () -> Constants.KC_REALM);
+    registry.add("application-properties.security.client-name", () -> Constants.KC_CLIENT);
   }
 
   @Test
   @Order(Integer.MIN_VALUE)
-  void testKeycloakClient() {
-    // Ugly hack to get it runs ONLY ONCE
-    var clientId =
-        KeycloakInitializationUtils.initializeKeycloak(
-            getApplicationProperties().security(), KEYCLOAK_CONTAINER);
+  void testKeycloakInitialization() {
+    assertDoesNotThrow(() -> keycloak.realm(Constants.KC_REALM).toRepresentation());
 
-    assertNotNull(clientId);
+    var clients = keycloak.realm(Constants.KC_REALM).clients().findByClientId(Constants.KC_CLIENT);
 
-    var realm = getApplicationProperties().security().realmName();
+    assertFalse(clients.isEmpty(), "Client not found");
 
-    assertDoesNotThrow(() -> keycloak.realm(realm).toRepresentation());
-
-    var client =
-        assertDoesNotThrow(() -> keycloak.realm(realm).clients().get(clientId).toRepresentation());
-
-    assertEquals(clientId, client.getId());
-
-    assertEquals(2, keycloak.realm(realm).users().count());
+    assertEquals(2, keycloak.realm(Constants.KC_REALM).users().count());
   }
 
   @Test

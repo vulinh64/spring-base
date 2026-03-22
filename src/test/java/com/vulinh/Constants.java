@@ -15,6 +15,8 @@ public class Constants {
   public static final String COMMON_PASSWORD = "123456";
 
   // Keycloak Section
+  public static final String KC_REALM = "spring-base-test";
+  public static final String KC_CLIENT = "spring-base-test-client";
   public static final String MOCK_UUID = "1234567890abcdef1234567890abcdef";
   public static final String MOCK_SLUG = "test-title-%s".formatted(MOCK_UUID);
   public static final String KC_ADMIN_USERNAME = "administrator";
