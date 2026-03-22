@@ -17,15 +17,19 @@ jobs:
         java-version: '25'
         distribution: 'corretto'
         cache: maven
-    - name: Clone and build spring-base-commons
+    - name: Download and install spring-base-commons
       run: |
-        git clone --depth 1 --branch ${{ env.SPRING_BASE_COMMONS_VERSION }} https://github.com/vulinh64/spring-base-commons.git
-        cd spring-base-commons
-        mvn clean install
-        cd ..
-    - name: Copy commons artifact to local Maven repo
-      run: |
-        mkdir -p ~/.m2/repository/com/vulinh/spring-base-commons/${{ env.SPRING_BASE_COMMONS_VERSION }}/
-        cp spring-base-commons/target/spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar ~/.m2/repository/com/vulinh/spring-base-commons/${{ env.SPRING_BASE_COMMONS_VERSION }}/spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar
+        gh release download ${{ env.SPRING_BASE_COMMONS_VERSION }} \
+          --repo vulinh64/spring-base-commons \
+          --pattern "spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar" \
+          --dir .
+        mvn install:install-file \
+          -Dfile=spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar \
+          -DgroupId=com.vulinh \
+          -DartifactId=spring-base-commons \
+          -Dversion=${{ env.SPRING_BASE_COMMONS_VERSION }} \
+          -Dpackaging=jar
+      env:
+        GH_TOKEN: ${{ github.token }}
     - name: Run unit tests
       run: mvn clean verify
