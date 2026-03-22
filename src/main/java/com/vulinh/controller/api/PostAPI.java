@@ -5,7 +5,6 @@ import module java.base;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.PostEndpoint;
-import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,11 +20,18 @@ import org.springframework.web.bind.annotation.*;
 public interface PostAPI {
 
   @GetMapping
-  GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(Pageable pageable);
+  GenericResponse<Page<PrefetchPostResponse>> findPrefetchPosts(Pageable pageable);
+
+  @GetMapping(PostEndpoint.BY_CATEGORY_ENDPOINT)
+  GenericResponse<Page<PrefetchPostResponse>> findPostsByCategory(
+      @PathVariable String categorySlug, Pageable pageable);
+
+  @GetMapping(PostEndpoint.SEARCH_ENDPOINT)
+  GenericResponse<Page<PrefetchPostResponse>> searchPosts(
+      @RequestParam String query, Pageable pageable);
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT)
-  GenericResponse<SinglePostResponse> getSinglePost(
-      @PathVariable(PostEndpoint.IDENTITY_VARIABLE) UUID postId);
+  GenericResponse<SinglePostResponse> getSinglePost(@PathVariable String identity);
 
   @GetMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   GenericResponse<Page<PostRevisionResponse>> getPostRevisions(
@@ -40,12 +46,12 @@ public interface PostAPI {
   @PatchMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   ResponseEntity<Void> editPost(
-      @PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId,
-      @RequestBody PostCreationRequest postCreationRequest);
+          @PathVariable UUID postId,
+          @RequestBody PostCreationRequest postCreationRequest);
 
   @DeleteMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
-  ResponseEntity<Void> deletePost(@PathVariable(PostEndpoint.POST_ID_VARIABLE) UUID postId);
+  ResponseEntity<Void> deletePost(@PathVariable UUID postId);
 
   @PatchMapping(PostEndpoint.IDENTITY_VARIABLE_FORMAT + PostEndpoint.REVISION_ENDPOINT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)

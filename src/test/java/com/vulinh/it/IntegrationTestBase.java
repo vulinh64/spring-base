@@ -4,7 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.vulinh.Constants;
 import com.vulinh.configuration.data.ApplicationProperties;
-import com.vulinh.keycloak.KeycloakAuthExchange;
+import com.vulinh.service.keycloak.KeycloakAuthExchange;
 import com.vulinh.utils.ImageProperties;
 import com.vulinh.utils.JsonUtils;
 import com.vulinh.utils.KeycloakInitializationUtils;

@@ -31,7 +31,9 @@ public enum ServiceErrorCode implements ApplicationError {
 
   MESSAGE_INVALID_USER("M4004"),
   MESSAGE_INVALID_KEYCLOAK("M4001"),
-  MESSAGE_USER_DISABLED("M4003");
+  MESSAGE_USER_DISABLED("M4003"),
+
+  MESSAGE_XSS_VIOLATION("M9108");
 
   final String errorCode;
 }

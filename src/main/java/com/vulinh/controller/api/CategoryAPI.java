@@ -30,5 +30,5 @@ public interface CategoryAPI {
 
   @DeleteMapping("/{categoryId}")
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
-  ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") UUID categoryId);
+  ResponseEntity<Void> deleteCategory(@PathVariable UUID categoryId);
 }

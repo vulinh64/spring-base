@@ -10,6 +10,7 @@ import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.SecurityUtils;
 import com.vulinh.utils.post.PostUtils;
+import com.vulinh.utils.post.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,18 @@ public class PostEditService {
     var actualPostCreationDTO = PostUtils.getActualDTO(postCreationRequest);
 
     var post = postValidationService.getPost(postId);
+
+    // Resolve slug uniqueness only if slug changed
+    if (!actualPostCreationDTO.slug().equals(post.getSlug())) {
+      var existingSlugs = postRepository.findSlugsByBaseSlug(actualPostCreationDTO.slug());
+      // Exclude the current post's slug from conflict detection
+      existingSlugs.remove(post.getSlug());
+      actualPostCreationDTO =
+          actualPostCreationDTO.withSlug(
+              SlugUtils.resolveUniqueSlug(actualPostCreationDTO.slug(), existingSlugs));
+    } else {
+      actualPostCreationDTO = actualPostCreationDTO.withSlug(post.getSlug());
+    }
 
     postValidationService.validateModifyingPermission(userDTO, post);
 

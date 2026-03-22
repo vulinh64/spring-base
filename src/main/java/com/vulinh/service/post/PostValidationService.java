@@ -2,6 +2,7 @@ package com.vulinh.service.post;
 
 import module java.base;
 
+import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.UserBasicResponse;
@@ -90,6 +91,19 @@ public class PostValidationService {
     return postRepository
         .findById(postId)
         .orElseThrow(() -> NotFound404Exception.postNotFound(postId));
+  }
+
+  public Post getPostByIdentity(String identity) {
+    try {
+      return getPost(UUID.fromString(identity));
+    } catch (IllegalArgumentException _) {
+      return postRepository
+          .findBySlug(identity)
+          .orElseThrow(
+              () ->
+                  NotFound404Exception.entityNotFound(
+                      EntityType.POST, identity, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+    }
   }
 
   @Getter

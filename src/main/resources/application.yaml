@@ -31,7 +31,7 @@ application-properties:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/search/** }
       - { method: GET, url: /comment/** }
-      - { method: DELETE, url: /auth/logout/** }
+      - { method: POST, url: /auth/** }
     no-authenticated-urls:
       - /free/**
       - /health
@@ -51,6 +51,7 @@ application-properties:
 server:
   port: ${SERVER_PORT:8088}
   shutdown: GRACEFUL
+  servlet.context-path: /api
 spring:
   application.name: spring-base
   cloud.stream:
