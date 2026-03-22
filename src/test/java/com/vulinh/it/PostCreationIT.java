@@ -117,7 +117,7 @@ class PostCreationIT extends IntegrationTestBase {
             PostCreationRequest.builder()
                 .title(TITLE)
                 .excerpt(EXCERPT)
-                .postContent("<script>Test Content</script>Test blank")
+                .postContent("Test blank")
                 .tags(TAGS)
                 .build(),
             accessToken);

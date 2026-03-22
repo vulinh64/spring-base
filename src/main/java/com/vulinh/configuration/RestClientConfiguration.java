@@ -1,7 +1,7 @@
 package com.vulinh.configuration;
 
 import com.vulinh.configuration.data.ApplicationProperties;
-import com.vulinh.keycloak.KeycloakAuthExchange;
+import com.vulinh.service.keycloak.KeycloakAuthExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
@@ -12,7 +12,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 public class RestClientConfiguration {
 
   @Bean
-  public KeycloakAuthExchange keycloakAuth(ApplicationProperties applicationProperties) {
+  public KeycloakAuthExchange keycloakAuthExchange(ApplicationProperties applicationProperties) {
     return HttpServiceProxyFactory.builderFor(
             RestClientAdapter.create(
                 RestClient.builder().baseUrl(applicationProperties.security().issuerUri()).build()))

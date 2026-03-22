@@ -7,6 +7,7 @@ import com.vulinh.data.repository.PostRepository;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.service.tag.TagService;
 import com.vulinh.utils.post.PostUtils;
+import com.vulinh.utils.post.SlugUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,11 @@ public class PostCreationService {
     postValidationService.validatePost(postCreationRequest);
 
     var actualCreationDTO = PostUtils.getActualDTO(postCreationRequest);
+
+    var existingSlugs = postRepository.findSlugsByBaseSlug(actualCreationDTO.slug());
+    actualCreationDTO =
+        actualCreationDTO.withSlug(
+            SlugUtils.resolveUniqueSlug(actualCreationDTO.slug(), existingSlugs));
 
     var categoryId = postCreationRequest.categoryId();
 

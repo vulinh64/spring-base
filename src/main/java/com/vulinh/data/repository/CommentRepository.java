@@ -6,4 +6,7 @@ import com.vulinh.data.entity.Comment;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommentRepository extends BaseRepository<Comment, UUID> {}
+public interface CommentRepository extends BaseRepository<Comment, UUID> {
+
+  long countByPostId(UUID postId);
+}

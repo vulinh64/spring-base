@@ -9,7 +9,6 @@ import com.vulinh.utils.post.PostUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,9 +32,7 @@ public class PostEditValidationService {
                     .map(Tag::getDisplayName)
                     .map(PostUtils::normalizeText)
                     .collect(Collectors.toSet()))
-            && Objects.equals(
-                StringUtils.normalizeSpace(postCreationRequest.postContent()),
-                StringUtils.normalizeSpace(post.getPostContent()));
+            && Objects.equals(postCreationRequest.postContent(), post.getPostContent());
 
     if (!result) {
       log.debug("Post {} ({})  unchanged", post.getId(), post.getTitle());

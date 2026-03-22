@@ -15,6 +15,10 @@ public interface CategoryMapper extends EntityDTOMapper<Category, CategoryRespon
 
   CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
+  @Override
+  @Mapping(target = "postCount", constant = "0L")
+  CategoryResponse toDto(Category category);
+
   @Mapping(target = "id", ignore = true)
   Category toCategory(CategoryCreationRequest categoryCreationRequest, String categorySlug);
 }

@@ -8,5 +8,5 @@ import lombok.With;
 
 @With
 @Builder
-public record CategoryResponse(UUID id, String categorySlug, String displayName)
+public record CategoryResponse(UUID id, String categorySlug, String displayName, long postCount)
     implements RecordUuidIdentifiable {}

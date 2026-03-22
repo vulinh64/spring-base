@@ -14,16 +14,11 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtUtils {
 
-  static final String AUTHORIZED_PARTY_CLAIM = "azp";
   static final String RESOURCE_ACCESS_CLAIM = "resource_access";
 
   @SuppressWarnings("unchecked")
   public static AbstractAuthenticationToken parseAuthoritiesByCustomClaims(
       Jwt jwt, @NonNull String clientName) {
-    if (!clientName.equals(jwt.getClaim(AUTHORIZED_PARTY_CLAIM))) {
-      throw new BadJwtException("Invalid authorized party");
-    }
-
     if (!jwt.hasClaim(RESOURCE_ACCESS_CLAIM)) {
       throw new BadJwtException("Missing resource access claim");
     }

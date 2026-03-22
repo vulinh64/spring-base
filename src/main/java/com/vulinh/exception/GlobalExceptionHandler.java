@@ -72,6 +72,19 @@ public class GlobalExceptionHandler {
     return logAndReturn(validationException);
   }
 
+  @ExceptionHandler(XSSViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  GenericResponse<Object> handleXSSViolationException(
+      XSSViolationException xssViolationException) {
+    log.info(
+        "XSS violation detected in field [{}]. Offending content: [{}]. Sanitized: [{}]",
+        xssViolationException.getFieldName(),
+        xssViolationException.getOffendingContent(),
+        xssViolationException.getSanitizedContent());
+
+    return ResponseCreator.toError(xssViolationException);
+  }
+
   @ExceptionHandler(ResourceConflictException.class)
   @ResponseStatus(HttpStatus.CONFLICT)
   GenericResponse<Object> handleResourceConflictException(

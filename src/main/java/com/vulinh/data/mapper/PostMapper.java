@@ -5,6 +5,7 @@ import module java.base;
 import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.projection.PostRevisionProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.response.AuthorResponse;
 import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.dto.response.PostRevisionResponse;
 import com.vulinh.data.dto.response.SinglePostResponse;
@@ -22,7 +23,9 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
 
   PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
 
-  SinglePostResponse toSinglePostDTO(Post post);
+  @Mapping(target = "id", source = "post.id")
+  @Mapping(target = "commentCount", constant = "0L")
+  SinglePostResponse toSinglePostDTO(Post post, AuthorResponse author);
 
   @Override
   @Mapping(target = "revisionNumber", ignore = true) // will be set manually
