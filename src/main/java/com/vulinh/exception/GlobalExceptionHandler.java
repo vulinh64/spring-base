@@ -74,8 +74,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(XSSViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  GenericResponse<Object> handleXSSViolationException(
-      XSSViolationException xssViolationException) {
+  GenericResponse<Object> handleXSSViolationException(XSSViolationException xssViolationException) {
     log.info(
         "XSS violation detected in field [{}]. Offending content: [{}]. Sanitized: [{}]",
         xssViolationException.getFieldName(),
@@ -96,6 +95,21 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   GenericResponse<Object> handleHttpMessageConversionException(
       HttpMessageConversionException httpMessageConversionException) {
+    // A record's compact constructor runs during Jackson deserialization, so any exception
+    // it throws (e.g. XSSViolationException) gets wrapped in JsonMappingException and then
+    // in HttpMessageNotReadableException. Walk the cause chain to surface the real error.
+    var cause = httpMessageConversionException.getCause();
+    var depth = 0;
+
+    while (cause != null && depth < 10) {
+      if (cause instanceof XSSViolationException xssViolation) {
+        return handleXSSViolationException(xssViolation);
+      }
+
+      cause = cause.getCause();
+      depth++;
+    }
+
     log.info("Bad request body format: {}", httpMessageConversionException.getMessage());
 
     return badRequestBody(httpMessageConversionException.getMessage());
@@ -104,12 +118,14 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(TypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   GenericResponse<Object> handleTypeMismatchException(TypeMismatchException typeMismatchException) {
-    log.info(
-        "Bad request format: {} (Property name: {}, required type: {}, value: {})",
-        typeMismatchException.getMessage(),
-        typeMismatchException.getPropertyName(),
-        typeMismatchException.getRequiredType(),
-        StringUtils.abbreviate(String.valueOf(typeMismatchException.getValue()), 100));
+    log.atInfo()
+        .setMessage("Bad request format: {} (Property name: {}, required type: {}, value: {})")
+        .addArgument(typeMismatchException.getMessage())
+        .addArgument(typeMismatchException.getPropertyName())
+        .addArgument(typeMismatchException.getRequiredType())
+        .addArgument(
+            () -> StringUtils.abbreviate(String.valueOf(typeMismatchException.getValue()), 100))
+        .log();
 
     return badRequestBody(
         "field [%s] - type [%s]"
