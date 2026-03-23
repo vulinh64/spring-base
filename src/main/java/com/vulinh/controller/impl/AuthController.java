@@ -21,8 +21,10 @@ import org.springframework.web.client.HttpClientErrorException;
 @RequiredArgsConstructor
 public class AuthController implements AuthAPI {
 
-  private final KeycloakAuthExchange keycloakAuthExchange;
   private final ApplicationProperties applicationProperties;
+
+  private final KeycloakAuthExchange keycloakAuthExchange;
+
   private final AuthorService authorService;
 
   @Override
@@ -32,7 +34,8 @@ public class AuthController implements AuthAPI {
           keycloakAuthExchange.getToken(
               applicationProperties.security(), loginRequest.username(), loginRequest.password());
 
-      addCookie(response, tokenResponse.accessToken(), 300);
+      addCookie(response, "access_token", tokenResponse.accessToken(), 300);
+      addCookie(response, "refresh_token", tokenResponse.refreshToken(), 1800);
 
       authorService.populateAuthorAsync(tokenResponse.accessToken());
 
@@ -48,14 +51,30 @@ public class AuthController implements AuthAPI {
   }
 
   @Override
+  public ResponseEntity<Void> refresh(String refreshToken, HttpServletResponse response) {
+    try {
+      var tokenResponse =
+          keycloakAuthExchange.refreshToken(applicationProperties.security(), refreshToken);
+
+      addCookie(response, "access_token", tokenResponse.accessToken(), tokenResponse.expiresIn());
+      addCookie(response, "refresh_token", tokenResponse.refreshToken(), tokenResponse.expiresIn());
+
+      return ResponseEntity.ok().build();
+    } catch (HttpClientErrorException.Unauthorized e) {
+      throw new KeycloakAuthenticationException("refresh", e);
+    }
+  }
+
+  @Override
   public ResponseEntity<Void> logout(HttpServletResponse response) {
-    addCookie(response, "", 0);
+    addCookie(response, "access_token", "", 0);
+    addCookie(response, "refresh_token", "", 0);
 
     return ResponseEntity.ok().build();
   }
 
-  private void addCookie(HttpServletResponse response, String value, int maxAge) {
-    var cookie = new Cookie("access_token", value);
+  private void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    var cookie = new Cookie(name, value);
 
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
