@@ -16,7 +16,7 @@ import com.vulinh.utils.validator.ApplicationError;
 /// - The authenticated user does not have sufficient permissions to access a resource
 public class AuthorizationException extends ApplicationException {
 
-  @Serial private static final long serialVersionUID = -8756921238690096504L;
+  @Serial private static final long serialVersionUID = 0L;
 
   /// Creates an [AuthorizationException] with a default message and error code.
   ///

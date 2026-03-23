@@ -13,7 +13,7 @@ import lombok.Getter;
 @Getter
 public class XSSViolationException extends ApplicationException {
 
-  @Serial private static final long serialVersionUID = -2847593018472650183L;
+  @Serial private static final long serialVersionUID = 0L;
 
   private static final int CONTENT_PREVIEW_LENGTH = 500;
 

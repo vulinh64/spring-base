@@ -6,6 +6,7 @@ import com.vulinh.data.dto.request.LoginRequest;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.UserBasicResponse;
+import com.vulinh.exception.KeycloakAuthenticationException;
 import com.vulinh.service.author.AuthorService;
 import com.vulinh.service.keycloak.KeycloakAuthExchange;
 import com.vulinh.utils.SecurityUtils;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,15 +27,19 @@ public class AuthController implements AuthAPI {
 
   @Override
   public ResponseEntity<Void> login(LoginRequest loginRequest, HttpServletResponse response) {
-    var tokenResponse =
-        keycloakAuthExchange.getToken(
-            applicationProperties.security(), loginRequest.username(), loginRequest.password());
+    try {
+      var tokenResponse =
+          keycloakAuthExchange.getToken(
+              applicationProperties.security(), loginRequest.username(), loginRequest.password());
 
-    addCookie(response, tokenResponse.accessToken(), 300);
+      addCookie(response, tokenResponse.accessToken(), 300);
 
-    authorService.populateAuthorAsync(tokenResponse.accessToken());
+      authorService.populateAuthorAsync(tokenResponse.accessToken());
 
-    return ResponseEntity.ok().build();
+      return ResponseEntity.ok().build();
+    } catch (HttpClientErrorException.Unauthorized e) {
+      throw new KeycloakAuthenticationException(loginRequest.username(), e);
+    }
   }
 
   @Override
