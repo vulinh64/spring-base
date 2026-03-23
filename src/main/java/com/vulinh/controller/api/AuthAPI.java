@@ -22,6 +22,10 @@ public interface AuthAPI {
   @PostMapping("/logout")
   ResponseEntity<Void> logout(HttpServletResponse response);
 
+  @PostMapping("/refresh")
+  ResponseEntity<Void> refresh(
+      @CookieValue("refresh_token") String refreshToken, HttpServletResponse response);
+
   @GetMapping("/me")
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   GenericResponse<UserBasicResponse> me();
