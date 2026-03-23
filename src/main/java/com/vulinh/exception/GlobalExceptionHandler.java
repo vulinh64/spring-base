@@ -179,7 +179,11 @@ public class GlobalExceptionHandler {
 
   static GenericResponse<Object> securityError(
       ApplicationError applicationError, Throwable throwable) {
-    log.info(throwable.getMessage(), throwable);
+    log.atInfo()
+        .setMessage("{} ({})")
+        .addArgument(throwable.getMessage())
+        .addArgument(throwable.getClass().getName())
+        .log();
 
     return ResponseCreator.toError(applicationError);
   }
