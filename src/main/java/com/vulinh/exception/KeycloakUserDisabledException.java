@@ -8,7 +8,7 @@ import com.vulinh.utils.validator.ApplicationError;
 /// The exception to represent the state when a Keycloak user has been disabled
 public class KeycloakUserDisabledException extends ApplicationException {
 
-  @Serial private static final long serialVersionUID = 4705314241370018291L;
+  @Serial private static final long serialVersionUID = 0L;
 
   public static KeycloakUserDisabledException userDisabledException(UUID userId) {
     return new KeycloakUserDisabledException(

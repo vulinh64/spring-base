@@ -19,7 +19,7 @@ import com.vulinh.utils.validator.ApplicationError;
 /// operations that trigger this exception for regular users.
 public class NoSuchPermissionException extends ApplicationException {
 
-  @Serial private static final long serialVersionUID = 8590613467771448158L;
+  @Serial private static final long serialVersionUID = 0L;
 
   /// Creates a [NoSuchPermissionException] with the specified message and error details.
   ///

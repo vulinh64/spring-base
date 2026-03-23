@@ -17,7 +17,7 @@ import com.vulinh.utils.validator.ApplicationError;
 /// - A referenced entity has been deleted or is otherwise unavailable
 public class NotFound404Exception extends ApplicationException {
 
-  @Serial private static final long serialVersionUID = 5815209580420516331L;
+  @Serial private static final long serialVersionUID = 0L;
 
   /// Creates a [NotFound404Exception] specifically for a missing Post entity.
   /// @param postId The identifier of the Post that was not found

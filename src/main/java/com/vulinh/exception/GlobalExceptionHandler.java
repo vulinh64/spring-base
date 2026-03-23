@@ -143,6 +143,13 @@ public class GlobalExceptionHandler {
     return logAndReturn(keycloakUserDisabledException);
   }
 
+  @ExceptionHandler(KeycloakAuthenticationException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  GenericResponse<Object> handleKeycloakAuthenticationException(
+      KeycloakAuthenticationException keycloakAuthenticationException) {
+    return logAndReturn(keycloakAuthenticationException);
+  }
+
   @ExceptionHandler(AuthenticationException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
   GenericResponse<Object> handleInvalidBearerTokenException(
