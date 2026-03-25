@@ -35,5 +35,6 @@ public class EndpointConstant {
   public static class CategoryEndpoint {
 
     public static final String SEARCH = COMMON_SEARCH_ENDPOINT;
+    public static final String ALL = "/all";
   }
 }

@@ -10,6 +10,7 @@ import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
+import com.vulinh.data.dto.response.CategoryShortResponse;
 import com.vulinh.data.entity.Category;
 import com.vulinh.data.entity.QCategory;
 import com.vulinh.data.entity.QPost;
@@ -55,6 +56,10 @@ public class CategoryService
             () ->
                 NotFound404Exception.entityNotFound(
                     EntityType.CATEGORY, categoryId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+  }
+
+  public List<CategoryShortResponse> getAllCategories() {
+    return categoryRepository.findAll().stream().map(CATEGORY_MAPPER::toShortDto).toList();
   }
 
   @Transactional
