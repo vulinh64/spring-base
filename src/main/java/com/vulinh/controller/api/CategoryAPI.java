@@ -7,6 +7,7 @@ import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
+import com.vulinh.data.dto.response.CategoryShortResponse;
 import com.vulinh.data.dto.response.GenericResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +24,9 @@ public interface CategoryAPI {
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   GenericResponse<CategoryResponse> createCategory(
       @RequestBody CategoryCreationRequest categoryCreationRequest);
+
+  @GetMapping(EndpointConstant.CategoryEndpoint.ALL)
+  GenericResponse<List<CategoryShortResponse>> getAllCategories();
 
   @GetMapping(EndpointConstant.CategoryEndpoint.SEARCH)
   GenericResponse<Page<CategoryResponse>> searchCategories(

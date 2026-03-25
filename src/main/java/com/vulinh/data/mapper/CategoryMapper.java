@@ -3,6 +3,7 @@ package com.vulinh.data.mapper;
 import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
+import com.vulinh.data.dto.response.CategoryShortResponse;
 import com.vulinh.data.entity.Category;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
@@ -18,6 +19,8 @@ public interface CategoryMapper extends EntityDTOMapper<Category, CategoryRespon
   @Override
   @Mapping(target = "postCount", constant = "0L")
   CategoryResponse toDto(Category category);
+
+  CategoryShortResponse toShortDto(Category category);
 
   @Mapping(target = "id", ignore = true)
   Category toCategory(CategoryCreationRequest categoryCreationRequest, String categorySlug);
