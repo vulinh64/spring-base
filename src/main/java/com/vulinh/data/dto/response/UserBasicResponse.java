@@ -13,5 +13,6 @@ public record UserBasicResponse(
     UUID id,
     String username,
     String email,
+    String displayName,
     Collection<UserRole> userRoles)
     implements RecordUuidIdentifiable, Serializable {}
