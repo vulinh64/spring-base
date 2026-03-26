@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.vulinh.utils.Equivalence.Creator;
 import com.vulinh.utils.Equivalence.EqualityDeepness;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -227,7 +228,7 @@ class EquivalenceStreamCreatorTest {
     void testBuildDistinct06() {
       var item1 = new ItemWithStringId("ID1", "Item 1");
       var itemBlank = new ItemWithStringId("   ", "Item Blank"); // Blank ID
-      var itemEmpty = new ItemWithStringId("", "Item Empty"); // Empty ID
+      var itemEmpty = new ItemWithStringId(StringUtils.EMPTY, "Item Empty"); // Empty ID
       var item2 = new ItemWithStringId("ID2", "Item 2");
       var itemNullId = new ItemWithStringId(null, "Item Null ID");
 
