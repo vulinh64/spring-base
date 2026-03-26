@@ -20,6 +20,7 @@ import com.vulinh.utils.KeycloakInitializationUtils;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.keycloak.admin.client.Keycloak;
@@ -135,7 +136,7 @@ class PostCreationIT extends IntegrationTestBase {
             .perform(
                 postWithEndpointAndPayload(
                         PostCreationRequest.builder()
-                            .title("")
+                            .title(StringUtils.EMPTY)
                             .excerpt(EXCERPT)
                             .postContent(POST_CONTENT)
                             .tags(TAGS)

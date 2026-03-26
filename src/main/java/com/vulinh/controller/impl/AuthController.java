@@ -13,6 +13,7 @@ import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
@@ -20,6 +21,9 @@ import org.springframework.web.client.HttpClientErrorException;
 @RestController
 @RequiredArgsConstructor
 public class AuthController implements AuthAPI {
+
+  public static final String ACCESS_TOKEN_COOKIE = "access_token";
+  public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
 
   private final ApplicationProperties applicationProperties;
 
@@ -34,8 +38,8 @@ public class AuthController implements AuthAPI {
           keycloakAuthExchange.getToken(
               applicationProperties.security(), loginRequest.username(), loginRequest.password());
 
-      addCookie(response, "access_token", tokenResponse.accessToken(), 300);
-      addCookie(response, "refresh_token", tokenResponse.refreshToken(), 1800);
+      addCookie(response, ACCESS_TOKEN_COOKIE, tokenResponse.accessToken(), 300);
+      addCookie(response, REFRESH_TOKEN_COOKIE, tokenResponse.refreshToken(), 1800);
 
       authorService.populateAuthorAsync(tokenResponse.accessToken());
 
@@ -56,8 +60,10 @@ public class AuthController implements AuthAPI {
       var tokenResponse =
           keycloakAuthExchange.refreshToken(applicationProperties.security(), refreshToken);
 
-      addCookie(response, "access_token", tokenResponse.accessToken(), tokenResponse.expiresIn());
-      addCookie(response, "refresh_token", tokenResponse.refreshToken(), tokenResponse.expiresIn());
+      addCookie(
+          response, ACCESS_TOKEN_COOKIE, tokenResponse.accessToken(), tokenResponse.expiresIn());
+      addCookie(
+          response, REFRESH_TOKEN_COOKIE, tokenResponse.refreshToken(), tokenResponse.expiresIn());
 
       return ResponseEntity.ok().build();
     } catch (HttpClientErrorException.Unauthorized e) {
@@ -67,8 +73,8 @@ public class AuthController implements AuthAPI {
 
   @Override
   public ResponseEntity<Void> logout(HttpServletResponse response) {
-    addCookie(response, "access_token", "", 0);
-    addCookie(response, "refresh_token", "", 0);
+    addCookie(response, ACCESS_TOKEN_COOKIE, StringUtils.EMPTY, 0);
+    addCookie(response, REFRESH_TOKEN_COOKIE, StringUtils.EMPTY, 0);
 
     return ResponseEntity.ok().build();
   }
