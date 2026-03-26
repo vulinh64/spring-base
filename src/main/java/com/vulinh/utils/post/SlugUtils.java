@@ -32,7 +32,11 @@ public class SlugUtils {
         // Replace white space to "-"
         .replace(' ', '-')
         // Replace Vietnamese character "đ" by "d"
-        .replace("đ", "d");
+        .replace("đ", "d")
+        // Replace em dash to "-"
+        .replace("—", "-")
+        // Strip anything not alphanumeric or "-"
+        .replaceAll("[^a-zA-Z0-9\\-]", StringUtils.EMPTY);
   }
 
   public static String resolveUniqueSlug(String baseSlug, Collection<String> existingSlugs) {
