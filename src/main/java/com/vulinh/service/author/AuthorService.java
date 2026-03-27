@@ -45,7 +45,10 @@ public class AuthorService {
       try {
         var keycloakUser = keycloakAdminClientService.getKeycloakUser(authorId);
 
-        var displayName = buildDisplayName(keycloakUser.firstName(), keycloakUser.lastName());
+        var displayName =
+            Stream.of(keycloakUser.firstName(), keycloakUser.lastName())
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.joining(StringUtils.SPACE));
 
         saveAuthor(
             keycloakUser.id(),
@@ -76,10 +79,10 @@ public class AuthorService {
 
       var username = jwt.getClaimAsString("preferred_username");
       var email = jwt.getClaimAsString("email");
-      var displayName =
-          buildDisplayName(jwt.getClaimAsString("given_name"), jwt.getClaimAsString("family_name"));
+      var displayName = jwt.getClaimAsString("name");
 
-      saveAuthor(userId, username, displayName.isBlank() ? username : displayName, email);
+      saveAuthor(
+          userId, username, StringUtils.isBlank(displayName) ? username : displayName, email);
     } catch (Exception e) {
       log.warn("Failed to populate author from login: {}", e.getMessage());
     }
@@ -101,11 +104,5 @@ public class AuthorService {
     authorRepository.save(author);
 
     log.info("Populated author: {} ({})", username, id);
-  }
-
-  static String buildDisplayName(String firstName, String lastName) {
-    return Stream.of(firstName, lastName)
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.joining(" "));
   }
 }
