@@ -4,6 +4,7 @@ import module java.base;
 
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.constant.EndpointConstant.CategoryEndpoint;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
@@ -25,10 +26,10 @@ public interface CategoryAPI {
   GenericResponse<CategoryResponse> createCategory(
       @RequestBody CategoryCreationRequest categoryCreationRequest);
 
-  @GetMapping(EndpointConstant.CategoryEndpoint.ALL)
+  @GetMapping(CategoryEndpoint.ALL)
   GenericResponse<List<CategoryShortResponse>> getAllCategories();
 
-  @GetMapping(EndpointConstant.CategoryEndpoint.SEARCH)
+  @GetMapping(CategoryEndpoint.SEARCH)
   GenericResponse<Page<CategoryResponse>> searchCategories(
       CategorySearchRequest categorySearchRequest, Pageable pageable);
 

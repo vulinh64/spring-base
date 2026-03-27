@@ -60,7 +60,7 @@ public class KeycloakInitializationUtils {
 
       var result = keycloakContainer.execInContainer(command);
 
-      var singleCommand = String.join(" ", command);
+      var singleCommand = String.join(StringUtils.SPACE, command);
 
       var output =
           StringUtils.defaultIfBlank(

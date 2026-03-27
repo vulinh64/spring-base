@@ -5,6 +5,7 @@ import module java.base;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.vulinh.configuration.CaffeineCacheConfiguration.CacheProperties;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
@@ -27,6 +28,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -58,10 +61,12 @@ public class CategoryService
                     EntityType.CATEGORY, categoryId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
+  @Cacheable(CacheProperties.ALL_CATEGORIES_CACHE)
   public List<CategoryShortResponse> getAllCategories() {
     return categoryRepository.findAll().stream().map(CATEGORY_MAPPER::toShortDto).toList();
   }
 
+  @CacheEvict(cacheNames = CacheProperties.ALL_CATEGORIES_CACHE, allEntries = true)
   @Transactional
   public CategoryResponse createCategory(CategoryCreationRequest categoryCreationRequest) {
     categoryValidationService.validateCategoryCreation(categoryCreationRequest);
@@ -74,6 +79,7 @@ public class CategoryService
         categoryRepository.save(CATEGORY_MAPPER.toCategory(categoryCreationRequest, slug)));
   }
 
+  @CacheEvict(cacheNames = CacheProperties.ALL_CATEGORIES_CACHE, allEntries = true)
   @Transactional
   public boolean deleteCategory(UUID categoryId) {
     if (CommonConstant.NIL_UUID.equals(categoryId)) {
