@@ -21,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AuthorService {
 
+  final KeycloakAdminClientService keycloakAdminClientService;
+
   final AuthorRepository authorRepository;
   final PostRepository postRepository;
-  final KeycloakAdminClientService keycloakAdminClientService;
+
   final JwtDecoder jwtDecoder;
 
   // --- Startup initialization ---
