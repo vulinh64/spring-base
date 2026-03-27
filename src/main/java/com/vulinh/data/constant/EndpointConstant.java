@@ -11,24 +11,30 @@ public class EndpointConstant {
   public static final String ENDPOINT_FREE = "/free";
   public static final String ENDPOINT_SUBSCRIPTION = "/subscription";
 
+  public static final String ENDPOINT_AUTH = "/auth";
+
   public static final String COMMON_SEARCH_ENDPOINT = "/search";
   public static final String ENDPOINT_COMMENT = "/comment";
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class PostEndpoint {
 
-    public static final String POST_ID_VARIABLE = "postId";
     public static final String IDENTITY_VARIABLE = "identity";
 
     public static final String POST_ID_VARIABLE_FORMAT = "/{postId}";
     public static final String IDENTITY_VARIABLE_FORMAT = "/{identity}";
 
     public static final String REVISION_ENDPOINT = "/revisions";
+
+    public static final String BY_CATEGORY_ENDPOINT = "/category/{categorySlug}";
+
+    public static final String SEARCH_ENDPOINT = COMMON_SEARCH_ENDPOINT;
   }
 
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class CategoryEndpoint {
 
     public static final String SEARCH = COMMON_SEARCH_ENDPOINT;
+    public static final String ALL = "/all";
   }
 }

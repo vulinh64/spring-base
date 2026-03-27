@@ -15,9 +15,11 @@ public record SinglePostResponse(
     String excerpt,
     String slug,
     String postContent,
-    Instant createdDate,
-    Instant updatedDate,
+    Instant createdDateTime,
+    Instant updatedDateTime,
     UUID authorId,
+    AuthorResponse author,
     CategoryResponse category,
-    List<TagData> tags)
+    List<TagData> tags,
+    long commentCount)
     implements RecordUuidIdentifiable, Serializable {}

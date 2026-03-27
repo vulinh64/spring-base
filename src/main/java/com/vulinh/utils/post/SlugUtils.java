@@ -12,13 +12,10 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SlugUtils {
 
-  static final int SLUG_MAX_LENGTH = 5000 + NoDashedUUIDGenerator.UUID_LENGTH + 1;
+  static final int SLUG_MAX_LENGTH = 5000;
 
   public static String createPostSlug(@NonNull String title) {
-    var randomUUID = generateRandomUUID();
-
-    // Remove character accents, normalize white spaces and turn text to lowercase
-    var result = "%s-%s".formatted(createBasicSlug(title), randomUUID);
+    var result = createBasicSlug(title);
 
     if (result.length() > SLUG_MAX_LENGTH) {
       throw new ApplicationValidationException(
@@ -35,10 +32,40 @@ public class SlugUtils {
         // Replace white space to "-"
         .replace(' ', '-')
         // Replace Vietnamese character "đ" by "d"
-        .replace("đ", "d");
+        .replace("đ", "d")
+        // Replace em dash to "-"
+        .replace("—", "-")
+        // Strip anything not alphanumeric or "-"
+        .replaceAll("[^a-zA-Z0-9\\-]", StringUtils.EMPTY);
   }
 
-  public static String generateRandomUUID() {
-    return NoDashedUUIDGenerator.createNonDashedUUID(UUID.randomUUID());
+  public static String resolveUniqueSlug(String baseSlug, Collection<String> existingSlugs) {
+    if (existingSlugs.isEmpty() || !existingSlugs.contains(baseSlug)) {
+      return baseSlug;
+    }
+
+    var maxSuffix =
+        existingSlugs.stream()
+            .map(slug -> parseSuffix(slug, baseSlug))
+            .max(Integer::compareTo)
+            .orElse(1);
+
+    return "%s-%d".formatted(baseSlug, maxSuffix + 1);
+  }
+
+  private static int parseSuffix(String slug, String baseSlug) {
+    if (slug.equals(baseSlug)) {
+      return 1;
+    }
+
+    // slug must be in the format "baseSlug-<number>"
+    var suffix = slug.substring(baseSlug.length() + 1);
+
+    try {
+      return Integer.parseInt(suffix);
+    } catch (NumberFormatException _) {
+      // Not a numeric suffix (e.g. "my-slug-extra-words"), ignore
+      return 0;
+    }
   }
 }

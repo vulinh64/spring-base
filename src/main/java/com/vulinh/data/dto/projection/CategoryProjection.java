@@ -6,5 +6,7 @@ import com.vulinh.data.base.Identifiable;
 
 public interface CategoryProjection extends Identifiable<UUID> {
 
+  String getCategorySlug();
+
   String getDisplayName();
 }

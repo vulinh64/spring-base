@@ -53,3 +53,12 @@ databaseChangeLog:
   - include:
       file: sql/0017-housecleaning.sql
       relativeToChangelogFile: true
+  - include:
+      file: sql/0018-add-unique-slug-constraint.sql
+      relativeToChangelogFile: true
+  - include:
+      file: sql/0019-create-author-table.sql
+      relativeToChangelogFile: true
+  - include:
+      file: sql/0020-add-post-fulltext-search.sql
+      relativeToChangelogFile: true

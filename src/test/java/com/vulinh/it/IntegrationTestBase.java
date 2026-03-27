@@ -4,13 +4,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.vulinh.Constants;
 import com.vulinh.configuration.data.ApplicationProperties;
-import com.vulinh.keycloak.KeycloakAuthExchange;
+import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.service.keycloak.KeycloakAuthExchange;
 import com.vulinh.utils.ImageProperties;
 import com.vulinh.utils.JsonUtils;
-import com.vulinh.utils.KeycloakInitializationUtils;
-import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.Getter;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,21 +35,9 @@ public abstract class IntegrationTestBase {
               ImageProperties.POSTGRESQL.shellStrategyHealthCheck(Constants.POSTGRES_USERNAME));
 
   @Container
-  public static final KeycloakContainer KEYCLOAK_CONTAINER =
-      new KeycloakContainer(ImageProperties.KEYCLOAK.getFullImageName())
-          .withAdminUsername(Constants.KC_ADMIN_USERNAME)
-          .withAdminPassword(Constants.KC_ADMIN_PASSWORD)
-          .waitingFor(ImageProperties.KEYCLOAK.shellStrategyHealthCheck());
-
-  @Container
   public static final RabbitMQContainer RABBIT_MQ_CONTAINER =
       new RabbitMQContainer(ImageProperties.RABBIT_MQ.getFullImageName())
           .waitingFor(ImageProperties.RABBIT_MQ.shellStrategyHealthCheck());
-
-  @BeforeAll
-  static void initializeKeycloakData() {
-    KeycloakInitializationUtils.initializeKeycloak(KEYCLOAK_CONTAINER);
-  }
 
   @Autowired private MockMvc mockMvc;
 
@@ -70,9 +56,8 @@ public abstract class IntegrationTestBase {
         .accessToken();
   }
 
-  protected static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(
-      String endpoint, T payload) {
-    return post(endpoint)
+  protected static <T> MockHttpServletRequestBuilder postWithEndpointAndPayload(T payload) {
+    return post(EndpointConstant.ENDPOINT_POST)
         .contentType(MediaType.APPLICATION_JSON)
         .content(JsonUtils.toMinimizedJSON(payload));
   }

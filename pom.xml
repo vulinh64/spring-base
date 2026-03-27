@@ -75,6 +75,9 @@
 
         <!-- https://mvnrepository.com/artifact/io.netty/netty-codec/versions -->
         <netty.version>4.2.10.Final</netty.version>
+
+        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+        <caffeine.version>3.2.3</caffeine.version>
     </properties>
 
     <dependencies>
@@ -115,6 +118,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -224,6 +231,13 @@
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
             <version>${keycloak-admin-client.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine/versions -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
         </dependency>
 
         <!-- BEGIN: JUnit Test -->

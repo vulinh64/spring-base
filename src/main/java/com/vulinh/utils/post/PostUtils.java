@@ -31,8 +31,7 @@ public class PostUtils {
 
     return StringUtils.isBlank(slug)
         ? result.withSlug(SlugUtils.createPostSlug(postCreationRequest.title()))
-        : result.withSlug(
-            "%s-%s".formatted(SlugUtils.createBasicSlug(slug), SlugUtils.generateRandomUUID()));
+        : result.withSlug(SlugUtils.createBasicSlug(slug));
   }
 
   public static boolean isUncategorizedPost(PostCreationRequest postCreationRequest, Post post) {
