@@ -20,14 +20,14 @@ import org.springframework.web.client.HttpClientErrorException;
 @RequiredArgsConstructor
 public class AuthService {
 
-  public static final String ACCESS_TOKEN_COOKIE = "access_token";
-  public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
+  static final String ACCESS_TOKEN_COOKIE = "access_token";
+  static final String REFRESH_TOKEN_COOKIE = "refresh_token";
 
-  private final ApplicationProperties applicationProperties;
+  final ApplicationProperties applicationProperties;
 
-  private final AuthorService authorService;
+  final AuthorService authorService;
 
-  private final KeycloakAuthExchange keycloakAuthExchange;
+  final KeycloakAuthExchange keycloakAuthExchange;
 
   public void login(LoginRequest loginRequest, HttpServletResponse response) {
     try {
