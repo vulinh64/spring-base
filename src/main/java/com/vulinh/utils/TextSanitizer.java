@@ -10,9 +10,12 @@ import org.jsoup.safety.Safelist;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TextSanitizer {
 
-  static final String[] SAFE_TAGS = {"details", "summary", "youtube"};
+  static final String YOUTUBE_TAG = "youtube";
 
-  static final Safelist DEFAULT_SAFELIST = Safelist.relaxed().addTags(SAFE_TAGS);
+  static final String[] SAFE_TAGS = {"details", "summary", YOUTUBE_TAG};
+
+  static final Safelist DEFAULT_SAFELIST =
+      Safelist.relaxed().addTags(SAFE_TAGS).addAttributes(YOUTUBE_TAG, "url");
 
   public static String sanitize(String text) {
     return StringUtils.isBlank(text) ? text : Jsoup.clean(text, DEFAULT_SAFELIST);
