@@ -45,6 +45,7 @@ application-properties:
       - /webjars/**
     high-privilege-verb-urls:
       - { method: DELETE, url: /category/** }
+      - { method: POST, url: /category/** }
 #
 # End of application properties
 #
