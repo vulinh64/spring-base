@@ -73,6 +73,8 @@ services:
     ports:
       - "8080:8080"
       - "9000:9000"
+    volumes:
+      - keycloak-volume:/opt/keycloak/data
     healthcheck:
       test: ['CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { java.net.URI uri = java.net.URI.create(args[0]); System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)uri.toURL().openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live']
       interval: 10s
@@ -81,6 +83,8 @@ services:
 volumes:
   postgresql-volume:
     name: postgresql-volume
+  keycloak-volume:
+    name: keycloak-volume
 networks:
   spring-base-network:
     driver: bridge
