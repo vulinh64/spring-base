@@ -8,6 +8,15 @@ SET CLIENT_NAME=spring-base-client
 SET KEYCLOAK_OVERLORD=admin
 SET KEYCLOAK_ADMIN_PASSWORD=123456
 
+echo Checking if realm [%KEYCLOAK_REALM%] already exists...
+docker cp "%~dp0PingKeycloak.java" %KEYCLOAK_CONTAINER%:/tmp/PingKeycloak.java
+docker exec %KEYCLOAK_CONTAINER% java /tmp/PingKeycloak.java
+if %ERRORLEVEL%==0 (
+    echo Realm [%KEYCLOAK_REALM%] already exists, skipping Keycloak initialization.
+    ENDLOCAL
+    exit /b 0
+)
+
 echo Configuring KCADM credentials...
 docker exec %KEYCLOAK_CONTAINER% %KCADM_PATH% config credentials --server http://localhost:8080 --realm master --user %KEYCLOAK_OVERLORD% --password %KEYCLOAK_ADMIN_PASSWORD%
 if errorlevel 1 (
