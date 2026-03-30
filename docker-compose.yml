@@ -53,6 +53,8 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq
       - RABBITMQ_DEFAULT_PASS=123456
+    volumes:
+      - rabbitmq-volume:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
@@ -85,6 +87,8 @@ volumes:
     name: postgresql-volume
   keycloak-volume:
     name: keycloak-volume
+  rabbitmq-volume:
+    name: rabbitmq-volume
 networks:
   spring-base-network:
     driver: bridge
