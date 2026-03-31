@@ -40,7 +40,9 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ApplicationException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   GenericResponse<Object> handleApplicationException(ApplicationException applicationException) {
-    return stackTraceAndReturn(applicationException);
+    log.info("Application error", applicationException);
+
+    return ResponseCreator.toError(applicationException);
   }
 
   @ExceptionHandler(AuthorizationException.class)
@@ -178,19 +180,9 @@ public class GlobalExceptionHandler {
     return ResponseCreator.toError(applicationException);
   }
 
-  static GenericResponse<Object> stackTraceAndReturn(ApplicationException applicationException) {
-    log.info("Application error", applicationException);
-
-    return ResponseCreator.toError(applicationException);
-  }
-
   static GenericResponse<Object> securityError(
       ApplicationError applicationError, Throwable throwable) {
-    log.atInfo()
-        .setMessage("{} ({})")
-        .addArgument(throwable.getMessage())
-        .addArgument(throwable.getClass().getName())
-        .log();
+    log.info("{} ({})", throwable.getMessage(), throwable.getClass().getName());
 
     return ResponseCreator.toError(applicationError);
   }
