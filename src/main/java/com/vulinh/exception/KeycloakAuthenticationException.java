@@ -1,7 +1,8 @@
 package com.vulinh.exception;
 
+import module java.base;
+
 import com.vulinh.locale.ServiceErrorCode;
-import java.io.Serial;
 
 /// When authentication with Keycloak failed
 public class KeycloakAuthenticationException extends ApplicationException {

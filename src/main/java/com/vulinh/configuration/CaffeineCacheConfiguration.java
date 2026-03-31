@@ -1,7 +1,8 @@
 package com.vulinh.configuration;
 
+import module java.base;
+
 import com.github.benmanes.caffeine.cache.Caffeine;
-import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.cache.CacheManager;
