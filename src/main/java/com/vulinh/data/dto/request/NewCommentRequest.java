@@ -9,6 +9,6 @@ import lombok.With;
 public record NewCommentRequest(String content) {
 
   public NewCommentRequest {
-    content = TextSanitizer.validateAndPassThrough(content, "content");
+    TextSanitizer.detectXss(content, "content");
   }
 }

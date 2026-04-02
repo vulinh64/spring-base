@@ -1,5 +1,6 @@
 package com.vulinh.utils;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -36,20 +37,34 @@ class TextSanitizerTest {
   @ParameterizedTest
   @ValueSource(
       strings = {
+        // Plain text and basic Markdown
         "Hello World",
-        "Hello <b>World</b>",
-        "<i>Italic</i> and <em>emphasis</em>",
-        "<a href=\"https://example.com\">Link</a>",
-        "## Markdown heading\n\nSome **bold** text"
+        "## Heading\n\nSome **bold** and _italic_ text",
+        "A [link](https://example.com) in markdown",
+        // Java generics in backtick code spans — must pass through as original Markdown
+        "`List<String>`",
+        "`Map<String, Integer>`",
+        "Use `new ArrayList<>()` to create a list",
+        // Java generics in fenced code blocks
+        """
+        ```java
+        List<String> items = new ArrayList<>();
+        ```
+        """,
+        """
+        ```
+        Map<K, V> map;
+        ```
+        """,
       })
-  void testValidateAndPassThrough_validContent(String input) {
-    assertEquals(input, TextSanitizer.validateAndPassThrough(input, "testField"));
+  void testDetectXss_validContent(String input) {
+    assertDoesNotThrow(() -> TextSanitizer.detectXss(input, "testField1"));
   }
 
   @ParameterizedTest
   @NullAndEmptySource
-  void testValidateAndPassThrough_blankInput(String input) {
-    assertEquals(input, TextSanitizer.validateAndPassThrough(input, "testField"));
+  void testDetectXss_blankInput(String input) {
+    assertDoesNotThrow(() -> TextSanitizer.detectXss(input, "testField2"));
   }
 
   @ParameterizedTest
@@ -59,11 +74,11 @@ class TextSanitizerTest {
         "<img src=x onerror=alert(1)>Safe",
         "<div onclick=\"alert(1)\">Click me</div>"
       })
-  void testValidateAndPassThrough_maliciousContent(String input) {
+  void testDetectXss_maliciousContent(String input) {
     var exception =
         assertThrows(
             XSSViolationException.class,
-            () -> TextSanitizer.validateAndPassThrough(input, "postContent"));
+            () -> TextSanitizer.detectXss(input, "postContent"));
 
     assertEquals("postContent", exception.getFieldName());
   }

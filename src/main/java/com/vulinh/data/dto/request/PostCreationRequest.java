@@ -28,7 +28,7 @@ public record PostCreationRequest(
   public PostCreationRequest {
     title = TextSanitizer.sanitize(TitleCaseUtils.toTitleCase(title));
     excerpt = TextSanitizer.sanitize(StringUtils.normalizeSpace(excerpt));
-    postContent = TextSanitizer.validateAndPassThrough(postContent, "postContent");
+    TextSanitizer.detectXss(postContent, "postContent");
     slug = TextSanitizer.sanitize(StringUtils.normalizeSpace(slug));
     tags =
         SetUtils.emptyIfNull(tags).stream()

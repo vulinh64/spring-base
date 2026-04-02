@@ -45,6 +45,9 @@
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <jsoup.version>1.22.1</jsoup.version>
 
+        <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark/versions -->
+        <commonmark.version>0.28.0</commonmark.version>
+
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
         <testcontainers.version>2.0.4</testcontainers.version>
 
@@ -226,6 +229,14 @@
             <version>${jsoup.version}</version>
         </dependency>
         <!-- END: JSoup -->
+
+        <!-- BEGIN: CommonMark (Markdown → HTML, used for sanitization validation) -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>${commonmark.version}</version>
+        </dependency>
+        <!-- END: CommonMark -->
 
         <dependency>
             <groupId>org.keycloak</groupId>

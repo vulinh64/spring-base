@@ -20,15 +20,15 @@ public class TagService {
 
   @NonNull
   public Set<Tag> parseTags(Collection<String> rawTags) {
-    if (rawTags.isEmpty()) {
-      return Collections.emptySet();
-    }
-
     var actualTags =
         rawTags.stream()
             .filter(StringUtils::isNotBlank)
             .map(PostUtils::normalizeText)
             .collect(Collectors.toSet());
+
+    if (actualTags.isEmpty()) {
+      return Collections.emptySet();
+    }
 
     var resultBuilder = ImmutableSet.<Tag>builder();
 
@@ -43,10 +43,9 @@ public class TagService {
             .filter(
                 rawTag ->
                     // Tags that did not present within database
-                    existingTags.isEmpty()
-                        || existingTags.stream()
-                            .map(Tag::getDisplayName)
-                            .noneMatch(tag -> tag.equalsIgnoreCase(rawTag)))
+                    existingTags.stream()
+                        .map(Tag::getDisplayName)
+                        .noneMatch(tag -> tag.equalsIgnoreCase(rawTag)))
             .map(displayName -> Tag.builder().displayName(displayName).build())
             .toList();
 
