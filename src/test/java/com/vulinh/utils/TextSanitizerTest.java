@@ -56,6 +56,13 @@ class TextSanitizerTest {
         Map<K, V> map;
         ```
         """,
+        """
+        This is HR
+        
+        ---
+        
+        This is not HR
+        """
       })
   void testDetectXss_validContent(String input) {
     assertDoesNotThrow(() -> TextSanitizer.detectXss(input, "testField1"));

@@ -14,7 +14,7 @@ public class TextSanitizer {
 
   static final String YOUTUBE_TAG = "youtube";
 
-  static final String[] SAFE_TAGS = {"details", "summary", YOUTUBE_TAG};
+  static final String[] SAFE_TAGS = {"details", "summary", "hr", YOUTUBE_TAG};
 
   static final Safelist DEFAULT_SAFELIST =
       Safelist.relaxed()
