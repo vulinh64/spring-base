@@ -17,6 +17,10 @@ public class KeycloakInitializationUtils {
 
   static final String KC_ADM_SHELL = "/opt/keycloak/bin/kcadm.sh";
 
+  public static volatile String adminUserId;
+  public static volatile String powerUserId;
+  public static volatile String normalUserId;
+
   static final Map<String, String> REPLACEMENT_MAP =
       Map.ofEntries(
           Map.entry("KC_ADMIN_USERNAME", Constants.KC_ADMIN_USERNAME),
@@ -25,8 +29,10 @@ public class KeycloakInitializationUtils {
           Map.entry("CLIENT_NAME", Constants.KC_CLIENT),
           Map.entry("ROLE_ADMIN", UserRole.ADMIN.name()),
           Map.entry("ROLE_POWER_USER", UserRole.POWER_USER.name()),
+          Map.entry("ROLE_USER", UserRole.USER.name()),
           Map.entry("ADMIN_USERNAME", Constants.TEST_ADMIN),
           Map.entry("POWER_USER_USERNAME", Constants.TEST_POWER_USER),
+          Map.entry("NORMAL_USER_USERNAME", Constants.TEST_NORMAL_USER),
           Map.entry("COMMON_PASSWORD", Constants.COMMON_PASSWORD),
           Map.entry("KC_ADM_SHELL", KC_ADM_SHELL));
 
@@ -54,7 +60,7 @@ public class KeycloakInitializationUtils {
 
       var result = keycloakContainer.execInContainer(command);
 
-      var singleCommand = String.join(" ", command);
+      var singleCommand = String.join(StringUtils.SPACE, command);
 
       var output =
           StringUtils.defaultIfBlank(
@@ -66,6 +72,18 @@ public class KeycloakInitializationUtils {
 
       if (singleCommand.contains("create clients -r")) {
         clientAtomic.set(output);
+      }
+
+      if (singleCommand.contains("create users") && singleCommand.contains("username=" + Constants.TEST_ADMIN)) {
+        adminUserId = output;
+      }
+
+      if (singleCommand.contains("create users") && singleCommand.contains("username=" + Constants.TEST_POWER_USER)) {
+        powerUserId = output;
+      }
+
+      if (singleCommand.contains("create users") && singleCommand.contains("username=" + Constants.TEST_NORMAL_USER)) {
+        normalUserId = output;
       }
     }
 

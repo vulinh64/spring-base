@@ -40,7 +40,9 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ApplicationException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   GenericResponse<Object> handleApplicationException(ApplicationException applicationException) {
-    return stackTraceAndReturn(applicationException);
+    log.info("Application error", applicationException);
+
+    return ResponseCreator.toError(applicationException);
   }
 
   @ExceptionHandler(AuthorizationException.class)
@@ -72,6 +74,18 @@ public class GlobalExceptionHandler {
     return logAndReturn(validationException);
   }
 
+  @ExceptionHandler(XSSViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  GenericResponse<Object> handleXSSViolationException(XSSViolationException xssViolationException) {
+    log.info(
+        "XSS violation detected in field [{}]. Offending content: [{}]. Sanitized: [{}]",
+        xssViolationException.getFieldName(),
+        xssViolationException.getOffendingContent(),
+        xssViolationException.getSanitizedContent());
+
+    return ResponseCreator.toError(xssViolationException);
+  }
+
   @ExceptionHandler(ResourceConflictException.class)
   @ResponseStatus(HttpStatus.CONFLICT)
   GenericResponse<Object> handleResourceConflictException(
@@ -83,6 +97,21 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   GenericResponse<Object> handleHttpMessageConversionException(
       HttpMessageConversionException httpMessageConversionException) {
+    // A record's compact constructor runs during Jackson deserialization, so any exception
+    // it throws (e.g. XSSViolationException) gets wrapped in JsonMappingException and then
+    // in HttpMessageNotReadableException. Walk the cause chain to surface the real error.
+    var cause = httpMessageConversionException.getCause();
+    var depth = 0;
+
+    while (cause != null && depth < 10) {
+      if (cause instanceof XSSViolationException xssViolation) {
+        return handleXSSViolationException(xssViolation);
+      }
+
+      cause = cause.getCause();
+      depth++;
+    }
+
     log.info("Bad request body format: {}", httpMessageConversionException.getMessage());
 
     return badRequestBody(httpMessageConversionException.getMessage());
@@ -91,12 +120,14 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(TypeMismatchException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   GenericResponse<Object> handleTypeMismatchException(TypeMismatchException typeMismatchException) {
-    log.info(
-        "Bad request format: {} (Property name: {}, required type: {}, value: {})",
-        typeMismatchException.getMessage(),
-        typeMismatchException.getPropertyName(),
-        typeMismatchException.getRequiredType(),
-        StringUtils.abbreviate(String.valueOf(typeMismatchException.getValue()), 100));
+    log.atInfo()
+        .setMessage("Bad request format: {} (Property name: {}, required type: {}, value: {})")
+        .addArgument(typeMismatchException.getMessage())
+        .addArgument(typeMismatchException.getPropertyName())
+        .addArgument(typeMismatchException.getRequiredType())
+        .addArgument(
+            () -> StringUtils.abbreviate(String.valueOf(typeMismatchException.getValue()), 100))
+        .log();
 
     return badRequestBody(
         "field [%s] - type [%s]"
@@ -112,6 +143,13 @@ public class GlobalExceptionHandler {
   GenericResponse<Object> handleKeycloakUserDisabledException(
       KeycloakUserDisabledException keycloakUserDisabledException) {
     return logAndReturn(keycloakUserDisabledException);
+  }
+
+  @ExceptionHandler(KeycloakAuthenticationException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  GenericResponse<Object> handleKeycloakAuthenticationException(
+      KeycloakAuthenticationException keycloakAuthenticationException) {
+    return logAndReturn(keycloakAuthenticationException);
   }
 
   @ExceptionHandler(AuthenticationException.class)
@@ -142,15 +180,9 @@ public class GlobalExceptionHandler {
     return ResponseCreator.toError(applicationException);
   }
 
-  static GenericResponse<Object> stackTraceAndReturn(ApplicationException applicationException) {
-    log.info("Application error", applicationException);
-
-    return ResponseCreator.toError(applicationException);
-  }
-
   static GenericResponse<Object> securityError(
       ApplicationError applicationError, Throwable throwable) {
-    log.info(throwable.getMessage(), throwable);
+    log.info("{} ({})", throwable.getMessage(), throwable.getClass().getName());
 
     return ResponseCreator.toError(applicationError);
   }

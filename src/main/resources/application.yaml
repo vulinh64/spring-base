@@ -29,9 +29,9 @@ application-properties:
     issuer-uri: ${application-properties.keycloak-authentication.auth-server}/realms/${application-properties.security.realm-name}
     no-authenticated-verb-urls:
       - { method: GET, url: /post/** }
-      - { method: GET, url: /category/search/** }
+      - { method: GET, url: /category/** }
       - { method: GET, url: /comment/** }
-      - { method: DELETE, url: /auth/logout/** }
+      - { method: POST, url: /auth/** }
     no-authenticated-urls:
       - /free/**
       - /health
@@ -45,12 +45,14 @@ application-properties:
       - /webjars/**
     high-privilege-verb-urls:
       - { method: DELETE, url: /category/** }
+      - { method: POST, url: /category/** }
 #
 # End of application properties
 #
 server:
   port: ${SERVER_PORT:8088}
   shutdown: GRACEFUL
+  servlet.context-path: /api
 spring:
   application.name: spring-base
   cloud.stream:

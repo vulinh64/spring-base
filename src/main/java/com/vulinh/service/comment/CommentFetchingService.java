@@ -7,7 +7,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.vulinh.data.dto.response.AuthorResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
+import com.vulinh.data.entity.QAuthor;
 import com.vulinh.data.entity.QComment;
 import com.vulinh.data.entity.QCommentRevision;
 import com.vulinh.data.entity.RevisionType;
@@ -49,6 +51,11 @@ public class CommentFetchingService {
     var qCommentCreatedDate = qComment.createdDateTime;
     var qCommentRevision = QCommentRevision.commentRevision;
     var qCommentId = qComment.id;
+    var qAuthor = QAuthor.author;
+
+    var authorProjection =
+        Projections.constructor(
+            AuthorResponse.class, qAuthor.id, qAuthor.username, qAuthor.email);
 
     var select =
         Projections.constructor(
@@ -66,9 +73,12 @@ public class CommentFetchingService {
                             qCommentRevision.revisionType.eq(RevisionType.UPDATED))
                         .exists())
                 .then(true)
-                .otherwise(false));
+                .otherwise(false),
+            authorProjection);
 
     return buildBasicQuery(postId, select)
+        .leftJoin(qAuthor)
+        .on(qComment.createdBy.eq(qAuthor.id))
         .orderBy(qCommentCreatedDate.desc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize());

@@ -10,5 +10,10 @@ import lombok.With;
 @With
 @Builder
 public record SingleCommentResponse(
-    UUID id, String content, Instant createdDateTime, Instant updatedDateTime, Boolean isEdited)
+    UUID id,
+    String content,
+    Instant createdDateTime,
+    Instant updatedDateTime,
+    Boolean isEdited,
+    AuthorResponse author)
     implements RecordUuidIdentifiable, RecordInstantDateTimeAuditable {}

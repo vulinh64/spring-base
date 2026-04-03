@@ -45,6 +45,7 @@ public class SecurityUtils {
             .id(UUID.fromString(token.getSubject()))
             .username(token.getClaimAsString("preferred_username"))
             .email(token.getClaimAsString("email"))
+            .displayName(token.getClaimAsString("name"))
             .userRoles(
                 jat.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)

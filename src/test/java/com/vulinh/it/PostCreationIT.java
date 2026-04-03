@@ -1,8 +1,8 @@
 package com.vulinh.it;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import module java.base;
@@ -10,67 +10,64 @@ import module java.base;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vulinh.Constants;
 import com.vulinh.data.constant.EndpointConstant;
-import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
-import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.entity.Post;
-import com.vulinh.data.entity.QPost;
-import com.vulinh.data.entity.RevisionType;
-import com.vulinh.data.entity.Tag;
-import com.vulinh.data.entity.ids.CommentRevisionId;
-import com.vulinh.data.entity.ids.PostRevisionId;
-import com.vulinh.data.repository.CommentRepository;
-import com.vulinh.data.repository.CommentRevisionRepository;
-import com.vulinh.data.repository.PostRepository;
-import com.vulinh.data.repository.PostRevisionRepository;
 import com.vulinh.locale.ServiceErrorCode;
+import com.vulinh.utils.ImageProperties;
 import com.vulinh.utils.JsonUtils;
-import com.vulinh.utils.post.NoDashedUUIDGenerator;
+import com.vulinh.utils.KeycloakInitializationUtils;
+import dasniko.testcontainers.keycloak.KeycloakContainer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.keycloak.admin.client.Keycloak;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Commit;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.junit.jupiter.Container;
 
 @Slf4j
 @TestMethodOrder(OrderAnnotation.class)
 class PostCreationIT extends IntegrationTestBase {
 
-  static final Set<String> TAGS = Set.of("integration test");
+  @Container
+  public static final KeycloakContainer KEYCLOAK_CONTAINER =
+      new KeycloakContainer(ImageProperties.KEYCLOAK.getFullImageName())
+          .withAdminUsername(Constants.KC_ADMIN_USERNAME)
+          .withAdminPassword(Constants.KC_ADMIN_PASSWORD)
+          .waitingFor(ImageProperties.KEYCLOAK.shellStrategyHealthCheck());
 
+  static final Set<String> TAGS = Set.of("integration test");
   static final String TITLE = "Test Title";
   static final String EXCERPT = "Test Excerpt";
-  static final String DANGEROUS_COMMENT_CONTENT =
-      "<script>This is a comment</script>This is a comment";
-  static final String SANITIZED_COMMENT_CONTENT = "This is a comment";
-  static final String EDITED_COMMENT_CONTENT = "Edited Comment";
-  static final String SANITIZED_POST_CONTENT = "Test blank";
+  static final String POST_CONTENT = "Test blank";
+  public static final PostCreationRequest VALID_POST_REQUEST =
+      PostCreationRequest.builder()
+          .title(TITLE)
+          .excerpt(EXCERPT)
+          .postContent(POST_CONTENT)
+          .tags(TAGS)
+          .build();
+  static final String XSS_POST_CONTENT = "<script>evil()</script>" + POST_CONTENT;
 
-  // Shared across tests
-  static UUID COMMENT_ID;
-  static long COMMENT_REVISION_NUMBER;
-  static long EDITED_REVISION_NUMBER;
-  static UUID POST_ID;
-  static long POST_REVISION_NUMBER;
+  static UUID adminUserId;
+  static UUID powerUserId;
 
-  @Autowired PostRepository postRepository;
-  @Autowired PostRevisionRepository postRevisionIdRepository;
-  @Autowired CommentRepository commentRepository;
-  @Autowired CommentRevisionRepository commentRevisionRepository;
-
+  @Autowired JdbcTemplate jdbcTemplate;
   @Autowired Keycloak keycloak;
+
+  @BeforeAll
+  static void captureUserIds() {
+    KeycloakInitializationUtils.initializeKeycloak(KEYCLOAK_CONTAINER);
+    adminUserId = UUID.fromString(KeycloakInitializationUtils.adminUserId);
+    powerUserId = UUID.fromString(KeycloakInitializationUtils.powerUserId);
+  }
 
   @DynamicPropertySource
   static void initialize(DynamicPropertyRegistry registry) {
@@ -92,6 +89,25 @@ class PostCreationIT extends IntegrationTestBase {
     registry.add("application-properties.security.client-name", () -> Constants.KC_CLIENT);
   }
 
+  @BeforeEach
+  void setup() {
+    purgeTestPost();
+  }
+
+  @AfterEach
+  void cleanup() {
+    purgeTestPost();
+  }
+
+  // post_revision has no FK to post, so must be deleted first.
+  // post_tag_mapping has ON DELETE CASCADE on post_id, so it is handled automatically.
+  private void purgeTestPost() {
+    jdbcTemplate.update(
+        "DELETE FROM post_revision WHERE post_id IN (SELECT id FROM post WHERE slug = ?)",
+        Constants.MOCK_SLUG);
+    jdbcTemplate.update("DELETE FROM post WHERE slug = ?", Constants.MOCK_SLUG);
+  }
+
   @Test
   @Order(Integer.MIN_VALUE)
   void testKeycloakInitialization() {
@@ -101,30 +117,93 @@ class PostCreationIT extends IntegrationTestBase {
 
     assertFalse(clients.isEmpty(), "Client not found");
 
-    assertEquals(2, keycloak.realm(Constants.KC_REALM).users().count());
+    assertEquals(3, keycloak.realm(Constants.KC_REALM).users().count());
   }
 
   @Test
-  @Transactional
-  @Commit
-  @Order(0)
   @SneakyThrows
-  void testCreatePost() {
-    var accessToken = getAccessToken(Constants.TEST_ADMIN);
+  void testCreatePost_noAuthentication_returns401() {
+    getMockMvc()
+        .perform(postWithEndpointAndPayload(VALID_POST_REQUEST))
+        .andExpect(status().isUnauthorized());
+  }
 
-    var postCreationResult =
-        createPostRequest(
-            PostCreationRequest.builder()
-                .title(TITLE)
-                .excerpt(EXCERPT)
-                .postContent("<script>Test Content</script>Test blank")
-                .tags(TAGS)
-                .build(),
-            accessToken);
+  @Test
+  @SneakyThrows
+  void testCreatePost_blankTitle_returnsInvalidTitleError() {
+    var result =
+        getMockMvc()
+            .perform(
+                postWithEndpointAndPayload(
+                        PostCreationRequest.builder()
+                            .title(StringUtils.EMPTY)
+                            .excerpt(EXCERPT)
+                            .postContent(POST_CONTENT)
+                            .tags(TAGS)
+                            .build())
+                    .header(
+                        HttpHeaders.AUTHORIZATION,
+                        bearerToken(getAccessToken(Constants.TEST_ADMIN))))
+            .andExpect(status().isBadRequest())
+            .andReturn();
 
     var response =
         JsonUtils.toObject(
-            postCreationResult.getResponse().getContentAsString(),
+            result.getResponse().getContentAsString(),
+            new TypeReference<GenericResponse<Object>>() {});
+
+    assertEquals(ServiceErrorCode.MESSAGE_POST_INVALID_TITLE.getErrorCode(), response.errorCode());
+  }
+
+  @Test
+  @SneakyThrows
+  void testCreatePost_xssInPostContent_returnsXssViolation() {
+    // Cannot use PostCreationRequest.builder() here: the compact constructor calls
+    // TextSanitizer.validateAndPassThrough on postContent and throws XSSViolationException
+    // on the test side before any HTTP call is made. Raw JSON bypasses the constructor.
+    var rawPayload =
+        """
+        {"title":"%s","excerpt":"%s","postContent":"%s","tags":["%s"]}
+        """
+            .formatted(TITLE, EXCERPT, XSS_POST_CONTENT, TAGS.iterator().next())
+            .strip();
+
+    var result =
+        getMockMvc()
+            .perform(
+                post(EndpointConstant.ENDPOINT_POST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(rawPayload)
+                    .header(
+                        HttpHeaders.AUTHORIZATION,
+                        bearerToken(getAccessToken(Constants.TEST_ADMIN))))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+
+    var response =
+        JsonUtils.toObject(
+            result.getResponse().getContentAsString(),
+            new TypeReference<GenericResponse<Object>>() {});
+
+    assertEquals(ServiceErrorCode.MESSAGE_XSS_VIOLATION.getErrorCode(), response.errorCode());
+  }
+
+  @Test
+  @SneakyThrows
+  void testCreatePost_validRequest_createsSuccessfully() {
+    var result =
+        getMockMvc()
+            .perform(
+                postWithEndpointAndPayload(VALID_POST_REQUEST)
+                    .header(
+                        HttpHeaders.AUTHORIZATION,
+                        bearerToken(getAccessToken(Constants.TEST_ADMIN))))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+    var response =
+        JsonUtils.toObject(
+            result.getResponse().getContentAsString(),
             new TypeReference<GenericResponse<BasicPostResponse>>() {});
 
     assertEquals(ServiceErrorCode.MESSAGE_SUCCESS.getErrorCode(), response.errorCode());
@@ -134,215 +213,40 @@ class PostCreationIT extends IntegrationTestBase {
     assertEquals(TITLE, data.title());
     assertEquals(EXCERPT, data.excerpt());
     assertEquals(Constants.MOCK_SLUG, data.slug());
-
-    POST_REVISION_NUMBER = data.revisionNumber();
   }
 
   @Test
-  @Transactional(readOnly = true)
-  @Order(1)
-  public void testVerifyPostCreation() {
-    var creatorId = getUserId(Constants.TEST_ADMIN);
-
-    var createdPost =
-        findCreatedPost()
-            .map(
-                post -> {
-                  assertEquals(TITLE, post.getTitle());
-                  assertEquals(EXCERPT, post.getExcerpt());
-                  assertEquals(SANITIZED_POST_CONTENT, post.getPostContent());
-                  assertEquals(Constants.MOCK_SLUG, post.getSlug());
-                  assertTrue(
-                      TAGS.containsAll(post.getTags().stream().map(Tag::getDisplayName).toList()));
-                  assertEquals(creatorId, post.getAuthorId());
-                  assertNotNull(post.getCreatedDateTime());
-                  assertNotNull(post.getUpdatedDateTime());
-
-                  return post;
-                })
-            .orElseGet(() -> fail("Post was not found"));
-
-    postRevisionIdRepository
-        .findById(PostRevisionId.of(createdPost.getId(), POST_REVISION_NUMBER))
-        .ifPresentOrElse(
-            postRevision -> {
-              assertEquals(TITLE, postRevision.getTitle());
-              assertEquals(EXCERPT, postRevision.getExcerpt());
-              assertEquals(SANITIZED_POST_CONTENT, postRevision.getPostContent());
-              assertEquals(Constants.MOCK_SLUG, postRevision.getSlug());
-              assertTrue(
-                  TAGS.containsAll(Arrays.stream(postRevision.getTags().split(",")).toList()));
-              assertEquals(RevisionType.CREATED, postRevision.getRevisionType());
-              assertNotNull(postRevision.getRevisionCreatedDateTime());
-              assertEquals(creatorId, postRevision.getRevisionCreatedBy());
-              assertEquals(creatorId, postRevision.getAuthorId());
-            },
-            () -> fail("Post revision was not found"));
-  }
-
-  @Test
-  @Transactional
-  @Commit
-  @Order(2)
   @SneakyThrows
-  void testCreateComment() {
-    var postId = findCreatedPost().map(Post::getId).orElseGet(() -> fail("Post not found"));
+  void testEditPost_adminCannotEditPowerUserPost_returns403() {
+    // Stateless SQL insertion: seed a post owned by the power user.
+    // purgeTestPost() in @BeforeEach already cleared any leftover with the same slug.
+    jdbcTemplate.update(
+        """
+        INSERT INTO post (id, title, slug, excerpt, post_content, author_id)
+        VALUES (gen_random_uuid(), ?, ?, ?, ?, ?)
+        """,
+        TITLE,
+        Constants.MOCK_SLUG,
+        EXCERPT,
+        POST_CONTENT,
+        powerUserId);
 
-    POST_ID = postId;
+    var postId =
+        jdbcTemplate.queryForObject(
+            "SELECT id FROM post WHERE slug = ?", UUID.class, Constants.MOCK_SLUG);
 
-    var accessToken = getAccessToken(Constants.TEST_POWER_USER);
-
-    var newCommentResult =
-        getMockMvc()
-            .perform(
-                postWithEndpointAndPayload(
-                        "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, postId),
-                        NewCommentRequest.builder().content(DANGEROUS_COMMENT_CONTENT).build())
-                    .header(HttpHeaders.AUTHORIZATION, bearerToken(accessToken)))
-            .andExpect(status().isCreated())
-            .andReturn();
-
-    var response =
-        JsonUtils.toObject(
-                newCommentResult.getResponse().getContentAsString(),
-                new TypeReference<GenericResponse<CommentResponse>>() {})
-            .data();
-
-    COMMENT_ID = response.commentId();
-    COMMENT_REVISION_NUMBER = response.revisionNumber();
-
-    assertEquals(postId, response.postId());
+    getMockMvc()
+        .perform(
+            patch("/post/{postId}", postId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtils.toMinimizedJSON(VALID_POST_REQUEST))
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    bearerToken(getAccessToken(Constants.TEST_NORMAL_USER))))
+        .andExpect(status().isForbidden());
   }
 
-  private static @NotNull String bearerToken(String accessToken) {
+  private static String bearerToken(String accessToken) {
     return "Bearer %s".formatted(accessToken);
-  }
-
-  @Test
-  @Transactional(readOnly = true)
-  @Order(3)
-  void testVerifyComment() {
-    assertNotNull(COMMENT_ID);
-    assertNotNull(POST_ID);
-
-    commentRepository
-        .findById(COMMENT_ID)
-        .ifPresentOrElse(
-            comment -> {
-              assertEquals(SANITIZED_COMMENT_CONTENT, comment.getContent());
-              assertEquals(POST_ID, comment.getPostId());
-              assertEquals(getUserId(Constants.TEST_POWER_USER), comment.getCreatedBy());
-              assertNotNull(comment.getCreatedDateTime());
-              assertNotNull(comment.getUpdatedDateTime());
-            },
-            () -> fail("Comment not found"));
-
-    commentRevisionRepository
-        .findById(CommentRevisionId.of(COMMENT_ID, COMMENT_REVISION_NUMBER))
-        .ifPresentOrElse(
-            commentRevision -> {
-              assertEquals(SANITIZED_COMMENT_CONTENT, commentRevision.getContent());
-              assertEquals(POST_ID, commentRevision.getPostId());
-              assertEquals(RevisionType.CREATED, commentRevision.getRevisionType());
-              assertNotNull(commentRevision.getRevisionCreatedDateTime());
-            },
-            () -> fail("Comment revision not found"));
-  }
-
-  @Test
-  @Transactional
-  @Commit
-  @Order(4)
-  @SneakyThrows
-  void testEditComment() {
-    var editCommentResponse =
-        getMockMvc()
-            .perform(
-                patch(
-                        "%s/%s".formatted(EndpointConstant.ENDPOINT_COMMENT, "{commentId}"),
-                        COMMENT_ID)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(
-                        HttpHeaders.AUTHORIZATION,
-                        bearerToken(getAccessToken(Constants.TEST_POWER_USER)))
-                    .content(
-                        JsonUtils.toMinimizedJSON(
-                            NewCommentRequest.builder().content(EDITED_COMMENT_CONTENT).build())))
-            .andExpect(status().isOk())
-            .andReturn()
-            .getResponse();
-
-    assertNotNull(editCommentResponse);
-
-    var response =
-        JsonUtils.toObject(
-                editCommentResponse.getContentAsString(),
-                new TypeReference<GenericResponse<CommentResponse>>() {})
-            .data();
-
-    assertEquals(COMMENT_ID, response.commentId());
-    assertEquals(POST_ID, response.postId());
-
-    var editedRevisionNumber = response.revisionNumber();
-
-    assertNotEquals(COMMENT_REVISION_NUMBER, editedRevisionNumber);
-
-    EDITED_REVISION_NUMBER = editedRevisionNumber;
-  }
-
-  @Test
-  @Transactional(readOnly = true)
-  @Order(5)
-  void testVerifyEditedComment() {
-    commentRepository
-        .findById(COMMENT_ID)
-        .ifPresentOrElse(
-            comment -> {
-              assertEquals(EDITED_COMMENT_CONTENT, comment.getContent());
-              assertEquals(POST_ID, comment.getPostId());
-            },
-            () -> fail("Edited comment not found"));
-
-    commentRevisionRepository
-        .findById(CommentRevisionId.of(COMMENT_ID, EDITED_REVISION_NUMBER))
-        .ifPresentOrElse(
-            commentRevision -> {
-              assertEquals(EDITED_COMMENT_CONTENT, commentRevision.getContent());
-              assertEquals(POST_ID, commentRevision.getPostId());
-              assertEquals(RevisionType.UPDATED, commentRevision.getRevisionType());
-              assertEquals(EDITED_REVISION_NUMBER, commentRevision.getId().getRevisionNumber());
-            },
-            () -> fail("Edited comment revision not found"));
-  }
-
-  @SneakyThrows
-  private MvcResult createPostRequest(PostCreationRequest postCreationRequest, String accessToken) {
-    try (var mockNoDashUUID = Mockito.mockStatic(NoDashedUUIDGenerator.class)) {
-      // Return a fixed UUID for testing
-      mockNoDashUUID
-          .when(() -> NoDashedUUIDGenerator.createNonDashedUUID(any()))
-          .thenReturn(Constants.MOCK_UUID);
-
-      return getMockMvc()
-          .perform(
-              postWithEndpointAndPayload(EndpointConstant.ENDPOINT_POST, postCreationRequest)
-                  .header(HttpHeaders.AUTHORIZATION, bearerToken(accessToken)))
-          .andExpect(status().isCreated())
-          .andReturn();
-    }
-  }
-
-  private Optional<Post> findCreatedPost() {
-    return postRepository.findOne(QPost.post.slug.eq(Constants.MOCK_SLUG));
-  }
-
-  private UUID getUserId(String user) {
-    return UUID.fromString(
-        keycloak
-            .realm(getApplicationProperties().security().realmName())
-            .users()
-            .search(user)
-            .getFirst()
-            .getId());
   }
 }

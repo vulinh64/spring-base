@@ -26,7 +26,7 @@ public class TitleCaseUtils {
     // Respect already upper case words
     var words = input.split("\\s+");
 
-    var joiner = new StringJoiner(" ");
+    var joiner = new StringJoiner(StringUtils.SPACE);
 
     for (var index = 0; index < words.length; index++) {
       var currentWord = words[index];

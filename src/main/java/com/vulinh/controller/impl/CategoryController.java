@@ -6,6 +6,7 @@ import com.vulinh.controller.api.CategoryAPI;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
+import com.vulinh.data.dto.response.CategoryShortResponse;
 import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.service.category.CategoryService;
@@ -23,6 +24,11 @@ public class CategoryController implements CategoryAPI {
   final CategoryService categoryService;
 
   @Override
+  public GenericResponse<List<CategoryShortResponse>> getAllCategories() {
+    return ResponseCreator.success(categoryService.getAllCategories());
+  }
+
+  @Override
   public GenericResponse<CategoryResponse> createCategory(
       CategoryCreationRequest categoryCreationRequest) {
     return ResponseCreator.success(categoryService.createCategory(categoryCreationRequest));
@@ -31,7 +37,8 @@ public class CategoryController implements CategoryAPI {
   @Override
   public GenericResponse<Page<CategoryResponse>> searchCategories(
       CategorySearchRequest categorySearchRequest, Pageable pageable) {
-    return ResponseCreator.success(categoryService.search(categorySearchRequest, pageable));
+    return ResponseCreator.success(
+        categoryService.searchWithPostCount(categorySearchRequest, pageable));
   }
 
   @Override

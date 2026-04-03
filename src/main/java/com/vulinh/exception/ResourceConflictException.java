@@ -20,7 +20,7 @@ import com.vulinh.utils.validator.ApplicationError;
 /// request could not be completed due to a conflict with the current state of the target resource.
 public class ResourceConflictException extends ApplicationException {
 
-  @Serial private static final long serialVersionUID = -5338307181212324393L;
+  @Serial private static final long serialVersionUID = 0L;
 
   /// Creates a [ResourceConflictException] with the specified message and error details.
   ///

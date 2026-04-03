@@ -3,7 +3,6 @@ package com.vulinh.controller.impl;
 import module java.base;
 
 import com.vulinh.controller.api.PostAPI;
-import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.*;
 import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
@@ -24,13 +23,24 @@ public class PostController implements PostAPI {
   final PostRevisionService postRevisionService;
 
   @Override
-  public GenericResponse<Page<PrefetchPostProjection>> findPrefetchPosts(Pageable pageable) {
+  public GenericResponse<Page<PrefetchPostResponse>> findPrefetchPosts(Pageable pageable) {
     return ResponseCreator.success(postService.findPrefetchPosts(pageable));
   }
 
   @Override
-  public GenericResponse<SinglePostResponse> getSinglePost(UUID postId) {
-    return ResponseCreator.success(postService.getSinglePost(postId));
+  public GenericResponse<Page<PrefetchPostResponse>> findPostsByCategory(
+      String categorySlug, Pageable pageable) {
+    return ResponseCreator.success(postService.findPostsByCategory(categorySlug, pageable));
+  }
+
+  @Override
+  public GenericResponse<Page<PrefetchPostResponse>> searchPosts(String query, Pageable pageable) {
+    return ResponseCreator.success(postService.searchPosts(query, pageable));
+  }
+
+  @Override
+  public GenericResponse<SinglePostResponse> getSinglePost(String identity) {
+    return ResponseCreator.success(postService.getSinglePost(identity));
   }
 
   @Override

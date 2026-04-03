@@ -11,7 +11,7 @@
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>Spring Base project</name>
     <description>Your dumb comments go boom!</description>
 
@@ -45,6 +45,9 @@
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <jsoup.version>1.22.1</jsoup.version>
 
+        <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark/versions -->
+        <commonmark.version>0.28.0</commonmark.version>
+
         <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
         <testcontainers.version>2.0.4</testcontainers.version>
 
@@ -75,6 +78,9 @@
 
         <!-- https://mvnrepository.com/artifact/io.netty/netty-codec/versions -->
         <netty.version>4.2.10.Final</netty.version>
+
+        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine/versions -->
+        <caffeine.version>3.2.3</caffeine.version>
     </properties>
 
     <dependencies>
@@ -115,6 +121,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -220,10 +230,25 @@
         </dependency>
         <!-- END: JSoup -->
 
+        <!-- BEGIN: CommonMark (Markdown → HTML, used for sanitization validation) -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>${commonmark.version}</version>
+        </dependency>
+        <!-- END: CommonMark -->
+
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
             <version>${keycloak-admin-client.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine/versions -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
         </dependency>
 
         <!-- BEGIN: JUnit Test -->
