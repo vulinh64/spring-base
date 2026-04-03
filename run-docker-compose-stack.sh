@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
 fi
 
 docker compose down
-docker rmi --force spring-base:1.0.0
+docker rmi --force spring-base:2.0.0
 docker compose up --detach
 
 # Configure Keycloak
