@@ -1,14 +1,11 @@
 package com.vulinh.service.auth;
 
+import com.vulinh.annotation.ExecutionTime;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.data.dto.request.LoginRequest;
-import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
-import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.exception.KeycloakAuthenticationException;
 import com.vulinh.service.author.AuthorService;
 import com.vulinh.service.keycloak.KeycloakAuthExchange;
-import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,7 @@ public class AuthService {
 
   final KeycloakAuthExchange keycloakAuthExchange;
 
+  @ExecutionTime
   public void login(LoginRequest loginRequest, HttpServletResponse response) {
     try {
       var tokenResponse =
@@ -49,10 +47,7 @@ public class AuthService {
     }
   }
 
-  public GenericResponse<UserBasicResponse> me() {
-    return ResponseCreator.success(SecurityUtils.getUserDTOOrThrow());
-  }
-
+  @ExecutionTime
   public void refresh(String refreshToken, HttpServletResponse response) {
     try {
       var tokenResponse =

@@ -2,6 +2,7 @@ package com.vulinh.service.post;
 
 import module java.base;
 
+import com.vulinh.annotation.ExecutionTime;
 import com.vulinh.data.dto.projection.PostSearchProjection;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
@@ -48,6 +49,7 @@ public class PostService {
     return enrichWithAuthors(page);
   }
 
+  @ExecutionTime
   public Page<PrefetchPostResponse> searchPosts(String query, Pageable pageable) {
     var page = postRepository.searchPosts(query, pageable);
     return enrichSearchResults(page);
@@ -68,6 +70,7 @@ public class PostService {
   }
 
   @Transactional
+  @ExecutionTime
   public BasicPostResponse createPost(PostCreationRequest postCreationRequest) {
     // Delegate to PostCreationService
     var newPost = postCreationService.createPost(postCreationRequest);
@@ -82,6 +85,7 @@ public class PostService {
   }
 
   @Transactional
+  @ExecutionTime
   public boolean editPost(UUID postId, PostCreationRequest postCreationRequest) {
     var possiblePost = postEditService.editPost(postId, postCreationRequest);
 

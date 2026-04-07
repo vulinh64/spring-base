@@ -2,6 +2,7 @@ package com.vulinh.service.comment;
 
 import module java.base;
 
+import com.vulinh.annotation.ExecutionTime;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.CommentResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
@@ -31,6 +32,7 @@ public class CommentService {
   final EventService eventService;
 
   @Transactional
+  @ExecutionTime
   public CommentResponse addComment(UUID postId, NewCommentRequest newCommentRequest) {
     commentValidationService.validate(newCommentRequest);
 
@@ -47,6 +49,7 @@ public class CommentService {
     return CommentResponse.of(postId, commentRevision);
   }
 
+  @ExecutionTime
   public CommentResponse editComment(NewCommentRequest newCommentRequest, UUID commentId) {
     var comment = commentValidationService.validateEditComment(newCommentRequest, commentId);
 

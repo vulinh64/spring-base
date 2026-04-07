@@ -3,8 +3,10 @@ package com.vulinh.controller.impl;
 import com.vulinh.controller.api.AuthAPI;
 import com.vulinh.data.dto.request.LoginRequest;
 import com.vulinh.data.dto.response.GenericResponse;
+import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.service.auth.AuthService;
+import com.vulinh.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +24,7 @@ public class AuthController implements AuthAPI {
 
   @Override
   public GenericResponse<UserBasicResponse> me() {
-    return authService.me();
+    return ResponseCreator.success(SecurityUtils.getUserDTOOrThrow());
   }
 
   @Override
