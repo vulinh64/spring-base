@@ -5,7 +5,7 @@
 # Stage 1: Build stage
 # Install the application and its dependencies
 # Create a custom minimal JRE
-FROM amazoncorretto:25-alpine-full AS build
+FROM maven:3.9.14-amazoncorretto-25-alpine AS build
 
 WORKDIR /usr/src/project
 
@@ -19,17 +19,12 @@ ENV COMMONS_GROUP_ID=com.vulinh
 ENV COMMONS_VERSION=2.5.0
 ENV GITHUB_USER=vulinh64
 
-# Copy Maven wrapper files
-COPY mvnw ./
-COPY .mvn/ .mvn/
-RUN chmod +x mvnw
-
 # Download the pre-built JAR from GitHub releases
 RUN wget -O ${COMMONS_NAME}.jar \
     https://github.com/${GITHUB_USER}/${COMMONS_NAME}/releases/download/${COMMONS_VERSION}/${COMMONS_NAME}-${COMMONS_VERSION}.jar
 
 # Install the JAR to local Maven repository
-RUN ./mvnw install:install-file \
+RUN mvn install:install-file \
     -Dfile=${COMMONS_NAME}.jar \
     -DgroupId=${COMMONS_GROUP_ID} \
     -DartifactId=${COMMONS_NAME} \
@@ -43,7 +38,7 @@ COPY pom.xml ./
 COPY src/ src/
 
 # Build the application using Maven wrapper
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Extract the JAR to analyze its dependencies
 RUN jar xf target/${APP_NAME}
