@@ -22,8 +22,6 @@ import org.springframework.security.config.annotation.web.configurers.AuthorizeH
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -75,33 +73,6 @@ public class SecurityConfiguration {
                                     JwtUtils.parseAuthoritiesByCustomClaims(
                                         jwt, security.clientName()))))
         .build();
-  }
-
-  @Bean
-  public BearerTokenResolver bearerTokenResolver() {
-    var defaultResolver = new DefaultBearerTokenResolver();
-
-    return request -> {
-      // Try standard Authorization header first
-      var token = defaultResolver.resolve(request);
-
-      if (token != null) {
-        return token;
-      }
-
-      // Fall back to access_token cookie
-      var cookies = request.getCookies();
-
-      if (cookies != null) {
-        for (var cookie : cookies) {
-          if ("access_token".equals(cookie.getName())) {
-            return cookie.getValue();
-          }
-        }
-      }
-
-      return null;
-    };
   }
 
   @Bean

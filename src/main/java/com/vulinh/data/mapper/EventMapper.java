@@ -1,6 +1,7 @@
 package com.vulinh.data.mapper;
 
-import com.vulinh.data.dto.response.KeycloakUserResponse;
+import module java.base;
+
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.Post;
@@ -24,9 +25,9 @@ public interface EventMapper {
   @Mapping(target = "postId", source = "post.id")
   NewPostFollowingEvent toNewPostFollowingEvent(Post post);
 
-  @Mapping(target = "subscribedUsername", source = "subscribedUser.username")
-  @Mapping(target = "subscribedUserId", source = "subscribedUser.id")
-  NewSubscriberEvent toNewSubscriptionEvent(KeycloakUserResponse subscribedUser);
+  default NewSubscriberEvent toNewSubscriptionEvent(UUID subscribedUserId) {
+    return NewSubscriberEvent.builder().subscribedUserId(subscribedUserId).build();
+  }
 
   @Mapping(target = "commentId", source = "comment.id")
   @Mapping(target = "postId", source = "post.id")

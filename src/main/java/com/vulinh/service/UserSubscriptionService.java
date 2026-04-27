@@ -2,14 +2,11 @@ package com.vulinh.service;
 
 import module java.base;
 
-import com.vulinh.exception.KeycloakUserDisabledException;
 import com.vulinh.service.event.EventService;
-import com.vulinh.service.keycloak.KeycloakAdminClientService;
 import com.vulinh.service.post.PostValidationService;
 import com.vulinh.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,8 +18,6 @@ public class UserSubscriptionService {
 
   final EventService eventService;
 
-  final KeycloakAdminClientService keycloakAdminClientService;
-
   public boolean subscribeToUser(UUID subscribedUserId) {
     var actionUser = SecurityUtils.getUserDTOOrThrow();
 
@@ -32,13 +27,7 @@ public class UserSubscriptionService {
       return false;
     }
 
-    var subscribedUser = keycloakAdminClientService.getKeycloakUser(subscribedUserId);
-
-    if (BooleanUtils.isFalse(subscribedUser.isEnabled())) {
-      throw KeycloakUserDisabledException.userDisabledException(subscribedUserId);
-    }
-
-    eventService.sendSubscribeToUserEvent(actionUser, subscribedUser);
+    eventService.sendSubscribeToUserEvent(actionUser, subscribedUserId);
 
     return true;
   }

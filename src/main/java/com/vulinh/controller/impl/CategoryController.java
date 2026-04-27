@@ -3,12 +3,11 @@ package com.vulinh.controller.impl;
 import module java.base;
 
 import com.vulinh.controller.api.CategoryAPI;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.CategoryCreationRequest;
 import com.vulinh.data.dto.request.CategorySearchRequest;
 import com.vulinh.data.dto.response.CategoryResponse;
 import com.vulinh.data.dto.response.CategoryShortResponse;
-import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.service.category.CategoryService;
 import com.vulinh.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,19 +24,19 @@ public class CategoryController implements CategoryAPI {
 
   @Override
   public GenericResponse<List<CategoryShortResponse>> getAllCategories() {
-    return ResponseCreator.success(categoryService.getAllCategories());
+    return GenericResponse.success(categoryService.getAllCategories());
   }
 
   @Override
   public GenericResponse<CategoryResponse> createCategory(
       CategoryCreationRequest categoryCreationRequest) {
-    return ResponseCreator.success(categoryService.createCategory(categoryCreationRequest));
+    return GenericResponse.success(categoryService.createCategory(categoryCreationRequest));
   }
 
   @Override
   public GenericResponse<Page<CategoryResponse>> searchCategories(
       CategorySearchRequest categorySearchRequest, Pageable pageable) {
-    return ResponseCreator.success(
+    return GenericResponse.success(
         categoryService.searchWithPostCount(categorySearchRequest, pageable));
   }
 

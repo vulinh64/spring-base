@@ -81,17 +81,19 @@ An example `.env` file can be copied from [this file](./.env-example).
 
 ### Running the Required Containers
 
-You can run [this script (Windows only)](./initialize-postgres-keycloak-rabbitmq.cmd) or [this script (Linux only)](./initialize-postgres-keycloak-rabbitmq.sh), and it will start the required containers for local development: PostgreSQL and Keycloak.
+You can run [this script (Windows only)](./initialize-postgres-rabbitmq.cmd) or [this script (Linux only)](./initialize-postgres-rabbitmq.sh), and it will start the required containers for local development: PostgreSQL and RabbitMQ.
 
 > Both scripts have already handled the external dependency for you. See the [Required External Dependency](#required-external-dependency) section for more information.
+
+### Authentication
+
+This service does not issue tokens; it only validates JWTs from an external OIDC-compatible identity provider (Keycloak, LogTo, self-hosted, ...). Configure the issuer via `JWT_ISSUER_URI` (default `http://localhost:8080`) and `JWT_CLIENT_NAME` for the `resource_access` claim used to extract authorities (Keycloak-style format).
 
 ## Running the Compose Stack
 
 You can run [this script (Windows only)](./run-docker-compose-stack.cmd), or [this script (Linux only)](./run-docker-compose-stack.sh) and it will build the service image and start the containers for you.
 
 > Again, both scripts have already handled the external dependency for you.
-
-If you want to make use of host OS to build the images (to speed up the build process), run [this script (Windows only)](./run-docker-compose-stack-jar.cmd) or [this script (Linux only)](./run-docker-compose-stack-jar.sh) instead.
 
 # Additional Notes
 

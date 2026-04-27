@@ -42,18 +42,6 @@ public class NotFound404Exception extends ApplicationException {
         entityType);
   }
 
-  /// Creates a `NotFoundException` for an invalid Keycloak user.
-  ///
-  /// @param userId The Keycloak user ID that was not found
-  /// @param e The exception that was thrown during lookup
-  /// @return A new `NotFoundException` instance for the invalid user
-  public static NotFound404Exception invalidKeycloakUser(UUID userId, Throwable e) {
-    return new NotFound404Exception(
-        "Keycloak user with ID [%s] not found".formatted(userId),
-        ServiceErrorCode.MESSAGE_INVALID_USER,
-        e);
-  }
-
   /// Constructs a new [NotFound404Exception] with the specified message, error details, and interpolation arguments.
   ///
   /// @param message The detailed message describing which entity was not found

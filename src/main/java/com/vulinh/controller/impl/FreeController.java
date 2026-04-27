@@ -3,7 +3,7 @@ package com.vulinh.controller.impl;
 import module java.base;
 
 import com.vulinh.controller.api.FreeAPI;
-import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.service.taxcalculator.TaxRequest;
 import com.vulinh.service.taxcalculator.TaxService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class FreeController implements FreeAPI {
       Integer numberOfDependants,
       Boolean isProbation,
       Double probationPercentage) {
-    return ResponseCreator.success(
+    return GenericResponse.success(
         taxService.calculate(
             TaxRequest.builder()
                 .totalSalary(totalSalary)

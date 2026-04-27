@@ -2,7 +2,7 @@ package com.vulinh.service.post;
 
 import module java.base;
 
-import com.vulinh.annotation.ExecutionTime;
+import com.vulinh.annotation.aspect.ExecutionTime;
 import com.vulinh.data.dto.projection.PostSearchProjection;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;

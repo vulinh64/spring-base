@@ -2,12 +2,6 @@
 # Application properties will be set here
 #
 application-properties:
-  keycloak-authentication:
-    username: ${KEYCLOAK_USERNAME:admin}
-    password: ${KEYCLOAK_PASSWORD:123456}
-    client-id: ${KEYCLOAK_ADMIN_CLIENT:admin-cli}
-    realm: ${KEYCLOAK_MASTER_REALM:master}
-    auth-server: ${KEYCLOAK_HOST:http://localhost:8080}
   # One single point for reusability
   message-topic:
     new-comment:
@@ -23,15 +17,16 @@ application-properties:
       topic-name: new-post-following
       type: NEW_POST_FOLLOWING
   security:
-    realm-name: ${KEYCLOAK_REALM:spring-base}
-    client-name: ${KEYCLOAK_CLIENT:spring-base-client}
-    # noinspection HttpUrlsUsage
-    issuer-uri: ${application-properties.keycloak-authentication.auth-server}/realms/${application-properties.security.realm-name}
+    # JWT issuer URI of the external auth provider (Keycloak, LogTo, self-hosted, ...).
+    # Override via JWT_ISSUER_URI to plug in any OIDC-compatible identity provider.
+    issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080}
+    # Client/audience name used to extract authorities from the JWT's resource_access claim
+    # (Keycloak-style format).
+    client-name: ${JWT_CLIENT_NAME:spring-base-client}
     no-authenticated-verb-urls:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/** }
       - { method: GET, url: /comment/** }
-      - { method: POST, url: /auth/** }
     no-authenticated-urls:
       - /free/**
       - /health
@@ -67,10 +62,9 @@ spring:
         destination: ${application-properties.message-topic.new-post-following.topic-name}
     default-binder: rabbit
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_NAME:myspringdatabase}
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_NAME:spring-base}
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:123456}
-  liquibase.enabled: ${LIQUIBASE_ENABLED:true}
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
   threads.virtual.enabled: true # Make use of Virtual Threads if possible
