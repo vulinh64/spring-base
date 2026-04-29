@@ -14,6 +14,7 @@ public record ApplicationProperties(SecurityProperties security, MessageTopic me
       List<VerbUrl> noAuthenticatedVerbUrls,
       List<VerbUrl> highPrivilegeVerbUrls,
       String issuerUri,
+      String jwkSetUri,
       String clientName) {}
 
   public record VerbUrl(HttpMethod method, String url) {}

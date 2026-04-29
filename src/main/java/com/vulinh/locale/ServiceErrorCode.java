@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum ServiceErrorCode implements ApplicationError {
-  MESSAGE_SUCCESS("M0000"),
-  MESSAGE_INTERNAL_ERROR("M9999"),
+  MESSAGE_SUCCESS("app.success"),
+  MESSAGE_INTERNAL_ERROR("app.internal-server-error"),
   MESSAGE_INVALID_ENTITY_ID("M0404"),
 
   MESSAGE_POST_INVALID_TITLE("M1000"),
@@ -26,6 +26,7 @@ public enum ServiceErrorCode implements ApplicationError {
 
   MESSAGE_INVALID_AUTHENTICATION("M9401"),
   MESSAGE_INSUFFICIENT_PERMISSION("M9403"),
+  MESSAGE_AUTH_SERVICE_UNAVAILABLE("M9503"),
   MESSAGE_INVALID_BODY_REQUEST("M9106"),
   MESSAGE_INVALID_OWNER_OR_NO_RIGHT("M9107"),
 

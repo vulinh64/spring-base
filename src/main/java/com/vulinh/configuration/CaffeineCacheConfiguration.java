@@ -19,6 +19,8 @@ public class CaffeineCacheConfiguration {
   public static class CacheProperties {
 
     public static final String ALL_CATEGORIES_CACHE = "all-categories-cache";
+    public static final String JWKS_CACHE = "jwks-cache";
+    public static final String KEY_INVALIDATION_DEDUP_CACHE = "key-invalidation-dedup-cache";
   }
 
   @Bean

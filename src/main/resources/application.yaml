@@ -17,12 +17,15 @@ application-properties:
       topic-name: new-post-following
       type: NEW_POST_FOLLOWING
   security:
-    # JWT issuer URI of the external auth provider (Keycloak, LogTo, self-hosted, ...).
-    # Override via JWT_ISSUER_URI to plug in any OIDC-compatible identity provider.
+    # JWT issuer URI of our custom auth server (see docs/SPRING_BASE_INTEGRATION.md).
+    # Used only for `iss` claim validation — we deliberately do NOT bootstrap from
+    # /.well-known/openid-configuration so the app can start while the auth server
+    # is unreachable. Token decoding will then fail at request time with 401.
     issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080}
-    # Client/audience name used to extract authorities from the JWT's resource_access claim
-    # (Keycloak-style format).
-    client-name: ${JWT_CLIENT_NAME:spring-base-client}
+    jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:8080/.well-known/jwks.json}
+    # Expected `aud` claim on incoming access tokens. Must match the client_id registered
+    # for this service on the auth server.
+    client-name: ${JWT_CLIENT_NAME:spring-base}
     no-authenticated-verb-urls:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/** }
@@ -50,17 +53,24 @@ server:
   servlet.context-path: /api
 spring:
   application.name: spring-base
-  cloud.stream:
-    bindings:
-      newPost-out-0:
-        destination: ${application-properties.message-topic.new-post.topic-name}
-      newSubscriber-out-0:
-        destination: ${application-properties.message-topic.new-subscriber.topic-name}
-      newComment-out-0:
-        destination: ${application-properties.message-topic.new-comment.topic-name}
-      newPostFollowing-out-0:
-        destination: ${application-properties.message-topic.new-post-following.topic-name}
-    default-binder: rabbit
+  cloud:
+    function.definition: keyInvalidated
+    stream:
+      bindings:
+        newPost-out-0:
+          destination: ${application-properties.message-topic.new-post.topic-name}
+        newSubscriber-out-0:
+          destination: ${application-properties.message-topic.new-subscriber.topic-name}
+        newComment-out-0:
+          destination: ${application-properties.message-topic.new-comment.topic-name}
+        newPostFollowing-out-0:
+          destination: ${application-properties.message-topic.new-post-following.topic-name}
+        # Inbound: JWKS key-rotation events from the auth server (see SPRING_BASE_INTEGRATION.md §7).
+        # Body is a no-op log line; lazy-on-unknown-kid is the correctness backstop.
+        keyInvalidated-in-0:
+          destination: key-invalidated
+          group: ${spring.application.name}
+      default-binder: rabbit
   datasource:
     url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_NAME:spring-base}
     username: ${POSTGRESQL_USERNAME:postgres}
@@ -74,8 +84,7 @@ spring:
     username: ${RABBITMQ_USERNAME:rabbitmq}
     password: ${RABBITMQ_PASSWORD:123456}
   security.oauth2.resourceserver.jwt:
-    issuer-uri: ${application-properties.security.issuer-uri}
-    audiences: account
+    jwk-set-uri: ${application-properties.security.jwk-set-uri}
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.utils.MyP6SpyLogging
   logging: CUSTOM

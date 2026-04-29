@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,13 +42,6 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   GenericResponse<Object> handleNotFoundException(NotFound404Exception notFound404Exception) {
     return logAndReturn(notFound404Exception);
-  }
-
-  @ExceptionHandler(ApplicationValidationException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  GenericResponse<Object> handleValidationException(
-      ApplicationValidationException validationException) {
-    return logAndReturn(validationException);
   }
 
   @ExceptionHandler(XSSViolationException.class)
@@ -111,6 +106,14 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
                 Optional.ofNullable(typeMismatchException.getRequiredType())
                     .map(Class::getName)
                     .orElse("unknown or empty type")));
+  }
+
+  @ExceptionHandler(AuthenticationServiceException.class)
+  @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+  GenericResponse<Object> handleAuthenticationServiceException(
+      AuthenticationServiceException authenticationServiceException) {
+    return securityError(
+        ServiceErrorCode.MESSAGE_AUTH_SERVICE_UNAVAILABLE, authenticationServiceException);
   }
 
   @ExceptionHandler(AuthenticationException.class)

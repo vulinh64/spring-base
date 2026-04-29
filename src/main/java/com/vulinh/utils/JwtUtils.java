@@ -4,34 +4,22 @@ import module java.base;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtUtils {
 
-  static final String RESOURCE_ACCESS_CLAIM = "resource_access";
+  static final String ROLES_CLAIM = "roles";
 
-  @SuppressWarnings("unchecked")
-  public static AbstractAuthenticationToken parseAuthoritiesByCustomClaims(
-      Jwt jwt, @NonNull String clientName) {
-    if (!jwt.hasClaim(RESOURCE_ACCESS_CLAIM)) {
-      throw new BadJwtException("Missing resource access claim");
+  public static AbstractAuthenticationToken parseAuthoritiesByCustomClaims(Jwt jwt) {
+    var roles = jwt.getClaimAsStringList(ROLES_CLAIM);
+
+    if (roles == null) {
+      roles = Collections.emptyList();
     }
-
-    var resourceAccess = jwt.getClaimAsMap(RESOURCE_ACCESS_CLAIM);
-
-    if (!resourceAccess.containsKey(clientName)) {
-      throw new BadJwtException("Missing client name claim");
-    }
-
-    var clientRoleContainer = (Map<String, Object>) resourceAccess.get(clientName);
-
-    var roles = (List<String>) clientRoleContainer.getOrDefault("roles", Collections.emptyList());
 
     return new JwtAuthenticationToken(
         jwt, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
