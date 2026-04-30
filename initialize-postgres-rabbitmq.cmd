@@ -17,10 +17,10 @@ call ./create-data-classes
 :: --- PostgreSQL Setup ---
 SET PG_CONTAINER_NAME=postgresql
 SET PG_VOLUME_NAME=postgresql-volume
-SET POSTGRESQL_NAME=postgres
-SET POSTGRESQL_TAG=18.3-alpine3.23
-SET POSTGRESQL_IMAGE=%POSTGRESQL_NAME%:%POSTGRESQL_TAG%
-SET PG_COMMAND=docker run -d --name !PG_CONTAINER_NAME! -e "POSTGRES_USER=postgres" -e "POSTGRES_PASSWORD=123456" -e "POSTGRES_DB=spring-base" -p 5432:5432 -v !PG_VOLUME_NAME!:/var/lib/postgresql !POSTGRESQL_IMAGE!
+SET POSTGRES_NAME=postgres
+SET POSTGRES_TAG=18.3-alpine3.23
+SET POSTGRES_IMAGE=%POSTGRES_NAME%:%POSTGRES_TAG%
+SET PG_COMMAND=docker run -d --name !PG_CONTAINER_NAME! -e "POSTGRES_USER=postgres" -e "POSTGRES_PASSWORD=123456" -e "POSTGRES_DB=spring-base" -p 5432:5432 -v !PG_VOLUME_NAME!:/var/lib/postgresql !POSTGRES_IMAGE!
 
 echo Checking PostgreSQL container [%PG_CONTAINER_NAME%]...
 docker ps -a | findstr /C:"!PG_CONTAINER_NAME!" >nul

@@ -18,10 +18,10 @@ chmod +x ./create-data-classes.sh
 # --- PostgreSQL Setup ---
 PG_CONTAINER_NAME="postgresql"
 PG_VOLUME_NAME="postgresql-volume"
-POSTGRESQL_NAME="postgres"
-POSTGRESQL_TAG="18.3-alpine3.23"
-POSTGRESQL_IMAGE="${POSTGRESQL_NAME}:${POSTGRESQL_TAG}"
-PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=spring-base\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql ${POSTGRESQL_IMAGE}"
+POSTGRES_NAME="postgres"
+POSTGRES_TAG="18.3-alpine3.23"
+POSTGRES_IMAGE="${POSTGRES_NAME}:${POSTGRES_TAG}"
+PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=spring-base\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql ${POSTGRES_IMAGE}"
 
 echo "Checking PostgreSQL container [${PG_CONTAINER_NAME}]..."
 if ! docker ps -a | grep -q "${PG_CONTAINER_NAME}"; then

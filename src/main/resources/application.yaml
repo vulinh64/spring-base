@@ -72,9 +72,9 @@ spring:
           group: ${spring.application.name}
       default-binder: rabbit
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_NAME:spring-base}
-    username: ${POSTGRESQL_USERNAME:postgres}
-    password: ${POSTGRESQL_PASSWORD:123456}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:spring-base}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:123456}
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
   threads.virtual.enabled: true # Make use of Virtual Threads if possible

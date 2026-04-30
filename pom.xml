@@ -11,7 +11,7 @@
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
     <name>Spring Base project</name>
     <description>Your dumb comments go boom!</description>
 
