@@ -156,6 +156,13 @@
         </dependency>
         <!-- END: PostgreSQL-->
 
+        <!-- BEGIN: Liquibase -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <!-- END: Liquibase -->
+
         <!-- BEGIN: Project Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
