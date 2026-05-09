@@ -2,20 +2,6 @@
 # Application properties will be set here
 #
 application-properties:
-  # One single point for reusability
-  message-topic:
-    new-comment:
-      topic-name: new-comment
-      type: NEW_COMMENT
-    new-post:
-      topic-name: new-post
-      type: NEW_POST
-    new-subscriber:
-      topic-name: new-subscriber
-      type: NEW_SUBSCRIBER
-    new-post-following:
-      topic-name: new-post-following
-      type: NEW_POST_FOLLOWING
   security:
     # JWT issuer URI of our custom auth server (see docs/SPRING_BASE_INTEGRATION.md).
     # Used only for `iss` claim validation — we deliberately do NOT bootstrap from
@@ -68,7 +54,7 @@ spring:
         # Inbound: JWKS key-rotation events from the auth server (see SPRING_BASE_INTEGRATION.md §7).
         # Body is a no-op log line; lazy-on-unknown-kid is the correctness backstop.
         keyInvalidated-in-0:
-          destination: key-invalidated
+          destination: ${application-properties.message-topic.key-invalidated.topic-name}
           group: ${spring.application.name}
       default-binder: rabbit
   datasource:
