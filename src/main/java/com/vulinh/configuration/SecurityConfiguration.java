@@ -26,6 +26,8 @@ import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
 import org.springframework.web.cors.CorsConfiguration;
@@ -45,6 +47,8 @@ public class SecurityConfiguration {
   static final String ROLE_ADMIN_NAME = UserRole.ADMIN.name();
 
   static final String EXPECTED_TYP = "access";
+
+  static final String ACCESS_TOKEN_COOKIE = "access_token";
 
   @Bean
   @SneakyThrows
@@ -105,6 +109,29 @@ public class SecurityConfiguration {
             new JwtTypValidator(EXPECTED_TYP)));
 
     return decoder;
+  }
+
+  @Bean
+  public BearerTokenResolver bearerTokenResolver() {
+    var headerResolver = new DefaultBearerTokenResolver();
+
+    return request -> {
+      var cookies = request.getCookies();
+
+      if (cookies != null) {
+        for (var cookie : cookies) {
+          if (ACCESS_TOKEN_COOKIE.equals(cookie.getName())) {
+            var value = cookie.getValue();
+
+            if (value != null && !value.isBlank()) {
+              return value;
+            }
+          }
+        }
+      }
+
+      return headerResolver.resolve(request);
+    };
   }
 
   @Bean
