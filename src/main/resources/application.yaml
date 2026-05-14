@@ -36,7 +36,6 @@ application-properties:
 server:
   port: ${SERVER_PORT:8088}
   shutdown: GRACEFUL
-  servlet.context-path: /api
 spring:
   application.name: spring-base
   cloud:
