@@ -10,7 +10,6 @@ services:
     ports:
       - "8088:8088"
     environment:
-      - SPRING_PROFILES_ACTIVE=development
       - POSTGRES_HOST=postgresql
       - RABBITMQ_HOST=rabbitmq
     depends_on:

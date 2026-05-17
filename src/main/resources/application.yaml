@@ -8,10 +8,10 @@ application-properties:
     # /.well-known/openid-configuration so the app can start while the auth server
     # is unreachable. Token decoding will then fail at request time with 401.
     issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080}
-    jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:8080/.well-known/jwks.json}
+    jwk-set-uri: ${JWT_JWK_SET_URI:${application-properties.security.issuer-uri}/.well-known/jwks.json}
     # Expected `aud` claim on incoming access tokens. Must match the client_id registered
     # for this service on the auth server.
-    client-name: ${JWT_CLIENT_NAME:spring-base}
+    client-name: ${JWT_CLIENT_NAME:${spring.application.name}}
     no-authenticated-verb-urls:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/** }
@@ -50,7 +50,7 @@ spring:
           destination: ${application-properties.message-topic.new-comment.topic-name}
         newPostFollowing-out-0:
           destination: ${application-properties.message-topic.new-post-following.topic-name}
-        # Inbound: JWKS key-rotation events from the auth server (see SPRING_BASE_INTEGRATION.md §7).
+        # Inbound: JWKS key-rotation events from the auth server.
         # Body is a no-op log line; lazy-on-unknown-kid is the correctness backstop.
         keyInvalidated-in-0:
           destination: ${application-properties.message-topic.key-invalidated.topic-name}
@@ -71,7 +71,7 @@ spring:
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: ${application-properties.security.jwk-set-uri}
 decorator.datasource.p6spy:
-  custom-appender-class: com.vulinh.utils.MyP6SpyLogging
+  custom-appender-class: Ycom.vulinh.utils.MyP6SpyLogging
   logging: CUSTOM
 management.endpoints.web:
   base-path: ''
