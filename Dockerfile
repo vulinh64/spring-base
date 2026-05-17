@@ -56,7 +56,7 @@ RUN jdeps  \
 # jdk.crypto.ec is needed for HTTPS
 # JDEPS currently does not detect this module
 RUN jlink \
-    --add-modules $(cat ${DEPS_FILE}) \
+    --add-modules $(cat ${DEPS_FILE}),jdk.crypto.ec \
     --strip-java-debug-attributes  \
     --compress 2  \
     --no-header-files  \
