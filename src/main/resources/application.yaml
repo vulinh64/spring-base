@@ -71,7 +71,7 @@ spring:
   security.oauth2.resourceserver.jwt:
     jwk-set-uri: ${application-properties.security.jwk-set-uri}
 decorator.datasource.p6spy:
-  custom-appender-class: Ycom.vulinh.utils.MyP6SpyLogging
+  custom-appender-class: com.vulinh.utils.MyP6SpyLogging
   logging: CUSTOM
 management.endpoints.web:
   base-path: ''
