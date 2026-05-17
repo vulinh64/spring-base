@@ -62,7 +62,7 @@ spring:
     password: ${POSTGRES_PASSWORD:123456}
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
-  threads.virtual.enabled: true # Make use of Virtual Threads if possible
+  threads.virtual.enabled: ${VIRTUAL_THREADS_ENABLED:true} # Make use of Virtual Threads if possible
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}

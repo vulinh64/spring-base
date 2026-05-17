@@ -45,18 +45,19 @@ Only needed when running this service **standalone**. In normal operation the au
 
 Sensible defaults are already wired up in [`application.yaml`](./src/main/resources/application.yaml), so the app boots out of the box against the containers from Step 2. Override any of the following environment variables when the defaults do not match your setup:
 
-| Environment variable | Default                                   | Remark                                                                           |
-|----------------------|-------------------------------------------|----------------------------------------------------------------------------------|
-| `SERVER_PORT`        | `8088`                                    | HTTP port this service listens on.                                               |
-| `JWT_ISSUER_URI`     | `http://localhost:8080`                   | Base URI of the auth server. Used for `iss` claim validation.                    |
-| `JWT_JWK_SET_URI`    | `${JWT_ISSUER_URI}/.well-known/jwks.json` | JWKS endpoint. Override only if JWKS is served from a different host.            |
-| `JWT_CLIENT_NAME`    | `spring-base`                             | Expected `aud` claim — must match this service's `client_id` on the auth server. |
-| `POSTGRES_HOST`      | `localhost`                               | PostgreSQL host.                                                                 |
-| `POSTGRES_PORT`      | `5432`                                    | PostgreSQL port.                                                                 |
-| `POSTGRES_DB`        | `spring-base`                             | Database name.                                                                   |
-| `POSTGRES_USER`      | `postgres`                                | Database user.                                                                   |
-| `POSTGRES_PASSWORD`  | `123456`                                  | Database password.                                                               |
-| `RABBITMQ_HOST`      | `localhost`                               | RabbitMQ host.                                                                   |
-| `RABBITMQ_PORT`      | `5672`                                    | RabbitMQ AMQP port.                                                              |
-| `RABBITMQ_USERNAME`  | `rabbitmq`                                | RabbitMQ user.                                                                   |
-| `RABBITMQ_PASSWORD`  | `123456`                                  | RabbitMQ password.                                                               |
+| Environment variable      | Default                                   | Remark                                                                           |
+|---------------------------|-------------------------------------------|----------------------------------------------------------------------------------|
+| `SERVER_PORT`             | `8088`                                    | HTTP port this service listens on.                                               |
+| `JWT_ISSUER_URI`          | `http://localhost:8080`                   | Base URI of the auth server. Used for `iss` claim validation.                    |
+| `JWT_JWK_SET_URI`         | `${JWT_ISSUER_URI}/.well-known/jwks.json` | JWKS endpoint. Override only if JWKS is served from a different host.            |
+| `JWT_CLIENT_NAME`         | `spring-base`                             | Expected `aud` claim — must match this service's `client_id` on the auth server. |
+| `POSTGRES_HOST`           | `localhost`                               | PostgreSQL host.                                                                 |
+| `POSTGRES_PORT`           | `5432`                                    | PostgreSQL port.                                                                 |
+| `POSTGRES_DB`             | `spring-base`                             | Database name.                                                                   |
+| `POSTGRES_USER`           | `postgres`                                | Database user.                                                                   |
+| `POSTGRES_PASSWORD`       | `123456`                                  | Database password.                                                               |
+| `RABBITMQ_HOST`           | `localhost`                               | RabbitMQ host.                                                                   |
+| `RABBITMQ_PORT`           | `5672`                                    | RabbitMQ AMQP port.                                                              |
+| `RABBITMQ_USERNAME`       | `rabbitmq`                                | RabbitMQ user.                                                                   |
+| `RABBITMQ_PASSWORD`       | `123456`                                  | RabbitMQ password.                                                               |
+| `VIRTUAL_THREADS_ENABLED` | `true`                                    | Enable virtual thread support.                                                   |
