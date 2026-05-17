@@ -16,22 +16,21 @@ import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.repository.PostRepository;
 import com.vulinh.exception.NotFound404Exception;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class CommentFetchingService {
 
-  @PersistenceContext final EntityManager entityManager;
+  public CommentFetchingService(PostRepository postRepository, EntityManager entityManager) {
+    this.postRepository = postRepository;
+    queryFactory = new JPAQueryFactory(entityManager);
+  }
 
   final PostRepository postRepository;
-
-  static volatile JPAQueryFactory queryFactory;
+  final JPAQueryFactory queryFactory;
 
   public Page<SingleCommentResponse> fetchComments(UUID postId, Pageable pageable) {
     if (!postRepository.existsById(postId)) {
@@ -54,8 +53,7 @@ public class CommentFetchingService {
     var qAuthor = QAuthor.author;
 
     var authorProjection =
-        Projections.constructor(
-            AuthorResponse.class, qAuthor.id, qAuthor.username, qAuthor.email);
+        Projections.constructor(AuthorResponse.class, qAuthor.id, qAuthor.username, qAuthor.email);
 
     var select =
         Projections.constructor(
@@ -66,7 +64,7 @@ public class CommentFetchingService {
             qComment.updatedDateTime,
             new CaseBuilder()
                 .when(
-                    getQueryFactory()
+                    queryFactory
                         .selectFrom(qCommentRevision)
                         .where(
                             qCommentId.eq(qCommentRevision.id.commentId),
@@ -87,14 +85,6 @@ public class CommentFetchingService {
   <T> JPAQuery<T> buildBasicQuery(UUID postId, Expression<T> select) {
     var eComment = QComment.comment;
 
-    return getQueryFactory().selectFrom(eComment).select(select).where(eComment.postId.eq(postId));
-  }
-
-  JPAQueryFactory getQueryFactory() {
-    if (queryFactory == null) {
-      queryFactory = new JPAQueryFactory(entityManager);
-    }
-
-    return queryFactory;
+    return queryFactory.selectFrom(eComment).select(select).where(eComment.postId.eq(postId));
   }
 }

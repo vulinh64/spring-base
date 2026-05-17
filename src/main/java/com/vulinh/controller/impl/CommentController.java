@@ -3,10 +3,9 @@ package com.vulinh.controller.impl;
 import module java.base;
 
 import com.vulinh.controller.api.CommentAPI;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.CommentResponse;
-import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import com.vulinh.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +22,18 @@ public class CommentController implements CommentAPI {
   @Override
   public GenericResponse<Page<SingleCommentResponse>> fetchComments(
       UUID postId, Pageable pageable) {
-    return ResponseCreator.success(commentService.fetchComments(postId, pageable));
+    return GenericResponse.success(commentService.fetchComments(postId, pageable));
   }
 
   @Override
   public GenericResponse<CommentResponse> addComment(
       UUID postId, NewCommentRequest newCommentRequest) {
-    return ResponseCreator.success(commentService.addComment(postId, newCommentRequest));
+    return GenericResponse.success(commentService.addComment(postId, newCommentRequest));
   }
 
   @Override
   public GenericResponse<CommentResponse> editComment(
       NewCommentRequest newCommentRequest, UUID commentId) {
-    return ResponseCreator.success(commentService.editComment(newCommentRequest, commentId));
+    return GenericResponse.success(commentService.editComment(newCommentRequest, commentId));
   }
 }

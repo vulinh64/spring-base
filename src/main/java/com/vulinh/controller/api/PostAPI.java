@@ -5,6 +5,7 @@ import module java.base;
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.PostEndpoint;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

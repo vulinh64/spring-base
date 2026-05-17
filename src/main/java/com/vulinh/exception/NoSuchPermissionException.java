@@ -2,7 +2,6 @@ package com.vulinh.exception;
 
 import module java.base;
 
-import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.ApplicationError;
 
 /// Exception thrown when a user attempts to access resources without proper permissions.
@@ -30,18 +29,6 @@ public class NoSuchPermissionException extends ApplicationException {
   public static NoSuchPermissionException noSuchPermissionException(
       String message, ApplicationError applicationError, Object... args) {
     return new NoSuchPermissionException(message, applicationError, args);
-  }
-
-  /// Creates a `NoSuchPermissionException` for an invalid Keycloak client authorization.
-  ///
-  /// @param notAuthorizedException The NotAuthorizedException thrown during Keycloak client authorization
-  /// @return A new `NoSuchPermissionException` instance for the invalid Keycloak client
-  public static NoSuchPermissionException noPermissionKeycloakClient(
-      String adminUser, Throwable notAuthorizedException) {
-    return new NoSuchPermissionException(
-        "Invalid Keycloak admin client authorization for user %s".formatted(adminUser),
-        ServiceErrorCode.MESSAGE_INVALID_KEYCLOAK,
-        notAuthorizedException);
   }
 
   /// Constructs a new [NoSuchPermissionException] with the specified message, error details,

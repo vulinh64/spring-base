@@ -46,12 +46,12 @@ public class Post extends AbstractTimestampAuditableEntity<UUID> {
       inverseJoinColumns = @JoinColumn(name = "tag_id"))
   @ToString.Exclude
   @OrderBy("displayName asc")
-  Set<Tag> tags;
+  private Set<Tag> tags;
 
   // This generates many delete statement, fixing...
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "post_id", updatable = false, insertable = false)
   @OrderBy("createdDateTime desc")
   @ToString.Exclude
-  List<Comment> comments;
+  private List<Comment> comments;
 }

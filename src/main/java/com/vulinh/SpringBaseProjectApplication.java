@@ -1,6 +1,6 @@
 package com.vulinh;
 
-import com.vulinh.aspect.ExecutionTimeAspect;
+import com.vulinh.annotation.aspect.ExecutionTimeAspect;
 import com.vulinh.configuration.AuditorConfiguration;
 import com.vulinh.configuration.data.ApplicationProperties;
 import lombok.AccessLevel;

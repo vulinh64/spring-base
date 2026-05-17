@@ -21,7 +21,7 @@ interface TaxMapper {
   default List<BigDecimal> toBigDecimalList(List<Double> values) {
     return values == null
         ? Collections.emptyList()
-        : values.stream().map(this::toBigDecimal).collect(Collectors.toList());
+        : values.stream().map(this::toBigDecimal).toList();
   }
 
   Insurance toInsurance(InsuranceDTO insuranceDTO);

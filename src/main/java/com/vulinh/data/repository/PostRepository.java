@@ -35,10 +35,6 @@ public interface PostRepository extends BaseRepository<Post, UUID> {
   List<String> findSlugsByBaseSlug(String baseSlug);
 
   @Query(
-      "select distinct p.authorId from Post p where p.authorId not in (select a.id from Author a)")
-  List<UUID> findAuthorIdsNotInAuthorTable();
-
-  @Query(
       value =
           """
           select p.id as id, p.title as title, p.excerpt as excerpt, p.slug as slug,

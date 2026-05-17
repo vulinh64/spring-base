@@ -2,10 +2,9 @@ package com.vulinh.service.event;
 
 import module java.base;
 
-import com.vulinh.annotation.ExecutionTime;
+import com.vulinh.annotation.aspect.ExecutionTime;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.TopicProperties;
-import com.vulinh.data.dto.response.KeycloakUserResponse;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.Post;
@@ -39,12 +38,11 @@ public class EventService {
   }
 
   @ExecutionTime
-  public void sendSubscribeToUserEvent(
-      UserBasicResponse basicActionUser, KeycloakUserResponse subscribedUser) {
+  public void sendSubscribeToUserEvent(UserBasicResponse basicActionUser, UUID subscribedUserId) {
     sendMessageInternal(
         applicationProperties.messageTopic().newSubscriber(),
         basicActionUser,
-        EVENT_MAPPER.toNewSubscriptionEvent(subscribedUser));
+        EVENT_MAPPER.toNewSubscriptionEvent(subscribedUserId));
   }
 
   @ExecutionTime

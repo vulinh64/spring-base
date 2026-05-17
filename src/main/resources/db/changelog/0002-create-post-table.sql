@@ -13,10 +13,8 @@ CREATE TABLE post
     updated_date_time timestamptz NULL,
     updated_by        uuid NULL,
     CONSTRAINT post_pk PRIMARY KEY (id),
-    CONSTRAINT post_unique UNIQUE (slug),
-    CONSTRAINT post_category_fk FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE SET DEFAULT ON UPDATE RESTRICT,
-    CONSTRAINT post_users_fk FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL ON UPDATE RESTRICT,
-    CONSTRAINT post_users_updated_by_fk FOREIGN KEY (updated_by) REFERENCES users (id) ON DELETE SET NULL ON UPDATE RESTRICT
+    CONSTRAINT post_slug_unique UNIQUE (slug),
+    CONSTRAINT post_category_fk FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE SET DEFAULT ON UPDATE RESTRICT
 );
 
 CREATE INDEX post_slug_idx ON post USING btree (slug);

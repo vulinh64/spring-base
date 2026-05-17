@@ -28,7 +28,7 @@ public class PostDeletionService {
       postRepository.delete(post);
 
       return Optional.of(post);
-    } catch (NotFound404Exception notFound404Exception) {
+    } catch (NotFound404Exception _) {
       return Optional.empty();
     }
   }

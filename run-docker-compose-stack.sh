@@ -9,14 +9,5 @@ if [ $? -ne 0 ]; then
 fi
 
 docker compose down
-docker rmi --force spring-base:2.0.0
+docker rmi --force spring-base:3.0.0-alpha
 docker compose up --detach
-
-# Configure Keycloak
-chmod +x ./create-keycloak-data.sh
-./create-keycloak-data.sh
-
-if [ $? -ne 0 ]; then
-    echo "Error: Keycloak configuration failed"
-    exit 1
-fi

@@ -3,9 +3,9 @@ package com.vulinh.controller.impl;
 import module java.base;
 
 import com.vulinh.controller.api.PostAPI;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.PostCreationRequest;
 import com.vulinh.data.dto.response.*;
-import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
 import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;
 import com.vulinh.utils.ResponseUtils;
@@ -24,34 +24,34 @@ public class PostController implements PostAPI {
 
   @Override
   public GenericResponse<Page<PrefetchPostResponse>> findPrefetchPosts(Pageable pageable) {
-    return ResponseCreator.success(postService.findPrefetchPosts(pageable));
+    return GenericResponse.success(postService.findPrefetchPosts(pageable));
   }
 
   @Override
   public GenericResponse<Page<PrefetchPostResponse>> findPostsByCategory(
       String categorySlug, Pageable pageable) {
-    return ResponseCreator.success(postService.findPostsByCategory(categorySlug, pageable));
+    return GenericResponse.success(postService.findPostsByCategory(categorySlug, pageable));
   }
 
   @Override
   public GenericResponse<Page<PrefetchPostResponse>> searchPosts(String query, Pageable pageable) {
-    return ResponseCreator.success(postService.searchPosts(query, pageable));
+    return GenericResponse.success(postService.searchPosts(query, pageable));
   }
 
   @Override
   public GenericResponse<SinglePostResponse> getSinglePost(String identity) {
-    return ResponseCreator.success(postService.getSinglePost(identity));
+    return GenericResponse.success(postService.getSinglePost(identity));
   }
 
   @Override
   public GenericResponse<Page<PostRevisionResponse>> getPostRevisions(
       UUID postId, Pageable pageable) {
-    return ResponseCreator.success(postRevisionService.getPostRevisions(postId, pageable));
+    return GenericResponse.success(postRevisionService.getPostRevisions(postId, pageable));
   }
 
   @Override
   public GenericResponse<BasicPostResponse> createPost(PostCreationRequest postCreationRequest) {
-    return ResponseCreator.success(postService.createPost(postCreationRequest));
+    return GenericResponse.success(postService.createPost(postCreationRequest));
   }
 
   @Override

@@ -10,8 +10,7 @@ CREATE TABLE comment
     created_by        uuid NOT NULL,
     updated_by        uuid NOT NULL,
     CONSTRAINT comment_pk PRIMARY KEY (id),
-    CONSTRAINT comment_post_fk FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT comment_user_fk FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT comment_post_fk FOREIGN KEY (post_id) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE INDEX comment_post_id_idx ON comment (post_id);

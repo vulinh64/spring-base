@@ -4,9 +4,9 @@ import module java.base;
 
 import com.vulinh.data.constant.CommonConstant;
 import com.vulinh.data.constant.EndpointConstant;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.dto.response.CommentResponse;
-import com.vulinh.data.dto.response.GenericResponse;
 import com.vulinh.data.dto.response.SingleCommentResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

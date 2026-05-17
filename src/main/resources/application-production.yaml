@@ -3,5 +3,3 @@ decorator.datasource.p6spy.enable-logging: false
 springdoc:
   api-docs.enabled: false
   swagger-ui.enabled: false
-# Not running on production (hypothetical)
-spring.liquibase.enabled: false

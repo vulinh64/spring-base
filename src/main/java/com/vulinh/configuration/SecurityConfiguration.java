@@ -2,6 +2,7 @@ package com.vulinh.configuration;
 
 import module java.base;
 
+import com.vulinh.configuration.CaffeineCacheConfiguration.CacheProperties;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.UserRole;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -20,10 +22,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,6 +45,10 @@ public class SecurityConfiguration {
   private final HandlerExceptionResolver handlerExceptionResolver;
 
   static final String ROLE_ADMIN_NAME = UserRole.ADMIN.name();
+
+  static final String EXPECTED_TYP = "access";
+
+  static final String ACCESS_TOKEN_COOKIE = "access_token";
 
   @Bean
   @SneakyThrows
@@ -71,36 +81,56 @@ public class SecurityConfiguration {
                     .jwt(
                         jwtConfigurer ->
                             jwtConfigurer.jwtAuthenticationConverter(
-                                jwt ->
-                                    JwtUtils.parseAuthoritiesByCustomClaims(
-                                        jwt, security.clientName()))))
+                                JwtUtils::parseAuthoritiesByCustomClaims)))
         .build();
   }
 
   @Bean
+  public JwtDecoder jwtDecoder(
+      ApplicationProperties applicationProperties, CacheManager cacheManager) {
+    var security = applicationProperties.security();
+
+    // withJwkSetUri defers fetching the JWK set until the first token decode, so the
+    // app can boot while the auth server is unreachable. fromIssuerLocation eagerly
+    // hits /.well-known/openid-configuration and would block startup.
+    //
+    // The injected Spring Cache lets JwtKeyInvalidationConfig evict the entry by
+    // jwkSetUri when a KEY_INVALIDATED event arrives, forcing the next decode to
+    // fetch the new JWKS instead of waiting for Nimbus's default 5 min TTL.
+    var decoder =
+        NimbusJwtDecoder.withJwkSetUri(security.jwkSetUri())
+            .cache(Objects.requireNonNull(cacheManager.getCache(CacheProperties.JWKS_CACHE)))
+            .build();
+
+    decoder.setJwtValidator(
+        new DelegatingOAuth2TokenValidator<>(
+            JwtValidators.createDefaultWithIssuer(security.issuerUri()),
+            new JwtAudValidator(security.clientName()),
+            new JwtTypValidator(EXPECTED_TYP)));
+
+    return decoder;
+  }
+
+  @Bean
   public BearerTokenResolver bearerTokenResolver() {
-    var defaultResolver = new DefaultBearerTokenResolver();
+    var headerResolver = new DefaultBearerTokenResolver();
 
     return request -> {
-      // Try standard Authorization header first
-      var token = defaultResolver.resolve(request);
-
-      if (token != null) {
-        return token;
-      }
-
-      // Fall back to access_token cookie
       var cookies = request.getCookies();
 
       if (cookies != null) {
         for (var cookie : cookies) {
-          if ("access_token".equals(cookie.getName())) {
-            return cookie.getValue();
+          if (ACCESS_TOKEN_COOKIE.equals(cookie.getName())) {
+            var value = cookie.getValue();
+
+            if (value != null && !value.isBlank()) {
+              return value;
+            }
           }
         }
       }
 
-      return null;
+      return headerResolver.resolve(request);
     };
   }
 

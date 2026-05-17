@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.13</version>
+        <version>3.5.14</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0-alpha</version>
     <name>Spring Base project</name>
     <description>Your dumb comments go boom!</description>
 
@@ -21,24 +21,24 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- https://github.com/vulinh64/spring-base-commons/releases -->
-        <spring-base-commons.version>2.5.0</spring-base-commons.version>
+        <spring-base-commons.version>3.0.0</spring-base-commons.version>
 
         <!-- CVE Fixes: START -->
 
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core/versions -->
         <log4j2.version>2.25.4</log4j2.version>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat/versions -->
-        <tomcat.version>10.1.54</tomcat.version>
-
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/versions -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io/versions -->
-        <common-io.version>2.21.0</common-io.version>
+        <common-io.version>2.22.0</common-io.version>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/versions -->
+        <commons-collections4.version>4.5.0</commons-collections4.version>
 
         <!-- https://mvnrepository.com/artifact/io.netty/netty-codec/versions -->
-        <netty.version>4.2.12.Final</netty.version>
+        <netty.version>4.2.13.Final</netty.version>
 
         <!-- CVE Fixes: END -->
 
@@ -50,7 +50,7 @@
         <openfeign.querydsl.version>7.1</openfeign.querydsl.version>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <guava.version>33.5.0-jre</guava.version>
+        <guava.version>33.6.0-jre</guava.version>
 
         <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
         <springdoc.openapi.version>2.8.17</springdoc.openapi.version>
@@ -61,32 +61,14 @@
         <!-- https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter -->
         <p6spy-springboot.version>1.12.1</p6spy-springboot.version>
 
-        <!-- https://mvnrepository.com/artifact/com.github.auties00/optional -->
-        <optional.version>1.0</optional.version>
-
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
-        <jsoup.version>1.22.1</jsoup.version>
+        <jsoup.version>1.22.2</jsoup.version>
 
         <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark/versions -->
         <commonmark.version>0.28.0</commonmark.version>
 
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
-        <testcontainers.version>2.0.4</testcontainers.version>
-
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
-        <testcontainers-jupiter.version>1.21.4</testcontainers-jupiter.version>
-
-        <!-- https://mvnrepository.com/artifact/com.github.dasniko/testcontainers-keycloak -->
-        <testcontainers-keycloak.version>4.2.0</testcontainers-keycloak.version>
-
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit -->
         <spring-cloud-starter-stream-rabbit.version>4.3.2</spring-cloud-starter-stream-rabbit.version>
-
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
-        <keycloak-admin-client.version>26.0.8</keycloak-admin-client.version>
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson/jackson-bom/versions -->
-        <jackson-bom.version>2.21.2</jackson-bom.version>
 
         <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine/versions -->
         <caffeine.version>3.2.3</caffeine.version>
@@ -147,13 +129,6 @@
         </dependency>
         <!-- END: Spring Base -->
 
-        <!-- BEGIN: Liquibase -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
-        <!-- END: Liquibase -->
-
         <!-- BEGIN: PostgreSQL-->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -165,6 +140,13 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
         <!-- END: PostgreSQL-->
+
+        <!-- BEGIN: Liquibase -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <!-- END: Liquibase -->
 
         <!-- BEGIN: Project Lombok -->
         <dependency>
@@ -196,14 +178,6 @@
             <version>${jmail.version}</version>
         </dependency>
         <!-- END: JMail validation library -->
-
-        <!-- BEGIN: Optional -->
-        <dependency>
-            <groupId>com.github.auties00</groupId>
-            <artifactId>optional</artifactId>
-            <version>${optional.version}</version>
-        </dependency>
-        <!-- END: Optional -->
 
         <!-- BEGIN: Swagger UI -->
         <dependency>
@@ -248,21 +222,15 @@
         <!-- END: CommonMark -->
 
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-admin-client</artifactId>
-            <version>${keycloak-admin-client.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${common-io.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine/versions -->
@@ -284,31 +252,6 @@
             <scope>test</scope>
         </dependency>
         <!-- END: JUnit Test -->
-
-        <!-- BEGIN: Testcontainers -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-postgresql</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.dasniko</groupId>
-            <artifactId>testcontainers-keycloak</artifactId>
-            <version>${testcontainers-keycloak.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-rabbitmq</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- END: Testcontainers -->
 
         <!-- Custom dependency -->
         <dependency>
@@ -372,10 +315,6 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

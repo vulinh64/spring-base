@@ -2,8 +2,7 @@ package com.vulinh.exception;
 
 import module java.base;
 
-import com.vulinh.data.dto.response.GenericResponse;
-import com.vulinh.data.dto.response.GenericResponse.ResponseCreator;
+import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.locale.LocalizationSupport;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.ApplicationError;
@@ -12,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,31 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
-
-  @ExceptionHandler(RuntimeException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  GenericResponse<Object> handleRuntimeErrorException(RuntimeException runtimeException) {
-    log.error("Internal server error", runtimeException);
-
-    return GenericResponse.builder()
-        .errorCode(ServiceErrorCode.MESSAGE_INTERNAL_ERROR.getErrorCode())
-        .displayMessage(
-            LocalizationSupport.getParsedMessage(ServiceErrorCode.MESSAGE_INTERNAL_ERROR))
-        .build();
-  }
-
-  //
-  // Basic handler, may not actually be used
-  //
-
-  @ExceptionHandler(ApplicationException.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  GenericResponse<Object> handleApplicationException(ApplicationException applicationException) {
-    log.info("Application error", applicationException);
-
-    return ResponseCreator.toError(applicationException);
-  }
+public class GlobalExceptionHandler extends CommonExceptionHandler {
 
   @ExceptionHandler(AuthorizationException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -51,7 +28,7 @@ public class GlobalExceptionHandler {
       AuthorizationException authorizationException) {
     log.info(authorizationException.getMessage());
 
-    return ResponseCreator.toError(authorizationException);
+    return GenericResponse.toError(authorizationException);
   }
 
   @ExceptionHandler(NoSuchPermissionException.class)
@@ -67,13 +44,6 @@ public class GlobalExceptionHandler {
     return logAndReturn(notFound404Exception);
   }
 
-  @ExceptionHandler(ApplicationValidationException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  GenericResponse<Object> handleValidationException(
-      ApplicationValidationException validationException) {
-    return logAndReturn(validationException);
-  }
-
   @ExceptionHandler(XSSViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   GenericResponse<Object> handleXSSViolationException(XSSViolationException xssViolationException) {
@@ -83,7 +53,7 @@ public class GlobalExceptionHandler {
         xssViolationException.getOffendingContent(),
         xssViolationException.getSanitizedContent());
 
-    return ResponseCreator.toError(xssViolationException);
+    return GenericResponse.toError(xssViolationException);
   }
 
   @ExceptionHandler(ResourceConflictException.class)
@@ -138,18 +108,12 @@ public class GlobalExceptionHandler {
                     .orElse("unknown or empty type")));
   }
 
-  @ExceptionHandler(KeycloakUserDisabledException.class)
-  @ResponseStatus(HttpStatus.FORBIDDEN)
-  GenericResponse<Object> handleKeycloakUserDisabledException(
-      KeycloakUserDisabledException keycloakUserDisabledException) {
-    return logAndReturn(keycloakUserDisabledException);
-  }
-
-  @ExceptionHandler(KeycloakAuthenticationException.class)
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  GenericResponse<Object> handleKeycloakAuthenticationException(
-      KeycloakAuthenticationException keycloakAuthenticationException) {
-    return logAndReturn(keycloakAuthenticationException);
+  @ExceptionHandler(AuthenticationServiceException.class)
+  @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+  GenericResponse<Object> handleAuthenticationServiceException(
+      AuthenticationServiceException authenticationServiceException) {
+    return securityError(
+        ServiceErrorCode.MESSAGE_AUTH_SERVICE_UNAVAILABLE, authenticationServiceException);
   }
 
   @ExceptionHandler(AuthenticationException.class)
@@ -177,13 +141,16 @@ public class GlobalExceptionHandler {
   static GenericResponse<Object> logAndReturn(ApplicationException applicationException) {
     log.info(applicationException.getMessage());
 
-    return ResponseCreator.toError(applicationException);
+    return GenericResponse.toError(applicationException);
   }
 
   static GenericResponse<Object> securityError(
-      ApplicationError applicationError, Throwable throwable) {
+      ApplicationError applicationError, Throwable throwable, Object... args) {
     log.info("{} ({})", throwable.getMessage(), throwable.getClass().getName());
 
-    return ResponseCreator.toError(applicationError);
+    return GenericResponse.builder()
+        .errorCode(applicationError)
+        .displayMessage(LocalizationSupport.getParsedMessage(applicationError, args))
+        .build();
   }
 }

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class NewCommentValidationService {
 
   static final int COMMENT_MAX_LENGTH = 10000;
-  
+
   static final ValidatorChain<NewCommentRequest> NEW_COMMENT_VALIDATOR =
       new ValidatorChainBuilder<NewCommentRequest>().add(NewCommentRule.values()).build();
 

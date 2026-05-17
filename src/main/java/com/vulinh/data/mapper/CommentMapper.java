@@ -1,7 +1,5 @@
 package com.vulinh.data.mapper;
 
-import module java.base;
-
 import com.vulinh.data.dto.request.NewCommentRequest;
 import com.vulinh.data.entity.Comment;
 import com.vulinh.data.entity.CommentRevision;
