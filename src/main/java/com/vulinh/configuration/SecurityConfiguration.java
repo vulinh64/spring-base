@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,27 +51,31 @@ public class SecurityConfiguration {
 
   static final String ACCESS_TOKEN_COOKIE = "access_token";
 
+  // Skips OAuth2 token decoding entirely for no-auth URLs so a stale access_token cookie can't 403
+  // them.
   @Bean
+  @Order(1)
+  @SneakyThrows
+  public SecurityFilterChain publicSecurityFilterChain(
+      HttpSecurity httpSecurity, ApplicationProperties applicationProperties) {
+    return applyCommonSecurity(httpSecurity)
+        .securityMatcher(
+            applicationProperties.security().noAuthenticatedUrls().toArray(String[]::new))
+        .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
+        .build();
+  }
+
+  @Bean
+  @Order(2)
   @SneakyThrows
   public SecurityFilterChain securityFilterChain(
       HttpSecurity httpSecurity, ApplicationProperties applicationProperties) {
     var security = applicationProperties.security();
 
-    return httpSecurity
-        .headers(
-            headersConfigurer ->
-                headersConfigurer
-                    .xssProtection(
-                        xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
-                    .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(
-            sessionManagementConfigurer ->
-                sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    return applyCommonSecurity(httpSecurity)
         .authorizeHttpRequests(
             authorizeHttpRequestsCustomizer ->
                 configureAuthorizeHttpRequestCustomizer(authorizeHttpRequestsCustomizer, security))
-        .cors(corsConfigurer -> corsConfigurer.configurationSource(createCorsFilter()))
         .oauth2ResourceServer(
             oAuth2ResourceServerProperties ->
                 oAuth2ResourceServerProperties
@@ -139,7 +144,7 @@ public class SecurityConfiguration {
     return RoleHierarchyImpl.fromHierarchy(toHierarchyPhrase());
   }
 
-  CorsConfigurationSource createCorsFilter() {
+  static CorsConfigurationSource createCorsFilter() {
     var config = new CorsConfiguration();
 
     config.setAllowCredentials(true);
@@ -159,6 +164,23 @@ public class SecurityConfiguration {
     handlerExceptionResolver.resolveException(request, response, null, exception);
   }
 
+  // Baseline shared by every SecurityFilterChain: security headers, CSRF disabled, stateless session, CORS.
+  @SneakyThrows
+  private static HttpSecurity applyCommonSecurity(HttpSecurity httpSecurity) {
+    return httpSecurity
+        .headers(
+            headersConfigurer ->
+                headersConfigurer
+                    .xssProtection(
+                        xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
+                    .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
+        .csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            sessionManagementConfigurer ->
+                sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .cors(corsConfigurer -> corsConfigurer.configurationSource(createCorsFilter()));
+  }
+
   static void configureAuthorizeHttpRequestCustomizer(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer,
@@ -173,11 +195,7 @@ public class SecurityConfiguration {
           .hasAuthority(ROLE_ADMIN_NAME);
     }
 
-    authorizeHttpRequestsCustomizer
-        .requestMatchers(securityProperties.noAuthenticatedUrls().toArray(String[]::new))
-        .permitAll()
-        .anyRequest()
-        .authenticated();
+    authorizeHttpRequestsCustomizer.anyRequest().authenticated();
   }
 
   static String toHierarchyPhrase() {

@@ -17,15 +17,11 @@ application-properties:
       - { method: GET, url: /category/** }
       - { method: GET, url: /comment/** }
     no-authenticated-urls:
-      - /free/**
       - /health
       - /health/**
+      - /free/**
       - /v3/api-docs/**
-      - /swagger-ui.html
       - /swagger-ui/**
-      - /swagger-resources/**
-      - /configuration/ui/**
-      - /configuration/security/**
       - /webjars/**
     high-privilege-verb-urls:
       - { method: DELETE, url: /category/** }
@@ -55,7 +51,6 @@ spring:
         keyInvalidated-in-0:
           destination: ${application-properties.message-topic.key-invalidated.topic-name}
           group: ${spring.application.name}
-      default-binder: rabbit
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:spring-base}
     username: ${POSTGRES_USER:postgres}
@@ -76,6 +71,11 @@ decorator.datasource.p6spy:
 management.endpoints.web:
   base-path: ''
   exposure.include: health
+management.endpoint.health:
+  probes.enabled: true
+  group:
+    liveness.include: livenessState
+    readiness.include: readinessState,db,rabbit
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
