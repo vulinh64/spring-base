@@ -16,6 +16,7 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Read spring-base-commons version
+      id: commons-version
       run: |
         echo "Reading spring-base-commons version from pom.xml \${spring-base-commons.version}..."
         SPRING_BASE_COMMONS_VERSION="$(mvn help:evaluate -Dexpression="spring-base-commons.version" -q -DforceStdout 2>/dev/null | sed -n '/^[0-9][0-9A-Za-z_.-]*$/ { p; q; }')"
@@ -24,7 +25,15 @@ jobs:
           exit 1
         fi
         echo "SPRING_BASE_COMMONS_VERSION=$SPRING_BASE_COMMONS_VERSION" >> "$GITHUB_ENV"
+        echo "version=$SPRING_BASE_COMMONS_VERSION" >> "$GITHUB_OUTPUT"
+    - name: Cache spring-base-commons
+      id: cache-spring-base-commons
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository/com/vulinh/spring-base-commons/${{ steps.commons-version.outputs.version }}
+        key: spring-base-commons-${{ runner.os }}-${{ steps.commons-version.outputs.version }}-${{ hashFiles('pom.xml') }}
     - name: Download and install spring-base-commons
+      if: steps.cache-spring-base-commons.outputs.cache-hit != 'true'
       run: |
         gh release download "$SPRING_BASE_COMMONS_VERSION" \
           --repo vulinh64/spring-base-commons \
