@@ -6,7 +6,7 @@ import com.vulinh.configuration.CaffeineCacheConfiguration.CacheProperties;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.UserRole;
-import com.vulinh.utils.JwtUtils;
+import com.vulinh.utils.CollectionHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
@@ -42,34 +48,34 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 public class SecurityConfiguration {
 
+  static final String INVALID_TOKEN = "invalid_token";
+
+  static final String WILDCARD_ALL = "*";
+
   // One of the best and the most elegant ways to handle exceptions in Spring Security filters
   private final HandlerExceptionResolver handlerExceptionResolver;
 
-  static final String ROLE_ADMIN_NAME = UserRole.ADMIN.name();
+  private final ApplicationProperties applicationProperties;
 
-  static final String EXPECTED_TYP = "access";
+  private final HttpSecurity httpSecurity;
 
-  static final String ACCESS_TOKEN_COOKIE = "access_token";
-
-  // Skips OAuth2 token decoding entirely for no-auth URLs so a stale access_token cookie can't 403
-  // them.
+  // Skips OAuth2 token decoding entirely for no-auth URLs
+  // so a stale access_token cookie can't 403 them.
   @Bean
-  @Order(1)
+  @Order(Integer.MIN_VALUE)
   @SneakyThrows
-  public SecurityFilterChain publicSecurityFilterChain(
-      HttpSecurity httpSecurity, ApplicationProperties applicationProperties) {
+  public SecurityFilterChain publicSecurityFilterChain() {
     return applyCommonSecurity(httpSecurity)
         .securityMatcher(
             applicationProperties.security().noAuthenticatedUrls().toArray(String[]::new))
-        .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
+        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
         .build();
   }
 
   @Bean
-  @Order(2)
+  @Order(0)
   @SneakyThrows
-  public SecurityFilterChain securityFilterChain(
-      HttpSecurity httpSecurity, ApplicationProperties applicationProperties) {
+  public SecurityFilterChain securityFilterChain() {
     var security = applicationProperties.security();
 
     return applyCommonSecurity(httpSecurity)
@@ -79,20 +85,26 @@ public class SecurityConfiguration {
         .oauth2ResourceServer(
             oAuth2ResourceServerProperties ->
                 oAuth2ResourceServerProperties
+                    .authenticationEntryPoint(this::resolveSecurityException)
                     // Return something to client rather than a blank 403 page
-                    .accessDeniedHandler(this::delegateToHandlerExceptionResolver)
+                    .accessDeniedHandler(this::resolveSecurityException)
                     // Return something to client rather than a blank 401 page
-                    .authenticationEntryPoint(this::delegateToHandlerExceptionResolver)
                     .jwt(
                         jwtConfigurer ->
                             jwtConfigurer.jwtAuthenticationConverter(
-                                JwtUtils::parseAuthoritiesByCustomClaims)))
+                                jwt ->
+                                    new JwtAuthenticationToken(
+                                        jwt,
+                                        CollectionHelper.emptyListIfNull(
+                                                jwt.getClaimAsStringList("roles"))
+                                            .stream()
+                                            .map(SimpleGrantedAuthority::new)
+                                            .collect(Collectors.toSet())))))
         .build();
   }
 
   @Bean
-  public JwtDecoder jwtDecoder(
-      ApplicationProperties applicationProperties, CacheManager cacheManager) {
+  public JwtDecoder jwtDecoder(CacheManager cacheManager) {
     var security = applicationProperties.security();
 
     // withJwkSetUri defers fetching the JWK set until the first token decode, so the
@@ -111,7 +123,7 @@ public class SecurityConfiguration {
         new DelegatingOAuth2TokenValidator<>(
             JwtValidators.createDefaultWithIssuer(security.issuerUri()),
             new JwtAudValidator(security.clientName()),
-            new JwtTypValidator(EXPECTED_TYP)));
+            new JwtTypValidator("access")));
 
     return decoder;
   }
@@ -125,7 +137,7 @@ public class SecurityConfiguration {
 
       if (cookies != null) {
         for (var cookie : cookies) {
-          if (ACCESS_TOKEN_COOKIE.equals(cookie.getName())) {
+          if ("access_token".equals(cookie.getName())) {
             var value = cookie.getValue();
 
             if (value != null && !value.isBlank()) {
@@ -148,9 +160,9 @@ public class SecurityConfiguration {
     var config = new CorsConfiguration();
 
     config.setAllowCredentials(true);
-    config.addAllowedOriginPattern("*");
-    config.addAllowedHeader("*");
-    config.addAllowedMethod("*");
+    config.addAllowedOriginPattern(WILDCARD_ALL);
+    config.addAllowedHeader(WILDCARD_ALL);
+    config.addAllowedMethod(WILDCARD_ALL);
 
     var source = new UrlBasedCorsConfigurationSource();
 
@@ -159,12 +171,13 @@ public class SecurityConfiguration {
     return source;
   }
 
-  private void delegateToHandlerExceptionResolver(
+  private void resolveSecurityException(
       HttpServletRequest request, HttpServletResponse response, Exception exception) {
     handlerExceptionResolver.resolveException(request, response, null, exception);
   }
 
-  // Baseline shared by every SecurityFilterChain: security headers, CSRF disabled, stateless session, CORS.
+  // Baseline shared by every SecurityFilterChain:
+  // security headers, CSRF disabled, stateless session, CORS.
   @SneakyThrows
   private static HttpSecurity applyCommonSecurity(HttpSecurity httpSecurity) {
     return httpSecurity
@@ -192,7 +205,7 @@ public class SecurityConfiguration {
     for (var privilegeVerbUrl : securityProperties.highPrivilegeVerbUrls()) {
       authorizeHttpRequestsCustomizer
           .requestMatchers(privilegeVerbUrl.method(), privilegeVerbUrl.url())
-          .hasAuthority(ROLE_ADMIN_NAME);
+          .hasAuthority(UserRole.ADMIN.name());
     }
 
     authorizeHttpRequestsCustomizer.anyRequest().authenticated();
@@ -220,5 +233,37 @@ public class SecurityConfiguration {
     }
 
     return result.toString();
+  }
+
+  record JwtAudValidator(String expectedAudience) implements OAuth2TokenValidator<Jwt> {
+
+    @Override
+    public OAuth2TokenValidatorResult validate(Jwt jwt) {
+      var audiences = jwt.getAudience();
+
+      return audiences != null && audiences.contains(expectedAudience)
+          ? OAuth2TokenValidatorResult.success()
+          : OAuth2TokenValidatorResult.failure(
+              new OAuth2Error(
+                  INVALID_TOKEN,
+                  "Required audience '%s' is missing".formatted(expectedAudience),
+                  null));
+    }
+  }
+
+  record JwtTypValidator(String expectedTyp) implements OAuth2TokenValidator<Jwt> {
+
+    static final String TYP_CLAIM = "typ";
+
+    @Override
+    public OAuth2TokenValidatorResult validate(Jwt jwt) {
+      return expectedTyp.equals(jwt.getClaimAsString(TYP_CLAIM))
+          ? OAuth2TokenValidatorResult.success()
+          : OAuth2TokenValidatorResult.failure(
+              new OAuth2Error(
+                  INVALID_TOKEN,
+                  "Required token type '%s' is missing".formatted(expectedTyp),
+                  null));
+    }
   }
 }

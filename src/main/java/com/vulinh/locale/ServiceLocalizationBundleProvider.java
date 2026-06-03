@@ -1,7 +1,6 @@
 package com.vulinh.locale;
 
-import java.util.Collection;
-import java.util.List;
+import module java.base;
 
 public final class ServiceLocalizationBundleProvider implements LocalizationBundleProvider {
 

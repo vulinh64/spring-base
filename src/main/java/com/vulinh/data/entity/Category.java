@@ -4,6 +4,7 @@ import module java.base;
 
 import com.vulinh.annotation.UUIDAsIdIfNullGenerator;
 import com.vulinh.data.base.AbstractEntity;
+import com.vulinh.data.base.JpaIdentifiable.DynamicJpaIdentifiable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
@@ -15,7 +16,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class Category extends AbstractEntity<UUID> {
+public class Category extends AbstractEntity<UUID> implements DynamicJpaIdentifiable<UUID> {
 
   @Serial private static final long serialVersionUID = 106688923162808538L;
 

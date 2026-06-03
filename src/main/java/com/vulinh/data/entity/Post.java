@@ -3,6 +3,7 @@ package com.vulinh.data.entity;
 import module java.base;
 
 import com.vulinh.data.base.AbstractTimestampAuditableEntity;
+import com.vulinh.data.base.JpaIdentifiable.DynamicJpaIdentifiable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -19,7 +20,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @ToString
 @Builder
-public class Post extends AbstractTimestampAuditableEntity<UUID> {
+public class Post extends AbstractTimestampAuditableEntity<UUID>
+    implements DynamicJpaIdentifiable<UUID> {
 
   @Serial private static final long serialVersionUID = -2260038525808618984L;
 
