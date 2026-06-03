@@ -1,13 +1,23 @@
 @echo off
+SETLOCAL EnableDelayedExpansion
 
 SET COMMONS_NAME=spring-base-commons
 SET COMMONS_GROUP_ID=com.vulinh
-SET COMMONS_VERSION=3.0.0
 SET GITHUB_USER=vulinh64
 
-SET JAR_FILE=%COMMONS_NAME%-%COMMONS_VERSION%.jar
-SET SOURCES_FILE=%COMMONS_NAME%-%COMMONS_VERSION%-sources.jar
-SET BASE_URL=https://github.com/%GITHUB_USER%/%COMMONS_NAME%/releases/download/%COMMONS_VERSION%
+echo Reading %COMMONS_NAME% version from pom.xml ${spring-base-commons.version}...
+FOR /F "usebackq delims=" %%V IN (`call .\mvnw.cmd help:evaluate -Dexpression^="spring-base-commons.version" -q -DforceStdout 2^>nul ^| findstr /R "^[0-9][0-9A-Za-z_.-]*$" ^& exit /b 0`) DO (
+    IF "!COMMONS_VERSION!"=="" SET "COMMONS_VERSION=%%V"
+)
+
+IF "!COMMONS_VERSION!"=="" (
+    echo Failed to evaluate spring-base-commons.version from pom.xml
+    exit /b 1
+)
+
+SET JAR_FILE=%COMMONS_NAME%-!COMMONS_VERSION!.jar
+SET SOURCES_FILE=%COMMONS_NAME%-!COMMONS_VERSION!-sources.jar
+SET BASE_URL=https://github.com/%GITHUB_USER%/%COMMONS_NAME%/releases/download/!COMMONS_VERSION!
 
 :: Create build directory if it doesn't exist
 IF NOT EXIST .\build mkdir .\build

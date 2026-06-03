@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      SPRING_BASE_COMMONS_VERSION: 3.0.0
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 25
@@ -17,17 +15,35 @@ jobs:
         java-version: '25'
         distribution: 'corretto'
         cache: maven
-    - name: Download and install spring-base-commons
+    - name: Read spring-base-commons version
+      id: commons-version
       run: |
-        gh release download ${{ env.SPRING_BASE_COMMONS_VERSION }} \
+        echo "Reading spring-base-commons version from pom.xml \${spring-base-commons.version}..."
+        SPRING_BASE_COMMONS_VERSION="$(mvn help:evaluate -Dexpression="spring-base-commons.version" -q -DforceStdout 2>/dev/null | sed -n '/^[0-9][0-9A-Za-z_.-]*$/ { p; q; }')"
+        if [ -z "$SPRING_BASE_COMMONS_VERSION" ]; then
+          echo "Failed to evaluate spring-base-commons.version from pom.xml"
+          exit 1
+        fi
+        echo "SPRING_BASE_COMMONS_VERSION=$SPRING_BASE_COMMONS_VERSION" >> "$GITHUB_ENV"
+        echo "version=$SPRING_BASE_COMMONS_VERSION" >> "$GITHUB_OUTPUT"
+    - name: Cache spring-base-commons
+      id: cache-spring-base-commons
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository/com/vulinh/spring-base-commons/${{ steps.commons-version.outputs.version }}
+        key: spring-base-commons-${{ runner.os }}-${{ steps.commons-version.outputs.version }}-${{ hashFiles('pom.xml') }}
+    - name: Download and install spring-base-commons
+      if: steps.cache-spring-base-commons.outputs.cache-hit != 'true'
+      run: |
+        gh release download "$SPRING_BASE_COMMONS_VERSION" \
           --repo vulinh64/spring-base-commons \
-          --pattern "spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar" \
+          --pattern "spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar" \
           --dir .
         mvn install:install-file \
-          -Dfile=spring-base-commons-${{ env.SPRING_BASE_COMMONS_VERSION }}.jar \
+          -Dfile="spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar" \
           -DgroupId=com.vulinh \
           -DartifactId=spring-base-commons \
-          -Dversion=${{ env.SPRING_BASE_COMMONS_VERSION }} \
+          -Dversion="$SPRING_BASE_COMMONS_VERSION" \
           -Dpackaging=jar
       env:
         GH_TOKEN: ${{ github.token }}

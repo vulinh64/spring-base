@@ -3,6 +3,7 @@ package com.vulinh.data.entity;
 import module java.base;
 
 import com.vulinh.data.base.AbstractEntity;
+import com.vulinh.data.base.JpaIdentifiable.ConcreteJpaIdentifiable;
 import com.vulinh.data.entity.ids.PostRevisionId;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +19,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @ToString
 @Builder
-public class PostRevision extends AbstractEntity<PostRevisionId> {
+public class PostRevision extends AbstractEntity<PostRevisionId>
+    implements ConcreteJpaIdentifiable<PostRevisionId> {
 
   @Serial private static final long serialVersionUID = -4374526557871349803L;
 

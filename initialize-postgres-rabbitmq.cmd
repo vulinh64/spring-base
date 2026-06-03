@@ -9,7 +9,6 @@ if errorlevel 1 (
 )
 
 docker compose down
-docker compose -f docker-compose-1.yml down
 
 :: Create local repository for data classes
 call ./create-data-classes
