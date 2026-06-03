@@ -3,7 +3,7 @@ package com.vulinh.data.entity;
 import module java.base;
 
 import com.vulinh.data.base.AbstractEntity;
-import com.vulinh.data.base.JpaIdentifiable;
+import com.vulinh.data.base.JpaIdentifiable.DynamicJpaIdentifiable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
@@ -18,8 +18,7 @@ import org.hibernate.annotations.UuidGenerator.Style;
 @ToString
 @Builder
 @With
-public class Tag extends AbstractEntity<UUID>
-    implements JpaIdentifiable.DynamicJpaIdentifiable<UUID> {
+public class Tag extends AbstractEntity<UUID> implements DynamicJpaIdentifiable<UUID> {
 
   @Serial private static final long serialVersionUID = 5399822567855696869L;
 

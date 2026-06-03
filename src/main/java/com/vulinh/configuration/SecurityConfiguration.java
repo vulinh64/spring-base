@@ -2,7 +2,6 @@ package com.vulinh.configuration;
 
 import module java.base;
 
-import com.nimbusds.jose.HeaderParameterNames;
 import com.vulinh.configuration.CaffeineCacheConfiguration.CacheProperties;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
@@ -21,12 +20,12 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -48,7 +47,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 public class SecurityConfiguration {
 
-  static final String TOKEN_TYPE_ACCESS = "access";
   static final String INVALID_TOKEN = "invalid_token";
 
   static final String WILDCARD_ALL = "*";
@@ -58,12 +56,14 @@ public class SecurityConfiguration {
 
   private final ApplicationProperties applicationProperties;
 
+  private final HttpSecurity httpSecurity;
+
   // Skips OAuth2 token decoding entirely for no-auth URLs
   // so a stale access_token cookie can't 403 them.
   @Bean
   @Order(Integer.MIN_VALUE)
   @SneakyThrows
-  public SecurityFilterChain publicSecurityFilterChain(HttpSecurity httpSecurity) {
+  public SecurityFilterChain publicSecurityFilterChain() {
     return applyCommonSecurity(httpSecurity)
         .securityMatcher(
             applicationProperties.security().noAuthenticatedUrls().toArray(String[]::new))
@@ -74,7 +74,7 @@ public class SecurityConfiguration {
   @Bean
   @Order(0)
   @SneakyThrows
-  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+  public SecurityFilterChain securityFilterChain() {
     var security = applicationProperties.security();
 
     return applyCommonSecurity(httpSecurity)
@@ -121,8 +121,8 @@ public class SecurityConfiguration {
     decoder.setJwtValidator(
         new DelegatingOAuth2TokenValidator<>(
             JwtValidators.createDefaultWithIssuer(security.issuerUri()),
-            jwt -> expectClientName(jwt, security),
-            SecurityConfiguration::expectTokenType));
+            new JwtAudValidator(security.clientName()),
+            new JwtTypValidator("access")));
 
     return decoder;
   }
@@ -175,30 +175,6 @@ public class SecurityConfiguration {
     handlerExceptionResolver.resolveException(request, response, null, exception);
   }
 
-  private static OAuth2TokenValidatorResult expectTokenType(Jwt jwt) {
-    return TOKEN_TYPE_ACCESS.equals(jwt.getClaimAsString(HeaderParameterNames.TYPE))
-        ? OAuth2TokenValidatorResult.success()
-        : OAuth2TokenValidatorResult.failure(
-            new OAuth2Error(
-                INVALID_TOKEN,
-                "Required token type '%s' is missing".formatted(TOKEN_TYPE_ACCESS),
-                null));
-  }
-
-  private static OAuth2TokenValidatorResult expectClientName(Jwt jwt, SecurityProperties security) {
-    var expectedAudiences = security.clientName();
-
-    var audiences = jwt.getAudience();
-
-    return audiences != null && audiences.contains(expectedAudiences)
-        ? OAuth2TokenValidatorResult.success()
-        : OAuth2TokenValidatorResult.failure(
-            new OAuth2Error(
-                INVALID_TOKEN,
-                "Required audience '%s' is missing".formatted(expectedAudiences),
-                null));
-  }
-
   // Baseline shared by every SecurityFilterChain:
   // security headers, CSRF disabled, stateless session, CORS.
   @SneakyThrows
@@ -210,7 +186,6 @@ public class SecurityConfiguration {
                     .xssProtection(
                         xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
                     .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
-        .csrf(AbstractHttpConfigurer::disable)
         .sessionManagement(
             sessionManagementConfigurer ->
                 sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -256,5 +231,37 @@ public class SecurityConfiguration {
     }
 
     return result.toString();
+  }
+
+  record JwtAudValidator(String expectedAudience) implements OAuth2TokenValidator<Jwt> {
+
+    @Override
+    public OAuth2TokenValidatorResult validate(Jwt jwt) {
+      var audiences = jwt.getAudience();
+
+      return audiences != null && audiences.contains(expectedAudience)
+          ? OAuth2TokenValidatorResult.success()
+          : OAuth2TokenValidatorResult.failure(
+              new OAuth2Error(
+                  INVALID_TOKEN,
+                  "Required audience '%s' is missing".formatted(expectedAudience),
+                  null));
+    }
+  }
+
+  record JwtTypValidator(String expectedTyp) implements OAuth2TokenValidator<Jwt> {
+
+    static final String TYP_CLAIM = "typ";
+
+    @Override
+    public OAuth2TokenValidatorResult validate(Jwt jwt) {
+      return expectedTyp.equals(jwt.getClaimAsString(TYP_CLAIM))
+          ? OAuth2TokenValidatorResult.success()
+          : OAuth2TokenValidatorResult.failure(
+              new OAuth2Error(
+                  INVALID_TOKEN,
+                  "Required token type '%s' is missing".formatted(expectedTyp),
+                  null));
+    }
   }
 }
