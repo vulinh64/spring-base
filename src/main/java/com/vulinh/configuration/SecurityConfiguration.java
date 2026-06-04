@@ -57,14 +57,12 @@ public class SecurityConfiguration {
 
   private final ApplicationProperties applicationProperties;
 
-  private final HttpSecurity httpSecurity;
-
   // Skips OAuth2 token decoding entirely for no-auth URLs
   // so a stale access_token cookie can't 403 them.
   @Bean
   @Order(Integer.MIN_VALUE)
   @SneakyThrows
-  public SecurityFilterChain publicSecurityFilterChain() {
+  public SecurityFilterChain publicSecurityFilterChain(HttpSecurity httpSecurity) {
     return applyCommonSecurity(httpSecurity)
         .securityMatcher(
             applicationProperties.security().noAuthenticatedUrls().toArray(String[]::new))
@@ -75,7 +73,7 @@ public class SecurityConfiguration {
   @Bean
   @Order(0)
   @SneakyThrows
-  public SecurityFilterChain securityFilterChain() {
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
     var security = applicationProperties.security();
 
     return applyCommonSecurity(httpSecurity)
