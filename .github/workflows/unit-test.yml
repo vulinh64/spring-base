@@ -31,7 +31,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.m2/repository/com/vulinh/spring-base-commons/${{ steps.commons-version.outputs.version }}
-        key: spring-base-commons-${{ runner.os }}-${{ steps.commons-version.outputs.version }}-${{ hashFiles('pom.xml') }}
+        key: spring-base-commons-${{ runner.os }}-${{ steps.commons-version.outputs.version }}
     - name: Download and install spring-base-commons
       if: steps.cache-spring-base-commons.outputs.cache-hit != 'true'
       run: |
