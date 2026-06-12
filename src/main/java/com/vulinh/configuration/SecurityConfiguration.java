@@ -2,6 +2,7 @@ package com.vulinh.configuration;
 
 import module java.base;
 
+import com.nimbusds.jose.HeaderParameterNames;
 import com.vulinh.configuration.CaffeineCacheConfiguration.CacheProperties;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
@@ -26,7 +27,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -48,6 +48,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Slf4j
 public class SecurityConfiguration {
 
+  static final String TOKEN_TYPE_ACCESS = "access";
   static final String INVALID_TOKEN = "invalid_token";
 
   static final String WILDCARD_ALL = "*";
@@ -120,8 +121,8 @@ public class SecurityConfiguration {
     decoder.setJwtValidator(
         new DelegatingOAuth2TokenValidator<>(
             JwtValidators.createDefaultWithIssuer(security.issuerUri()),
-            new JwtAudValidator(security.clientName()),
-            new JwtTypValidator("access")));
+            jwt -> expectClientName(jwt, security),
+            SecurityConfiguration::expectTokenType));
 
     return decoder;
   }
@@ -172,6 +173,30 @@ public class SecurityConfiguration {
   private void resolveSecurityException(
       HttpServletRequest request, HttpServletResponse response, Exception exception) {
     handlerExceptionResolver.resolveException(request, response, null, exception);
+  }
+
+  private static OAuth2TokenValidatorResult expectTokenType(Jwt jwt) {
+    return TOKEN_TYPE_ACCESS.equals(jwt.getClaimAsString(HeaderParameterNames.TYPE))
+        ? OAuth2TokenValidatorResult.success()
+        : OAuth2TokenValidatorResult.failure(
+            new OAuth2Error(
+                INVALID_TOKEN,
+                "Required token type '%s' is missing".formatted(TOKEN_TYPE_ACCESS),
+                null));
+  }
+
+  private static OAuth2TokenValidatorResult expectClientName(Jwt jwt, SecurityProperties security) {
+    var expectedAudiences = security.clientName();
+
+    var audiences = jwt.getAudience();
+
+    return audiences != null && audiences.contains(expectedAudiences)
+        ? OAuth2TokenValidatorResult.success()
+        : OAuth2TokenValidatorResult.failure(
+            new OAuth2Error(
+                INVALID_TOKEN,
+                "Required audience '%s' is missing".formatted(expectedAudiences),
+                null));
   }
 
   // Baseline shared by every SecurityFilterChain:
@@ -231,37 +256,5 @@ public class SecurityConfiguration {
     }
 
     return result.toString();
-  }
-
-  record JwtAudValidator(String expectedAudience) implements OAuth2TokenValidator<Jwt> {
-
-    @Override
-    public OAuth2TokenValidatorResult validate(Jwt jwt) {
-      var audiences = jwt.getAudience();
-
-      return audiences != null && audiences.contains(expectedAudience)
-          ? OAuth2TokenValidatorResult.success()
-          : OAuth2TokenValidatorResult.failure(
-              new OAuth2Error(
-                  INVALID_TOKEN,
-                  "Required audience '%s' is missing".formatted(expectedAudience),
-                  null));
-    }
-  }
-
-  record JwtTypValidator(String expectedTyp) implements OAuth2TokenValidator<Jwt> {
-
-    static final String TYP_CLAIM = "typ";
-
-    @Override
-    public OAuth2TokenValidatorResult validate(Jwt jwt) {
-      return expectedTyp.equals(jwt.getClaimAsString(TYP_CLAIM))
-          ? OAuth2TokenValidatorResult.success()
-          : OAuth2TokenValidatorResult.failure(
-              new OAuth2Error(
-                  INVALID_TOKEN,
-                  "Required token type '%s' is missing".formatted(expectedTyp),
-                  null));
-    }
   }
 }

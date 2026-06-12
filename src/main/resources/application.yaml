@@ -26,6 +26,7 @@ application-properties:
     high-privilege-verb-urls:
       - { method: DELETE, url: /category/** }
       - { method: POST, url: /category/** }
+  p6spy.max-length: 10000
 #
 # End of application properties
 #

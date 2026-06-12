@@ -3,6 +3,7 @@ package com.vulinh;
 import com.vulinh.annotation.aspect.ExecutionTimeAspect;
 import com.vulinh.configuration.AuditorConfiguration;
 import com.vulinh.configuration.data.ApplicationProperties;
+import com.vulinh.utils.MyP6SpyLogging.Configurer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +21,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableConfigurationProperties(ApplicationProperties.class)
 @EnableAsync
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Import(ExecutionTimeAspect.class)
+@Import({ExecutionTimeAspect.class, Configurer.class})
 class SpringBaseProjectApplication {
 
   static void main(String[] args) {
