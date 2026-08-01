@@ -15,11 +15,39 @@ jobs:
         java-version: '25'
         distribution: 'corretto'
         cache: maven
+    - name: Read spring-base-parent version
+      id: parent-version
+      run: |
+        echo "Reading spring-base-parent version from pom.xml..."
+        SPRING_BASE_PARENT_VERSION="$(sed -n '/<parent>/,/<\/parent>/s:.*<version>\([^<]*\)</version>.*:\1:p' pom.xml | sed -n '1p')"
+        if [ -z "$SPRING_BASE_PARENT_VERSION" ]; then
+          echo "Failed to evaluate parent version from pom.xml"
+          exit 1
+        fi
+        echo "SPRING_BASE_PARENT_VERSION=$SPRING_BASE_PARENT_VERSION" >> "$GITHUB_ENV"
+        echo "version=$SPRING_BASE_PARENT_VERSION" >> "$GITHUB_OUTPUT"
+    - name: Cache spring-base-parent
+      id: cache-spring-base-parent
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository/com/vulinh/spring-base-parent/${{ steps.parent-version.outputs.version }}
+        key: spring-base-parent-${{ runner.os }}-${{ steps.parent-version.outputs.version }}-${{ hashFiles('pom.xml') }}
+    - name: Download and install spring-base-parent
+      if: steps.cache-spring-base-parent.outputs.cache-hit != 'true'
+      run: |
+        PARENT_POM_FILE="spring-base-parent-${SPRING_BASE_PARENT_VERSION}.pom"
+        PARENT_M2_PATH="$HOME/.m2/repository/com/vulinh/spring-base-parent/${SPRING_BASE_PARENT_VERSION}"
+        curl -fL \
+          -o "$PARENT_POM_FILE" \
+          "https://github.com/vulinh64/spring-base-parent/releases/download/${SPRING_BASE_PARENT_VERSION}/${PARENT_POM_FILE}"
+        mkdir -p "$PARENT_M2_PATH"
+        cp "$PARENT_POM_FILE" "$PARENT_M2_PATH/$PARENT_POM_FILE"
+        rm -f "$PARENT_M2_PATH"/*.lastUpdated
     - name: Read spring-base-commons version
       id: commons-version
       run: |
         echo "Reading spring-base-commons version from pom.xml \${spring-base-commons.version}..."
-        SPRING_BASE_COMMONS_VERSION="$(mvn help:evaluate -Dexpression="spring-base-commons.version" -q -DforceStdout 2>/dev/null | sed -n '/^[0-9][0-9A-Za-z_.-]*$/ { p; q; }')"
+        SPRING_BASE_COMMONS_VERSION="$(./mvnw help:evaluate -Dexpression="spring-base-commons.version" -q -DforceStdout 2>/dev/null | sed -n '/^[0-9][0-9A-Za-z_.-]*$/ { p; q; }')"
         if [ -z "$SPRING_BASE_COMMONS_VERSION" ]; then
           echo "Failed to evaluate spring-base-commons.version from pom.xml"
           exit 1
@@ -39,7 +67,7 @@ jobs:
           --repo vulinh64/spring-base-commons \
           --pattern "spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar" \
           --dir .
-        mvn install:install-file \
+        ./mvnw install:install-file \
           -Dfile="spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar" \
           -DgroupId=com.vulinh \
           -DartifactId=spring-base-commons \
@@ -48,4 +76,4 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Run unit tests
-      run: mvn clean verify
+      run: ./mvnw clean verify

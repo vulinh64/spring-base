@@ -3,36 +3,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.14</version>
+        <groupId>com.vulinh</groupId>
+        <artifactId>spring-base-parent</artifactId>
+        <version>1.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.vulinh</groupId>
     <artifactId>spring-base</artifactId>
     <version>3.0.0-alpha</version>
     <name>Spring Base project</name>
     <description>Your dumb comments go boom!</description>
 
     <properties>
-        <java.version>25</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- https://github.com/vulinh64/spring-base-commons/releases -->
-        <spring-base-commons.version>3.1.0</spring-base-commons.version>
-
         <!-- CVE Fixes: START -->
-
-        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core/versions -->
-        <log4j2.version>2.25.4</log4j2.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/versions -->
         <commons-lang3.version>3.20.0</commons-lang3.version>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io/versions -->
-        <common-io.version>2.22.0</common-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/versions -->
         <commons-collections4.version>4.5.0</commons-collections4.version>
@@ -42,56 +31,20 @@
 
         <!-- CVE Fixes: END -->
 
-        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-        <mapstruct.version>1.6.3</mapstruct.version>
-
-        <!-- The property "querydsl.version" is reserved by Spring, do not use that! -->
-        <!-- https://mvnrepository.com/artifact/io.github.openfeign.querydsl/querydsl-jpa -->
-        <openfeign.querydsl.version>7.1</openfeign.querydsl.version>
-
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <guava.version>33.6.0-jre</guava.version>
 
-        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-        <springdoc.openapi.version>2.8.17</springdoc.openapi.version>
-
         <!-- https://mvnrepository.com/artifact/com.sanctionco.jmail/jmail -->
         <jmail.version>2.1.0</jmail.version>
-
-        <!-- https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter -->
-        <p6spy-springboot.version>1.12.1</p6spy-springboot.version>
 
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <jsoup.version>1.22.2</jsoup.version>
 
         <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark/versions -->
         <commonmark.version>0.28.0</commonmark.version>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-stream-rabbit -->
-        <spring-cloud-starter-stream-rabbit.version>4.3.2</spring-cloud-starter-stream-rabbit.version>
-
-        <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine/versions -->
-        <caffeine.version>3.2.3</caffeine.version>
     </properties>
 
     <dependencies>
-        <!-- BEGIN: Spring Logging -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
-        <!-- END: Spring Logging -->
-
         <!-- BEGIN: Spring Base -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,21 +64,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-            <version>${spring-cloud-starter-stream-rabbit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <!-- END: Spring Base -->
 
@@ -136,8 +79,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <!-- END: PostgreSQL-->
 
@@ -148,29 +91,6 @@
         </dependency>
         <!-- END: Liquibase -->
 
-        <!-- BEGIN: Project Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <!-- END: Project Lombok -->
-
-        <!-- BEGIN: Mapstruct /w annotation processor-->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
-        <!-- END: Mapstruct /w annotation processor-->
-
-        <!-- BEGIN: SQL spying library -->
-        <dependency>
-            <groupId>com.github.gavlyukovskiy</groupId>
-            <artifactId>p6spy-spring-boot-starter</artifactId>
-            <version>${p6spy-springboot.version}</version>
-        </dependency>
-        <!-- END: SQL spying library -->
-
         <!-- BEGIN: JMail validation library -->
         <dependency>
             <groupId>com.sanctionco.jmail</groupId>
@@ -178,24 +98,6 @@
             <version>${jmail.version}</version>
         </dependency>
         <!-- END: JMail validation library -->
-
-        <!-- BEGIN: Swagger UI -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>${springdoc.openapi.version}</version>
-        </dependency>
-        <!-- END: Swagger UI -->
-
-        <!-- BEGIN: QueryDSL /wo annotation processor -->
-        <!-- The original QueryDSL is no longer maintained (2024-11-12) -->
-        <!-- Switching to OpenFeign's QueryDSL -->
-        <dependency>
-            <groupId>io.github.openfeign.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-            <version>${openfeign.querydsl.version}</version>
-        </dependency>
-        <!-- END: QueryDSL /wo annotation processor -->
 
         <!-- BEGIN: Google Guava -->
         <dependency>
@@ -224,7 +126,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${common-io.version}</version>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>
@@ -239,119 +141,13 @@
             <artifactId>caffeine</artifactId>
             <version>${caffeine.version}</version>
         </dependency>
-
-        <!-- BEGIN: JUnit Test -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- END: JUnit Test -->
-
-        <!-- Custom dependency -->
-        <dependency>
-            <groupId>com.vulinh</groupId>
-            <artifactId>spring-base-commons</artifactId>
-            <version>${spring-base-commons.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>app</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>
-                        com.vulinh.SpringBaseProjectApplication
-                    </mainClass>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.hibernate.orm</groupId>
-                            <artifactId>hibernate-jpamodelgen</artifactId>
-                            <version>${hibernate.version}</version>
-                        </path>
-
-                        <!-- The original QueryDSL is no longer maintained (2024-11-12) -->
-                        <!-- Switching to OpenFeign's QueryDSL -->
-                        <!-- See https://github.com/querydsl/querydsl/issues/3131#issuecomment-1549255382 -->
-                        <!-- The link above might be outdated already, but is kept for historical value -->
-                        <!-- Everything else is subjective to the whim of IntelliJ's stability -->
-                        <path>
-                            <groupId>io.github.openfeign.querydsl</groupId>
-                            <artifactId>querydsl-apt</artifactId>
-                            <version>${openfeign.querydsl.version}</version>
-                            <classifier>jakarta</classifier>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!-- This is needed to clear away Mockito dynamically loaded agents warning -->
-                    <argLine>
-                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar
-                        -Xshare:off
-                    </argLine>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/*IT.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <!-- This is needed to clear away Mockito dynamically loaded agents warning -->
-                    <argLine>
-                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar
-                        -Xshare:off
-                    </argLine>
-                    <includes>
-                        <include>**/*IT.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/*Test.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 </project>

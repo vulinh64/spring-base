@@ -56,6 +56,7 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:spring-base}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:123456}
+  jpa.open-in-view: false
   # Make your default spring boot logging colorful (if you are using Community version lmao)
   output.ansi.enabled: ALWAYS
   threads.virtual.enabled: ${VIRTUAL_THREADS_ENABLED:true} # Make use of Virtual Threads if possible
@@ -69,14 +70,6 @@ spring:
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.utils.MyP6SpyLogging
   logging: CUSTOM
-management.endpoints.web:
-  base-path: ''
-  exposure.include: health
-management.endpoint.health:
-  probes.enabled: true
-  group:
-    liveness.include: livenessState
-    readiness.include: readinessState,db,rabbit
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
