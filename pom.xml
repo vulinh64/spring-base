@@ -12,8 +12,6 @@
 
     <artifactId>spring-base</artifactId>
     <version>3.0.0-alpha</version>
-    <name>Spring Base project</name>
-    <description>Your dumb comments go boom!</description>
 
     <properties>
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io/versions -->
