@@ -19,7 +19,9 @@ jobs:
       id: parent-version
       run: |
         echo "Reading spring-base-parent version from pom.xml..."
+        # Extract the first <version> declared inside Maven's <parent> section.
         SPRING_BASE_PARENT_VERSION="$(sed -n '/<parent>/,/<\/parent>/s:.*<version>\([^<]*\)</version>.*:\1:p' pom.xml | sed -n '1p')"
+        # Stop before downloading if the expected parent version cannot be read.
         if [ -z "$SPRING_BASE_PARENT_VERSION" ]; then
           echo "Failed to evaluate parent version from pom.xml"
           exit 1
@@ -35,19 +37,25 @@ jobs:
     - name: Download and install spring-base-parent
       if: steps.cache-spring-base-parent.outputs.cache-hit != 'true'
       run: |
+        # Build the GitHub release asset name and its Maven local-repository path.
         PARENT_POM_FILE="spring-base-parent-${SPRING_BASE_PARENT_VERSION}.pom"
         PARENT_M2_PATH="$HOME/.m2/repository/com/vulinh/spring-base-parent/${SPRING_BASE_PARENT_VERSION}"
+        # Download the parent POM release asset, following GitHub's redirect.
         curl -fL \
           -o "$PARENT_POM_FILE" \
           "https://github.com/vulinh64/spring-base-parent/releases/download/${SPRING_BASE_PARENT_VERSION}/${PARENT_POM_FILE}"
+        # Place the POM where Maven resolves locally installed parent artifacts.
         mkdir -p "$PARENT_M2_PATH"
         cp "$PARENT_POM_FILE" "$PARENT_M2_PATH/$PARENT_POM_FILE"
+        # Remove any prior failed-resolution marker for this artifact.
         rm -f "$PARENT_M2_PATH"/*.lastUpdated
     - name: Read spring-base-commons version
       id: commons-version
       run: |
         echo "Reading spring-base-commons version from pom.xml \${spring-base-commons.version}..."
+        # Evaluate the inherited Maven property and keep only the version value.
         SPRING_BASE_COMMONS_VERSION="$(./mvnw help:evaluate -Dexpression="spring-base-commons.version" -q -DforceStdout 2>/dev/null | sed -n '/^[0-9][0-9A-Za-z_.-]*$/ { p; q; }')"
+        # Do not attempt a download when the property is missing or invalid.
         if [ -z "$SPRING_BASE_COMMONS_VERSION" ]; then
           echo "Failed to evaluate spring-base-commons.version from pom.xml"
           exit 1
@@ -63,10 +71,12 @@ jobs:
     - name: Download and install spring-base-commons
       if: steps.cache-spring-base-commons.outputs.cache-hit != 'true'
       run: |
+        # Download the versioned commons JAR from its GitHub release.
         gh release download "$SPRING_BASE_COMMONS_VERSION" \
           --repo vulinh64/spring-base-commons \
           --pattern "spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar" \
           --dir .
+        # Install the downloaded JAR in Maven's local repository under its coordinates.
         ./mvnw install:install-file \
           -Dfile="spring-base-commons-${SPRING_BASE_COMMONS_VERSION}.jar" \
           -DgroupId=com.vulinh \
@@ -76,4 +86,5 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Run unit tests
+      # Clean previous build output, then run unit and integration-test lifecycle phases.
       run: ./mvnw clean verify
