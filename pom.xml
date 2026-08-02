@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.vulinh</groupId>
         <artifactId>spring-base-parent</artifactId>
@@ -15,21 +16,11 @@
     <description>Your dumb comments go boom!</description>
 
     <properties>
-        <!-- CVE Fixes: START -->
-
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/versions -->
-        <commons-lang3.version>3.20.0</commons-lang3.version>
-
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io/versions -->
         <commons-io.version>2.22.0</commons-io.version>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/versions -->
         <commons-collections4.version>4.5.0</commons-collections4.version>
-
-        <!-- https://mvnrepository.com/artifact/io.netty/netty-codec/versions -->
-        <netty.version>4.2.13.Final</netty.version>
-
-        <!-- CVE Fixes: END -->
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <guava.version>33.6.0-jre</guava.version>
@@ -66,11 +57,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+        <!-- END: Spring Base -->
+
+        <!-- RabbitMQ Messaging, version is managed by parent POM -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
         </dependency>
-        <!-- END: Spring Base -->
+
+        <!-- OpenAPI + Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
 
         <!-- BEGIN: PostgreSQL-->
         <dependency>
@@ -140,10 +139,6 @@
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
             <version>${caffeine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
     </dependencies>
 
