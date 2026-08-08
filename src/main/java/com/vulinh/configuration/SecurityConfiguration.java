@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -36,6 +37,9 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -64,7 +68,12 @@ public class SecurityConfiguration {
   public SecurityFilterChain publicSecurityFilterChain(HttpSecurity httpSecurity) {
     return applyCommonSecurity(httpSecurity)
         .securityMatcher(
-            applicationProperties.security().noAuthenticatedUrls().toArray(String[]::new))
+            new OrRequestMatcher(
+                Stream.concat(
+                        applicationProperties.security().noAuthenticatedUrls().stream()
+                            .map(PathPatternRequestMatcher.withDefaults()::matcher),
+                        Stream.of(EndpointRequest.toAnyEndpoint()))
+                    .toArray(RequestMatcher[]::new)))
         .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
         .build();
   }

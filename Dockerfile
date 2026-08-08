@@ -17,6 +17,7 @@ ENV PARENT_NAME=spring-base-parent
 ENV COMMONS_NAME=spring-base-commons
 ENV COMMONS_GROUP_ID=com.vulinh
 ENV GITHUB_USER=vulinh64
+ARG HEALTH_CHECK_VERSION=1.0.1
 
 # Copy the main Maven configuration first for dependency-layer caching
 COPY pom.xml ./
@@ -88,6 +89,10 @@ RUN COMMONS_VERSION="$(cat commons-version.txt)" \
 # Copy source code
 COPY src/ src/
 
+# Download the versioned, shared Docker health check source.
+RUN wget -O HealthCheck.java \
+    "https://raw.githubusercontent.com/${GITHUB_USER}/spring-base-squad/${HEALTH_CHECK_VERSION}/health-check/HealthCheck.java"
+
 # Build the application using Maven
 RUN mvn clean package -DskipTests
 
@@ -106,9 +111,10 @@ RUN jdeps \
     > "${DEPS_FILE}"
 
 # Create a custom JRE containing only the required modules
-# jdk.crypto.ec is required for HTTPS but may not be detected by jdeps
+# jdk.crypto.ec is required for HTTPS but may not be detected by jdeps.
+# jdk.compiler is required for the source-file Docker health check.
 RUN jlink \
-    --add-modules "$(cat "${DEPS_FILE}"),jdk.crypto.ec" \
+    --add-modules "$(cat "${DEPS_FILE}"),jdk.crypto.ec,jdk.compiler" \
     --strip-java-debug-attributes \
     --compress 2 \
     --no-header-files \
@@ -135,6 +141,9 @@ RUN addgroup -S "${GROUP}" \
     && mkdir -p "/${WORKDIR}" \
     && chown -R "${USER}:${GROUP}" "/${WORKDIR}"
 
+# Copy the shared Docker health check companion.
+COPY --from=build /usr/src/project/HealthCheck.java /${WORKDIR}/HealthCheck.java
+
 # Copy the application JAR from the build stage
 COPY --from=build \
     "/usr/src/project/target/${APP_NAME}" \
@@ -143,6 +152,11 @@ COPY --from=build \
 WORKDIR "/${WORKDIR}"
 
 USER "${USER}"
+
+# Liveness deliberately remains up when external dependencies such as PostgreSQL
+# or RabbitMQ are unavailable.
+HEALTHCHECK --interval=30s --timeout=35s --start-period=60s --retries=3 \
+    CMD ["java", "HealthCheck.java", "http://localhost:8088/actuator/health/liveness"]
 
 #
 # Run the application with container-aware JVM settings

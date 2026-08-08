@@ -17,8 +17,6 @@ application-properties:
       - { method: GET, url: /category/** }
       - { method: GET, url: /comment/** }
     no-authenticated-urls:
-      - /health
-      - /health/**
       - /free/**
       - /v3/api-docs/**
       - /swagger-ui/**
@@ -73,3 +71,12 @@ decorator.datasource.p6spy:
 springdoc.swagger-ui:
   path: /swagger-ui
   disable-swagger-default-url: true
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,env
