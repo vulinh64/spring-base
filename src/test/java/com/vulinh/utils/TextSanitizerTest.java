@@ -58,9 +58,9 @@ class TextSanitizerTest {
         """,
         """
         This is HR
-        
+
         ---
-        
+
         This is not HR
         """
       })
@@ -84,8 +84,7 @@ class TextSanitizerTest {
   void testDetectXss_maliciousContent(String input) {
     var exception =
         assertThrows(
-            XSSViolationException.class,
-            () -> TextSanitizer.detectXss(input, "postContent"));
+            XSSViolationException.class, () -> TextSanitizer.detectXss(input, "postContent"));
 
     assertEquals("postContent", exception.getFieldName());
   }

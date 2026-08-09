@@ -2,10 +2,10 @@ package com.vulinh.service.taxcalculator;
 
 import module java.base;
 
-import com.vulinh.service.taxcalculator.TaxSupport.InsuranceDTO;
-import com.vulinh.service.taxcalculator.TaxSupport.PersonalTaxDTO;
 import com.vulinh.service.taxcalculator.TaxResponse.Insurance;
 import com.vulinh.service.taxcalculator.TaxResponse.PersonalTax;
+import com.vulinh.service.taxcalculator.TaxSupport.InsuranceDTO;
+import com.vulinh.service.taxcalculator.TaxSupport.PersonalTaxDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

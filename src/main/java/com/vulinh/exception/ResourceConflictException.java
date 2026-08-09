@@ -16,8 +16,9 @@ import com.vulinh.utils.validator.ApplicationError;
 ///
 /// - Any attempt to create a resource violates a uniqueness constraint
 ///
-/// This exception corresponds to a <code>409 Conflict</code> HTTP status code in REST APIs and indicates that the
-/// request could not be completed due to a conflict with the current state of the target resource.
+/// This exception corresponds to a <code>409 Conflict</code> HTTP status code in REST APIs and
+/// indicates that the request could not be completed due to a conflict with the current state of
+/// the target resource.
 public class ResourceConflictException extends ApplicationException {
 
   @Serial private static final long serialVersionUID = 0L;
@@ -25,23 +26,26 @@ public class ResourceConflictException extends ApplicationException {
   /// Creates a [ResourceConflictException] with the specified message and error details.
   ///
   /// @param message The detailed message describing the resource conflict
-  /// @param applicationError The specific application error encapsulating the error code and details
-  /// @param args Variable arguments that will be used for message interpolation (such as the conflicting field value)
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
+  /// @param args Variable arguments that will be used for message interpolation (such as the
+  ///   conflicting field value)
   /// @return A new [ResourceConflictException] instance
   public static ResourceConflictException resourceConflictException(
       String message, ApplicationError applicationError, Object... args) {
     return new ResourceConflictException(message, applicationError, args);
   }
 
-  /// Constructs a new [ResourceConflictException] with the specified message, error details, and interpolation
-  /// arguments.
+  /// Constructs a new [ResourceConflictException] with the specified message, error details, and
+  /// interpolation arguments.
   ///
-  /// @param message The detailed message describing the resource conflict (e.g., "User with email 'email@example.com'
-  /// already exists")
-  /// @param applicationError The specific application error encapsulating the error code and details
-  /// @param args Variable arguments that will be used for message interpolation (such as the conflicting field value)
-  ResourceConflictException(
-      String message, ApplicationError applicationError, Object... args) {
+  /// @param message The detailed message describing the resource conflict (e.g., "User with email
+  ///   'email@example.com' already exists")
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
+  /// @param args Variable arguments that will be used for message interpolation (such as the
+  ///   conflicting field value)
+  ResourceConflictException(String message, ApplicationError applicationError, Object... args) {
     super(message, applicationError, null, args);
   }
 }

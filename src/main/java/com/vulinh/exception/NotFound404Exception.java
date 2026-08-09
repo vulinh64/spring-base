@@ -20,19 +20,21 @@ public class NotFound404Exception extends ApplicationException {
   @Serial private static final long serialVersionUID = 0L;
 
   /// Creates a [NotFound404Exception] specifically for a missing Post entity.
+  ///
   /// @param postId The identifier of the Post that was not found
   /// @return A new [NotFound404Exception] instance for the missing Post
   public static NotFound404Exception postNotFound(UUID postId) {
-    return entityNotFound(
-        EntityType.POST, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
+    return entityNotFound(EntityType.POST, postId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID);
   }
 
-  /// Creates a [NotFound404Exception] with a formatted message indicating which entity could not
-  /// be found by its ID.
+  /// Creates a [NotFound404Exception] with a formatted message indicating which entity could not be
+  /// found by its ID.
   ///
-  /// @param entityType The name of the entity type that was being searched for (e.g., "Post", "Comment")
+  /// @param entityType The name of the entity type that was being searched for (e.g., "Post",
+  ///   "Comment")
   /// @param entityId The identifier used to search for the entity
-  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
   /// @return A new [NotFound404Exception] instance with a formatted message
   public static NotFound404Exception entityNotFound(
       EntityType entityType, Object entityId, ApplicationError applicationError) {
@@ -42,23 +44,27 @@ public class NotFound404Exception extends ApplicationException {
         entityType);
   }
 
-  /// Constructs a new [NotFound404Exception] with the specified message, error details, and interpolation arguments.
+  /// Constructs a new [NotFound404Exception] with the specified message, error details, and
+  /// interpolation arguments.
   ///
   /// @param message The detailed message describing which entity was not found
-  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
   /// @param args Variable arguments that will be used for message interpolation
   NotFound404Exception(String message, ApplicationError applicationError, Object... args) {
     this(message, applicationError, null, args);
   }
 
-  /// Constructs a new `NotFoundException` with the specified message, error details, cause, and interpolation
-  /// arguments.
+  /// Constructs a new `NotFoundException` with the specified message, error details, cause, and
+  /// interpolation arguments.
   ///
   /// @param message The detailed message describing which entity was not found
-  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
   /// @param throwable The cause of this exception
   /// @param args Variable arguments that will be used for message interpolation
-  NotFound404Exception(String message, ApplicationError applicationError, Throwable throwable, Object... args) {
+  NotFound404Exception(
+      String message, ApplicationError applicationError, Throwable throwable, Object... args) {
     super(message, applicationError, throwable, args);
   }
 }

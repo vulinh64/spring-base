@@ -47,8 +47,7 @@ public interface PostAPI {
   @PatchMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   ResponseEntity<Void> editPost(
-          @PathVariable UUID postId,
-          @RequestBody PostCreationRequest postCreationRequest);
+      @PathVariable UUID postId, @RequestBody PostCreationRequest postCreationRequest);
 
   @DeleteMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
