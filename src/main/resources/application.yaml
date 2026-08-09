@@ -12,15 +12,12 @@ application-properties:
     # Expected `aud` claim on incoming access tokens. Must match the client_id registered
     # for this service on the auth server.
     client-name: ${JWT_CLIENT_NAME:${spring.application.name}}
-    no-authenticated-verb-urls:
+    no-auth-method-urls:
       - { method: GET, url: /post/** }
       - { method: GET, url: /category/** }
       - { method: GET, url: /comment/** }
-    no-authenticated-urls:
+    no-auth-urls:
       - /free/**
-      - /v3/api-docs/**
-      - /swagger-ui/**
-      - /webjars/**
     high-privilege-verb-urls:
       - { method: DELETE, url: /category/** }
       - { method: POST, url: /category/** }
@@ -68,9 +65,6 @@ spring:
 decorator.datasource.p6spy:
   custom-appender-class: com.vulinh.utils.MyP6SpyLogging
   logging: CUSTOM
-springdoc.swagger-ui:
-  path: /swagger-ui
-  disable-swagger-default-url: true
 management:
   endpoint:
     health:

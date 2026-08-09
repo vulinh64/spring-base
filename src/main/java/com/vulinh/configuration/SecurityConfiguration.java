@@ -6,6 +6,7 @@ import com.vulinh.configuration.CaffeineCacheConfiguration.CacheProperties;
 import com.vulinh.configuration.data.ApplicationProperties;
 import com.vulinh.configuration.data.ApplicationProperties.SecurityProperties;
 import com.vulinh.data.constant.UserRole;
+import com.vulinh.data.config.SecurityPathUtils;
 import com.vulinh.utils.CollectionHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -37,9 +37,6 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -67,13 +64,7 @@ public class SecurityConfiguration {
   @SneakyThrows
   public SecurityFilterChain publicSecurityFilterChain(HttpSecurity httpSecurity) {
     return applyCommonSecurity(httpSecurity)
-        .securityMatcher(
-            new OrRequestMatcher(
-                Stream.concat(
-                        applicationProperties.security().noAuthenticatedUrls().stream()
-                            .map(PathPatternRequestMatcher.withDefaults()::matcher),
-                        Stream.of(EndpointRequest.toAnyEndpoint()))
-                    .toArray(RequestMatcher[]::new)))
+        .securityMatcher(SecurityPathUtils.publicApi(applicationProperties.security()))
         .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
         .build();
   }
@@ -203,10 +194,6 @@ public class SecurityConfiguration {
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
           authorizeHttpRequestsCustomizer,
       SecurityProperties securityProperties) {
-    for (var verbUrl : securityProperties.noAuthenticatedVerbUrls()) {
-      authorizeHttpRequestsCustomizer.requestMatchers(verbUrl.method(), verbUrl.url()).permitAll();
-    }
-
     for (var privilegeVerbUrl : securityProperties.highPrivilegeVerbUrls()) {
       authorizeHttpRequestsCustomizer
           .requestMatchers(privilegeVerbUrl.method(), privilegeVerbUrl.url())

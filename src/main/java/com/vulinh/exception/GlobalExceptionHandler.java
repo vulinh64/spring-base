@@ -6,6 +6,7 @@ import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.locale.LocalizationSupport;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.ApplicationError;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.TypeMismatchException;
@@ -111,22 +112,30 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
   @ExceptionHandler(AuthenticationServiceException.class)
   @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
   GenericResponse<Object> handleAuthenticationServiceException(
-      AuthenticationServiceException authenticationServiceException) {
+      AuthenticationServiceException authenticationServiceException,
+      HttpServletRequest httpServletRequest) {
     return securityError(
-        ServiceErrorCode.MESSAGE_AUTH_SERVICE_UNAVAILABLE, authenticationServiceException);
+        ServiceErrorCode.MESSAGE_AUTH_SERVICE_UNAVAILABLE,
+        authenticationServiceException,
+        httpServletRequest);
   }
 
   @ExceptionHandler(AuthenticationException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
   GenericResponse<Object> handleInvalidBearerTokenException(
-      AuthenticationException authenticationException) {
-    return securityError(ServiceErrorCode.MESSAGE_INVALID_AUTHENTICATION, authenticationException);
+      AuthenticationException authenticationException, HttpServletRequest request) {
+    return securityError(
+        ServiceErrorCode.MESSAGE_INVALID_AUTHENTICATION, authenticationException, request);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)
-  GenericResponse<Object> handleAccessDeniedException(AccessDeniedException accessDeniedException) {
-    return securityError(ServiceErrorCode.MESSAGE_INSUFFICIENT_PERMISSION, accessDeniedException);
+  GenericResponse<Object> handleAccessDeniedException(
+      AccessDeniedException accessDeniedException, HttpServletRequest httpServletRequest) {
+    return securityError(
+        ServiceErrorCode.MESSAGE_INSUFFICIENT_PERMISSION,
+        accessDeniedException,
+        httpServletRequest);
   }
 
   static GenericResponse<Object> badRequestBody(String additionalMessage) {
@@ -145,12 +154,19 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
   }
 
   static GenericResponse<Object> securityError(
-      ApplicationError applicationError, Throwable throwable, Object... args) {
-    log.info("{} ({})", throwable.getMessage(), throwable.getClass().getName());
+      ApplicationError applicationError,
+      Throwable throwable,
+      HttpServletRequest httpServletRequest) {
+    log.info(
+        "{} ({} {}) ({})",
+        throwable.getMessage(),
+        httpServletRequest.getMethod(),
+        httpServletRequest.getRequestURI(),
+        throwable.getClass().getName());
 
     return GenericResponse.builder()
         .errorCode(applicationError)
-        .displayMessage(LocalizationSupport.getParsedMessage(applicationError, args))
+        .displayMessage(LocalizationSupport.getParsedMessage(applicationError))
         .build();
   }
 }
