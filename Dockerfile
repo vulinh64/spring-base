@@ -166,10 +166,10 @@ HEALTHCHECK --interval=30s --timeout=35s --start-period=60s --retries=3 \
 # MaxRAMPercentage: Limit maximum heap to 75% of container memory
 # InitialRAMPercentage: Start with 50% of container memory
 # MaxMetaspaceSize: Limit metaspace to 512 MB
-ENTRYPOINT ["java", \
-    "-XX:+UseCompactObjectHeaders", \
-    "-XX:MaxRAMPercentage=75.0", \
-    "-XX:InitialRAMPercentage=50.0", \
-    "-XX:MaxMetaspaceSize=512m", \
-    "-jar", \
-    "app.jar"]
+ENTRYPOINT ["/bin/sh", "-c", "exec java \
+    -XX:+UseCompactObjectHeaders \
+    -XX:MaxRAMPercentage=75.0 \
+    -XX:InitialRAMPercentage=50.0 \
+    -XX:MaxMetaspaceSize=512m \
+    -Dspring.profiles.active=\"${SPRING_PROFILES_ACTIVE:-local}\" \
+    -jar app.jar \"$@\"", "--"]
