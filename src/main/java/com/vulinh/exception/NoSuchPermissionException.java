@@ -14,8 +14,8 @@ import com.vulinh.utils.validator.ApplicationError;
 ///
 /// - Access is attempted to a protected resource without the required permission level
 ///
-/// Only superusers with overriding permissions would typically be allowed to perform the
-/// operations that trigger this exception for regular users.
+/// Only superusers with overriding permissions would typically be allowed to perform the operations
+/// that trigger this exception for regular users.
 public class NoSuchPermissionException extends ApplicationException {
 
   @Serial private static final long serialVersionUID = 0L;
@@ -23,7 +23,8 @@ public class NoSuchPermissionException extends ApplicationException {
   /// Creates a [NoSuchPermissionException] with the specified message and error details.
   ///
   /// @param message The detailed message describing the permission violation
-  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
   /// @param args Variable arguments that will be used for message interpolation
   /// @return A new [NoSuchPermissionException] instance
   public static NoSuchPermissionException noSuchPermissionException(
@@ -31,21 +32,23 @@ public class NoSuchPermissionException extends ApplicationException {
     return new NoSuchPermissionException(message, applicationError, args);
   }
 
-  /// Constructs a new [NoSuchPermissionException] with the specified message, error details,
-  /// and interpolation arguments.
+  /// Constructs a new [NoSuchPermissionException] with the specified message, error details, and
+  /// interpolation arguments.
   ///
   /// @param message The detailed message describing the permission violation
-  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
   /// @param args Variable arguments that will be used for message interpolation
   NoSuchPermissionException(String message, ApplicationError applicationError, Object... args) {
     this(message, applicationError, null, args);
   }
 
-  /// Constructs a new `NoSuchPermissionException` with the specified message, error details, cause, and interpolation
-  /// arguments.
+  /// Constructs a new `NoSuchPermissionException` with the specified message, error details, cause,
+  /// and interpolation arguments.
   ///
   /// @param message The detailed message describing the permission violation
-  /// @param applicationError The specific application error encapsulating the error code and details
+  /// @param applicationError The specific application error encapsulating the error code and
+  ///   details
   /// @param throwable The cause of this exception
   /// @param args Variable arguments that will be used for message interpolation
   NoSuchPermissionException(

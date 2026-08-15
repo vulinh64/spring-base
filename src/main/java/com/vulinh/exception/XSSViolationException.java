@@ -6,8 +6,8 @@ import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.ApplicationError;
 import lombok.Getter;
 
-/// Exception thrown when user-submitted content contains disallowed HTML tags or attributes
-/// that fail Jsoup's safety validation. This exception carries detailed context for backend
+/// Exception thrown when user-submitted content contains disallowed HTML tags or attributes that
+/// fail Jsoup's safety validation. This exception carries detailed context for backend
 /// investigation: the field name where the violation was detected, the offending content
 /// (truncated), and the sanitized version showing what Jsoup would have produced.
 @Getter

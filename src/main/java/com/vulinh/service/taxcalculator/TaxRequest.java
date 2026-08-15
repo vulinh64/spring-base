@@ -42,7 +42,8 @@ public record TaxRequest(
     // Probation percentage must be between 85% and 100%
     if (isProbation
         && (Double.compare(probationPercentage, ProbationRate.MIN_PERCENTAGE.percentage()) < 0
-            || Double.compare(probationPercentage, ProbationRate.MAX_PERCENTAGE.percentage()) > 0)) {
+            || Double.compare(probationPercentage, ProbationRate.MAX_PERCENTAGE.percentage())
+                > 0)) {
       throw new TaxCalculatorException("Invalid probation percentage");
     }
   }
