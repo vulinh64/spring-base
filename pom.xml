@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.vulinh</groupId>
         <artifactId>spring-base-parent</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -17,14 +17,11 @@
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io/versions -->
         <commons-io.version>2.22.0</commons-io.version>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/versions -->
-        <commons-collections4.version>4.5.0</commons-collections4.version>
-
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <guava.version>33.6.0-jre</guava.version>
 
         <!-- https://mvnrepository.com/artifact/com.sanctionco.jmail/jmail -->
-        <jmail.version>2.1.0</jmail.version>
+        <jmail.version>2.2.0</jmail.version>
 
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <jsoup.version>1.23.1</jsoup.version>
@@ -116,14 +113,6 @@
             <version>${commons-io.version}</version>
         </dependency>
         <!-- END: Commons IO -->
-
-        <!-- BEGIN: Commons Collection 4 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections4.version}</version>
-        </dependency>
-        <!-- END: Commons Collection 4 -->
 
         <!-- BEGIN: Caffeine -->
         <dependency>
