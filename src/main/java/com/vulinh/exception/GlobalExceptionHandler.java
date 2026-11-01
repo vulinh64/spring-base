@@ -6,10 +6,12 @@ import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.locale.LocalizationSupport;
 import com.vulinh.locale.ServiceErrorCode;
 import com.vulinh.utils.validator.ApplicationError;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,6 +24,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends CommonExceptionHandler {
+
+  @ExceptionHandler({OptimisticLockingFailureException.class, OptimisticLockException.class})
+  @ResponseStatus(HttpStatus.CONFLICT)
+  GenericResponse<Object> handleOptimisticLockException(Exception exception) {
+    return logAndReturn(
+        ResourceConflictException.resourceConflictException(
+            "Post changed during persistence: %s".formatted(exception.getClass().getSimpleName()),
+            ServiceErrorCode.MESSAGE_POST_VERSION_CONFLICT));
+  }
 
   @ExceptionHandler(AuthorizationException.class)
   @ResponseStatus(HttpStatus.FORBIDDEN)

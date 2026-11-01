@@ -5,6 +5,7 @@ import module java.base;
 import com.vulinh.controller.api.PostAPI;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.request.PostEditRequest;
 import com.vulinh.data.dto.response.*;
 import com.vulinh.service.post.PostRevisionService;
 import com.vulinh.service.post.PostService;
@@ -55,8 +56,8 @@ public class PostController implements PostAPI {
   }
 
   @Override
-  public ResponseEntity<Void> editPost(UUID postId, PostCreationRequest postCreationRequest) {
-    return ResponseUtils.returnOkOrNoContent(postService.editPost(postId, postCreationRequest));
+  public ResponseEntity<Void> editPost(UUID postId, PostEditRequest postEditRequest) {
+    return ResponseUtils.returnOkOrNoContent(postService.editPost(postId, postEditRequest));
   }
 
   @Override

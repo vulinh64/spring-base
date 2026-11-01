@@ -17,13 +17,8 @@ public record PostCreationRequest(
     String postContent,
     String slug,
     UUID categoryId,
-    Set<String> tags) {
-
-  // Testing only
-  public PostCreationRequest(
-      String title, String excerpt, String postContent, String slug, Set<String> e) {
-    this(title, excerpt, postContent, slug, null, e);
-  }
+    Set<String> tags)
+    implements PostRequest<PostCreationRequest> {
 
   public PostCreationRequest {
     title = TextSanitizer.sanitize(TitleCaseUtils.toTitleCase(title));

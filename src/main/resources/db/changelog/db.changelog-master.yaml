@@ -32,3 +32,9 @@ databaseChangeLog:
   - include:
       file: 0011-add-post-fulltext-search.sql
       relativeToChangelogFile: true
+  - include:
+      file: 0012-add-post-version.sql
+      relativeToChangelogFile: true
+  - include:
+      file: 0013-add-tag-display-name-unique.sql
+      relativeToChangelogFile: true

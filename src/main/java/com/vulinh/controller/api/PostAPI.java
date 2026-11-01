@@ -7,6 +7,7 @@ import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.constant.EndpointConstant.PostEndpoint;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.request.PostEditRequest;
 import com.vulinh.data.dto.response.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +48,7 @@ public interface PostAPI {
   @PatchMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)
   ResponseEntity<Void> editPost(
-      @PathVariable UUID postId, @RequestBody PostCreationRequest postCreationRequest);
+      @PathVariable UUID postId, @RequestBody PostEditRequest postEditRequest);
 
   @DeleteMapping(PostEndpoint.POST_ID_VARIABLE_FORMAT)
   @SecurityRequirement(name = CommonConstant.SECURITY_SCHEME_NAME)

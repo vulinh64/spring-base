@@ -29,6 +29,8 @@ public class Post extends AbstractTimestampAuditableEntity<UUID>
   @UuidGenerator(style = Style.TIME)
   UUID id;
 
+  @Version Long version;
+
   String title;
   String slug;
   String excerpt;

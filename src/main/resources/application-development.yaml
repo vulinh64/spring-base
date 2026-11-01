@@ -10,7 +10,6 @@ logging.level:
       user.UserValidationService: DEBUG
       post:
         PostValidationService: DEBUG
-        PostEditValidationService: DEBUG
       category.CategoryService: DEBUG
     configuration.com.vulinh.configuration.SecurityConfiguration: DEBUG
     # org.springframework.security.oauth2: TRACE

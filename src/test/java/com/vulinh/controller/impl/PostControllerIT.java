@@ -14,6 +14,7 @@ import com.vulinh.AbstractBaseIntegration;
 import com.vulinh.data.constant.EndpointConstant;
 import com.vulinh.data.dto.GenericResponse;
 import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.request.PostEditRequest;
 import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.entity.RevisionType;
 import com.vulinh.data.entity.ids.PostRevisionId;
@@ -78,8 +79,9 @@ class PostControllerIT extends AbstractBaseIntegration {
       executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
   void editPostUpdatesPersistedPostAndCreatesRevision() throws Exception {
     var request =
-        PostCreationRequest.builder()
+        PostEditRequest.builder()
             .title("Updated Existing Post")
+            .version(0L)
             .excerpt("Updated excerpt")
             .postContent("Updated content")
             .slug("updated-existing-post")

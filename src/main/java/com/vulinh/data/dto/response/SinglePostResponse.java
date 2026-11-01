@@ -11,6 +11,7 @@ import lombok.With;
 @Builder
 public record SinglePostResponse(
     UUID id,
+    Long version,
     String title,
     String excerpt,
     String slug,

@@ -4,7 +4,7 @@ import module java.base;
 
 import com.vulinh.data.constant.EntityType;
 import com.vulinh.data.constant.UserRole;
-import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.request.PostRequest;
 import com.vulinh.data.dto.response.UserBasicResponse;
 import com.vulinh.data.entity.Post;
 import com.vulinh.data.repository.PostRepository;
@@ -19,7 +19,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,8 +32,8 @@ public class PostValidationService {
   static final int TITLE_MAX_LENGTH = 5000;
   static final int TAG_MAX_LENGTH = 1000;
 
-  public static final ValidatorChain<PostCreationRequest> BASIC_POST_VALIDATOR =
-      new ValidatorChainBuilder<PostCreationRequest>().add(PostRule.values()).build();
+  public static final ValidatorChain<PostRequest<?>> BASIC_POST_VALIDATOR =
+      new ValidatorChainBuilder<PostRequest<?>>().add(PostRule.values()).build();
 
   public void validateModifyingPermission(UserBasicResponse userDTO, Post post) {
     if (!(PostValidationService.isOwner(userDTO, post)
@@ -83,8 +83,8 @@ public class PostValidationService {
     return result;
   }
 
-  public void validatePost(@NonNull PostCreationRequest postCreationRequest) {
-    BASIC_POST_VALIDATOR.validate(postCreationRequest);
+  public void validatePost(@NonNull PostRequest<?> postRequest) {
+    BASIC_POST_VALIDATOR.validate(postRequest);
   }
 
   public Post getPost(UUID postId) {
@@ -108,17 +108,17 @@ public class PostValidationService {
 
   @Getter
   @RequiredArgsConstructor
-  public enum PostRule implements ValidatorStep<PostCreationRequest> {
+  public enum PostRule implements ValidatorStep<PostRequest<?>> {
     POST_NO_BLANK_TITLE(
-        ValidatorStepFactory.noBlankField(PostCreationRequest::title),
+        ValidatorStepFactory.noBlankField(PostRequest::title),
         ServiceErrorCode.MESSAGE_POST_INVALID_TITLE,
         "Blank title is not allowed"),
     POST_LONG_ENOUGH_TITLE(
-        ValidatorStepFactory.noExceededLength(PostCreationRequest::title, TITLE_MAX_LENGTH),
+        ValidatorStepFactory.noExceededLength(PostRequest::title, TITLE_MAX_LENGTH),
         ServiceErrorCode.MESSAGE_POST_INVALID_TITLE,
         "Title length is too long"),
     POST_NO_EMPTY_CONTENT(
-        ValidatorStepFactory.noBlankField(PostCreationRequest::postContent),
+        ValidatorStepFactory.noBlankField(PostRequest::postContent),
         ServiceErrorCode.MESSAGE_POST_INVALID_CONTENT,
         "Empty content is not allowed"),
     POST_NO_INVALID_TAG(
@@ -126,11 +126,11 @@ public class PostValidationService {
         ServiceErrorCode.MESSAGE_POST_INVALID_TAG,
         "Empty tag or tag is too long");
 
-    final Predicate<PostCreationRequest> predicate;
+    final Predicate<PostRequest<?>> predicate;
     final ServiceErrorCode applicationError;
     final String exceptionMessage;
 
-    static boolean isValidTags(PostCreationRequest dto) {
+    static boolean isValidTags(PostRequest<?> dto) {
       for (var tag : dto.tags()) {
         if (StringUtils.isBlank(tag) || tag.length() > TAG_MAX_LENGTH) {
           log.debug("Tag {} is empty or too long", tag);

@@ -8,7 +8,7 @@ import com.vulinh.exception.AuthorizationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -39,10 +39,16 @@ public class SecurityUtils {
     }
 
     var token = jat.getToken();
+    var subject = token.getSubject();
+
+    if (subject == null) {
+      log.warn("JWT subject is missing");
+      return Optional.empty();
+    }
 
     return Optional.of(
         UserBasicResponse.builder()
-            .id(UUID.fromString(token.getSubject()))
+            .id(UUID.fromString(subject))
             .username(token.getClaimAsString("username"))
             .userRoles(
                 jat.getAuthorities().stream()

@@ -6,6 +6,7 @@ import com.vulinh.annotation.aspect.ExecutionTime;
 import com.vulinh.data.dto.projection.PostSearchProjection;
 import com.vulinh.data.dto.projection.PrefetchPostProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.request.PostEditRequest;
 import com.vulinh.data.dto.response.*;
 import com.vulinh.data.entity.Author;
 import com.vulinh.data.mapper.PostMapper;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -55,6 +57,7 @@ public class PostService {
     return enrichSearchResults(page);
   }
 
+  @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
   public SinglePostResponse getSinglePost(String identity) {
     var post = postValidationService.getPostByIdentity(identity);
 
@@ -86,8 +89,8 @@ public class PostService {
 
   @Transactional
   @ExecutionTime
-  public boolean editPost(UUID postId, PostCreationRequest postCreationRequest) {
-    var possiblePost = postEditService.editPost(postId, postCreationRequest);
+  public boolean editPost(UUID postId, PostEditRequest postEditRequest) {
+    var possiblePost = postEditService.editPost(postId, postEditRequest);
 
     if (possiblePost.isPresent()) {
       var post = possiblePost.get();

@@ -5,6 +5,7 @@ import module java.base;
 import com.vulinh.data.base.EntityDTOMapper;
 import com.vulinh.data.dto.projection.PostRevisionProjection;
 import com.vulinh.data.dto.request.PostCreationRequest;
+import com.vulinh.data.dto.request.PostEditRequest;
 import com.vulinh.data.dto.response.AuthorResponse;
 import com.vulinh.data.dto.response.BasicPostResponse;
 import com.vulinh.data.dto.response.PostRevisionResponse;
@@ -32,6 +33,7 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   BasicPostResponse toDto(Post entity);
 
   @Mapping(target = "id", ignore = true)
+  @Mapping(target = "version", ignore = true)
   @Mapping(target = "createdDateTime", ignore = true)
   @Mapping(target = "updatedDateTime", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
@@ -58,9 +60,10 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "tags", source = "tags")
   @Mapping(target = "category", source = "category")
+  @Mapping(target = "version", ignore = true)
   @Mapping(target = "comments", ignore = true)
   void merge(
-      PostCreationRequest postCreationRequest,
+      PostEditRequest postEditRequest,
       Category category,
       Collection<Tag> tags,
       @MappingTarget Post post);
@@ -68,6 +71,7 @@ public interface PostMapper extends EntityDTOMapper<Post, BasicPostResponse> {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "updatedBy", ignore = true)
   @Mapping(target = "createdDateTime", ignore = true)
+  @Mapping(target = "version", ignore = true)
   @Mapping(target = "updatedDateTime", ignore = true)
   @Mapping(target = "authorId", ignore = true)
   @Mapping(target = "comments", ignore = true)

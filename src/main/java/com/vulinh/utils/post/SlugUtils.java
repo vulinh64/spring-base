@@ -7,7 +7,7 @@ import com.vulinh.locale.ServiceErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SlugUtils {
