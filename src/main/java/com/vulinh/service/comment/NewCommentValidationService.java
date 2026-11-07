@@ -35,10 +35,9 @@ public class NewCommentValidationService {
     var comment =
         commentRepository
             .findById(commentId)
-            .orElseThrow(
-                () ->
-                    NotFound404Exception.entityNotFound(
-                        EntityType.COMMENT, commentId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+            .orElseThrow(() ->
+                NotFound404Exception.entityNotFound(
+                    EntityType.COMMENT, commentId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
 
     var user = SecurityUtils.getUserDTOOrThrow();
 

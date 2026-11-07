@@ -58,16 +58,16 @@ public interface PostRepository extends BaseRepository<Post, UUID> {
 
   @Query(
       """
-        select
-        p.id as id, p.title as title,
-        p.excerpt as excerpt,
-        p.slug as slug,
-        p.createdDateTime as createdDate,
-        p.updatedDateTime as updatedDate,
-        p.authorId as authorId,
-        p.category as category
-        from Post p
-        where p.category.categorySlug = :categorySlug
-        """)
+      select
+      p.id as id, p.title as title,
+      p.excerpt as excerpt,
+      p.slug as slug,
+      p.createdDateTime as createdDate,
+      p.updatedDateTime as updatedDate,
+      p.authorId as authorId,
+      p.category as category
+      from Post p
+      where p.category.categorySlug = :categorySlug
+      """)
   Page<PrefetchPostProjection> findPostsByCategorySlug(String categorySlug, Pageable pageable);
 }

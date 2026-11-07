@@ -76,27 +76,22 @@ public class SecurityConfiguration {
     var security = applicationProperties.security();
 
     return applyCommonSecurity(httpSecurity)
-        .authorizeHttpRequests(
-            authorizeHttpRequestsCustomizer ->
-                configureAuthorizeHttpRequestCustomizer(authorizeHttpRequestsCustomizer, security))
-        .oauth2ResourceServer(
-            oAuth2ResourceServerProperties ->
-                oAuth2ResourceServerProperties
-                    .authenticationEntryPoint(this::resolveSecurityException)
-                    // Return something to client rather than a blank 403 page
-                    .accessDeniedHandler(this::resolveSecurityException)
-                    // Return something to client rather than a blank 401 page
-                    .jwt(
-                        jwtConfigurer ->
-                            jwtConfigurer.jwtAuthenticationConverter(
-                                jwt ->
-                                    new JwtAuthenticationToken(
-                                        jwt,
-                                        CollectionHelper.emptyListIfNull(
-                                                jwt.getClaimAsStringList("roles"))
-                                            .stream()
-                                            .map(SimpleGrantedAuthority::new)
-                                            .collect(Collectors.toSet())))))
+        .authorizeHttpRequests(authorizeHttpRequestsCustomizer ->
+            configureAuthorizeHttpRequestCustomizer(authorizeHttpRequestsCustomizer, security))
+        .oauth2ResourceServer(oAuth2ResourceServerProperties ->
+            oAuth2ResourceServerProperties
+                .authenticationEntryPoint(this::resolveSecurityException)
+                // Return something to client rather than a blank 403 page
+                .accessDeniedHandler(this::resolveSecurityException)
+                // Return something to client rather than a blank 401 page
+                .jwt(jwtConfigurer ->
+                    jwtConfigurer.jwtAuthenticationConverter(jwt ->
+                        new JwtAuthenticationToken(
+                            jwt,
+                            CollectionHelper.emptyListIfNull(jwt.getClaimAsStringList("roles"))
+                                .stream()
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toSet())))))
         .build();
   }
 
@@ -178,15 +173,12 @@ public class SecurityConfiguration {
   @SneakyThrows
   private static HttpSecurity applyCommonSecurity(HttpSecurity httpSecurity) {
     return httpSecurity
-        .headers(
-            headersConfigurer ->
-                headersConfigurer
-                    .xssProtection(
-                        xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
-                    .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
-        .sessionManagement(
-            sessionManagementConfigurer ->
-                sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .headers(headersConfigurer ->
+            headersConfigurer
+                .xssProtection(xssConfig -> xssConfig.headerValue(HeaderValue.ENABLED_MODE_BLOCK))
+                .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")))
+        .sessionManagement(sessionManagementConfigurer ->
+            sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .cors(corsConfigurer -> corsConfigurer.configurationSource(createCorsFilter()));
   }
 

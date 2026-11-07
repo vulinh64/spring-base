@@ -11,7 +11,6 @@ import com.vulinh.configuration.data.ApplicationProperties.TopicProperties;
 import com.vulinh.data.constant.UserRole;
 import com.vulinh.data.event.EventMessageWrapper;
 import com.vulinh.utils.JsonUtils;
-import java.nio.charset.StandardCharsets;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
@@ -58,12 +57,11 @@ public abstract class AbstractBaseIntegration {
 
   protected RequestPostProcessor testUserJwt() {
     return jwt()
-        .jwt(
-            token ->
-                token
-                    .subject(USER_ID.toString())
-                    .claim("username", USERNAME)
-                    .claim("roles", java.util.List.of(UserRole.USER.name())))
+        .jwt(token ->
+            token
+                .subject(USER_ID.toString())
+                .claim("username", USERNAME)
+                .claim("roles", java.util.List.of(UserRole.USER.name())))
         .authorities(new SimpleGrantedAuthority(UserRole.USER.name()));
   }
 

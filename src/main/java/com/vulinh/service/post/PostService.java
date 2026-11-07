@@ -129,29 +129,28 @@ public class PostService {
 
     var authorMap = authorService.findAuthorMapByIds(authorIds);
 
-    return page.map(
-        projection ->
-            PrefetchPostResponse.builder()
-                .id(projection.getId())
-                .title(projection.getTitle())
-                .excerpt(projection.getExcerpt())
-                .slug(projection.getSlug())
-                .createdDateTime(projection.getCreatedDateTime())
-                .updatedDateTime(projection.getUpdatedDateTime())
-                .authorId(projection.getAuthorId())
-                .author(
-                    Optional.ofNullable(authorMap.get(projection.getAuthorId()))
-                        .map(PostService::toAuthorResponse)
-                        .orElse(null))
-                .category(
-                    projection.getCategoryId() != null
-                        ? CategoryResponse.builder()
-                            .id(projection.getCategoryId())
-                            .categorySlug(projection.getCategorySlug())
-                            .displayName(projection.getDisplayName())
-                            .build()
-                        : null)
-                .build());
+    return page.map(projection ->
+        PrefetchPostResponse.builder()
+            .id(projection.getId())
+            .title(projection.getTitle())
+            .excerpt(projection.getExcerpt())
+            .slug(projection.getSlug())
+            .createdDateTime(projection.getCreatedDateTime())
+            .updatedDateTime(projection.getUpdatedDateTime())
+            .authorId(projection.getAuthorId())
+            .author(
+                Optional.ofNullable(authorMap.get(projection.getAuthorId()))
+                    .map(PostService::toAuthorResponse)
+                    .orElse(null))
+            .category(
+                projection.getCategoryId() != null
+                    ? CategoryResponse.builder()
+                        .id(projection.getCategoryId())
+                        .categorySlug(projection.getCategorySlug())
+                        .displayName(projection.getDisplayName())
+                        .build()
+                    : null)
+            .build());
   }
 
   private Page<PrefetchPostResponse> enrichWithAuthors(Page<PrefetchPostProjection> page) {
@@ -163,32 +162,31 @@ public class PostService {
 
     var authorMap = authorService.findAuthorMapByIds(authorIds);
 
-    return page.map(
-        projection -> {
-          var category = projection.getCategory();
+    return page.map(projection -> {
+      var category = projection.getCategory();
 
-          return PrefetchPostResponse.builder()
-              .id(projection.getId())
-              .title(projection.getTitle())
-              .excerpt(projection.getExcerpt())
-              .slug(projection.getSlug())
-              .createdDateTime(projection.getCreatedDateTime())
-              .updatedDateTime(projection.getUpdatedDateTime())
-              .authorId(projection.getAuthorId())
-              .author(
-                  Optional.ofNullable(authorMap.get(projection.getAuthorId()))
-                      .map(PostService::toAuthorResponse)
-                      .orElse(null))
-              .category(
-                  category != null
-                      ? CategoryResponse.builder()
-                          .id(category.getId())
-                          .categorySlug(category.getCategorySlug())
-                          .displayName(category.getDisplayName())
-                          .build()
-                      : null)
-              .build();
-        });
+      return PrefetchPostResponse.builder()
+          .id(projection.getId())
+          .title(projection.getTitle())
+          .excerpt(projection.getExcerpt())
+          .slug(projection.getSlug())
+          .createdDateTime(projection.getCreatedDateTime())
+          .updatedDateTime(projection.getUpdatedDateTime())
+          .authorId(projection.getAuthorId())
+          .author(
+              Optional.ofNullable(authorMap.get(projection.getAuthorId()))
+                  .map(PostService::toAuthorResponse)
+                  .orElse(null))
+          .category(
+              category != null
+                  ? CategoryResponse.builder()
+                      .id(category.getId())
+                      .categorySlug(category.getCategorySlug())
+                      .displayName(category.getDisplayName())
+                      .build()
+                  : null)
+          .build();
+    });
   }
 
   static AuthorResponse toAuthorResponse(Author author) {

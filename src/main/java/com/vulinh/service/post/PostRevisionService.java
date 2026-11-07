@@ -83,12 +83,11 @@ public class PostRevisionService {
     return postRevisionRepository
         .findById(new PostRevisionId(postId, revisionNumber))
         .map(postRevision -> applyRevisionInternal(postRevision, post))
-        .orElseThrow(
-            () ->
-                NotFound404Exception.entityNotFound(
-                    EntityType.POST_REVISION,
-                    PostRevisionId.of(postId, revisionNumber),
-                    ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+        .orElseThrow(() ->
+            NotFound404Exception.entityNotFound(
+                EntityType.POST_REVISION,
+                PostRevisionId.of(postId, revisionNumber),
+                ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
   @Transactional

@@ -2,7 +2,7 @@ services:
   spring-base:
     networks:
       - spring-base-network
-    image: 'spring-base:3.0.0-alpha'
+    image: 'spring-base:3.0.0'
     container_name: spring-base
     build:
       context: .
@@ -20,7 +20,7 @@ services:
   postgresql:
     networks:
       - spring-base-network
-    image: 'postgres:18.3-alpine3.23'
+    image: 'postgres:18.6-alpine3.24'
     container_name: postgresql
     ports:
       - "5432:5432"
@@ -39,7 +39,7 @@ services:
   rabbitmq:
     networks:
       - spring-base-network
-    image: 'rabbitmq:4.2.4-alpine'
+    image: 'rabbitmq:4.4.0-alpine'
     container_name: rabbitmq
     ports:
       - "5672:5672"

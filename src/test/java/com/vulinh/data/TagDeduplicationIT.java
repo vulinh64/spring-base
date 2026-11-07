@@ -2,10 +2,10 @@ package com.vulinh.data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import module java.base;
+import module java.sql;
+
+import com.vulinh.test.BaseDockerImage;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
@@ -13,7 +13,7 @@ class TagDeduplicationIT {
 
   @Test
   void migrationRetainsOldestTagAndPreservesAllPostAssociations() throws Exception {
-    try (var postgres = new PostgreSQLContainer("postgres:18.3-alpine3.23")) {
+    try (var postgres = new PostgreSQLContainer(BaseDockerImage.POSTGRESQL_IMAGE)) {
       postgres.start();
       try (var connection =
               DriverManager.getConnection(
@@ -65,9 +65,9 @@ class TagDeduplicationIT {
         try (var result =
             statement.executeQuery(
                 """
-            SELECT count(*) FROM post_tag_mapping
-            WHERE tag_id = 'ffffffff-ffff-1fff-8190-000000000001'
-            """)) {
+                SELECT count(*) FROM post_tag_mapping
+                WHERE tag_id = 'ffffffff-ffff-1fff-8190-000000000001'
+                """)) {
           assertTrue(result.next());
           assertEquals(2, result.getInt(1));
         }
@@ -78,9 +78,9 @@ class TagDeduplicationIT {
         try (var result =
             statement.executeQuery(
                 """
-            SELECT count(*) FROM pg_indexes
-            WHERE tablename = 'tag' AND indexname = 'tag_display_name_idx'
-            """)) {
+                SELECT count(*) FROM pg_indexes
+                WHERE tablename = 'tag' AND indexname = 'tag_display_name_idx'
+                """)) {
           assertTrue(result.next());
           assertEquals(0, result.getInt(1));
         }
@@ -90,9 +90,9 @@ class TagDeduplicationIT {
                 () ->
                     statement.execute(
                         """
-            INSERT INTO tag(id, display_name)
-            VALUES ('00000000-0000-1000-819f-000000000007', 'spring')
-            """));
+                        INSERT INTO tag(id, display_name)
+                        VALUES ('00000000-0000-1000-819f-000000000007', 'spring')
+                        """));
         assertEquals("23505", duplicate.getSQLState());
         connection.rollback();
       }

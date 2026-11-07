@@ -21,21 +21,21 @@ public interface PostRevisionRepository
 
   @Query(
       """
-              select new com.vulinh.data.dto.projection.PostRevisionProjection
-              (pr.id.postId,
-              pr.id.revisionNumber,
-              pr.revisionType,
-              pr.title,
-              pr.slug,
-              pr.excerpt,
-              left(pr.postContent,50)||'...',
-              pr.authorId,
-              pr.categoryId,
-              pr.tags,
-              pr.revisionCreatedDateTime,
-              pr.revisionCreatedBy)
-              from PostRevision pr inner join Post p on pr.id.postId = p.id
-              where p.id = :postId
-              """)
+      select new com.vulinh.data.dto.projection.PostRevisionProjection
+      (pr.id.postId,
+      pr.id.revisionNumber,
+      pr.revisionType,
+      pr.title,
+      pr.slug,
+      pr.excerpt,
+      left(pr.postContent,50)||'...',
+      pr.authorId,
+      pr.categoryId,
+      pr.tags,
+      pr.revisionCreatedDateTime,
+      pr.revisionCreatedBy)
+      from PostRevision pr inner join Post p on pr.id.postId = p.id
+      where p.id = :postId
+      """)
   Page<PostRevisionProjection> findByPostIdOrPostSlug(UUID postId, Pageable pageable);
 }

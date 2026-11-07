@@ -55,10 +55,9 @@ public class CategoryService
     return Optional.ofNullable(categoryId)
         .or(() -> Optional.of(CommonConstant.NIL_UUID))
         .flatMap(categoryRepository::findById)
-        .orElseThrow(
-            () ->
-                NotFound404Exception.entityNotFound(
-                    EntityType.CATEGORY, categoryId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+        .orElseThrow(() ->
+            NotFound404Exception.entityNotFound(
+                EntityType.CATEGORY, categoryId, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
   }
 
   @Cacheable(CacheProperties.ALL_CATEGORIES_CACHE)
@@ -89,12 +88,11 @@ public class CategoryService
 
     return categoryRepository
         .findById(categoryId)
-        .map(
-            category -> {
-              categoryRepository.delete(category);
+        .map(category -> {
+          categoryRepository.delete(category);
 
-              return true;
-            })
+          return true;
+        })
         .isPresent();
   }
 
@@ -135,14 +133,13 @@ public class CategoryService
 
     var results =
         fetchQuery.fetch().stream()
-            .map(
-                projection ->
-                    CategoryResponse.builder()
-                        .id(projection.id())
-                        .categorySlug(projection.categorySlug())
-                        .displayName(projection.displayName())
-                        .postCount(projection.postCount())
-                        .build())
+            .map(projection ->
+                CategoryResponse.builder()
+                    .id(projection.id())
+                    .categorySlug(projection.categorySlug())
+                    .displayName(projection.displayName())
+                    .postCount(projection.postCount())
+                    .build())
             .toList();
 
     return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);

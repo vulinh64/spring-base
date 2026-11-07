@@ -40,12 +40,11 @@ public class TagService {
 
     var nonMatchingTags =
         actualTags.stream()
-            .filter(
-                rawTag ->
-                    // Tags that did not present within database
-                    existingTags.stream()
-                        .map(Tag::getDisplayName)
-                        .noneMatch(tag -> tag.equalsIgnoreCase(rawTag)))
+            .filter(rawTag ->
+                // Tags that did not present within database
+                existingTags.stream()
+                    .map(Tag::getDisplayName)
+                    .noneMatch(tag -> tag.equalsIgnoreCase(rawTag)))
             .map(displayName -> Tag.builder().displayName(displayName).build())
             .toList();
 

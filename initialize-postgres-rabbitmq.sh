@@ -18,7 +18,7 @@ chmod +x ./create-data-classes.sh
 PG_CONTAINER_NAME="postgresql"
 PG_VOLUME_NAME="postgresql-volume"
 POSTGRES_NAME="postgres"
-POSTGRES_TAG="18.3-alpine3.23"
+POSTGRES_TAG="18.6-alpine3.24"
 POSTGRES_IMAGE="${POSTGRES_NAME}:${POSTGRES_TAG}"
 PG_COMMAND="docker run -d --name ${PG_CONTAINER_NAME} -e \"POSTGRES_USER=postgres\" -e \"POSTGRES_PASSWORD=123456\" -e \"POSTGRES_DB=spring-base\" -p 5432:5432 -v ${PG_VOLUME_NAME}:/var/lib/postgresql ${POSTGRES_IMAGE}"
 
@@ -38,7 +38,7 @@ fi
 # --- RabbitMQ Setup ---
 RABBITMQ_CONTAINER_NAME="rabbitmq"
 RABBITMQ_NAME="rabbitmq"
-RABBITMQ_TAG="4.2.4-alpine"
+RABBITMQ_TAG="4.4.0-alpine"
 RABBITMQ_IMAGE="${RABBITMQ_NAME}:${RABBITMQ_TAG}"
 RABBITMQ_COMMAND="docker run --detach --name ${RABBITMQ_CONTAINER_NAME} --hostname rabbitmq -e RABBITMQ_DEFAULT_USER=rabbitmq -e RABBITMQ_DEFAULT_PASS=123456 -p 5672:5672 -p 15672:15672 -v rabbitmq-volume:/var/lib/rabbitmq ${RABBITMQ_IMAGE}"
 

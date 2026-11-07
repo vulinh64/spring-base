@@ -99,10 +99,9 @@ public class PostValidationService {
     } catch (IllegalArgumentException _) {
       return postRepository
           .findBySlug(identity)
-          .orElseThrow(
-              () ->
-                  NotFound404Exception.entityNotFound(
-                      EntityType.POST, identity, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
+          .orElseThrow(() ->
+              NotFound404Exception.entityNotFound(
+                  EntityType.POST, identity, ServiceErrorCode.MESSAGE_INVALID_ENTITY_ID));
     }
   }
 
