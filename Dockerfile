@@ -5,7 +5,7 @@
 # Stage 1: Build stage
 # Install the application and its dependencies
 # Create a custom minimal JRE
-FROM maven:3.9.14-amazoncorretto-25-alpine AS build
+FROM maven:3.10.0-eclipse-temurin-25-alpine AS build
 
 WORKDIR /usr/src/project
 
@@ -122,7 +122,7 @@ RUN jlink \
     --output /jre-minimalist
 
 # Stage 2: Production stage
-FROM alpine:3.23.3 AS final
+FROM alpine:3.24.4 AS final
 
 ENV JAVA_HOME=/opt/java/jre-minimalist
 ENV PATH="${JAVA_HOME}/bin:${JAVA_HOME}/lib:${PATH}"
