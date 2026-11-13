@@ -6,4 +6,4 @@ on:
 
 jobs:
   build:
-    uses: vulinh64/spring-base-squad/.github/workflows/java-maven-ci.yml@1.0.0
+    uses: vulinh64/spring-base-squad/.github/workflows/java-maven-ci.yml@1.1.0

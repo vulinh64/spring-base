@@ -18,15 +18,16 @@ ENV COMMONS_NAME=spring-base-commons
 ENV COMMONS_GROUP_ID=com.vulinh
 ENV GITHUB_USER=vulinh64
 ARG HEALTH_CHECK_VERSION=1.0.1
+ARG SQUAD_VERSION=1.1.0
 
 # Copy the main Maven configuration first for dependency-layer caching
 COPY pom.xml ./
 
 # Download and install the custom parent POM
 RUN echo "Reading ${PARENT_NAME} version from pom.xml..." \
-    && PARENT_VERSION="$(sed -n \
-        '/<parent>/,/<\/parent>/s:.*<version>\([^<]*\)</version>.*:\1:p' \
-        pom.xml | sed -n '1p')" \
+    && wget -O ParentPomDetector.java \
+        "https://raw.githubusercontent.com/${GITHUB_USER}/spring-base-squad/${SQUAD_VERSION}/ParentPomDetector.java" \
+    && PARENT_VERSION="$(java ParentPomDetector.java)" \
     && if [ -z "${PARENT_VERSION}" ]; then \
         echo "Failed to read ${PARENT_NAME} version from pom.xml"; \
         exit 1; \
