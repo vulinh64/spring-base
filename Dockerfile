@@ -17,16 +17,16 @@ ENV PARENT_NAME=spring-base-parent
 ENV COMMONS_NAME=spring-base-commons
 ENV COMMONS_GROUP_ID=com.vulinh
 ENV GITHUB_USER=vulinh64
-ARG HEALTH_CHECK_VERSION=1.0.1
+ARG SQUAD_VERSION=1.1.0
 
 # Copy the main Maven configuration first for dependency-layer caching
 COPY pom.xml ./
 
 # Download and install the custom parent POM
 RUN echo "Reading ${PARENT_NAME} version from pom.xml..." \
-    && PARENT_VERSION="$(sed -n \
-        '/<parent>/,/<\/parent>/s:.*<version>\([^<]*\)</version>.*:\1:p' \
-        pom.xml | sed -n '1p')" \
+    && wget -O ParentPomDetector.java \
+        "https://raw.githubusercontent.com/${GITHUB_USER}/spring-base-squad/refs/tags/${SQUAD_VERSION}/ParentPomDetector.java" \
+    && PARENT_VERSION="$(java ParentPomDetector.java)" \
     && if [ -z "${PARENT_VERSION}" ]; then \
         echo "Failed to read ${PARENT_NAME} version from pom.xml"; \
         exit 1; \
@@ -50,19 +50,16 @@ RUN echo "Reading ${PARENT_NAME} version from pom.xml..." \
 
 # Read the commons version inherited from the parent POM
 RUN echo "Reading ${COMMONS_NAME} version from pom.xml \${spring-base-commons.version}..." \
-    && mvn help:evaluate \
+    && COMMONS_VERSION="$(mvn help:evaluate \
         -Dexpression="spring-base-commons.version" \
         -q \
-        -DforceStdout \
-        2>/dev/null \
-        | sed -n '/^[0-9][0-9A-Za-z_.-]*$/ { p; q; }' \
-        > commons-version.txt \
-    && COMMONS_VERSION="$(cat commons-version.txt)" \
-    && if [ -z "${COMMONS_VERSION}" ]; then \
+        -DforceStdout)" \
+    && if [ -z "${COMMONS_VERSION}" ] || [ "${COMMONS_VERSION}" = "null object or invalid expression" ]; then \
         echo "Failed to evaluate spring-base-commons.version from pom.xml"; \
         exit 1; \
     else \
         echo "Found ${COMMONS_NAME} version ${COMMONS_VERSION}"; \
+        printf '%s\n' "${COMMONS_VERSION}" > commons-version.txt; \
     fi
 
 # Download the pre-built commons JAR from GitHub Releases
@@ -86,12 +83,11 @@ RUN COMMONS_VERSION="$(cat commons-version.txt)" \
         -Dpackaging=jar \
     && echo "Successfully installed ${COMMONS_NAME} version ${COMMONS_VERSION}"
 
+# Resolve dependencies and build plugins before source changes invalidate the cache.
+RUN mvn dependency:go-offline
+
 # Copy source code
 COPY src/ src/
-
-# Download the versioned, shared Docker health check source.
-RUN wget -O HealthCheck.java \
-    "https://raw.githubusercontent.com/${GITHUB_USER}/spring-base-squad/${HEALTH_CHECK_VERSION}/health-check/HealthCheck.java"
 
 # Build the application using Maven
 RUN mvn clean package -DskipTests
@@ -112,9 +108,8 @@ RUN jdeps \
 
 # Create a custom JRE containing only the required modules
 # jdk.crypto.ec is required for HTTPS but may not be detected by jdeps.
-# jdk.compiler is required for the source-file Docker health check.
 RUN jlink \
-    --add-modules "$(cat "${DEPS_FILE}"),jdk.crypto.ec,jdk.compiler" \
+    --add-modules "$(cat "${DEPS_FILE}"),jdk.crypto.ec" \
     --strip-java-debug-attributes \
     --compress 2 \
     --no-header-files \
@@ -141,9 +136,6 @@ RUN addgroup -S "${GROUP}" \
     && mkdir -p "/${WORKDIR}" \
     && chown -R "${USER}:${GROUP}" "/${WORKDIR}"
 
-# Copy the shared Docker health check companion.
-COPY --from=build /usr/src/project/HealthCheck.java /${WORKDIR}/HealthCheck.java
-
 # Copy the application JAR from the build stage
 COPY --from=build \
     "/usr/src/project/target/${APP_NAME}" \
@@ -155,8 +147,8 @@ USER "${USER}"
 
 # Liveness deliberately remains up when external dependencies such as PostgreSQL
 # or RabbitMQ are unavailable.
-HEALTHCHECK --interval=30s --timeout=35s --start-period=60s --retries=3 \
-    CMD ["java", "HealthCheck.java", "http://localhost:8088/actuator/health/liveness"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD wget -q -O /dev/null http://127.0.0.1:8088/actuator/health/liveness || exit 1
 
 #
 # Run the application with container-aware JVM settings
