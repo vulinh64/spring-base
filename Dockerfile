@@ -26,7 +26,7 @@ COPY pom.xml ./
 # Download and install the custom parent POM
 RUN echo "Reading ${PARENT_NAME} version from pom.xml..." \
     && wget -O ParentPomDetector.java \
-        "https://raw.githubusercontent.com/${GITHUB_USER}/spring-base-squad/${SQUAD_VERSION}/ParentPomDetector.java" \
+        "https://raw.githubusercontent.com/${GITHUB_USER}/spring-base-squad/refs/tags/${SQUAD_VERSION}/ParentPomDetector.java" \
     && PARENT_VERSION="$(java ParentPomDetector.java)" \
     && if [ -z "${PARENT_VERSION}" ]; then \
         echo "Failed to read ${PARENT_NAME} version from pom.xml"; \
